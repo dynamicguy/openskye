@@ -1,5 +1,8 @@
 package com.aimtechpartners.skye.platform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A <code>DataSet</code> is the metadata representing a set of structured data
  * <p/>
@@ -8,8 +11,17 @@ package com.aimtechpartners.skye.platform;
  */
 public class DataSet extends SimpleObject {
 
-    public DataSetType dataSetType;
-    public long rowCount;
+    private DataSetType dataSetType;
+    private long rowCount;
+    private List<Column> columns = new ArrayList();
+
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<Column> columns) {
+        this.columns = columns;
+    }
 
     public long getRowCount() {
         return rowCount;

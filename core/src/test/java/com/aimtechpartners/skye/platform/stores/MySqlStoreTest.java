@@ -16,8 +16,8 @@ public class MySqlStoreTest {
 
     @BeforeClass
     public void setUp() {
-        String jdbcUrl = "jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)(user=root)/confluence";
-        mySqlStore = new MySqlInformationStore("test", jdbcUrl, "root", "");
+        String jdbcUrl = "jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)/skye_test";
+        mySqlStore = new MySqlInformationStore("skye_test", jdbcUrl, "skye_test", "skye_test");
     }
 
     @Test
