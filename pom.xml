@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.aimtechpartners</groupId>
+    <artifactId>skye</artifactId>
+    <version>0.0.1</version>
+    <packaging>pom</packaging>
+
+    <name>Skye</name>
+    <description>Open Information Lifecycle Management Framework</description>
+    <url>https://github.com/aimtechpartners/skye</url>
+    <inceptionYear>2013</inceptionYear>
+
+    <developers>
+        <developer>
+            <email>philip@fiveclouds.com</email>
+            <name>Philip Dodds</name>
+            <url>https://github.com/pdodds</url>
+            <id>pdodds</id>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>core</module>
+        <module>discovery</module>
+        <module>ingestion</module>
+        <module>storage</module>
+        <module>lifecycle-engine</module>
+  </modules>
+
+    <issueManagement>
+        <url>https://github.com/aimtechpartners/skye/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/aimtechpartners/skye</url>
+        <connection>scm:git:git://github.com/aimtechpartners/skye.git</connection>
+        <developerConnection>scm:git:git@github.com:aimtechpartners/skye.git</developerConnection>
+    </scm>
+
+    <dependencies>
+
+        <!-- Some core stuff we should use -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+
+        <!-- Setup basic logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+    </dependencies>
+
+    <dependencyManagement>
+        
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.15</version>
+                <configuration>
+                    <forkMode>always</forkMode>
+                </configuration>
+            </plugin>
+           
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
