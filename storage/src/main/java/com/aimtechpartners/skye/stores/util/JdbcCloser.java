@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform.util;
+package com.aimtechpartners.skye.stores.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.aimtechpartners</groupId>
         <artifactId>skye</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>com.aimtechpartners.skye</groupId>
     <artifactId>skye-storage</artifactId>
@@ -13,7 +13,24 @@
     <name>Skye :: Storage</name>
 
     <dependencies>
-        
+        <dependency>
+            <groupId>com.aimtechpartners.skye</groupId>
+            <artifactId>skye-core</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+        </dependency>
+
     </dependencies>
-    
+
 </project>

@@ -1,7 +1,7 @@
-package com.aimtechpartners.skye.platform.stores;
+package com.aimtechpartners.skye.stores;
 
 import com.aimtechpartners.skye.platform.*;
-import com.aimtechpartners.skye.platform.util.JdbcCloser;
+import com.aimtechpartners.skye.stores.util.JdbcCloser;
 import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;

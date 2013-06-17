@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform.stores;
+package com.aimtechpartners.skye.stores;
 
 import com.aimtechpartners.skye.platform.DataSet;
 import com.google.common.collect.Lists;
