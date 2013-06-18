@@ -9,6 +9,18 @@ The aim of the platform is to then leverage the range of intelligent metadata th
 
 Through the course of this lifecycle we will then be able to take a "slice" of the information for archiving,  manage the storage in the archive through legal storage management to destruction.
 
+Building
+-
+
+In order to build the Skye platform you will need to have:
+
+* Oracle JDK 7
+* Maven 3.x
+
+You should then be able to simply run:
+
+     mvn clean install
+
 Getting Involved
 -
 
