@@ -27,6 +27,8 @@
         <module>ingestion</module>
         <module>storage</module>
         <module>lifecycle-engine</module>
+        <module>cli</module>
+        <module>repository</module>
   </modules>
 
     <issueManagement>
