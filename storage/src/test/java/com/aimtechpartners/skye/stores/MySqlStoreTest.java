@@ -1,6 +1,7 @@
 package com.aimtechpartners.skye.stores;
 
 import com.aimtechpartners.skye.platform.DataSet;
+import com.aimtechpartners.skye.stores.util.JdbcProperties;
 import com.google.common.collect.Lists;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -17,7 +18,9 @@ public class MySqlStoreTest {
     @BeforeClass
     public void setUp() {
         String jdbcUrl = "jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)/skye_test";
-        mySqlStore = new MySqlInformationStore("skye_test", jdbcUrl, "skye_test", "skye_test");
+        JdbcProperties storeProperties = new JdbcProperties(jdbcUrl, "skye_test", "skye_test");
+        mySqlStore = new MySqlInformationStore();
+        mySqlStore.initialize(storeProperties);
     }
 
     @Test

@@ -2,15 +2,17 @@ package com.aimtechpartners.skye.platform;
 
 import org.joda.time.DateTime;
 
-import java.io.InputStream;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * The base interface for an Information Store
  */
 public interface InformationStore<T extends SimpleObject> {
 
-    Map<String,String> getMetadata();
+    void initialize(Properties properties);
+
+    Properties getMetadata();
 
     String getName();
 
@@ -19,7 +21,5 @@ public interface InformationStore<T extends SimpleObject> {
     Iterable<T> getSince(DateTime dateTime);
 
     Iterable<T> getAll();
-
-    InputStream getStream(T simpleObject);
 
 }
