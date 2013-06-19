@@ -50,7 +50,8 @@ public abstract class AbstractJdbcInformationStore implements InformationStore<D
         List<DataSet> dataSets = Lists.newArrayList();
         try {
             conn = getJdbcConnection();
-            rs = conn.getMetaData().getTables(null, null, "%", null);
+            String[] types= {"TABLE"} ;
+            rs = conn.getMetaData().getTables(null, null, "%", types);
             while (rs.next()) {
                 String tableName = rs.getString(3);
 
