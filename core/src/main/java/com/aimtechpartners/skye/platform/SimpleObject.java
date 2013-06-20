@@ -13,7 +13,7 @@ import java.util.Map;
 public abstract class SimpleObject {
 
     private String path;
-    private List<String> tags = new ArrayList();
+    private List<Tag> tags = new ArrayList<>();
     private Map<String, String> metadata = new HashMap();
     private List<SimpleObject> related = new ArrayList();
 
@@ -41,11 +41,11 @@ public abstract class SimpleObject {
         this.metadata = metadata;
     }
 
-    public List<String> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

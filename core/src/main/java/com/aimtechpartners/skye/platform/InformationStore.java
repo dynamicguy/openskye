@@ -2,11 +2,13 @@ package com.aimtechpartners.skye.platform;
 
 import org.joda.time.DateTime;
 
-import java.util.Map;
 import java.util.Properties;
 
 /**
- * The base interface for an Information Store
+ * A representation of an Information Store
+ * <p/>
+ * An information store is basically any source system that is capable of providing access
+ * to a type of {@link SimpleObject} for ingestion into the Skye ILM framework
  */
 public interface InformationStore<T extends SimpleObject> {
 
