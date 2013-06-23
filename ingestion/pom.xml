@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.aimtechpartners</groupId>
+        <groupId>com.infobelt</groupId>
         <artifactId>skye</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.aimtechpartners.skye</groupId>
+    <groupId>com.infobelt.skye</groupId>
     <artifactId>skye-ingestion</artifactId>
 
     <name>Skye :: Ingestion</name>

@@ -2,14 +2,14 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.aimtechpartners</groupId>
+    <groupId>com.infobelt</groupId>
     <artifactId>skye</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Skye</name>
     <description>Open Information Lifecycle Management Framework</description>
-    <url>https://github.com/aimtechpartners/skye</url>
+    <url>https://github.com/infobelt/skye</url>
     <inceptionYear>2013</inceptionYear>
 
     <developers>
@@ -32,14 +32,14 @@
   </modules>
 
     <issueManagement>
-        <url>https://github.com/aimtechpartners/skye/issues</url>
+        <url>https://github.com/infobelt/skye/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/aimtechpartners/skye</url>
-        <connection>scm:git:git://github.com/aimtechpartners/skye.git</connection>
-        <developerConnection>scm:git:git@github.com:aimtechpartners/skye.git</developerConnection>
+        <url>https://github.com/infobelt/skye</url>
+        <connection>scm:git:git://github.com/infobelt/skye.git</connection>
+        <developerConnection>scm:git:git@github.com:infobelt/skye.git</developerConnection>
     </scm>
 
     <dependencies>
@@ -80,7 +80,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.aimtechpartners.skye</groupId>
+                <groupId>com.infobelt.skye</groupId>
                 <artifactId>skye-core</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>

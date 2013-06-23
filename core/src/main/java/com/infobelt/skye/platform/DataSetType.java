@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform;
+package com.infobelt.skye.platform;
 
 /**
  * A representation of the basic types of {@link DataSet}

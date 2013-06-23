@@ -1,9 +1,9 @@
-package com.aimtechpartners.skye.stores;
+package com.infobelt.skye.stores;
 
-import com.aimtechpartners.skye.platform.*;
-import com.aimtechpartners.skye.stores.util.JdbcCloser;
-import com.aimtechpartners.skye.stores.util.JdbcProperties;
 import com.google.common.collect.Lists;
+import com.infobelt.skye.platform.*;
+import com.infobelt.skye.stores.util.JdbcCloser;
+import com.infobelt.skye.stores.util.JdbcProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ public abstract class AbstractJdbcInformationStore implements InformationStore<D
         List<DataSet> dataSets = Lists.newArrayList();
         try {
             conn = getJdbcConnection();
-            String[] types= {"TABLE"} ;
+            String[] types = {"TABLE"};
             rs = conn.getMetaData().getTables(null, null, "%", types);
             while (rs.next()) {
                 String tableName = rs.getString(3);

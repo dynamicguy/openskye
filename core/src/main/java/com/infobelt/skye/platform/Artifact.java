@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform;
+package com.infobelt.skye.platform;
 
 /**
  * An <code>Artifact</code> is the metadata representing an unstructured file

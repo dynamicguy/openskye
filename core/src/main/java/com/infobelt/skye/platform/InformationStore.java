@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform;
+package com.infobelt.skye.platform;
 
 import org.joda.time.DateTime;
 

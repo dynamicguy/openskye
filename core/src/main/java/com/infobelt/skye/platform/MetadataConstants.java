@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform;
+package com.infobelt.skye.platform;
 
 /**
  * A set of core metadata constants that are used through Skye to

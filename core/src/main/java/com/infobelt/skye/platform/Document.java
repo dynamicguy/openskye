@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform;
+package com.infobelt.skye.platform;
 
 /**
  * A <code>Document</code> is the metadata representing a document

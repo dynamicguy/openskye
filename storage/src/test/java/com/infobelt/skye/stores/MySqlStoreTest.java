@@ -1,7 +1,7 @@
-package com.aimtechpartners.skye.stores;
+package com.infobelt.skye.stores;
 
-import com.aimtechpartners.skye.platform.DataSet;
-import com.aimtechpartners.skye.stores.util.JdbcProperties;
+import com.infobelt.skye.platform.DataSet;
+import com.infobelt.skye.stores.util.JdbcProperties;
 import com.google.common.collect.Lists;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.stores.util;
+package com.infobelt.skye.stores.util;
 
 import java.util.Properties;
 

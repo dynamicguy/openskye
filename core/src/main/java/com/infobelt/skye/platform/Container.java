@@ -1,4 +1,4 @@
-package com.aimtechpartners.skye.platform;
+package com.infobelt.skye.platform;
 
 /**
  * Represents a logical container of {@link SimpleObject} and is an of itself it
