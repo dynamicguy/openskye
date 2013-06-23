@@ -24,5 +24,5 @@ You should then be able to simply run:
 Getting Involved
 -
 
-The Skye framework is open source and licensed under an Apache 2 license.  We are always looking for people to get involved,  if you are interested please contact info@aimtechpartners.com or take a look at the issues, fork and submit a pull request.
+The Skye framework is open source and licensed under an Apache 2 license.  We are always looking for people to get involved,  if you are interested please contact info@infobelt.com or take a look at the issues, fork and submit a pull request.
 
