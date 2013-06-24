@@ -13,7 +13,7 @@ public class DataSet extends SimpleObject {
 
     private DataSetType dataSetType;
     private long rowCount;
-    private List<Column> columns = new ArrayList();
+    private List<Column> columns = new ArrayList<>();
 
     public List<Column> getColumns() {
         return columns;
@@ -38,4 +38,5 @@ public class DataSet extends SimpleObject {
     public void setDataSetType(DataSetType dataSetType) {
         this.dataSetType = dataSetType;
     }
+
 }

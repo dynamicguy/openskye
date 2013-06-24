@@ -2,10 +2,10 @@ package com.infobelt.skye.platform;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A base abstract type for taggable metadata to use
@@ -13,16 +13,16 @@ import java.util.Map;
 public abstract class SimpleObject {
 
     private String path;
-    private List<Tag> tags = new ArrayList();
-    private Map<String, String> metadata = new HashMap();
-    private List<SimpleObject> related = new ArrayList();
+    private Set<Tag> tags = new HashSet<>();
+    private Map<String, String> metadata = new HashMap<>();
+    private boolean container;
 
-    public List<SimpleObject> getRelated() {
-        return related;
+    public boolean isContainer() {
+        return container;
     }
 
-    public void setRelated(List<SimpleObject> related) {
-        this.related = related;
+    public void setContainer(boolean container) {
+        this.container = container;
     }
 
     public String getPath() {
@@ -41,11 +41,11 @@ public abstract class SimpleObject {
         this.metadata = metadata;
     }
 
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

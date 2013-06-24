@@ -3,7 +3,7 @@ package com.infobelt.skye.platform;
 import java.util.UUID;
 
 /**
- * Represents a named tag that ca be associated with {@link SimpleObject}
+ * Represents a named tag that can be associated with {@link SimpleObject}
  */
 public class Tag {
 

@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 /**
  * An implementation of an {@link InformationStore} for the MySQL
  * database
@@ -19,4 +21,5 @@ public class MySqlInformationStore extends AbstractJdbcInformationStore {
     public Iterable<DataSet> getSince(DateTime dateTime) {
         return Lists.newArrayList();
     }
+
 }

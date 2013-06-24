@@ -5,5 +5,4 @@ package com.infobelt.skye.platform;
  */
 public class Artifact extends SimpleObject {
 
-
 }

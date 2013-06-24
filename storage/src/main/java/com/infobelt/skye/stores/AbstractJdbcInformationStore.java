@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -102,5 +103,15 @@ public abstract class AbstractJdbcInformationStore implements InformationStore<D
     @Override
     public String getUrl() {
         return storeProperties.getJdbcUrl();
+    }
+
+    @Override
+    public Iterable<DataSet> getChildren(DataSet simpleObject) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Iterable<DataSet> getRelated(DataSet simpleObject) {
+        return new ArrayList<>();
     }
 }
