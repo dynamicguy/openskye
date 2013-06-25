@@ -1,14 +1,11 @@
 package com.infobelt.skye.platform;
 
-import java.util.UUID;
-
 /**
  * Represents a named tag that can be associated with {@link SimpleObject}
  */
 public class Tag {
 
     private String name;
-    private UUID id;
 
     public String getName() {
         return name;
@@ -18,11 +15,8 @@ public class Tag {
         this.name = name;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Tag) ? ((Tag) obj).getName().equals(getName()) : false;
     }
 }
