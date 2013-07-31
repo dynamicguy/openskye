@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "DOMAIN_ARCHIVE_STORE")
-public class DomainArchiveStore extends AbstractDomainObject {
+public class DomainArchiveStore {
 
     private Domain domain;
     private ArchiveStoreInstance archiveStoreInstance;

@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PERMISSION")
-public class Permission extends AbstractDomainObject {
+public class Permission {
 
 
 }

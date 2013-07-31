@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PROJECT")
-public class Project extends AbstractDomainObject {
+public class Project {
 
     private Domain domain;
     private String name;

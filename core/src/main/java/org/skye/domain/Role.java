@@ -8,5 +8,5 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ROLE")
-public class Role extends AbstractDomainObject {
+public class Role {
 }

@@ -12,10 +12,19 @@ import java.util.Set;
  */
 public abstract class SimpleObject {
 
+    private String id;
     private String path;
     private Set<Tag> tags = new HashSet<>();
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public boolean isContainer() {
         return container;

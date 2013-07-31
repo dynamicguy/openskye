@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TASK_LOG")
-public class TaskLog extends AbstractDomainObject {
+public class TaskLog {
 
     private Task task;
 

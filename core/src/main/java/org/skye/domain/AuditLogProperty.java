@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "AUDIT_LOG_PROPERTY")
-public class AuditLogProperty extends AbstractDomainObject {
+public class AuditLogProperty {
 
     private AuditLog auditLog;
     private String propertyName;

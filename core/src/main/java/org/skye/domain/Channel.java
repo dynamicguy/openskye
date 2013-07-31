@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "CHANNEL")
-public class Channel extends AbstractDomainObject {
+public class Channel {
 
     private Project project;
     private String name;

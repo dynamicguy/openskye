@@ -8,7 +8,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "USER_ROLE")
-public class UserRole extends AbstractDomainObject {
+public class UserRole {
 
     private User user;
     private Role role;
