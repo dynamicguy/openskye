@@ -1,11 +1,14 @@
 package org.skye.resource.dao;
 
+import org.hibernate.SessionFactory;
+import org.skye.domain.Domain;
+
 /**
- * Created with IntelliJ IDEA.
- * User: pdodds
- * Date: 7/31/13
- * Time: 2:29 PM
- * To change this template use File | Settings | File Templates.
+ * DAO for the {@link Domain}
  */
-public class DomainDao {
+public class DomainDAO extends AbstractPaginatingDAO<Domain> {
+
+    public DomainDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 }

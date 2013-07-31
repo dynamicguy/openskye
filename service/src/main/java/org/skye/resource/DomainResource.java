@@ -1,11 +1,17 @@
 package org.skye.resource;
 
+import org.skye.domain.Domain;
+import org.skye.resource.dao.AbstractPaginatingDAO;
+
+import javax.ws.rs.Path;
+
 /**
- * Created with IntelliJ IDEA.
- * User: pdodds
- * Date: 7/31/13
- * Time: 2:30 PM
- * To change this template use File | Settings | File Templates.
+ * The REST endpoint for {@link Domain}
  */
-public class DomainResource {
+@Path("/api/1/domains")
+public class DomainResource extends AbstractDomainResource<Domain> {
+
+    public DomainResource(AbstractPaginatingDAO<Domain> dao) {
+        super(dao);
+    }
 }

@@ -13,6 +13,9 @@ import java.util.Properties;
 public class SkyePlatform {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SkyePlatform.class);
+    private String release = "unknown";
+    private String version = "unknown";
+    private String status = "unknown";
 
     public SkyePlatform() {
         Properties prop = new Properties();
@@ -21,22 +24,27 @@ public class SkyePlatform {
             InputStream releaseStream = SkyePlatform.class.getClassLoader().getResourceAsStream("skye-release.properties");
             if (releaseStream == null)
                 LOGGER.warn("Unable to find skye-release.properties");
-            else
+            else {
                 prop.load(releaseStream);
+                release = prop.getProperty("release");
+                version = prop.getProperty("version");
+                status = "valid";
+            }
+
         } catch (IOException e) {
             LOGGER.warn("Unable to load release information", e);
         }
     }
 
     public String getRelease() {
-        return "Bowman";
+        return release;
     }
 
     public String getVersion() {
-        return "0.0.1";
+        return version;
     }
 
     public String getStatus() {
-        return "active";
+        return status;
     }
 }

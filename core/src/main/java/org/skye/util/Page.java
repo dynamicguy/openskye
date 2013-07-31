@@ -5,22 +5,23 @@ package org.skye.util;
  */
 public class Page {
 
-    private int pageNumber;
-    private int pageSize;
+    private long pageNumber;
+    private long pageSize;
 
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public int getPageSize() {
+    public long getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(long pageSize) {
         this.pageSize = pageSize;
     }
+
+    public long getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(long pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
 }

@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Resource to provide the current platform version information
  */
-@Path("/platform")
+@Path("/api/1/platform")
 @Produces(MediaType.APPLICATION_JSON)
 public class PlatformResource {
 

@@ -1,11 +1,47 @@
 package org.skye.util;
 
+import java.util.List;
+
 /**
- * Created with IntelliJ IDEA.
- * User: pdodds
- * Date: 7/31/13
- * Time: 2:02 PM
- * To change this template use File | Settings | File Templates.
+ * A utility to handle paginated results
  */
-public class PaginatedResult {
+public class PaginatedResult<T> {
+
+    private long page;
+    private long pageSize;
+    private long totalResults;
+    private List<T> results;
+
+    public long getPage() {
+        return page;
+    }
+
+    public void setPage(long page) {
+        this.page = page;
+    }
+
+    public long getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(long pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public long getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(long totalResults) {
+        this.totalResults = totalResults;
+    }
+
+    public List<T> getResults() {
+        return results;
+    }
+
+    public void setResults(List<T> results) {
+        this.results = results;
+    }
+
 }
