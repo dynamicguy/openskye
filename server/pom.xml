@@ -7,13 +7,20 @@
         <artifactId>platform</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.skye</groupId>
-    <artifactId>skye-cli</artifactId>
 
-    <name>Skye :: CLI tools</name>
+    <groupId>org.skye</groupId>
+    <artifactId>skye-server</artifactId>
+
+    <name>Skye :: Server</name>
 
     <dependencies>
 
+        <!-- Leverage DropWizard for server -->
+        <dependency>
+            <groupId>com.yammer.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <version>0.6.2</version>
+        </dependency>
     </dependencies>
 
 </project>
