@@ -1,8 +1,7 @@
 package org.skye.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -10,13 +9,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUDIT_LOG")
-public class AuditLog {
+public class AuditLog extends AbstractDomainObject {
 
-    @Id
-    @GeneratedValue(generator = "hibernate-uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
-    private String id;
     private User user;
     private String auditEntity;
     private AuditEvent auditEvent;

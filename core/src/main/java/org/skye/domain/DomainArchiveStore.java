@@ -1,31 +1,17 @@
 package org.skye.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * A {@link Domain} owned {@link ArchiveStoreInstance}
  */
 @Entity
 @Table(name = "DOMAIN_ARCHIVE_STORE")
-public class DomainArchiveStore {
+public class DomainArchiveStore extends AbstractDomainObject {
 
-    @Id
-    @GeneratedValue(generator = "hibernate-uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
-    private String id;
     private Domain domain;
     private ArchiveStoreInstance archiveStoreInstance;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Domain getDomain() {
         return domain;

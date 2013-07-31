@@ -21,6 +21,7 @@
             <artifactId>dropwizard-core</artifactId>
             <version>0.6.2</version>
         </dependency>
+
     </dependencies>
 
 </project>

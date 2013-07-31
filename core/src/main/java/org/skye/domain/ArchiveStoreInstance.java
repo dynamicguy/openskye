@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import com.google.common.base.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,12 +10,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "ARCHIVE_STORE_INSTANCE")
-public class ArchiveStoreInstance {
-
-    @Id
-    @GeneratedValue(generator = "hibernate-uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
-    private String id;
+public class ArchiveStoreInstance extends AbstractDomainObject {
 
 }

@@ -1,33 +1,18 @@
 package org.skye.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * A set of properties for an {@link AuditLog}
  */
 @Entity
 @Table(name = "AUDIT_LOG_PROPERTY")
-public class AuditLogProperty {
+public class AuditLogProperty extends AbstractDomainObject {
 
-    @Id
-    @GeneratedValue(generator = "hibernate-uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
-    private String id;
     private AuditLog auditLog;
     private String propertyName;
     private String propertyValue;
-
-    public String getId() {
-
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public AuditLog getAuditLog() {
         return auditLog;

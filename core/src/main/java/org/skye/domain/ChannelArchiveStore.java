@@ -1,21 +1,15 @@
 package org.skye.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * The representation of a relationship that exists between a channel and an archive store
  */
 @Entity
 @Table(name = "CHANNEL")
-public class ChannelArchiveStore {
+public class ChannelArchiveStore extends AbstractDomainObject {
 
-    @Id
-    @GeneratedValue(generator = "hibernate-uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
-    private String id;
     private Channel channel;
     private DomainArchiveStore domainArchiveStore;
 
@@ -33,14 +27,6 @@ public class ChannelArchiveStore {
 
     public void setChannel(Channel channel) {
         this.channel = channel;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
 }

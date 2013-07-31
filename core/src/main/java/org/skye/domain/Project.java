@@ -1,31 +1,17 @@
 package org.skye.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * A project
  */
 @Entity
 @Table(name = "PROJECT")
-public class Project {
+public class Project extends AbstractDomainObject {
 
-    @Id
-    @GeneratedValue(generator = "hibernate-uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
-    private String id;
     private Domain domain;
     private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Domain getDomain() {
         return domain;
