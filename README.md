@@ -21,6 +21,13 @@ You should then be able to simply run:
 
      mvn clean install
 
+Running
+-
+
+In order to get a basic server running simply build, then
+
+     java -jar service/target/skye-service-0.0.1-SNAPSHOT.jar server service/skye.yml
+
 Getting Involved
 -
 
