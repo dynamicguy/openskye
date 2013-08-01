@@ -6,6 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.skye.util.PaginatedResult;
 
+import java.io.Serializable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -45,11 +47,42 @@ public class AbstractPaginatingDAO<T> {
     }
 
     /**
+     * Persists the instance
+     *
+     * @param newInstance
+     * @return
+     */
+    public T persist(T newInstance) {
+        currentSession().persist(newInstance);
+        return newInstance;
+    }
+
+    /**
      * Returns the current {@link org.hibernate.Session}.
      *
      * @return the current session
      */
     protected Session currentSession() {
         return sessionFactory.getCurrentSession();
+    }
+
+    /**
+     * Return the persistent instance of {@code <E>} with the given identifier, or {@code null} if
+     * there is no such persistent instance. (If the instance, or a proxy for the instance, is
+     * already associated with the session, return that instance or proxy.)
+     *
+     * @param id an identifier
+     * @return a persistent instance or {@code null}
+     * @throws org.hibernate.HibernateException
+     *
+     * @see Session#get(Class, Serializable)
+     */
+    @SuppressWarnings("unchecked")
+    public T get(String id) {
+        return (T) currentSession().get(entityClass, checkNotNull(id));
+    }
+
+    public void delete(String id) {
+        currentSession().delete(currentSession().get(entityClass, checkNotNull(id)));
     }
 }

@@ -1,7 +1,8 @@
 package org.skye.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**
  * Relationship between {@link User} and {@link Role}
@@ -10,8 +11,25 @@ import javax.persistence.Table;
 @Table(name = "USER_ROLE")
 public class UserRole {
 
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(unique = true)
+    protected String id;
+
+    @ManyToOne
     private User user;
+
+    @ManyToOne
     private Role role;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public User getUser() {
         return user;

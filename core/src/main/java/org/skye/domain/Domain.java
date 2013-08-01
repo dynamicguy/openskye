@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A domain represents a top level entity within the organization
@@ -18,6 +20,16 @@ public class Domain {
     @Column(unique = true)
     protected String id;
     private String name;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Project> projects = new ArrayList<>();
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
 
     public String getId() {
         return id;

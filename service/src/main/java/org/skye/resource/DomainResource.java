@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
  * The REST endpoint for {@link Domain}
  */
 @Path("/api/1/domains")
-public class DomainResource extends AbstractDomainResource<Domain> {
+public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
     public DomainResource(AbstractPaginatingDAO<Domain> dao) {
         super(dao);

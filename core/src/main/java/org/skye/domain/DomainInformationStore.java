@@ -1,7 +1,8 @@
 package org.skye.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**
  * The representation of an information store owned by a {@link Domain}
@@ -10,7 +11,21 @@ import javax.persistence.Table;
 @Table(name = "DOMAIN_INFORMATION_STORE")
 public class DomainInformationStore {
 
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(unique = true)
+    protected String id;
+    @ManyToOne
     private Domain domain;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Domain getDomain() {
         return domain;

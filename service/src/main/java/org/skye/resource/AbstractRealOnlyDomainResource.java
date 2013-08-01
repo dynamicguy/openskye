@@ -6,6 +6,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -14,11 +15,11 @@ import javax.ws.rs.core.MediaType;
  * domain objects persisted in hibernate
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractDomainResource<T> {
+public abstract class AbstractRealOnlyDomainResource<T> {
 
     private AbstractPaginatingDAO<T> dao;
 
-    public AbstractDomainResource(AbstractPaginatingDAO<T> dao) {
+    public AbstractRealOnlyDomainResource(AbstractPaginatingDAO<T> dao) {
         this.dao = dao;
     }
 
@@ -27,6 +28,14 @@ public abstract class AbstractDomainResource<T> {
     @UnitOfWork
     public PaginatedResult<T> getAll() {
         return dao.list();
+    }
+
+    @Path("/{id}")
+    @GET
+    @UnitOfWork
+    public T get(@PathParam("id") String id) {
+        // TODO need to do the merge here?
+        return dao.get(id);
     }
 
 }

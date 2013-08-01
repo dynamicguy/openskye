@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class ArchiveStoreInstance {
 
     @Id
-    @GeneratedValue(generator = "hibernate-uuid")
+    @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;

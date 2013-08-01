@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,14 +15,16 @@ import java.util.List;
 public class AuditLog {
 
     @Id
-    @GeneratedValue(generator = "hibernate-uuid")
+    @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
     private User user;
     private String auditEntity;
     private AuditEvent auditEvent;
-    private List<AuditLogProperty> auditLogProperties;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<AuditLogProperty> auditLogProperties = new ArrayList<>();
 
     public String getId() {
         return id;

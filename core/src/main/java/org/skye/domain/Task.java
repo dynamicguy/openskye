@@ -1,7 +1,8 @@
 package org.skye.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**
  * A Task
@@ -10,4 +11,17 @@ import javax.persistence.Table;
 @Table(name = "TASK")
 public class Task {
 
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(unique = true)
+    protected String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
