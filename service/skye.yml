@@ -38,3 +38,8 @@ database:
 
   # the maximum lifetime of an idle connection
   closeConnectionIfIdleFor: 1 minute
+
+http:
+    contextParameters:
+        swagger.api.basepath: http://localhost:8080
+        api.version: 1.0

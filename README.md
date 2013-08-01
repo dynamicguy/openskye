@@ -28,6 +28,10 @@ In order to get a basic server running simply build, then
 
      java -jar service/target/skye-service-0.0.1-SNAPSHOT.jar server service/skye.yml
 
+Once the server is running you should be able to visit [http://localhost:8080/explore/index.html](http://localhost:8080/explore/index.html) to see the REST endpoints for the running instance.
+
+![screen](https://raw.github.com/infobelt/skye/master/screenshot.png)
+
 Getting Involved
 -
 
