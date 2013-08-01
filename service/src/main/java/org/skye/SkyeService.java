@@ -1,6 +1,7 @@
 package org.skye;
 
 import com.yammer.dropwizard.Service;
+import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
@@ -33,6 +34,9 @@ public class SkyeService extends Service<SkyeConfiguration> {
     public void initialize(Bootstrap<SkyeConfiguration> bootstrap) {
         bootstrap.setName("skye");
         bootstrap.addBundle(hibernate);
+
+        // We will pick up the Doclet generated swagger configuration
+        bootstrap.addBundle(new AssetsBundle("/apidocs", "/apidocs", "index.html"));
     }
 
     @Override
@@ -43,6 +47,7 @@ public class SkyeService extends Service<SkyeConfiguration> {
         environment.addResource(new ChannelResource(new ChannelDAO(hibernate.getSessionFactory())));
         environment.addResource(new UserResource(new UserDAO(hibernate.getSessionFactory())));
         environment.addResource(new ProjectResource(new ProjectDAO(hibernate.getSessionFactory())));
+
 
     }
 
