@@ -12,7 +12,7 @@ Through the course of this lifecycle we will then be able to take a "slice" of t
 Building
 -
 
-[![Build Status](https://travis-ci.org/infobelt/skye.png)](https://travis-ci.org/infobelt/skye)
+[![Build Status](https://travis-ci.org/infobelt/skye.png?branch=master)](https://travis-ci.org/infobelt/skye)
 
 In order to build the Skye platform you will need to have:
 
