@@ -32,6 +32,13 @@
             <version>0.6.2</version>
         </dependency>
 
+        <!-- Guice for DI -->
+        <dependency>
+            <groupId>com.hubspot.dropwizard</groupId>
+            <artifactId>dropwizard-guice</artifactId>
+            <version>0.6.2</version>
+        </dependency>
+
         <!-- H2 for demos -->
         <dependency>
             <groupId>com.h2database</groupId>

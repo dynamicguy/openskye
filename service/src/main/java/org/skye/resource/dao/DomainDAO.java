@@ -1,6 +1,5 @@
 package org.skye.resource.dao;
 
-import org.hibernate.SessionFactory;
 import org.skye.domain.Domain;
 
 /**
@@ -8,7 +7,4 @@ import org.skye.domain.Domain;
  */
 public class DomainDAO extends AbstractPaginatingDAO<Domain> {
 
-    public DomainDAO(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
 }

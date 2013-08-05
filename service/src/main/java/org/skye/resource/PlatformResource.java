@@ -20,7 +20,7 @@ public class PlatformResource {
 
     @GET
     @Timed
-    @ApiOperation(value = "Get platform release information", notes = "An easy way to find the version and build id for the running instance")
+    @ApiOperation(value = "Get platform release information", notes = "An easy way to find the version and build id for the running instance", responseClass = "org.skye.core.SkyePlatform")
     public SkyePlatform getPlatform() {
         return new SkyePlatform();
     }

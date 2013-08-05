@@ -1,6 +1,8 @@
 package org.skye.resource;
 
+import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
+import com.yammer.metrics.annotation.Timed;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 
 import javax.ws.rs.*;
@@ -14,33 +16,32 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnlyDomainResource<T> {
 
-    private AbstractPaginatingDAO<T> dao;
-
-    public AbstractUpdatableDomainResource(AbstractPaginatingDAO<T> dao) {
-        super(dao);
-        this.dao = dao;
-    }
-
+    @ApiOperation(value = "Create a new instance", notes = "Creates a new instance")
     @Path("/")
     @POST
     @UnitOfWork
+    @Timed
     public T create(T newInstance) {
-        return dao.persist(newInstance);
+        return getDAO().persist(newInstance);
     }
 
+    @ApiOperation(value = "Update the instance identified by the identifier", notes = "Updates the instance")
     @Path("/{id}")
     @PUT
     @UnitOfWork
+    @Timed
     public T update(@PathParam("id") String id, T newInstance) {
         // TODO need to do the merge here?
-        return dao.persist(newInstance);
+        return getDAO().persist(newInstance);
     }
 
+    @ApiOperation(value = "Deletes the instance identified by the identifier", notes = "Deletes the instance")
     @Path("/{id}")
     @DELETE
     @UnitOfWork
+    @Timed
     public Response delete(@PathParam("id") String id) {
-        dao.delete(id);
+        getDAO().delete(id);
         return Response.ok().build();
     }
 

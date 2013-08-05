@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.skye.util.PaginatedResult;
 
+import javax.inject.Inject;
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,20 +16,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * more intelligent that the basic one since we will
  * need to include security and also pagination
  */
-public class AbstractPaginatingDAO<T> {
+public abstract class AbstractPaginatingDAO<T> {
 
-    private final SessionFactory sessionFactory;
-    private final Class<?> entityClass;
-
-    /**
-     * Creates a new DAO with a given session provider.
-     *
-     * @param sessionFactory a session provider
-     */
-    public AbstractPaginatingDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = checkNotNull(sessionFactory);
-        this.entityClass = Generics.getTypeParameter(getClass());
-    }
+    @Inject
+    private SessionFactory sessionFactory = null;
+    private Class<?> entityClass = Generics.getTypeParameter(getClass());
 
     public PaginatedResult<T> list() {
         PaginatedResult<T> result = new PaginatedResult<>();

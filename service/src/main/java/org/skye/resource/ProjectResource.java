@@ -1,10 +1,11 @@
 package org.skye.resource;
 
 import com.wordnik.swagger.annotations.Api;
-import org.skye.domain.Domain;
 import org.skye.domain.Project;
 import org.skye.resource.dao.AbstractPaginatingDAO;
+import org.skye.resource.dao.ProjectDAO;
 
+import javax.inject.Inject;
 import javax.ws.rs.Path;
 
 /**
@@ -14,7 +15,11 @@ import javax.ws.rs.Path;
 @Path("/api/1/projects")
 public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
 
-    public ProjectResource(AbstractPaginatingDAO<Project> dao) {
-        super(dao);
+    @Inject
+    private ProjectDAO projectDAO;
+
+    @Override
+    protected AbstractPaginatingDAO<Project> getDAO() {
+        return projectDAO;
     }
 }

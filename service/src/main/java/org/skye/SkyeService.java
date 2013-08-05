@@ -1,5 +1,6 @@
 package org.skye;
 
+import com.hubspot.dropwizard.guice.GuiceBundle;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
@@ -8,11 +9,6 @@ import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.skye.config.SkyeConfiguration;
 import org.skye.domain.*;
-import org.skye.resource.*;
-import org.skye.resource.dao.ChannelDAO;
-import org.skye.resource.dao.DomainDAO;
-import org.skye.resource.dao.ProjectDAO;
-import org.skye.resource.dao.UserDAO;
 import org.skye.util.SwaggerBundle;
 
 /**
@@ -33,8 +29,17 @@ public class SkyeService extends Service<SkyeConfiguration> {
 
     @Override
     public void initialize(Bootstrap<SkyeConfiguration> bootstrap) {
+
         bootstrap.setName("skye");
+
         bootstrap.addBundle(hibernate);
+        GuiceBundle<SkyeConfiguration> guiceBundle = GuiceBundle.<SkyeConfiguration>newBuilder()
+                .addModule(new SkyeModule(hibernate))
+                .enableAutoConfig(getClass().getPackage().getName())
+                .setConfigClass(SkyeConfiguration.class)
+                .build();
+
+        bootstrap.addBundle(guiceBundle);
         bootstrap.addBundle(new SwaggerBundle());
         bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
     }
@@ -42,11 +47,6 @@ public class SkyeService extends Service<SkyeConfiguration> {
     @Override
     public void run(SkyeConfiguration configuration,
                     Environment environment) {
-        environment.addResource(new PlatformResource());
-        environment.addResource(new DomainResource(new DomainDAO(hibernate.getSessionFactory())));
-        environment.addResource(new ChannelResource(new ChannelDAO(hibernate.getSessionFactory())));
-        environment.addResource(new UserResource(new UserDAO(hibernate.getSessionFactory())));
-        environment.addResource(new ProjectResource(new ProjectDAO(hibernate.getSessionFactory())));
     }
 
 }

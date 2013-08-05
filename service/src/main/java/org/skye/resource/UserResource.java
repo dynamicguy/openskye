@@ -3,7 +3,9 @@ package org.skye.resource;
 import com.wordnik.swagger.annotations.Api;
 import org.skye.domain.User;
 import org.skye.resource.dao.AbstractPaginatingDAO;
+import org.skye.resource.dao.UserDAO;
 
+import javax.inject.Inject;
 import javax.ws.rs.Path;
 
 /**
@@ -13,7 +15,11 @@ import javax.ws.rs.Path;
 @Path("/api/1/users")
 public class UserResource extends AbstractUpdatableDomainResource<User> {
 
-    public UserResource(AbstractPaginatingDAO<User> dao) {
-        super(dao);
+    @Inject
+    private UserDAO userDAO;
+
+    @Override
+    protected AbstractPaginatingDAO<User> getDAO() {
+        return userDAO;
     }
 }
