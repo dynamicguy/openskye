@@ -6,6 +6,6 @@ import javax.ws.rs.Path;
 
 @Path("/api-docs")
 @Api("/api-docs")
-class ApiListingResourceJSON extends com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON {
+public class ApiListingResourceJSON extends com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON {
 
 }

@@ -3,7 +3,6 @@ package org.skye.resource;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
-import org.skye.resource.dao.AbstractPaginatingDAO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,7 +16,6 @@ import javax.ws.rs.core.Response;
 public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnlyDomainResource<T> {
 
     @ApiOperation(value = "Create a new instance", notes = "Creates a new instance")
-    @Path("/")
     @POST
     @UnitOfWork
     @Timed

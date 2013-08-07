@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "TASK")
+@Data
 public class Task {
 
     @Id
@@ -16,12 +18,4 @@ public class Task {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

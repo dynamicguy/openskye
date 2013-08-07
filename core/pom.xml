@@ -13,12 +13,6 @@
     <name>Skye :: Core</name>
 
     <dependencies>
-        <!-- Security -->
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-core</artifactId>
-            <version>1.2.2</version>
-        </dependency>
 
         <!-- Domain persistence -->
         <dependency>
@@ -38,6 +32,13 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
+        </dependency>
+
+        <!-- Lets use Lombok to try and make the Java code a little easier -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>0.12.0</version>
         </dependency>
     </dependencies>
 

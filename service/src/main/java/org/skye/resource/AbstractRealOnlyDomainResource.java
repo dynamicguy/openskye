@@ -22,7 +22,6 @@ public abstract class AbstractRealOnlyDomainResource<T> {
     protected abstract AbstractPaginatingDAO<T> getDAO();
 
     @ApiOperation(value = "Return all", notes = "Returns a list of all")
-    @Path("/")
     @GET
     @UnitOfWork
     @Timed

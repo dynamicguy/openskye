@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ROLE")
+@Data
 public class Role {
 
     @Id
@@ -21,19 +23,4 @@ public class Role {
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Permission> permissions = new ArrayList<>();
 
-    public List<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

@@ -1,6 +1,6 @@
 package org.skye.domain;
 
-import com.google.common.base.Objects;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUDIT_LOG")
+@Data
 public class AuditLog {
 
     @Id
@@ -22,62 +23,7 @@ public class AuditLog {
     private User user;
     private String auditEntity;
     private AuditEvent auditEvent;
-
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<AuditLogProperty> auditLogProperties = new ArrayList<>();
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof AuditLog) {
-            final AuditLog other = (AuditLog) obj;
-            return Objects.equal(id, other.id);
-        } else {
-            return false;
-        }
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getAuditEntity() {
-        return auditEntity;
-    }
-
-    public void setAuditEntity(String auditEntity) {
-        this.auditEntity = auditEntity;
-    }
-
-    public AuditEvent getAuditEvent() {
-        return auditEvent;
-    }
-
-    public void setAuditEvent(AuditEvent auditEvent) {
-        this.auditEvent = auditEvent;
-    }
-
-    public List<AuditLogProperty> getAuditLogProperties() {
-        return auditLogProperties;
-    }
-
-    public void setAuditLogProperties(List<AuditLogProperty> auditLogProperties) {
-        this.auditLogProperties = auditLogProperties;
-    }
 }

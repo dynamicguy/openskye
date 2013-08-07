@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "DOMAIN_ARCHIVE_STORE")
+@Data
 public class DomainArchiveStore {
 
     @Id
@@ -20,28 +22,4 @@ public class DomainArchiveStore {
     private Domain domain;
     @ManyToOne
     private ArchiveStoreInstance archiveStoreInstance;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Domain getDomain() {
-        return domain;
-    }
-
-    public void setDomain(Domain domain) {
-        this.domain = domain;
-    }
-
-    public ArchiveStoreInstance getArchiveStoreInstance() {
-        return archiveStoreInstance;
-    }
-
-    public void setArchiveStoreInstance(ArchiveStoreInstance archiveStoreInstance) {
-        this.archiveStoreInstance = archiveStoreInstance;
-    }
 }

@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CHANNEL")
+@Data
 public class Channel {
 
     @Id
@@ -24,35 +26,4 @@ public class Channel {
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     private String name;
 
-    public List<ChannelArchiveStore> getChannelArchiveStores() {
-        return channelArchiveStores;
-    }
-
-    public void setChannelArchiveStores(List<ChannelArchiveStore> channelArchiveStores) {
-        this.channelArchiveStores = channelArchiveStores;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

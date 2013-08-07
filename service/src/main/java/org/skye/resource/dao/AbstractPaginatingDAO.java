@@ -19,7 +19,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class AbstractPaginatingDAO<T> {
 
     @Inject
-    private SessionFactory sessionFactory = null;
+    private SessionFactory sessionFactory;
+
     private Class<?> entityClass = Generics.getTypeParameter(getClass());
 
     public PaginatedResult<T> list() {

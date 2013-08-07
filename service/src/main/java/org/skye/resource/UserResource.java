@@ -4,6 +4,7 @@ import com.wordnik.swagger.annotations.Api;
 import org.skye.domain.User;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.UserDAO;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -13,6 +14,7 @@ import javax.ws.rs.Path;
  */
 @Api(value = "/api/1/users", description = "Manage users")
 @Path("/api/1/users")
+@Service
 public class UserResource extends AbstractUpdatableDomainResource<User> {
 
     @Inject

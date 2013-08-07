@@ -7,7 +7,7 @@ import com.yammer.dropwizard.config.Environment;
 public class SwaggerBundle extends AssetsBundle {
 
     public SwaggerBundle() {
-        super("/swagger");
+        super("/thisdoesnothing");
     }
 
     @Override

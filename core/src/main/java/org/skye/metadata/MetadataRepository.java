@@ -49,5 +49,4 @@ public interface MetadataRepository {
      */
     Iterable<SimpleObject> search(Domain domain, Project project, String query, Page page);
 
-
 }

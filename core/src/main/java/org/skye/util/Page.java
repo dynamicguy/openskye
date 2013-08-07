@@ -1,27 +1,14 @@
 package org.skye.util;
 
+import lombok.Data;
+
 /**
  * A simple representation of a page
  */
+@Data
 public class Page {
 
     private long pageNumber;
     private long pageSize;
-
-    public long getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(long pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public long getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(long pageNumber) {
-        this.pageNumber = pageNumber;
-    }
 
 }

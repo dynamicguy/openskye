@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "CHANNEL")
+@Data
 public class ChannelArchiveStore {
 
     @Id
@@ -20,29 +22,5 @@ public class ChannelArchiveStore {
     private Channel channel;
     @ManyToOne
     private DomainArchiveStore domainArchiveStore;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public DomainArchiveStore getDomainArchiveStore() {
-        return domainArchiveStore;
-    }
-
-    public void setDomainArchiveStore(DomainArchiveStore domainArchiveStore) {
-        this.domainArchiveStore = domainArchiveStore;
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
 
 }

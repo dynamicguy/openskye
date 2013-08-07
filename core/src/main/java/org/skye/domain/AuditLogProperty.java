@@ -1,5 +1,7 @@
 package org.skye.domain;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -8,33 +10,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "AUDIT_LOG_PROPERTY")
+@Data
 public class AuditLogProperty {
 
     private AuditLog auditLog;
     private String propertyName;
     private String propertyValue;
 
-    public AuditLog getAuditLog() {
-        return auditLog;
-    }
-
-    public void setAuditLog(AuditLog auditLog) {
-        this.auditLog = auditLog;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
-
-    public String getPropertyValue() {
-        return propertyValue;
-    }
-
-    public void setPropertyValue(String propertyValue) {
-        this.propertyValue = propertyValue;
-    }
 }
