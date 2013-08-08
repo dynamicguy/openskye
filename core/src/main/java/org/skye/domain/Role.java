@@ -22,5 +22,6 @@ public class Role {
     protected String id;
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Permission> permissions = new ArrayList<>();
+    private String name;
 
 }
