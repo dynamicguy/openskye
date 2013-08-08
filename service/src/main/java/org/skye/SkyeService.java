@@ -13,6 +13,7 @@ import org.apache.shiro.web.servlet.ShiroFilter;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.skye.config.SkyeConfiguration;
 import org.skye.domain.*;
+import org.skye.util.SwaggerBundle;
 
 /**
  * The Skye Service
@@ -41,7 +42,8 @@ public class SkyeService extends Service<SkyeConfiguration> {
                 .setConfigClass(SkyeConfiguration.class)
                 .build();
         bootstrap.addBundle(guiceBundle);
-        bootstrap.addBundle(new AssetsBundle("/apidocs", "/apidocs", "index.html"));
+        bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
+        bootstrap.addBundle(new SwaggerBundle());
 
     }
 

@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
@@ -23,6 +24,7 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     protected abstract String getPermissionDomain();
 
+    @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure")
     @GET
     @UnitOfWork
     @Timed
@@ -34,6 +36,7 @@ public abstract class AbstractRealOnlyDomainResource<T> {
         }
     }
 
+    @ApiOperation(value = "Find by id", notes = "Return an instance by id")
     @Path("/{id}")
     @GET
     @UnitOfWork
