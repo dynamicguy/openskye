@@ -1,6 +1,7 @@
 package org.skye.metadata;
 
 import com.google.common.base.Optional;
+import org.skye.core.ArchiveContentBlock;
 import org.skye.core.SimpleObject;
 import org.skye.domain.Domain;
 import org.skye.domain.Project;
@@ -10,8 +11,7 @@ import org.skye.util.Page;
  * This is the standard interface to allow the storage and searching of {@link SimpleObject} instances
  * that have been discovered
  */
-public interface MetadataRepository {
-
+public interface ObjectMetadataRepository {
 
     /**
      * Gets the details of a single simple object
@@ -48,5 +48,13 @@ public interface MetadataRepository {
      * @return The resulting {@link SimpleObject}s
      */
     Iterable<SimpleObject> search(Domain domain, Project project, String query, Page page);
+
+    /**
+     * Returns a
+     *
+     * @param simpleObject
+     * @return
+     */
+    Iterable<ArchiveContentBlock> getArchiveContentBlocks(SimpleObject simpleObject);
 
 }
