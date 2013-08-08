@@ -2,10 +2,10 @@ package org.skye.resource;
 
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
+import org.apache.shiro.SecurityUtils;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.util.PaginatedResult;
 
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,11 +21,17 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     protected abstract AbstractPaginatingDAO<T> getDAO();
 
+    protected abstract String getPermissionDomain();
+
     @GET
     @UnitOfWork
     @Timed
     public PaginatedResult<T> getAll() {
-        return getDAO().list();
+        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":list")) {
+            return getDAO().list();
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @Path("/{id}")
@@ -34,7 +40,12 @@ public abstract class AbstractRealOnlyDomainResource<T> {
     @Timed
     public T get(@PathParam("id") String id) {
         // TODO need to do the merge here?
-        return getDAO().get(id);
+        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":get")) {
+            return getDAO().get(id);
+        } else {
+            throw new UnauthorizedException();
+        }
+
     }
 
 }

@@ -20,4 +20,9 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
     protected AbstractPaginatingDAO<Project> getDAO() {
         return projectDAO;
     }
+
+    @Override
+    protected String getPermissionDomain() {
+        return "project";
+    }
 }

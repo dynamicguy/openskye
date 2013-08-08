@@ -52,7 +52,8 @@ public class SkyeService extends Service<SkyeConfiguration> {
         // Lets set-up the security
         environment.setSessionHandler(new SessionHandler());
         environment.addServletListeners(new EnvironmentLoaderListener());
-        environment.addFilter(new ShiroFilter(), "/*").setName("shiro-filter");
+        ShiroFilter shiroFilter = new ShiroFilter();
+        environment.addFilter(shiroFilter, "/api/1/*").setName("shiro-filter");
     }
 
 }

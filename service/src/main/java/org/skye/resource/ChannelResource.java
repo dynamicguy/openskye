@@ -20,4 +20,9 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     protected AbstractPaginatingDAO<Channel> getDAO() {
         return channelDAO;
     }
+
+    @Override
+    protected String getPermissionDomain() {
+        return "channel";
+    }
 }

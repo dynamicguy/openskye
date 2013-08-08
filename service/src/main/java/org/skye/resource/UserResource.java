@@ -20,4 +20,9 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     protected AbstractPaginatingDAO<User> getDAO() {
         return userDAO;
     }
+
+    @Override
+    protected String getPermissionDomain() {
+        return "user";
+    }
 }

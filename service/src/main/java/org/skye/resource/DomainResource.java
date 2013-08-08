@@ -23,4 +23,9 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     protected AbstractPaginatingDAO<Domain> getDAO() {
         return domainDAO;
     }
+
+    @Override
+    protected String getPermissionDomain() {
+        return "domain";
+    }
 }

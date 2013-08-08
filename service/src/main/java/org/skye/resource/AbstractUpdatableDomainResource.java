@@ -2,6 +2,7 @@ package org.skye.resource;
 
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
+import org.apache.shiro.SecurityUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,7 +19,11 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
     @UnitOfWork
     @Timed
     public T create(T newInstance) {
-        return getDAO().persist(newInstance);
+        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":create")) {
+            return getDAO().persist(newInstance);
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @Path("/{id}")
@@ -27,7 +32,11 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
     @Timed
     public T update(@PathParam("id") String id, T newInstance) {
         // TODO need to do the merge here?
-        return getDAO().persist(newInstance);
+        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":update")) {
+            return getDAO().persist(newInstance);
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @Path("/{id}")
@@ -35,7 +44,12 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
     @UnitOfWork
     @Timed
     public Response delete(@PathParam("id") String id) {
-        getDAO().delete(id);
-        return Response.ok().build();
+        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":delete")) {
+            getDAO().delete(id);
+            return Response.ok().build();
+        } else {
+            throw new UnauthorizedException();
+        }
+
     }
 }

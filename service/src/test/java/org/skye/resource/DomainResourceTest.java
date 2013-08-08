@@ -1,6 +1,8 @@
 package org.skye.resource;
 
 import com.yammer.dropwizard.testing.ResourceTest;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.Domain;
 import org.skye.resource.dao.DomainDAO;
@@ -19,12 +21,13 @@ public class DomainResourceTest extends ResourceTest {
         DomainResource domainResource = new DomainResource();
         domainResource.domainDAO = dao;
         addResource(domainResource);
+        ThreadContext.bind(new IniSecurityManagerFactory("classpath:shiro-mock.ini").getInstance());
     }
 
     @Test
     public void simpleResourceTest() throws Exception {
-        assertThat(client().resource("/api/1/domains/1").get(Domain.class))
+        assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(Domain.class))
                 .isEqualTo(domain);
-        verify(dao).get("1");
+        verify(dao).get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
 }
