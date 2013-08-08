@@ -1,0 +1,9 @@
+{
+    "id": null,
+    "username": null,
+    "email": null,
+    "name": "Example",
+    "passwordHash": null,
+    "domain": null,
+    "userRoles": []
+}
