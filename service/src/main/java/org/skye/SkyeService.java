@@ -34,16 +34,21 @@ public class SkyeService extends Service<SkyeConfiguration> {
 
     @Override
     public void initialize(Bootstrap<SkyeConfiguration> bootstrap) {
+
         bootstrap.setName("skye");
         bootstrap.addBundle(hibernate);
-        GuiceBundle<SkyeConfiguration> guiceBundle = GuiceBundle.<SkyeConfiguration>newBuilder()
+        bootstrap.addBundle(buildGuiceBundle());
+        bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
+        bootstrap.addBundle(new SwaggerBundle());
+
+    }
+
+    public GuiceBundle buildGuiceBundle() {
+        return GuiceBundle.<SkyeConfiguration>newBuilder()
                 .addModule(new SkyeTestModule(hibernate))
                 .enableAutoConfig(getClass().getPackage().getName())
                 .setConfigClass(SkyeConfiguration.class)
                 .build();
-        bootstrap.addBundle(guiceBundle);
-        bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
-        bootstrap.addBundle(new SwaggerBundle());
 
     }
 
