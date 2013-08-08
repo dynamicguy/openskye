@@ -1,5 +1,7 @@
 package org.skye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUDIT_LOG")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuditLog {
 
     @Id
@@ -24,6 +27,7 @@ public class AuditLog {
     private String auditEntity;
     private AuditEvent auditEvent;
     @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<AuditLogProperty> auditLogProperties = new ArrayList<>();
 
 }
