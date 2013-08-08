@@ -2,6 +2,8 @@ package org.skye.domain;
 
 import org.junit.Test;
 
+import java.util.UUID;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.asJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,6 +18,7 @@ public class UserTest {
     @Test
     public void serializesToJSON() throws Exception {
         final User user = new User();
+        user.setId("c324e70b-1873-4689-a13f-506571d473d3");
         user.setName("Example");
         assertThat("a User can be serialized to JSON",
                 asJson(user),

@@ -2,6 +2,8 @@ package org.skye.domain;
 
 import org.junit.Test;
 
+import java.util.UUID;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.asJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,6 +18,7 @@ public class RolePermissionTest {
     @Test
     public void serializesToJSON() throws Exception {
         final RolePermission rolePermission = new RolePermission();
+        rolePermission.setId("ac3273e1-1133-4662-85ab-fcc151b56807");
         assertThat("a RolePermission can be serialized to JSON",
                 asJson(rolePermission),
                 is(equalTo(jsonFixture("fixtures/rolePermission.json"))));

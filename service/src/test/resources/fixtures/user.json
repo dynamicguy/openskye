@@ -1,9 +1,4 @@
 {
-    "id": null,
-    "username": null,
-    "email": null,
-    "name": "Example",
-    "passwordHash": null,
-    "domain": null,
-    "userRoles": []
+    "id": "c324e70b-1873-4689-a13f-506571d473d3",
+    "name": "Example"
 }

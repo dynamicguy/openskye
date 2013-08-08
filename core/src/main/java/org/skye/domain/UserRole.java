@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "USER_ROLE")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRole {
 
     @Id

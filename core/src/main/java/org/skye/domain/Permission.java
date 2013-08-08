@@ -1,5 +1,6 @@
 package org.skye.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PERMISSION")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Permission {
 
     @Id

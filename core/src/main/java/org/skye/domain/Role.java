@@ -1,5 +1,7 @@
 package org.skye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "ROLE")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Role {
 
     @Id
@@ -21,6 +24,7 @@ public class Role {
     @Column(unique = true)
     protected String id;
     @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<Permission> permissions = new ArrayList<>();
     private String name;
 

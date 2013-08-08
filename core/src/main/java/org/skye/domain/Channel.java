@@ -1,5 +1,7 @@
 package org.skye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "CHANNEL")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Channel {
 
     @Id
@@ -23,6 +26,7 @@ public class Channel {
     @ManyToOne
     private Project project;
     @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     private String name;
 
