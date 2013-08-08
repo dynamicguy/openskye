@@ -10,7 +10,6 @@ import org.skye.resource.dao.DomainDAO;
 
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class DomainResourceTest extends ResourceTest {
@@ -20,7 +19,7 @@ public class DomainResourceTest extends ResourceTest {
 
     @Override
     protected void setUpResources() {
-        when(dao.get(anyString())).thenReturn(domain);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(domain);
         DomainResource domainResource = new DomainResource();
         domainResource.domainDAO = dao;
         addResource(domainResource);
@@ -38,7 +37,7 @@ public class DomainResourceTest extends ResourceTest {
     @Test
     public void testUnAuthorisedGet() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(anyString())).thenReturn(false);
+        when(subject.isPermitted("domain:get")).thenReturn(false);
         try {
             assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(Domain.class));
             fail("Should be unauthorized");
