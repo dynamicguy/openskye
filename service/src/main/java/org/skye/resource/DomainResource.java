@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
     @Inject
-    private DomainDAO domainDAO;
+    protected DomainDAO domainDAO;
 
     @Override
     protected AbstractPaginatingDAO<Domain> getDAO() {

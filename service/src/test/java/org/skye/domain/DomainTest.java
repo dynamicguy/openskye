@@ -1,7 +1,6 @@
-package org.skye.resource;
+package org.skye.domain;
 
 import org.junit.Test;
-import org.skye.domain.Domain;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.asJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
