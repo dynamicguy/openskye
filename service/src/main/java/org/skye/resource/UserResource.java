@@ -14,7 +14,7 @@ import javax.ws.rs.Path;
 public class UserResource extends AbstractUpdatableDomainResource<User> {
 
     @Inject
-    private UserDAO userDAO;
+    protected UserDAO userDAO;
 
     @Override
     protected AbstractPaginatingDAO<User> getDAO() {

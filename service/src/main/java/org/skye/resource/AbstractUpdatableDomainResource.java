@@ -4,6 +4,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
+import org.skye.util.UnauthorizedException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

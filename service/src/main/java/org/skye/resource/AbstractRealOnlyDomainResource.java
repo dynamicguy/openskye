@@ -6,6 +6,7 @@ import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.util.PaginatedResult;
+import org.skye.util.UnauthorizedException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

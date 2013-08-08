@@ -21,7 +21,7 @@ public class AuditLogTest {
         //auditLog.setId(UUID.randomUUID().toString());
 
         auditLog.setId("9c17a5b3-bbbe-4870-90b2-9f1c6378442e");
-        assertThat("a AuditLog can be serialized to JSON",
+        assertThat("a AuditLogDAO can be serialized to JSON",
                 asJson(auditLog),
                 is(equalTo(jsonFixture("fixtures/auditLog.json"))));
     }
