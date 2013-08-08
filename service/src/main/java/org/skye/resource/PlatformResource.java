@@ -8,11 +8,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+
+@Path("/api/1/platform")
+@Produces(MediaType.APPLICATION_JSON)
 /**
  * Resource to provide the current platform version information
  */
-@Path("/api/1/platform")
-@Produces(MediaType.APPLICATION_JSON)
 public class PlatformResource {
 
     @GET

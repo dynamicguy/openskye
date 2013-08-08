@@ -14,6 +14,9 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/api/1/domains")
 @Produces(MediaType.APPLICATION_JSON)
+/**
+ * Manage domains
+ */
 public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
     @Inject
@@ -28,4 +31,6 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     protected String getPermissionDomain() {
         return "domain";
     }
+
+
 }

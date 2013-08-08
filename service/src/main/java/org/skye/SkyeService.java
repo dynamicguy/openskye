@@ -41,7 +41,7 @@ public class SkyeService extends Service<SkyeConfiguration> {
                 .setConfigClass(SkyeConfiguration.class)
                 .build();
         bootstrap.addBundle(guiceBundle);
-        bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
+        bootstrap.addBundle(new AssetsBundle("/apidocs", "/apidocs", "index.html"));
 
     }
 
