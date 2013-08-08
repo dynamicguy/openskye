@@ -1,4 +1,4 @@
-package org.skye.resource;
+package org.skye.util;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
