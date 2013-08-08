@@ -1,11 +1,11 @@
 package org.skye.resource;
 
-import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,7 +21,6 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     protected abstract AbstractPaginatingDAO<T> getDAO();
 
-    @ApiOperation(value = "Return all", notes = "Returns a list of all")
     @GET
     @UnitOfWork
     @Timed
@@ -29,7 +28,6 @@ public abstract class AbstractRealOnlyDomainResource<T> {
         return getDAO().list();
     }
 
-    @ApiOperation(value = "Return one identified by identifier", notes = "Returns a single instance")
     @Path("/{id}")
     @GET
     @UnitOfWork

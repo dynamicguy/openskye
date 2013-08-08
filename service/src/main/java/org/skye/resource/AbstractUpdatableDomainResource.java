@@ -1,6 +1,5 @@
 package org.skye.resource;
 
-import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 
@@ -15,7 +14,6 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnlyDomainResource<T> {
 
-    @ApiOperation(value = "Create a new instance", notes = "Creates a new instance")
     @POST
     @UnitOfWork
     @Timed
@@ -23,7 +21,6 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
         return getDAO().persist(newInstance);
     }
 
-    @ApiOperation(value = "Update the instance identified by the identifier", notes = "Updates the instance")
     @Path("/{id}")
     @PUT
     @UnitOfWork
@@ -33,7 +30,6 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
         return getDAO().persist(newInstance);
     }
 
-    @ApiOperation(value = "Deletes the instance identified by the identifier", notes = "Deletes the instance")
     @Path("/{id}")
     @DELETE
     @UnitOfWork
@@ -42,6 +38,4 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
         getDAO().delete(id);
         return Response.ok().build();
     }
-
-
 }

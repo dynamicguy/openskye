@@ -39,7 +39,15 @@ database:
   # the maximum lifetime of an idle connection
   closeConnectionIfIdleFor: 1 minute
 
+logging:
+    level: INFO
+    console:
+        enabled: true
+        threshold: DEBUG
+
 http:
+    port: 8080
     contextParameters:
-        swagger.api.basepath: http://localhost:8080
-        api.version: 1.0
+            swagger.api.basepath: http://localhost:8080
+            api.version: 1.0
+            shiroConfigLocations: classpath:shiro-mock.ini

@@ -1,10 +1,8 @@
 package org.skye.resource;
 
-import com.wordnik.swagger.annotations.Api;
 import org.skye.domain.Domain;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.DomainDAO;
-import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -14,10 +12,8 @@ import javax.ws.rs.core.MediaType;
 /**
  * The REST endpoint for {@link Domain}
  */
-@Api(value = "/api/1/domains", description = "Manage domains")
 @Path("/api/1/domains")
 @Produces(MediaType.APPLICATION_JSON)
-@Service
 public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
     @Inject
