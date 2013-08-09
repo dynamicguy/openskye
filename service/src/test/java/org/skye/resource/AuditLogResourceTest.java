@@ -10,6 +10,8 @@ import org.skye.domain.AuditLog;
 import org.skye.resource.dao.AuditLogDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.ws.rs.core.MediaType;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -26,9 +28,24 @@ public class AuditLogResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(auditLog);
+        when(dao.persist(auditLog)).thenReturn(auditLog);
         AuditLogResource auditLogResource = new AuditLogResource();
         auditLogResource.auditLogDAO = dao;
         addResource(auditLogResource);
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLog:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/auditLogs").type(MediaType.APPLICATION_JSON_TYPE).post(AuditLog.class, auditLog)).isEqualTo(auditLog);
+    }
+
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLog:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/auditLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLog).getStatus());
     }
 
     @Test

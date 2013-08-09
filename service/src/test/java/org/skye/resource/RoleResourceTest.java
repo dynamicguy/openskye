@@ -10,6 +10,8 @@ import org.skye.domain.Role;
 import org.skye.resource.dao.RoleDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.ws.rs.core.MediaType;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -26,9 +28,24 @@ public class RoleResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(role);
+        when(dao.persist(role)).thenReturn(role);
         RoleResource roleResource = new RoleResource();
         roleResource.roleDAO = dao;
         addResource(roleResource);
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("role:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/roles").type(MediaType.APPLICATION_JSON_TYPE).post(Role.class, role)).isEqualTo(role);
+    }
+
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("role:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/roles").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, role).getStatus());
     }
 
     @Test

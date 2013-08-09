@@ -3,6 +3,7 @@ package org.skye.resource;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
+import junit.framework.TestCase;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.skye.domain.Domain;
 import org.skye.resource.dao.DomainDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static junit.framework.Assert.assertEquals;
@@ -29,9 +31,24 @@ public class DomainResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(domain);
+        when(dao.persist(domain)).thenReturn(domain);
         DomainResource domainResource = new DomainResource();
         domainResource.domainDAO = dao;
         addResource(domainResource);
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/domains").type(MediaType.APPLICATION_JSON_TYPE).post(Domain.class, domain)).isEqualTo(domain);
+    }
+
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/domains").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, domain).getStatus());
     }
 
     @Test

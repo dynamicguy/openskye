@@ -10,6 +10,8 @@ import org.skye.domain.User;
 import org.skye.resource.dao.UserDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.ws.rs.core.MediaType;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -26,9 +28,24 @@ public class UserResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(user);
+        when(dao.persist(user)).thenReturn(user);
         UserResource userResource = new UserResource();
         userResource.userDAO = dao;
         addResource(userResource);
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("user:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/users").type(MediaType.APPLICATION_JSON_TYPE).post(User.class, user)).isEqualTo(user);
+    }
+
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("user:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/users").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user).getStatus());
     }
 
     @Test

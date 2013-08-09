@@ -11,6 +11,8 @@ import org.skye.domain.Domain;
 import org.skye.resource.dao.ChannelDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.ws.rs.core.MediaType;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -27,9 +29,24 @@ public class ChannelResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(channel);
+        when(dao.persist(channel)).thenReturn(channel);
         ChannelResource channelResource = new ChannelResource();
         channelResource.channelDAO = dao;
         addResource(channelResource);
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("channel:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/channels").type(MediaType.APPLICATION_JSON_TYPE).post(Channel.class, channel)).isEqualTo(channel);
+    }
+
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("channel:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/channels").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, channel).getStatus());
     }
 
     @Test

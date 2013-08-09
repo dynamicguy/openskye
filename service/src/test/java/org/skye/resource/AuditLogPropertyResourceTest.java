@@ -3,6 +3,7 @@ package org.skye.resource;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
+import junit.framework.TestCase;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
@@ -11,6 +12,8 @@ import org.skye.domain.Role;
 import org.skye.resource.dao.AuditLogPropertyDAO;
 import org.skye.resource.dao.RoleDAO;
 import org.skye.util.PaginatedResult;
+
+import javax.ws.rs.core.MediaType;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
@@ -27,11 +30,24 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(auditLogProperty);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
+        when(dao.persist(auditLogProperty)).thenReturn(auditLogProperty);
         AuditLogPropertyResource auditLogPropertyResource = new AuditLogPropertyResource();
         auditLogPropertyResource.auditLogPropertyDAO = dao;
         addResource(auditLogPropertyResource);
     }
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLogProperty:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/auditLogProperties").type(MediaType.APPLICATION_JSON_TYPE).post(AuditLogProperty.class, auditLogProperty)).isEqualTo(auditLogProperty);
+    }
 
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLogProperty:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/auditLogProperties").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLogProperty).getStatus());
+    }
     @Test
     public void testAuthorizedDelete() throws Exception {
         ThreadContext.bind(subject);

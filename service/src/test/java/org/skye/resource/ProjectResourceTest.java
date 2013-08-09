@@ -12,6 +12,8 @@ import org.skye.resource.dao.ProjectDAO;
 import org.skye.resource.dao.UserDAO;
 import org.skye.util.PaginatedResult;
 
+import javax.ws.rs.core.MediaType;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -28,9 +30,24 @@ public class ProjectResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(project);
+        when(dao.persist(project)).thenReturn(project);
         ProjectResource projectResource = new ProjectResource();
         projectResource.projectDAO = dao;
         addResource(projectResource);
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:create")).thenReturn(true);
+        assertThat(client().resource("/api/1/projects").type(MediaType.APPLICATION_JSON_TYPE).post(Project.class, project)).isEqualTo(project);
+    }
+
+    @Test
+    public void testUnAuthorizedPost() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:create")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/projects").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, project).getStatus());
     }
 
     @Test
