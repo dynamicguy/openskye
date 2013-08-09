@@ -7,6 +7,7 @@ import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.TaskLog;
 import org.skye.resource.dao.TaskLogDAO;
+import org.skye.util.PaginatedResult;
 
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -16,13 +17,34 @@ public class TaskLogResourceTest extends ResourceTest {
     private final TaskLog taskLog = new TaskLog();
     private final TaskLogDAO dao = mock(TaskLogDAO.class);
     private final Subject subject = mock(Subject.class);
+    private PaginatedResult<TaskLog> expectedResult = new PaginatedResult<>();
 
     @Override
     protected void setUpResources() {
+        when(dao.list()).thenReturn(expectedResult);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(taskLog);
         TaskLogResource taskLogResource = new TaskLogResource();
         taskLogResource.taskLogDAO = dao;
         addResource(taskLogResource);
+    }
+
+    @Test
+    public void testAuthorizedGetAll() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("taskLog:list")).thenReturn(true);
+        assertThat(client().resource("/api/1/taskLogs").get(PaginatedResult.class)).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testUnAuthorizedGetAll() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("taskLog:list")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/taskLogs").get(PaginatedResult.class)).isEqualTo(expectedResult);
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
     }
 
     @Test

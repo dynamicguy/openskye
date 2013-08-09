@@ -9,6 +9,7 @@ import org.skye.domain.AuditLogProperty;
 import org.skye.domain.Role;
 import org.skye.resource.dao.AuditLogPropertyDAO;
 import org.skye.resource.dao.RoleDAO;
+import org.skye.util.PaginatedResult;
 
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -18,6 +19,7 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
     private final AuditLogProperty auditLogProperty = new AuditLogProperty();
     private final AuditLogPropertyDAO dao = mock(AuditLogPropertyDAO.class);
     private final Subject subject = mock(Subject.class);
+    private PaginatedResult<AuditLogProperty> expectedResult = new PaginatedResult<>();
 
     @Override
     protected void setUpResources() {
@@ -26,6 +28,28 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
         auditLogPropertyResource.auditLogPropertyDAO = dao;
         addResource(auditLogPropertyResource);
     }
+
+
+    @Test
+    public void testAuthorizedGetAll() throws Exception {
+        when(dao.list()).thenReturn(expectedResult);
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLogProperty:list")).thenReturn(true);
+        assertThat(client().resource("/api/1/auditLogProperties").get(PaginatedResult.class)).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testUnAuthorizedGetAll() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLogProperty:list")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/auditLogProperties").get(PaginatedResult.class)).isEqualTo(expectedResult);
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
+    }
+
 
     @Test
     public void testAuthorizedGet() throws Exception {

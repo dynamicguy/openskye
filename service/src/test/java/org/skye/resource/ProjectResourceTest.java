@@ -9,6 +9,7 @@ import org.skye.domain.Project;
 import org.skye.domain.User;
 import org.skye.resource.dao.ProjectDAO;
 import org.skye.resource.dao.UserDAO;
+import org.skye.util.PaginatedResult;
 
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -18,13 +19,34 @@ public class ProjectResourceTest extends ResourceTest {
     private final Project project = new Project();
     private final ProjectDAO dao = mock(ProjectDAO.class);
     private final Subject subject = mock(Subject.class);
+    private PaginatedResult<Project> expectedResult = new PaginatedResult<>();
 
     @Override
     protected void setUpResources() {
+        when(dao.list()).thenReturn(expectedResult);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(project);
         ProjectResource projectResource = new ProjectResource();
         projectResource.projectDAO = dao;
         addResource(projectResource);
+    }
+
+    @Test
+    public void testAuthorizedGetAll() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:list")).thenReturn(true);
+        assertThat(client().resource("/api/1/projects").get(PaginatedResult.class)).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testUnAuthorizedGetAll() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:list")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/projects").get(PaginatedResult.class)).isEqualTo(expectedResult);
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
     }
 
     @Test
