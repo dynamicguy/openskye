@@ -35,6 +35,20 @@ public class RoleResourceTest extends ResourceTest {
     }
 
     @Test
+    public void testAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("role:update")).thenReturn(true);
+        assertThat(client().resource("/api/1/roles/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(Role.class, role)).isEqualTo(role);
+    }
+
+    @Test
+    public void testUnAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("role:update")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/roles/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, role).getStatus());
+    }
+
+    @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("role:create")).thenReturn(true);

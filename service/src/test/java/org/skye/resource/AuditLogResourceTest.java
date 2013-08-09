@@ -33,7 +33,19 @@ public class AuditLogResourceTest extends ResourceTest {
         auditLogResource.auditLogDAO = dao;
         addResource(auditLogResource);
     }
+    @Test
+    public void testAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLog:update")).thenReturn(true);
+        assertThat(client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(AuditLog.class, auditLog)).isEqualTo(auditLog);
+    }
 
+    @Test
+    public void testUnAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLog:update")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLog).getStatus());
+    }
     @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);

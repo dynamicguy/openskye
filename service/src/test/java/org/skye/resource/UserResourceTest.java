@@ -35,6 +35,20 @@ public class UserResourceTest extends ResourceTest {
     }
 
     @Test
+    public void testAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("user:update")).thenReturn(true);
+        assertThat(client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(User.class, user)).isEqualTo(user);
+    }
+
+    @Test
+    public void testUnAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("user:update")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, user).getStatus());
+    }
+
+    @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("user:create")).thenReturn(true);

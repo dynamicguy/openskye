@@ -37,6 +37,20 @@ public class ProjectResourceTest extends ResourceTest {
     }
 
     @Test
+    public void testAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:update")).thenReturn(true);
+        assertThat(client().resource("/api/1/projects/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(Project.class, project)).isEqualTo(project);
+    }
+
+    @Test
+    public void testUnAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:update")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/projects/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, project).getStatus());
+    }
+
+    @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("project:create")).thenReturn(true);

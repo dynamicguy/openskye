@@ -37,6 +37,20 @@ public class PermissionResourceTest extends ResourceTest {
     }
 
     @Test
+    public void testAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("permission:update")).thenReturn(true);
+        assertThat(client().resource("/api/1/permissions/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(Permission.class, permission)).isEqualTo(permission);
+    }
+
+    @Test
+    public void testUnAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("permission:update")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/permissions/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, permission).getStatus());
+    }
+
+    @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("permission:create")).thenReturn(true);

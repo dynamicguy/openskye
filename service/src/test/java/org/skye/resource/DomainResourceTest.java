@@ -38,6 +38,20 @@ public class DomainResourceTest extends ResourceTest {
     }
 
     @Test
+    public void testAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:update")).thenReturn(true);
+        assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(Domain.class, domain)).isEqualTo(domain);
+    }
+
+    @Test
+    public void testUnAuthorizedPut() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:update")).thenReturn(false);
+        assertEquals(401,client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, domain).getStatus());
+    }
+
+    @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("domain:create")).thenReturn(true);
