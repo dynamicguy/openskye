@@ -20,11 +20,11 @@ import javax.ws.rs.core.MediaType;
 public class AuditLogPropertyResource extends AbstractUpdatableDomainResource<AuditLogProperty> {
 
     @Inject
-    protected AuditLogPropertyDAO auditLogPropertiesDAO;
+    protected AuditLogPropertyDAO auditLogPropertyDAO;
 
     @Override
     protected AbstractPaginatingDAO<AuditLogProperty> getDAO() {
-        return auditLogPropertiesDAO;
+        return auditLogPropertyDAO;
     }
 
     @Override

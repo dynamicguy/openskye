@@ -14,7 +14,7 @@ import javax.ws.rs.Path;
 public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
 
     @Inject
-    private ChannelDAO channelDAO;
+    protected ChannelDAO channelDAO;
 
     @Override
     protected AbstractPaginatingDAO<Channel> getDAO() {

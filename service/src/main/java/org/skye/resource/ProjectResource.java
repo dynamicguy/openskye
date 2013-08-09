@@ -14,7 +14,7 @@ import javax.ws.rs.Path;
 public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
 
     @Inject
-    private ProjectDAO projectDAO;
+    protected ProjectDAO projectDAO;
 
     @Override
     protected AbstractPaginatingDAO<Project> getDAO() {
