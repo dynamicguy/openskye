@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
 import org.apache.shiro.subject.Subject;
@@ -9,6 +10,7 @@ import org.skye.domain.TaskLog;
 import org.skye.resource.dao.TaskLogDAO;
 import org.skye.util.PaginatedResult;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -22,6 +24,7 @@ public class TaskLogResourceTest extends ResourceTest {
     @Override
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
+        when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(taskLog);
         TaskLogResource taskLogResource = new TaskLogResource();
         taskLogResource.taskLogDAO = dao;
@@ -45,6 +48,23 @@ public class TaskLogResourceTest extends ResourceTest {
         } catch (UniformInterfaceException e) {
             assertThat(e).hasMessage("Client response status: 401");
         }
+    }
+
+    @Test
+    public void testAuthorizedDelete() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("taskLog:delete")).thenReturn(true);
+        ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
+        assertEquals(200,response.getStatus());
+
+        verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+    @Test
+    public void testUnAuthorisedDelete() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("task:delete")).thenReturn(false);
+        ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
+        assertEquals(401,response.getStatus());
     }
 
     @Test

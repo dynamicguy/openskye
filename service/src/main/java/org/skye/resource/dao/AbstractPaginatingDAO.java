@@ -20,7 +20,6 @@ public abstract class AbstractPaginatingDAO<T> {
 
     @Inject
     private SessionFactory sessionFactory;
-
     private Class<?> entityClass = Generics.getTypeParameter(getClass());
 
     public PaginatedResult<T> list() {
@@ -75,7 +74,11 @@ public abstract class AbstractPaginatingDAO<T> {
         return (T) currentSession().get(entityClass, checkNotNull(id));
     }
 
-    public void delete(String id) {
-        currentSession().delete(currentSession().get(entityClass, checkNotNull(id)));
+    public boolean delete(String id) {
+        Object entity = currentSession().get(entityClass, checkNotNull(id));
+        if (entity != null) {
+            currentSession().delete(entity);
+            return true;
+        } else return false;
     }
 }

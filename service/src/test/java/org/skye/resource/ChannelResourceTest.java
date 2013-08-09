@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
 import org.apache.shiro.subject.Subject;
@@ -10,6 +11,7 @@ import org.skye.domain.Domain;
 import org.skye.resource.dao.ChannelDAO;
 import org.skye.util.PaginatedResult;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -23,6 +25,7 @@ public class ChannelResourceTest extends ResourceTest {
     @Override
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
+        when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(channel);
         ChannelResource channelResource = new ChannelResource();
         channelResource.channelDAO = dao;
@@ -46,6 +49,23 @@ public class ChannelResourceTest extends ResourceTest {
         } catch (UniformInterfaceException e) {
             assertThat(e).hasMessage("Client response status: 401");
         }
+    }
+
+    @Test
+    public void testAuthorizedDelete() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("channel:delete")).thenReturn(true);
+        ClientResponse response = client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
+        assertEquals(response.getStatus(),200);
+
+        verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+    @Test
+    public void testUnAuthorisedDelete() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("channel:delete")).thenReturn(false);
+        ClientResponse response = client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
+        assertEquals(401,response.getStatus());
     }
 
     @Test
