@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.wordnik.swagger.annotations.Api;
 import org.skye.domain.Domain;
 import org.skye.domain.Role;
 import org.skye.resource.AbstractUpdatableDomainResource;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
  */
+@Api(value = "/api/1/roles", description = "Manage roles")
 @Path("/api/1/roles")
 @Produces(MediaType.APPLICATION_JSON)
 /**

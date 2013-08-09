@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.wordnik.swagger.annotations.Api;
 import org.skye.domain.Domain;
 import org.skye.domain.Permission;
 import org.skye.resource.dao.AbstractPaginatingDAO;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
  */
+@Api(value = "/api/1/permissions", description = "Manage permmisions")
 @Path("/api/1/permissions")
 @Produces(MediaType.APPLICATION_JSON)
 /**
