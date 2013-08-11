@@ -27,5 +27,11 @@ public class Domain {
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<DomainArchiveStore> archiveStores = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<DomainInformationStore> informationStores = new ArrayList<>();
 
 }
