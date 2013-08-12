@@ -21,7 +21,7 @@ import org.skye.util.SwaggerBundle;
 @Slf4j
 public class SkyeService extends Service<SkyeConfiguration> {
 
-    protected final HibernateBundle<SkyeConfiguration> hibernate = new HibernateBundle<SkyeConfiguration>(Domain.class, Channel.class, Project.class, User.class, UserRole.class, Role.class, Permission.class, ChannelArchiveStore.class, DomainArchiveStore.class, ArchiveStoreInstance.class) {
+    protected final HibernateBundle<SkyeConfiguration> hibernate = new HibernateBundle<SkyeConfiguration>(DomainInformationStore.class, Domain.class, Channel.class, Project.class, User.class, UserRole.class, Role.class, Permission.class, ChannelArchiveStore.class, DomainArchiveStore.class, ArchiveStoreInstance.class) {
         @Override
         public DatabaseConfiguration getDatabaseConfiguration(SkyeConfiguration configuration) {
             return configuration.getDatabaseConfiguration();

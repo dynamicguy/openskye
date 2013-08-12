@@ -15,4 +15,10 @@ public class PaginatedResult<T> {
     private long totalResults;
     private List<T> results;
 
+    // TODO This isn't great since we are doing some messy stuff in
+    // here
+    public PaginatedResult<T> paginate(List<T> list) {
+        results = list;
+        return this;
+    }
 }

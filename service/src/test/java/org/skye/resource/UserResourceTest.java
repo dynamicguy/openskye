@@ -45,7 +45,7 @@ public class UserResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("user:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, user).getStatus());
+        assertEquals(401, client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, user).getStatus());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class UserResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("user:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/users").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user).getStatus());
+        assertEquals(401, client().resource("/api/1/users").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user).getStatus());
     }
 
     @Test
@@ -86,16 +86,17 @@ public class UserResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("user:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("user:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

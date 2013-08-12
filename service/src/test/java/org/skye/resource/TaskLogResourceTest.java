@@ -45,7 +45,7 @@ public class TaskLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, taskLog).getStatus());
+        assertEquals(401, client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, taskLog).getStatus());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TaskLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/taskLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, taskLog).getStatus());
+        assertEquals(401, client().resource("/api/1/taskLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, taskLog).getStatus());
     }
 
     @Test
@@ -86,16 +86,17 @@ public class TaskLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

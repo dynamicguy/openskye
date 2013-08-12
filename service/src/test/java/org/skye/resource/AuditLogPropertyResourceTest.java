@@ -3,14 +3,11 @@ package org.skye.resource;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
-import junit.framework.TestCase;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.AuditLogProperty;
-import org.skye.domain.Role;
 import org.skye.resource.dao.AuditLogPropertyDAO;
-import org.skye.resource.dao.RoleDAO;
 import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
@@ -47,7 +44,7 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLogProperty:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/auditLogProperties/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLogProperty).getStatus());
+        assertEquals(401, client().resource("/api/1/auditLogProperties/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLogProperty).getStatus());
     }
 
     @Test
@@ -61,23 +58,25 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLogProperty:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/auditLogProperties").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLogProperty).getStatus());
+        assertEquals(401, client().resource("/api/1/auditLogProperties").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLogProperty).getStatus());
     }
+
     @Test
     public void testAuthorizedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLogProperty:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/auditLogProperties/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLogProperty:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/auditLogProperties/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

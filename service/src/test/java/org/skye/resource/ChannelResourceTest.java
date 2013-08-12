@@ -7,7 +7,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.Channel;
-import org.skye.domain.Domain;
 import org.skye.resource.dao.ChannelDAO;
 import org.skye.util.PaginatedResult;
 
@@ -46,7 +45,7 @@ public class ChannelResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("channel:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, channel).getStatus());
+        assertEquals(401, client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, channel).getStatus());
     }
 
     @Test
@@ -60,7 +59,7 @@ public class ChannelResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("channel:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/channels").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, channel).getStatus());
+        assertEquals(401, client().resource("/api/1/channels").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, channel).getStatus());
     }
 
     @Test
@@ -87,16 +86,17 @@ public class ChannelResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("channel:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(response.getStatus(),200);
+        assertEquals(response.getStatus(), 200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("channel:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

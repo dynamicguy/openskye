@@ -1,9 +1,7 @@
 package org.skye.resource;
 
 import com.wordnik.swagger.annotations.Api;
-import org.skye.domain.Domain;
 import org.skye.domain.Role;
-import org.skye.resource.AbstractUpdatableDomainResource;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.RoleDAO;
 

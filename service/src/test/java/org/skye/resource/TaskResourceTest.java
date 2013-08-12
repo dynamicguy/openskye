@@ -6,9 +6,7 @@ import com.yammer.dropwizard.testing.ResourceTest;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
-import org.skye.domain.Role;
 import org.skye.domain.Task;
-import org.skye.resource.dao.RoleDAO;
 import org.skye.resource.dao.TaskDAO;
 import org.skye.util.PaginatedResult;
 
@@ -47,7 +45,7 @@ public class TaskResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/tasks/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, task).getStatus());
+        assertEquals(401, client().resource("/api/1/tasks/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, task).getStatus());
     }
 
     @Test
@@ -61,7 +59,7 @@ public class TaskResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/tasks").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, task).getStatus());
+        assertEquals(401, client().resource("/api/1/tasks").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, task).getStatus());
     }
 
     @Test
@@ -88,16 +86,17 @@ public class TaskResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/tasks/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/tasks/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

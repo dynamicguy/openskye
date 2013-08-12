@@ -33,6 +33,7 @@ public class AuditLogResourceTest extends ResourceTest {
         auditLogResource.auditLogDAO = dao;
         addResource(auditLogResource);
     }
+
     @Test
     public void testAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
@@ -44,8 +45,9 @@ public class AuditLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLog).getStatus());
+        assertEquals(401, client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLog).getStatus());
     }
+
     @Test
     public void testAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
@@ -57,7 +59,7 @@ public class AuditLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/auditLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLog).getStatus());
+        assertEquals(401, client().resource("/api/1/auditLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLog).getStatus());
     }
 
     @Test
@@ -78,21 +80,23 @@ public class AuditLogResourceTest extends ResourceTest {
             assertThat(e).hasMessage("Client response status: 401");
         }
     }
+
     @Test
     public void testAuthorizedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

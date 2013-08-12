@@ -1,6 +1,5 @@
 package org.skye.resource.dao;
 
-import org.skye.domain.Role;
 import org.skye.domain.TaskLog;
 
 /**

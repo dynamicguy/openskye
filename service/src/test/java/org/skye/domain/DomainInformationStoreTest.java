@@ -2,8 +2,6 @@ package org.skye.domain;
 
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.asJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 import static org.hamcrest.MatcherAssert.assertThat;
