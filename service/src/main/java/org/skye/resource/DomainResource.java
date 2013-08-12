@@ -4,6 +4,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.skye.domain.Domain;
 import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.DomainInformationStore;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.DomainDAO;
 import org.skye.util.PaginatedResult;
@@ -42,6 +43,15 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     public PaginatedResult<DomainArchiveStore> getArchiveStores(@PathParam("id") String id) {
         Domain domain = get(id);
         return new PaginatedResult<DomainArchiveStore>().paginate(domain.getArchiveStores());
+    }
+
+    @Path("/{id}/archiveStores")
+    @GET
+    @ApiOperation(value = "Return the archive stores owned by this domain")
+    public PaginatedResult<DomainInformationStore> getInformationStores(@PathParam("id") String id) {
+
+        Domain domain = get(id);
+        return new PaginatedResult<DomainInformationStore>().paginate(domain.getInformationStores());
     }
 
 }
