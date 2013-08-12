@@ -7,6 +7,8 @@ import org.skye.domain.Domain;
 import org.skye.domain.Project;
 import org.skye.util.Page;
 
+import java.io.InputStream;
+
 /**
  * This is the standard interface to allow the storage and searching of {@link SimpleObject} instances
  * that have been discovered
@@ -50,11 +52,20 @@ public interface ObjectMetadataRepository {
     Iterable<SimpleObject> search(Domain domain, Project project, String query, Page page);
 
     /**
-     * Returns a
+     * Returns the metadata for the archive content blocks for the simple object
      *
      * @param simpleObject
-     * @return
+     * @return An iterable for the archive content blocks
      */
     Iterable<ArchiveContentBlock> getArchiveContentBlocks(SimpleObject simpleObject);
+
+    /**
+     * Returns an {@link InputStream} to the content of the simple object
+     * Depending on the type of {@link SimpleObject} this can be a number of structures
+     *
+     * @param simpleObject
+     * @return An inputstream to the raw information
+     */
+    InputStream getContent(SimpleObject simpleObject);
 
 }

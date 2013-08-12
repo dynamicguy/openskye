@@ -8,6 +8,8 @@ import org.skye.domain.Project;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.util.Page;
 
+import java.io.InputStream;
+
 /**
  * An in-memory object metadata repository that can be used for testing
  */
@@ -34,6 +36,11 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public Iterable<ArchiveContentBlock> getArchiveContentBlocks(SimpleObject simpleObject) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public InputStream getContent(SimpleObject simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

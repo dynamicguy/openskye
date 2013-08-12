@@ -18,5 +18,5 @@ public abstract class SimpleObject {
     private Set<Tag> tags = new HashSet<>();
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
-
+    private String mimeType;
 }
