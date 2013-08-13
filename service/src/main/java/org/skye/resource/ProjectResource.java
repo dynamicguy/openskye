@@ -33,9 +33,9 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
         return "project";
     }
 
-    @Path("/{id}/archiveStores")
+    @Path("/{id}/channels")
     @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
+    @ApiOperation(value = "Return the channels for this project")
     public PaginatedResult<Channel> getChannels(@PathParam("id") String id) {
         Project project = get(id);
         return new PaginatedResult<Channel>().paginate(project.getChannels());

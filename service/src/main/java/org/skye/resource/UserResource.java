@@ -33,9 +33,9 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         return "user";
     }
 
-    @Path("/{id}/archiveStores")
+    @Path("/{id}/roles")
     @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
+    @ApiOperation(value = "Return the roles for this user")
     public PaginatedResult<UserRole> getUserRoles(@PathParam("id") String id) {
         User user = get(id);
         return new PaginatedResult<UserRole>().paginate(user.getUserRoles());
