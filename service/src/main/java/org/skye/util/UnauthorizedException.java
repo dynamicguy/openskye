@@ -16,9 +16,9 @@ public class UnauthorizedException extends WebApplicationException {
     }
 
     /**
-     * Create a HTTP 404 (Not Found) exception.
+     * Create a HTTP 401 (Not Found) exception.
      *
-     * @param message the String that is the entity of the 404 response.
+     * @param message the String that is the entity of the 401 response.
      */
     public UnauthorizedException(String message) {
         super(Response.status(Response.Status.UNAUTHORIZED).entity(message).type("text/plain").build());
