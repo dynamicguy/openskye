@@ -34,6 +34,7 @@ public class AccountResource {
             } else {
                 throw new NotFoundException();
             }
+
         } else {
             throw new UnauthorizedException();
         }
