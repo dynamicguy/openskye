@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -19,7 +20,6 @@ import static org.mockito.Mockito.*;
 
 public class DomainResourceTest extends ResourceTest {
     private final Domain domain = new Domain();
-    private String id;
     private final DomainDAO dao = mock(DomainDAO.class);
     private final Subject subject = mock(Subject.class);
     private PaginatedResult<Domain> expectedResult = new PaginatedResult<>();
@@ -28,7 +28,7 @@ public class DomainResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(domain);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(domain));
         when(dao.persist(domain)).thenReturn(domain);
         DomainResource domainResource = new DomainResource();
         domainResource.domainDAO = dao;

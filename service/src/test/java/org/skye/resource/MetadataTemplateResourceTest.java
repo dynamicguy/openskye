@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import org.apache.shiro.subject.Subject;
@@ -28,7 +29,7 @@ public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(metadataTemplate);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(metadataTemplate));
         when(dao.persist(metadataTemplate)).thenReturn(metadataTemplate);
         MetadataTemplateResource metadataTemplateResource = new MetadataTemplateResource();
         metadataTemplateResource.metadataTemplateDAO = dao;

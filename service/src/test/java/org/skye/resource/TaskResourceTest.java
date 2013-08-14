@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -27,7 +28,7 @@ public class TaskResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(task);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(task));
         when(dao.persist(task)).thenReturn(task);
         TaskResource taskResource = new TaskResource();
         taskResource.taskDAO = dao;

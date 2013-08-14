@@ -1,5 +1,6 @@
 package org.skye.resource.dao;
 
+import com.google.common.base.Optional;
 import com.yammer.dropwizard.util.Generics;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -70,8 +71,12 @@ public abstract class AbstractPaginatingDAO<T> {
      * @see Session#get(Class, Serializable)
      */
     @SuppressWarnings("unchecked")
-    public T get(String id) {
-        return (T) currentSession().get(entityClass, checkNotNull(id));
+    public Optional<T> get(String id) {
+        T result = (T) currentSession().get(entityClass, checkNotNull(id));
+        if (result == null)
+            return Optional.absent();
+        else
+            return Optional.of(result);
     }
 
     public boolean delete(String id) {

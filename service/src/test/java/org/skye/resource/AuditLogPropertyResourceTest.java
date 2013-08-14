@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -25,7 +26,7 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
 
     @Override
     protected void setUpResources() {
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(auditLogProperty);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(auditLogProperty));
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.persist(auditLogProperty)).thenReturn(auditLogProperty);
         AuditLogPropertyResource auditLogPropertyResource = new AuditLogPropertyResource();
@@ -98,7 +99,6 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
             assertThat(e).hasMessage("Client response status: 401");
         }
     }
-
 
     @Test
     public void testAuthorizedGet() throws Exception {
