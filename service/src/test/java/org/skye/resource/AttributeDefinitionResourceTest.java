@@ -8,9 +8,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.AttributeDefinition;
-import org.skye.domain.AttributeInstance;
 import org.skye.resource.dao.AttributeDefinitionDAO;
-import org.skye.resource.dao.AttributeInstanceDAO;
 import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
@@ -48,7 +46,7 @@ public class AttributeDefinitionResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("attributeDefinition:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/attributeDefinitions/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, attributeDefinition).getStatus());
+        assertEquals(401, client().resource("/api/1/attributeDefinitions/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, attributeDefinition).getStatus());
     }
 
     @Test
@@ -62,7 +60,7 @@ public class AttributeDefinitionResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("attributeDefinition:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/attributeDefinitions").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, attributeDefinition).getStatus());
+        assertEquals(401, client().resource("/api/1/attributeDefinitions").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, attributeDefinition).getStatus());
     }
 
     @Test
@@ -89,16 +87,17 @@ public class AttributeDefinitionResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("attributeDefinition:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/attributeDefinitions/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("attributeDefinition:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/attributeDefinitions/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

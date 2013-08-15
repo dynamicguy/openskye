@@ -97,7 +97,7 @@ public class ChannelResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("channel:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/channels/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test

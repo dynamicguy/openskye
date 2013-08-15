@@ -87,7 +87,7 @@ public class TaskResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/tasks/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
@@ -97,7 +97,7 @@ public class TaskResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/tasks/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test

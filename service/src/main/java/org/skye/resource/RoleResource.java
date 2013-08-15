@@ -39,7 +39,7 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
         return "role";
     }
 
-    @Path("/{id}/roles")
+    @Path("/{id}/permissions")
     @GET
     @ApiOperation(value = "Return the permissions for this role")
     public PaginatedResult<Permission> getPermissions(@PathParam("id") String id) {

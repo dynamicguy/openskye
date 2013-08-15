@@ -60,7 +60,7 @@ public class TaskLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:create")).thenReturn(false);
-        assertEquals(401, client().resource("/api/1/taskLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, taskLog).getStatus());
+        assertThat(client().resource("/api/1/taskLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, taskLog).getStatus()).isEqualTo(401);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TaskLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
@@ -97,7 +97,7 @@ public class TaskLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test

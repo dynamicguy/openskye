@@ -13,7 +13,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static junit.framework.Assert.assertEquals;
+import static com.mongodb.util.MyAsserts.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -67,7 +67,7 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLogProperty:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/auditLogProperties/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
@@ -77,7 +77,7 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLogProperty:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/auditLogProperties/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test
