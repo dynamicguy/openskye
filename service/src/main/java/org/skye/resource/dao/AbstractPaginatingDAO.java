@@ -24,7 +24,7 @@ public abstract class AbstractPaginatingDAO<T> {
     private Class<?> entityClass = Generics.getTypeParameter(getClass());
 
     public PaginatedResult<T> list() {
-        PaginatedResult<T> result = new PaginatedResult<>();
+        PaginatedResult<T> resuapi/1/permissions/1?api_key=special-keylt = new PaginatedResult<>();
         result.setResults(criteria().list());
         return result;
     }

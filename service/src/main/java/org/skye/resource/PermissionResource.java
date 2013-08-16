@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/api/1/permissions")
 @Produces(MediaType.APPLICATION_JSON)
 /**
- * Manage domains
+ * Manage domains     ..
  */
 public class PermissionResource extends AbstractUpdatableDomainResource<Permission> {
 

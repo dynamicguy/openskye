@@ -21,4 +21,19 @@ public class PaginatedResult<T> {
         results = list;
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof PaginatedResult) {
+            PaginatedResult<T> other = (PaginatedResult<T>) o;
+            if (other.getPage() == this.page && other.getPageSize() == this.pageSize) {
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
