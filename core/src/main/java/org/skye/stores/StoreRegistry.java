@@ -23,6 +23,7 @@ public class StoreRegistry {
     // use to allow registry
     private Set<ArchiveStore> archiveStores = new HashSet<>();
     private Set<InformationStore> informationStores = new HashSet<>();
+    private StoreRegistryMetadata storeRegistryMetadata = new StoreRegistryMetadata();
 
     /**
      * Default constructor will look for all implementations of stores on the classpath
@@ -34,7 +35,10 @@ public class StoreRegistry {
         // Get all the ArchiveStore and InformationStore implementations
         for (Class<? extends ArchiveStore> archiveStoreClass : reflections.getSubTypesOf(ArchiveStore.class)) {
             try {
-                archiveStores.add(archiveStoreClass.newInstance());
+                ArchiveStore archiveStore = archiveStoreClass.newInstance();
+                RegisteredArchiveStore registeredArchiveStore = new RegisteredArchiveStore();
+                storeRegistryMetadata.getArchiveStores().add(registeredArchiveStore);
+                archiveStores.add(archiveStore);
             } catch (Exception e) {
                 log.error("Unable to create an instance of " + archiveStoreClass.getName(), e);
             }
@@ -42,7 +46,11 @@ public class StoreRegistry {
 
         for (Class<? extends InformationStore> informationStoreClass : reflections.getSubTypesOf(InformationStore.class)) {
             try {
-                informationStores.add(informationStoreClass.newInstance());
+                InformationStore informationStore = informationStoreClass.newInstance();
+                RegisteredInformationStore registeredInformationStore = new RegisteredInformationStore();
+                storeRegistryMetadata.getInformationStores().add(registeredInformationStore);
+
+                informationStores.add(informationStore);
             } catch (Exception e) {
                 log.error("Unable to create an instance of " + informationStoreClass.getName(), e);
             }
@@ -115,5 +123,15 @@ public class StoreRegistry {
      */
     public int getArchiveStoreCount() {
         return informationStores.size();
+    }
+
+    /**
+     * Returns a representation of the metadata for the stores that
+     * are available
+     *
+     * @return the metadata for the stores registered
+     */
+    public StoreRegistryMetadata getMetadata() {
+        return storeRegistryMetadata;
     }
 }

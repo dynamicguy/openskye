@@ -21,9 +21,6 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "/api/1/roles", description = "Manage roles")
 @Path("/api/1/roles")
 @Produces(MediaType.APPLICATION_JSON)
-/**
- * Manage domains
- */
 public class RoleResource extends AbstractUpdatableDomainResource<Role> {
 
     @Inject
