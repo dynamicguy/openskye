@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
  * The REST endpoint for {@link org.skye.domain.Domain}
  */
 @Api(value = "/api/1/account", description = "Access and manage your account information")
-@Path("/api/1/auditLogs")
+@Path("/api/1/account")
 @Produces(MediaType.APPLICATION_JSON)
 /**
  * Manage domains
