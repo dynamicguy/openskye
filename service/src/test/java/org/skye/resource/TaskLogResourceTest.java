@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -27,7 +28,7 @@ public class TaskLogResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(taskLog);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(taskLog));
         when(dao.persist(taskLog)).thenReturn(taskLog);
         TaskLogResource taskLogResource = new TaskLogResource();
         taskLogResource.taskLogDAO = dao;
@@ -59,7 +60,7 @@ public class TaskLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:create")).thenReturn(false);
-        assertEquals(401, client().resource("/api/1/taskLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, taskLog).getStatus());
+        assertThat(client().resource("/api/1/taskLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, taskLog).getStatus()).isEqualTo(401);
     }
 
     @Test
@@ -86,7 +87,7 @@ public class TaskLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("taskLog:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
@@ -96,7 +97,7 @@ public class TaskLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("task:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/taskLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test

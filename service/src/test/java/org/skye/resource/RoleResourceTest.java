@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -27,7 +28,7 @@ public class RoleResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(role);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(role));
         when(dao.persist(role)).thenReturn(role);
         RoleResource roleResource = new RoleResource();
         roleResource.roleDAO = dao;
@@ -86,7 +87,7 @@ public class RoleResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("role:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/roles/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
@@ -96,7 +97,7 @@ public class RoleResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("role:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/roles/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test

@@ -1,14 +1,13 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.MetadataTemplate;
-import org.skye.domain.RetentionPolicy;
 import org.skye.resource.dao.MetadataTemplateDAO;
-import org.skye.resource.dao.RetentionPolicyDAO;
 import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
@@ -28,7 +27,7 @@ public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(metadataTemplate);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(metadataTemplate));
         when(dao.persist(metadataTemplate)).thenReturn(metadataTemplate);
         MetadataTemplateResource metadataTemplateResource = new MetadataTemplateResource();
         metadataTemplateResource.metadataTemplateDAO = dao;
@@ -46,7 +45,7 @@ public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("metadataTemplate:update")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/metadataTemplates/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, metadataTemplate).getStatus());
+        assertEquals(401, client().resource("/api/1/metadataTemplates/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, metadataTemplate).getStatus());
     }
 
     @Test
@@ -60,7 +59,7 @@ public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("metadataTemplate:create")).thenReturn(false);
-        assertEquals(401,client().resource("/api/1/metadataTemplates").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, metadataTemplate).getStatus());
+        assertEquals(401, client().resource("/api/1/metadataTemplates").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, metadataTemplate).getStatus());
     }
 
     @Test
@@ -87,16 +86,17 @@ public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.
         ThreadContext.bind(subject);
         when(subject.isPermitted("metadataTemplate:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/metadataTemplates/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200,response.getStatus());
+        assertEquals(200, response.getStatus());
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
+
     @Test
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("metadataTemplate:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/metadataTemplates/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401,response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test

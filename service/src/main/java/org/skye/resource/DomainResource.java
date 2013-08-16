@@ -47,7 +47,7 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
     @Path("/{id}/informationStores")
     @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
+    @ApiOperation(value = "Return the information stores owned by this domain")
     public PaginatedResult<DomainInformationStore> getInformationStores(@PathParam("id") String id) {
 
         Domain domain = get(id);

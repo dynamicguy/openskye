@@ -1,10 +1,12 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.resource.dao.AbstractPaginatingDAO;
+import org.skye.util.NotFoundException;
 import org.skye.util.PaginatedResult;
 import org.skye.util.UnauthorizedException;
 
@@ -45,7 +47,11 @@ public abstract class AbstractRealOnlyDomainResource<T> {
     public T get(@PathParam("id") String id) {
         // TODO need to do the merge here?
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":get")) {
-            return getDAO().get(id);
+            Optional<T> result = getDAO().get(id);
+            if (result.isPresent())
+                return result.get();
+            else
+                throw new NotFoundException();
         } else {
             throw new UnauthorizedException();
         }

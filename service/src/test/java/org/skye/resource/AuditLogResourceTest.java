@@ -1,5 +1,6 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -12,7 +13,6 @@ import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -27,7 +27,7 @@ public class AuditLogResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(auditLog);
+        when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(auditLog));
         when(dao.persist(auditLog)).thenReturn(auditLog);
         AuditLogResource auditLogResource = new AuditLogResource();
         auditLogResource.auditLogDAO = dao;
@@ -45,7 +45,7 @@ public class AuditLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:update")).thenReturn(false);
-        assertEquals(401, client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLog).getStatus());
+        assertThat(client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, auditLog).getStatus()).isEqualTo(401);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class AuditLogResourceTest extends ResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:create")).thenReturn(false);
-        assertEquals(401, client().resource("/api/1/auditLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLog).getStatus());
+        assertThat(client().resource("/api/1/auditLogs").type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, auditLog).getStatus()).isEqualTo(401);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class AuditLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:delete")).thenReturn(true);
         ClientResponse response = client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(200);
 
         verify(dao).delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
     }
@@ -96,7 +96,7 @@ public class AuditLogResourceTest extends ResourceTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("auditLog:delete")).thenReturn(false);
         ClientResponse response = client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class);
-        assertEquals(401, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
     @Test

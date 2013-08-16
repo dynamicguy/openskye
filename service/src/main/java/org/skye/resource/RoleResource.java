@@ -39,9 +39,9 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
         return "role";
     }
 
-    @Path("/{id}/archiveStores")
+    @Path("/{id}/permissions")
     @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
+    @ApiOperation(value = "Return the permissions for this role")
     public PaginatedResult<Permission> getPermissions(@PathParam("id") String id) {
         Role role = get(id);
         return new PaginatedResult<Permission>().paginate(role.getPermissions());

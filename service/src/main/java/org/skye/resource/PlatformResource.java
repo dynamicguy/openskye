@@ -9,8 +9,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Api(value = "/api/1/platforms", description = "Manage platforms")
-@Path("/api/1/platforms")
+@Api(value = "/api/1/platform", description = "Get platform details")
+@Path("/api/1/platform")
 @Produces(MediaType.APPLICATION_JSON)
 /**
  * Resource to provide the current platform version information

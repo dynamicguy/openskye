@@ -12,6 +12,8 @@ import java.util.Properties;
  */
 public interface InformationStore {
 
+    String NAME = "name";
+
     /**
      * Used to initialize the information store
      *
