@@ -76,4 +76,12 @@ public interface InformationStore {
      */
     Iterable<SimpleObject> getRelated(SimpleObject simpleObject);
 
+    /**
+     * Give the implementation string the InformationStore returns true if it implements
+     * this
+     *
+     * @param implementation The string representation of the implementation (ie. JDBC)
+     * @return true if the store can implement this implementation
+     */
+    boolean isImplementing(String implementation);
 }

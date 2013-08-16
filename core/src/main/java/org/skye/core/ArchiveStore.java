@@ -35,4 +35,13 @@ public interface ArchiveStore {
      * @return true if this {@link ArchiveStore} supports this {@link SimpleObject}
      */
     boolean isSupported(SimpleObject so);
+
+    /**
+     * Give the implementation string the ArchiveStore returns true if it implements
+     * this
+     *
+     * @param implementation The string representation of the implementation (ie. LocalFS)
+     * @return true if the store can implement this implementation
+     */
+    boolean isImplementing(String implementation);
 }

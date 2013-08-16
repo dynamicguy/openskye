@@ -1,4 +1,4 @@
-package org.skye.stores.archive;
+package org.skye.stores.inmemory;
 
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
@@ -6,12 +6,11 @@ import org.skye.core.SimpleObject;
 import java.util.Properties;
 
 /**
- * An implementation of an {@link ArchiveStore} that simply uses the local
- * filesystem to store archives
+ * An in-memory {@link org.skye.core.ArchiveStore} that can be used for testing
  */
-public class LocalFilesystemArchiveStore implements ArchiveStore {
+public class InMemoryArchiveStore implements ArchiveStore {
 
-    public final static String IMPLEMENTATION = "localFS";
+    public static final String IMPLEMENTATION = "In-memory";
 
     @Override
     public void initialize(Properties properties) {
@@ -20,12 +19,12 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     @Override
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "In-memory (for testing only)";
     }
 
     @Override
     public String getUrl() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "mem://.";
     }
 
     @Override

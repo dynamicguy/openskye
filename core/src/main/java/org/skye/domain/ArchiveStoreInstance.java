@@ -20,5 +20,7 @@ public class ArchiveStoreInstance {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
+    // The name of the {@link ArchiveStore} implementation
+    private String implementation;
 
 }

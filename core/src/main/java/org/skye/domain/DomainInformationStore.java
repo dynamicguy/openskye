@@ -22,5 +22,7 @@ public class DomainInformationStore {
     protected String id;
     @ManyToOne
     private Domain domain;
+    // The name of the {@link InformationStore} implementation
+    private String implementation;
 
 }

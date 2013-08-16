@@ -20,6 +20,7 @@ import java.util.Properties;
  */
 public class LocalFilesystemInformationStore implements InformationStore {
 
+    public final static String IMPLEMENTATION = "localFS";
     private static final String FILE_PATH = "filePath";
     private Properties properties;
     private Path fileSystem;
@@ -80,6 +81,11 @@ public class LocalFilesystemInformationStore implements InformationStore {
     @Override
     public Iterable<SimpleObject> getRelated(SimpleObject simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isImplementing(String implementation) {
+        return implementation.equals(IMPLEMENTATION);
     }
 
     public Path getFileSystem() {

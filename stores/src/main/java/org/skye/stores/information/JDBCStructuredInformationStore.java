@@ -26,6 +26,7 @@ import java.util.Properties;
 @Slf4j
 public class JDBCStructuredInformationStore implements InformationStore {
 
+    public final static String IMPLEMENTATION = "jdbcStructured";
     public static final String DRIVER_CLASS = "driverClass";
     public static final String DB_URL = "dbUrl";
     public static final String USER = "user";
@@ -128,5 +129,10 @@ public class JDBCStructuredInformationStore implements InformationStore {
     @Override
     public Iterable<SimpleObject> getRelated(SimpleObject simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isImplementing(String implementation) {
+        return implementation.equals(IMPLEMENTATION);
     }
 }
