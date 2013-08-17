@@ -84,7 +84,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
     }
 
     @Override
-    public Iterable<SimpleObject> getAll() {
+    public Iterable<SimpleObject> getRoot() {
         DataContext dataContext = DataContextFactory.createJdbcDataContext(getConnection());
         List<SimpleObject> schemaObjects = new ArrayList<>();
         for (Schema schema : dataContext.getSchemas()) {

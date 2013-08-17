@@ -44,4 +44,12 @@ public interface ArchiveStore {
      * @return true if the store can implement this implementation
      */
     boolean isImplementing(String implementation);
+
+    /**
+     * Will load the @{link SimpleObject} content into the store and then it will update
+     * the links to the {@link ArchiveContentBlock}
+     *
+     * @param simpleObject the object to archive
+     */
+    void put(SimpleObject simpleObject);
 }

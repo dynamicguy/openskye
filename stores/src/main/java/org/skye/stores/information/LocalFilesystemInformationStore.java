@@ -51,7 +51,7 @@ public class LocalFilesystemInformationStore implements InformationStore {
     }
 
     @Override
-    public Iterable<SimpleObject> getAll() {
+    public Iterable<SimpleObject> getRoot() {
 
         try (DirectoryStream<Path> ds =
                      Files.newDirectoryStream(getFileSystem())) {

@@ -21,6 +21,13 @@
             <version>4.2.3.Final</version>
         </dependency>
 
+        <!-- We will use Guice to wire everything together -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+
         <!-- Use Reflections for the registry -->
         <dependency>
             <groupId>org.reflections</groupId>

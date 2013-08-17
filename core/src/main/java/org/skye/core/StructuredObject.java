@@ -1,6 +1,7 @@
 package org.skye.core;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.skye.core.structured.ColumnMetadata;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * These structure can be used to model structured objects such as tables, or structured files
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class StructuredObject extends SimpleObject {
 
     private List<ColumnMetadata> columns;

@@ -41,7 +41,7 @@ public class InMemoryInformationStore implements InformationStore {
     }
 
     @Override
-    public Iterable<SimpleObject> getAll() {
+    public Iterable<SimpleObject> getRoot() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

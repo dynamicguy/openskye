@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.SimpleObject;
 import org.skye.domain.Domain;
+import org.skye.domain.DomainInformationStore;
 import org.skye.domain.Project;
 import org.skye.util.Page;
 
@@ -68,4 +69,10 @@ public interface ObjectMetadataRepository {
      */
     InputStream getContent(SimpleObject simpleObject);
 
+    /**
+     * Returns an iterator over all the {@link SimpleObject} for the given {@link DomainInformationStore}
+     *
+     * @param domainInformationStore
+     */
+    Iterable<SimpleObject> getSimpleObjects(DomainInformationStore domainInformationStore);
 }

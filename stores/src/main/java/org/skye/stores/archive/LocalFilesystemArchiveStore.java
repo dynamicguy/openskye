@@ -37,4 +37,9 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
     public boolean isImplementing(String implementation) {
         return implementation.equals(IMPLEMENTATION);
     }
+
+    @Override
+    public void put(SimpleObject simpleObject) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

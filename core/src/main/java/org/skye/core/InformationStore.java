@@ -58,7 +58,7 @@ public interface InformationStore {
      *
      * @return iterator to all root simple objects
      */
-    Iterable<SimpleObject> getAll();
+    Iterable<SimpleObject> getRoot();
 
     /**
      * Returns an iterator to the child simple objects for a given simple object
