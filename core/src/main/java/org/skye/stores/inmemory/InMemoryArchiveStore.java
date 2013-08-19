@@ -3,6 +3,8 @@ package org.skye.stores.inmemory;
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -11,10 +13,11 @@ import java.util.Properties;
 public class InMemoryArchiveStore implements ArchiveStore {
 
     public static final String IMPLEMENTATION = "In-memory";
+    private Map<SimpleObject, SimpleObject> objects = new HashMap<>();
 
     @Override
     public void initialize(Properties properties) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // Nothing to do
     }
 
     @Override
@@ -29,7 +32,7 @@ public class InMemoryArchiveStore implements ArchiveStore {
 
     @Override
     public boolean isSupported(SimpleObject so) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 
     @Override
@@ -39,6 +42,6 @@ public class InMemoryArchiveStore implements ArchiveStore {
 
     @Override
     public void put(SimpleObject simpleObject) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        objects.put(simpleObject, simpleObject);
     }
 }

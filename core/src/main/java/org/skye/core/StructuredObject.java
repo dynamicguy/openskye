@@ -3,7 +3,9 @@ package org.skye.core;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.skye.core.structured.ColumnMetadata;
+import org.skye.core.structured.Row;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,4 +18,8 @@ import java.util.List;
 public class StructuredObject extends SimpleObject {
 
     private List<ColumnMetadata> columns;
+
+    public Iterator<Row> getRows() {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
 }

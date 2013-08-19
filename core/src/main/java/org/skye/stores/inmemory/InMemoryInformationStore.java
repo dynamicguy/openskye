@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 import org.skye.core.InformationStore;
 import org.skye.core.SimpleObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -12,6 +14,7 @@ import java.util.Properties;
 public class InMemoryInformationStore implements InformationStore {
 
     public static final String IMPLEMENTATION = "In-memory";
+    private List<SimpleObject> root = new ArrayList<>();
 
     @Override
     public void initialize(Properties properties) {
@@ -42,7 +45,7 @@ public class InMemoryInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getRoot() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return root;
     }
 
     @Override

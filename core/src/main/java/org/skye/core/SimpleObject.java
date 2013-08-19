@@ -2,10 +2,7 @@ package org.skye.core;
 
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A base abstract type to represent a simple object within the enterprise
@@ -19,4 +16,6 @@ public abstract class SimpleObject {
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
     private String mimeType;
+    private InformationStore informationStore;
+    private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 }

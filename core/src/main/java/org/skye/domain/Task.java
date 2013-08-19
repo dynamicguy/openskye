@@ -20,4 +20,7 @@ public class Task {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
+    private TaskType taskType;
+    @ManyToOne
+    private Channel channel;
 }

@@ -1,23 +1,17 @@
-package org.skye.stores.archive;
+package org.skye.hadoop.stores;
 
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
 
-import javax.tools.FileObject;
 import java.util.Properties;
 
 /**
- * An implementation of an {@link ArchiveStore} that simply uses the local
- * filesystem to store archives
+ * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
  */
-public class LocalFilesystemArchiveStore implements ArchiveStore {
-
-    public final static String IMPLEMENTATION = "localFS";
-    private String localPath;
-
+public class HDFSArchiveStore implements ArchiveStore {
     @Override
     public void initialize(Properties properties) {
-        localPath = properties.getProperty("localPath");
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -32,18 +26,16 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     @Override
     public boolean isSupported(SimpleObject so) {
-        return true;
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public boolean isImplementing(String implementation) {
-        return implementation.equals(IMPLEMENTATION);
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void put(SimpleObject simpleObject) {
-        if (simpleObject instanceof FileObject) {
-
-        }
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

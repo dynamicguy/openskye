@@ -26,6 +26,7 @@
         <module>stores</module>
         <module>cli</module>
         <module>service</module>
+        <module>hadoop</module>
     </modules>
 
     <issueManagement>
@@ -87,6 +88,16 @@
             <dependency>
                 <groupId>org.skye</groupId>
                 <artifactId>skye-stores</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.skye</groupId>
+                <artifactId>skye-service</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.skye</groupId>
+                <artifactId>skye-hadoop</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>

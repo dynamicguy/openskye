@@ -1,4 +1,4 @@
-package org.skye.job.impl;
+package org.skye.task.inmemory;
 
 import com.google.common.base.Optional;
 import org.skye.core.ArchiveStore;
@@ -6,19 +6,16 @@ import org.skye.core.InformationStore;
 import org.skye.core.SkyeException;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.DomainInformationStore;
-import org.skye.job.JobManager;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
 
 import javax.inject.Inject;
 
 /**
- * An abstract base for a {@link org.skye.job.Job}
+ * An abstract base for the {@link TaskStep}
  */
-public abstract class AbstractJob {
+public abstract class AbstractTaskStep implements TaskStep {
 
-    @Inject
-    protected JobManager manager;
     @Inject
     protected StoreRegistry storeRegistry;
     @Inject
@@ -37,4 +34,5 @@ public abstract class AbstractJob {
             throw new SkyeException("Unable to build archive store");
         return as.get();
     }
+
 }
