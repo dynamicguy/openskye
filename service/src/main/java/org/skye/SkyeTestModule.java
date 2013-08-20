@@ -28,7 +28,7 @@ public class SkyeTestModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class).asEagerSingleton();
-        bind(StoreRegistry.class).to(StoreRegistry.class).asEagerSingleton();
+        bind(StoreRegistry.class).asEagerSingleton();
     }
 
 }
