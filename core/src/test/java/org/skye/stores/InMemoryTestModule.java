@@ -1,6 +1,9 @@
 package org.skye.stores;
 
+import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
+import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.metadata.impl.InMemoryObjectMetadataRepository;
 import org.skye.task.TaskManager;
 import org.skye.task.inmemory.InMemoryTaskManager;
 
@@ -10,6 +13,8 @@ import org.skye.task.inmemory.InMemoryTaskManager;
 public class InMemoryTestModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(TaskManager.class).to(InMemoryTaskManager.class);
+        bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
+        bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class).asEagerSingleton();
+        install(new GuiceBerryModule());
     }
 }
