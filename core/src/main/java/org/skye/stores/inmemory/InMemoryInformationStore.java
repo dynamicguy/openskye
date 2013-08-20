@@ -3,6 +3,7 @@ package org.skye.stores.inmemory;
 import org.joda.time.DateTime;
 import org.skye.core.InformationStore;
 import org.skye.core.SimpleObject;
+import org.skye.domain.DomainInformationStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public class InMemoryInformationStore implements InformationStore {
     private List<SimpleObject> root = new ArrayList<>();
 
     @Override
-    public void initialize(Properties properties) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void initialize(DomainInformationStore dis) {
+
     }
 
     @Override

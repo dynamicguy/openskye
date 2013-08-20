@@ -2,10 +2,10 @@ package org.skye.stores.inmemory;
 
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
+import org.skye.domain.DomainArchiveStore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * An in-memory {@link org.skye.core.ArchiveStore} that can be used for testing
@@ -16,8 +16,8 @@ public class InMemoryArchiveStore implements ArchiveStore {
     private Map<SimpleObject, SimpleObject> objects = new HashMap<>();
 
     @Override
-    public void initialize(Properties properties) {
-        // Nothing to do
+    public void initialize(DomainArchiveStore das) {
+
     }
 
     @Override

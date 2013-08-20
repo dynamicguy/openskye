@@ -2,9 +2,9 @@ package org.skye.stores.archive;
 
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
+import org.skye.domain.DomainArchiveStore;
 
 import javax.tools.FileObject;
-import java.util.Properties;
 
 /**
  * An implementation of an {@link ArchiveStore} that simply uses the local
@@ -13,11 +13,11 @@ import java.util.Properties;
 public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     public final static String IMPLEMENTATION = "localFS";
-    private String localPath;
+    private DomainArchiveStore domainArchiveStore;
 
     @Override
-    public void initialize(Properties properties) {
-        localPath = properties.getProperty("localPath");
+    public void initialize(DomainArchiveStore das) {
+        this.domainArchiveStore = das;
     }
 
     @Override

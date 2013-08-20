@@ -2,6 +2,7 @@ package org.skye.stores.information;
 
 import org.joda.time.DateTime;
 import org.skye.core.*;
+import org.skye.domain.DomainInformationStore;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -22,27 +23,26 @@ public class LocalFilesystemInformationStore implements InformationStore {
 
     public final static String IMPLEMENTATION = "localFS";
     private static final String FILE_PATH = "filePath";
-    private Properties properties;
-    private Path fileSystem;
+    private DomainInformationStore domainInformationStore;
 
     @Override
-    public void initialize(Properties properties) {
-        this.properties = properties;
+    public void initialize(DomainInformationStore dis) {
+        this.domainInformationStore = dis;
     }
 
     @Override
     public Properties getMetadata() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new Properties();
     }
 
     @Override
     public String getName() {
-        return properties.getProperty(FILE_PATH);
+        return domainInformationStore.getProperties().get(FILE_PATH);
     }
 
     @Override
     public String getUrl() {
-        return "file://" + properties.getProperty(FILE_PATH);
+        return "file://" + domainInformationStore.getProperties().get(FILE_PATH);
     }
 
     @Override
@@ -89,6 +89,6 @@ public class LocalFilesystemInformationStore implements InformationStore {
     }
 
     public Path getFileSystem() {
-        return FileSystems.getDefault().getPath(properties.getProperty(FILE_PATH));
+        return FileSystems.getDefault().getPath(domainInformationStore.getProperties().get(FILE_PATH));
     }
 }

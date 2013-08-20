@@ -2,15 +2,15 @@ package org.skye.hadoop.stores;
 
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
-
-import java.util.Properties;
+import org.skye.domain.DomainArchiveStore;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
  */
 public class HDFSArchiveStore implements ArchiveStore {
+
     @Override
-    public void initialize(Properties properties) {
+    public void initialize(DomainArchiveStore das) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

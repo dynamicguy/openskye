@@ -1,6 +1,6 @@
 package org.skye.core;
 
-import java.util.Properties;
+import org.skye.domain.DomainArchiveStore;
 
 /**
  * Represents the interface for an <code>ArchiveStore</code>.
@@ -10,9 +10,9 @@ public interface ArchiveStore {
     /**
      * Used to initialize the archive store
      *
-     * @param properties the properties used to initialize
+     * @param das the domain archive store
      */
-    void initialize(Properties properties);
+    void initialize(DomainArchiveStore das);
 
     /**
      * Returns the name of the store

@@ -1,6 +1,7 @@
 package org.skye.core;
 
 import org.joda.time.DateTime;
+import org.skye.domain.DomainInformationStore;
 
 import java.util.Properties;
 
@@ -17,9 +18,9 @@ public interface InformationStore {
     /**
      * Used to initialize the information store
      *
-     * @param properties the properties used to initialize
+     * @param dis The domain information store
      */
-    void initialize(Properties properties);
+    void initialize(DomainInformationStore dis);
 
     /**
      * Returns a set of metadata for this information store

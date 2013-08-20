@@ -5,6 +5,8 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An instance of an {@link org.skye.core.ArchiveStore} definition
@@ -22,5 +24,7 @@ public class ArchiveStoreInstance {
     private String id;
     // The name of the {@link ArchiveStore} implementation
     private String implementation;
+    @MapKey(name = "name")
+    private Map<String, String> properties = new HashMap<>();
 
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The representation of an information store owned by a {@link Domain}
@@ -24,5 +26,7 @@ public class DomainInformationStore {
     private Domain domain;
     // The name of the {@link InformationStore} implementation
     private String implementation;
+    @MapKey(name = "name")
+    private Map<String, String> properties = new HashMap<>();
 
 }

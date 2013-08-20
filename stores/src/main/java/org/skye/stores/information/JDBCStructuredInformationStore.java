@@ -9,6 +9,7 @@ import org.eobjects.metamodel.schema.Table;
 import org.joda.time.DateTime;
 import org.skye.core.*;
 import org.skye.core.structured.ColumnMetadata;
+import org.skye.domain.DomainInformationStore;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,16 +32,11 @@ public class JDBCStructuredInformationStore implements InformationStore {
     public static final String DB_URL = "dbUrl";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
-    private Properties properties;
-
-    @Override
-    public void initialize(Properties properties) {
-        this.properties = properties;
-    }
+    private DomainInformationStore domainInformationStore;
 
     private Connection getConnection() {
         try {
-            Class.forName(properties.getProperty(DRIVER_CLASS));
+            Class.forName(domainInformationStore.getProperties().get(DRIVER_CLASS));
 
             //STEP 3: Open a connection
             log.info("Connecting to database...");
@@ -50,6 +46,11 @@ public class JDBCStructuredInformationStore implements InformationStore {
         } catch (SQLException e) {
             throw new SkyeException("Unable to connect to database due to SQL exception", e);
         }
+    }
+
+    @Override
+    public void initialize(DomainInformationStore dis) {
+        this.domainInformationStore = dis;
     }
 
     @Override
@@ -70,12 +71,12 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public String getName() {
-        return properties.getProperty(InformationStore.NAME);
+        return domainInformationStore.getProperties().get(InformationStore.NAME);
     }
 
     @Override
     public String getUrl() {
-        return properties.getProperty(DB_URL);
+        return domainInformationStore.getProperties().get(DB_URL);
     }
 
     @Override

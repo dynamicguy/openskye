@@ -5,6 +5,8 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A {@link Domain} owned {@link ArchiveStoreInstance}
@@ -24,4 +26,7 @@ public class DomainArchiveStore {
     private Domain domain;
     @ManyToOne
     private ArchiveStoreInstance archiveStoreInstance;
+    @OneToMany(cascade = CascadeType.ALL)
+    @MapKey(name = "name")
+    private Map<String, String> properties = new HashMap<>();
 }
