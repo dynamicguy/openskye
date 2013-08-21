@@ -50,4 +50,4 @@ http:
     contextParameters:
             swagger.api.basepath: http://localhost:8080
             api.version: 1.0
-            shiroConfigLocations: classpath:shiro-mock.ini
+           # shiroConfigLocations: classpath:shiro-mock.ini

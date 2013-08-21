@@ -6,6 +6,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.realm.AuthenticatingRealm;
+//import org.skye.config.SkyeConfiguration;
 
 //import org.skye.domain;
 
@@ -13,6 +14,12 @@ import org.apache.shiro.realm.AuthenticatingRealm;
  * SkyeRealm: a realm specific to Skye
  */
 public class SkyeRealm extends AuthenticatingRealm {
+   /*
+    private final HibernateBundle<SkyeConfiguration> hibernate;
+
+    public SkyeRealm(HibernateBundle<SkyeConfiguration> hibernate){
+        this.hibernate = hibernate;
+    }  */
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
@@ -28,6 +35,8 @@ public class SkyeRealm extends AuthenticatingRealm {
     public boolean supports(AuthenticationToken authenticationToken) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+
 
 
 }
