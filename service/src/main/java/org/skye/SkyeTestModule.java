@@ -1,8 +1,8 @@
 package org.skye;
 
+import com.google.inject.Exposed;
 import com.google.inject.Provides;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
-import org.apache.shiro.config.Ini;
 import org.apache.shiro.guice.ShiroModule;
 import org.apache.shiro.realm.Realm;
 import org.hibernate.SessionFactory;
@@ -24,6 +24,7 @@ public class SkyeTestModule extends ShiroModule {
     }
 
     @Provides
+    @Exposed
     public SessionFactory provideSessionFactory() {
         return hibernate.getSessionFactory();
     }
@@ -31,21 +32,17 @@ public class SkyeTestModule extends ShiroModule {
     @Override
     public void configure() {
         bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class).asEagerSingleton();
+        expose(ObjectMetadataRepository.class);
         bind(StoreRegistry.class).asEagerSingleton();
+        expose(StoreRegistry.class);
+
         configureShiro();
     }
 
     @Override
-    protected void configureShiro(){
-        Ini init = new Ini();
-        init.addSection("main");
-        init.setSectionProperty("main", "SkyeRealm", "org.skye.security.SkyeRealm");
-        try{
-            bindRealm().toConstructor(SkyeRealm.class.getConstructor(Ini.class));
-        }
-        catch (NoSuchMethodException e){
-             addError(e);
-        }
+    protected void configureShiro() {
+        bind(Realm.class).to(SkyeRealm.class).asEagerSingleton();
+        expose(Realm.class);
     }
 
 }
