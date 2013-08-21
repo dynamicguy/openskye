@@ -9,6 +9,7 @@ import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
+import org.apache.shiro.web.servlet.ShiroFilter;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.skye.config.SkyeConfiguration;
 import org.skye.domain.*;
@@ -60,6 +61,9 @@ public class SkyeService extends Service<SkyeConfiguration> {
         // Lets set-up the security
         environment.setSessionHandler(new SessionHandler());
         environment.addServletListeners(new EnvironmentLoaderListener());
+
+        ShiroFilter shiroFilter = new ShiroFilter();
+        environment.addFilter(shiroFilter, "/api/1/*").setName("shiro-filter");
     }
 
 }

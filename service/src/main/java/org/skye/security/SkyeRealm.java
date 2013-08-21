@@ -16,7 +16,7 @@ public class SkyeRealm extends AuthenticatingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        return null;
+        throw new AuthenticationException();
     }
 
     @Override
