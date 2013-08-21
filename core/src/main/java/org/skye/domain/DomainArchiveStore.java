@@ -26,7 +26,6 @@ public class DomainArchiveStore {
     private Domain domain;
     @ManyToOne
     private ArchiveStoreInstance archiveStoreInstance;
-    @OneToMany(cascade = CascadeType.ALL)
-    @MapKey(name = "name")
+    @Transient
     private Map<String, String> properties = new HashMap<>();
 }

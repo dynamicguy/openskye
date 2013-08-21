@@ -24,7 +24,7 @@ public class ArchiveStoreInstance {
     private String id;
     // The name of the {@link ArchiveStore} implementation
     private String implementation;
-    @MapKey(name = "name")
+    @Transient
     private Map<String, String> properties = new HashMap<>();
 
 }

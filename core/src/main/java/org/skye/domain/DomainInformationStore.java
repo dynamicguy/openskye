@@ -26,7 +26,7 @@ public class DomainInformationStore {
     private Domain domain;
     // The name of the {@link InformationStore} implementation
     private String implementation;
-    @MapKey(name = "name")
+    @Transient
     private Map<String, String> properties = new HashMap<>();
 
 }
