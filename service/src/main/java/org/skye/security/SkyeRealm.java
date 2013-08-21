@@ -21,6 +21,10 @@ public class SkyeRealm extends AuthenticatingRealm {
         this.hibernate = hibernate;
     }  */
 
+    public SkyeRealm(){
+        super();
+    }
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         return null;
