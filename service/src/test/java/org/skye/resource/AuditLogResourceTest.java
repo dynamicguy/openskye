@@ -119,4 +119,25 @@ public class AuditLogResourceTest extends ResourceTest {
             assertThat(e).hasMessage("Client response status: 401");
         }
     }
+
+    @Test
+    public void testAuthorizedGetAuditLogProperties() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLog:get")).thenReturn(true);
+        assertThat(client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/auditLogProperties").get(AuditLog.class))
+                .isEqualTo(auditLog);
+        verify(dao).get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+
+    @Test
+    public void testUnAuthorisedGetAuditLogProperties() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("auditLog:get")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/auditLogs/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/auditLogProperties").get(AuditLog.class));
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
+    }
 }
