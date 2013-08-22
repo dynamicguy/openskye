@@ -7,8 +7,11 @@ import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.core.ArchiveContentBlock;
+import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
 import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.stores.StoreRegistry;
+import org.skye.util.NotFoundException;
 import org.skye.util.UnauthorizedException;
 
 import javax.inject.Inject;
@@ -32,6 +35,8 @@ public class MetaRepository {
 
     @Inject
     protected ObjectMetadataRepository objectMetadataRepository;
+    @Inject
+    private StoreRegistry storeRegistry;
 
     @ApiOperation(value = "Get simple object by id", notes = "Return an instance by id")
     @Path("/{id}")
@@ -70,14 +75,19 @@ public class MetaRepository {
     @Timed
     public Response getContent(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {
-            Optional<SimpleObject> simpleObject = objectMetadataRepository.get(id);
-            if (simpleObject.isPresent()) {
-                return Response.ok(objectMetadataRepository.getContent(simpleObject.get())).header("Content-Disposition", "attachment; filename=" + simpleObject.get().getPath()).build();
+            Optional<SimpleObject> optionalSimpleObject = objectMetadataRepository.get(id);
+            if (optionalSimpleObject.isPresent()) {
+                SimpleObject simpleObject = optionalSimpleObject.get();
+                Optional<ArchiveStore> archiveStore = storeRegistry.build(simpleObject.getDomainArchiveStore());
+                if (archiveStore.isPresent()) {
+                    org.omg.CORBA.portable.InputStream inputStream = archiveStore.get().getStream(simpleObject);
+                    return Response.ok(inputStream).
+                            header("Content-Disposition", "attachment; filename=" + simpleObject.getPath()).build();
+                }
             }
-            ;
         } else {
             throw new UnauthorizedException();
         }
-        return null;
+        throw new NotFoundException();
     }
 }

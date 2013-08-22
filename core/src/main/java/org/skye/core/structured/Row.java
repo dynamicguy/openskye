@@ -6,5 +6,4 @@ package org.skye.core.structured;
 public class Row {
 
 
-
 }

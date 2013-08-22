@@ -51,6 +51,6 @@ public class SkyeWebEnvironment implements MutableWebEnvironment {
 
     @Override
     public org.apache.shiro.mgt.SecurityManager getSecurityManager() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return webSecurityManager;
     }
 }

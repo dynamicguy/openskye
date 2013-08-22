@@ -1,5 +1,6 @@
 package org.skye.stores.inmemory;
 
+import org.omg.CORBA.portable.InputStream;
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainArchiveStore;
@@ -43,5 +44,10 @@ public class InMemoryArchiveStore implements ArchiveStore {
     @Override
     public void put(SimpleObject simpleObject) {
         objects.put(simpleObject, simpleObject);
+    }
+
+    @Override
+    public InputStream getStream(SimpleObject simpleObject) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

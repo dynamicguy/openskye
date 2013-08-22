@@ -1,5 +1,6 @@
 package org.skye.core;
 
+import org.omg.CORBA.portable.InputStream;
 import org.skye.domain.DomainArchiveStore;
 
 /**
@@ -52,4 +53,13 @@ public interface ArchiveStore {
      * @param simpleObject the object to archive
      */
     void put(SimpleObject simpleObject);
+
+    /**
+     * Will get a stream of the content of the @{link SimpleObject}
+     *
+     * @param simpleObject the object to get a stream to
+     */
+    InputStream getStream(SimpleObject simpleObject);
+
+
 }

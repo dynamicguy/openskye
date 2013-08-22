@@ -1,6 +1,7 @@
 package org.skye.core;
 
 import lombok.Data;
+import org.skye.domain.DomainArchiveStore;
 
 import java.util.*;
 
@@ -17,5 +18,7 @@ public abstract class SimpleObject {
     private boolean container;
     private String mimeType;
     private InformationStore informationStore;
+    private DomainArchiveStore domainArchiveStore;
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
+
 }
