@@ -3,12 +3,15 @@ package org.skye;
 import com.google.inject.Exposed;
 import com.google.inject.Provides;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.guice.ShiroModule;
 import org.apache.shiro.realm.Realm;
 import org.hibernate.SessionFactory;
 import org.skye.config.SkyeConfiguration;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.impl.InMemoryObjectMetadataRepository;
+import org.skye.security.SkyeAuthenticationToken;
 import org.skye.security.SkyeRealm;
 import org.skye.stores.StoreRegistry;
 
@@ -43,6 +46,8 @@ public class SkyeTestModule extends ShiroModule {
     protected void configureShiro() {
         bind(Realm.class).to(SkyeRealm.class).asEagerSingleton();
         expose(Realm.class);
+        bind(AuthenticationToken.class).to(SkyeAuthenticationToken.class).asEagerSingleton();
+        expose(AuthenticationToken.class);
     }
 
 }
