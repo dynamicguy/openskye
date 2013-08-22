@@ -10,6 +10,7 @@ import org.skye.util.NotFoundException;
 import org.skye.util.PaginatedResult;
 import org.skye.util.UnauthorizedException;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;

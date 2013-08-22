@@ -24,21 +24,28 @@
             <artifactId>skye-stores</artifactId>
         </dependency>
 
-        <!-- Use the DropWizard Guice Integration -->
-        <dependency>
-            <artifactId>dropwizard-guice</artifactId>
-            <groupId>com.hubspot.dropwizard</groupId>
-            <version>0.6.2</version>
-        </dependency>
+        <!-- Hibernate -->
         <dependency>
             <groupId>com.yammer.dropwizard</groupId>
             <artifactId>dropwizard-hibernate</artifactId>
             <version>0.6.2</version>
         </dependency>
+
+        <!-- Guice -->
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-servlet</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-guice</artifactId>
+            <version>1.9.1</version>
         </dependency>
 
         <!-- Use DropWizard Testing -->

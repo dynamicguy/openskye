@@ -1,7 +1,10 @@
 package org.skye.security;
 
 import org.apache.shiro.web.env.MutableWebEnvironment;
+import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.FilterChainResolver;
+import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 
 import javax.inject.Inject;
@@ -14,19 +17,31 @@ import javax.servlet.ServletContext;
  */
 public class SkyeWebEnvironment implements MutableWebEnvironment {
 
+    private final PathMatchingFilterChainResolver pathMatchingFilterChainResolver;
     @Inject
     private WebSecurityManager webSecurityManager;
     private ServletContext servletContext;
-    private FilterChainResolver filterChainResolver;
+
+    public SkyeWebEnvironment() {
+
+        BasicHttpAuthenticationFilter authc = new BasicHttpAuthenticationFilter();
+
+        DefaultFilterChainManager filterChainManager = new DefaultFilterChainManager();
+        filterChainManager.addFilter("auth-c", authc);
+
+        pathMatchingFilterChainResolver = new PathMatchingFilterChainResolver();
+        pathMatchingFilterChainResolver.setFilterChainManager(filterChainManager);
+
+    }
 
     @Override
     public FilterChainResolver getFilterChainResolver() {
-        return filterChainResolver;
+        return pathMatchingFilterChainResolver;
     }
 
     @Override
     public void setFilterChainResolver(FilterChainResolver filterChainResolver) {
-        this.filterChainResolver = filterChainResolver;
+        //
     }
 
     @Override

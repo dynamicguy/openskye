@@ -1,6 +1,5 @@
 package org.skye;
 
-import com.hubspot.dropwizard.guice.GuiceBundle;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
@@ -8,11 +7,10 @@ import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.web.env.EnvironmentLoaderListener;
-import org.apache.shiro.web.servlet.ShiroFilter;
-import org.eclipse.jetty.server.session.SessionHandler;
 import org.skye.config.SkyeConfiguration;
 import org.skye.domain.*;
+import org.skye.guice.GuiceBundle;
+import org.skye.security.SkyeGuiceServletContextListener;
 import org.skye.util.SwaggerBundle;
 
 /**
@@ -58,12 +56,8 @@ public class SkyeService extends Service<SkyeConfiguration> {
     public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {
 
-        // Lets set-up the security
-        environment.setSessionHandler(new SessionHandler());
-        environment.addServletListeners(new EnvironmentLoaderListener());
+        environment.addServletListeners(new SkyeGuiceServletContextListener(guiceBundle.getInjector()));
 
-        ShiroFilter shiroFilter = new ShiroFilter();
-        environment.addFilter(shiroFilter, "/api/1/*").setName("shiro-filter");
     }
 
 }
