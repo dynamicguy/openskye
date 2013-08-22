@@ -10,10 +10,9 @@ import org.junit.Test;
 import org.skye.domain.Domain;
 import org.skye.resource.dao.DomainDAO;
 import org.skye.util.PaginatedResult;
-
+import static org.junit.Assert.assertEquals;
 import javax.ws.rs.core.MediaType;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -115,6 +114,46 @@ public class DomainResourceTest extends ResourceTest {
         when(subject.isPermitted("domain:get")).thenReturn(false);
         try {
             assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(Domain.class));
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
+    }
+
+    @Test
+    public void testAuthorizedGetArchiveStores() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:get")).thenReturn(true);
+        assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/archiveStores").get(Domain.class)).isEqualTo(domain);
+        verify(dao).get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+
+    @Test
+    public void testUnAuthorisedGetArchiveStores() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:get")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/archiveStores").get(Domain.class));
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
+    }
+
+    @Test
+    public void testAuthorizedGetInformationStores() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:get")).thenReturn(true);
+        assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/informationStores").get(Domain.class)).isEqualTo(domain);
+        verify(dao).get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+
+    @Test
+    public void testUnAuthorisedGetInformationStores() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("domain:get")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/domains/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/informationStores").get(Domain.class));
             fail("Should be unauthorized");
         } catch (UniformInterfaceException e) {
             assertThat(e).hasMessage("Client response status: 401");

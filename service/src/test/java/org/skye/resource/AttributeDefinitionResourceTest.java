@@ -13,7 +13,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;

@@ -33,7 +33,7 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
         return "channel";
     }
 
-    @Path("/{id}/archiveStores")
+    @Path("/{id}/channelArchiveStores")
     @GET
     @ApiOperation(value = "Return the archive stores used by this channel")
     public PaginatedResult<ChannelArchiveStore> getChannelArchiveStores(@PathParam("id") String id) {
