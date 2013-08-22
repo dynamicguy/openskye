@@ -13,7 +13,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -115,6 +115,26 @@ public class UserResourceTest extends ResourceTest {
         when(subject.isPermitted("user:get")).thenReturn(false);
         try {
             assertThat(client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(User.class));
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
+    }
+
+    @Test
+    public void testAuthorizedGetUserRoles() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("user:get")).thenReturn(true);
+        assertThat(client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/roles").get(User.class)).isEqualTo(user);
+        verify(dao).get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+
+    @Test
+    public void testUnAuthorisedGetUserRoles() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("user:get")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/users/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/roles").get(User.class));
             fail("Should be unauthorized");
         } catch (UniformInterfaceException e) {
             assertThat(e).hasMessage("Client response status: 401");

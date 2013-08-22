@@ -39,7 +39,7 @@ public class AuditLogResource extends AbstractUpdatableDomainResource<AuditLog> 
         return "auditLog";
     }
 
-    @Path("/{id}/archiveStores")
+    @Path("/{id}/auditLogProperties")
     @GET
     @ApiOperation(value = "Return the properties for this audit log")
     public PaginatedResult<AuditLogProperty> getAuditLogProperties(@PathParam("id") String id) {

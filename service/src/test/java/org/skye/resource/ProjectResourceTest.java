@@ -13,7 +13,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -115,6 +115,27 @@ public class ProjectResourceTest extends ResourceTest {
         when(subject.isPermitted("project:get")).thenReturn(false);
         try {
             assertThat(client().resource("/api/1/projects/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(Project.class));
+            fail("Should be unauthorized");
+        } catch (UniformInterfaceException e) {
+            assertThat(e).hasMessage("Client response status: 401");
+        }
+    }
+
+    @Test
+    public void testAuthorizedGetChannels() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:get")).thenReturn(true);
+        assertThat(client().resource("/api/1/projects/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/channels").get(Project.class))
+                .isEqualTo(project);
+        verify(dao).get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
+    }
+
+    @Test
+    public void testUnAuthorisedGetChannels() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted("project:get")).thenReturn(false);
+        try {
+            assertThat(client().resource("/api/1/projects/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9/channels").get(Project.class));
             fail("Should be unauthorized");
         } catch (UniformInterfaceException e) {
             assertThat(e).hasMessage("Client response status: 401");
