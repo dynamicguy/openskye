@@ -1,5 +1,6 @@
 package org.skye.security;
 
+import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
@@ -19,7 +20,7 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
 
     @Override
     protected Injector getInjector() {
-        Injector childInjector = injector.createChildInjector(new SkyeShiroModule(servletContext));
+        Injector childInjector = Guice.createInjector(new SkyeShiroModule(servletContext));
         return childInjector;
     }
 

@@ -13,6 +13,8 @@ import org.skye.guice.GuiceBundle;
 import org.skye.security.SkyeGuiceServletContextListener;
 import org.skye.util.SwaggerBundle;
 
+import javax.servlet.ServletContext;
+
 /**
  * The Skye Service
  */

@@ -1,5 +1,6 @@
 package org.skye.security;
 
+import com.google.inject.Binder;
 import org.apache.shiro.guice.web.ShiroWebModule;
 
 import javax.servlet.ServletContext;
@@ -18,6 +19,7 @@ public class SkyeShiroModule extends ShiroWebModule {
         bindRealm().to(SkyeRealm.class).asEagerSingleton();
 
         addFilterChain("/**", AUTHC_BASIC);
+        ShiroWebModule.bindGuiceFilter(binder());
     }
 
 }
