@@ -13,8 +13,6 @@ import org.skye.guice.GuiceBundle;
 import org.skye.security.SkyeGuiceServletContextListener;
 import org.skye.util.SwaggerBundle;
 
-import javax.servlet.ServletContext;
-
 /**
  * The Skye Service
  */
@@ -51,15 +49,12 @@ public class SkyeService extends Service<SkyeConfiguration> {
                 .enableAutoConfig(getClass().getPackage().getName())
                 .setConfigClass(SkyeConfiguration.class)
                 .build();
-
     }
 
     @Override
     public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {
-
-        environment.addServletListeners(new SkyeGuiceServletContextListener(guiceBundle.getInjector()));
-
+        environment.addServletListeners(new SkyeGuiceServletContextListener(hibernate));
     }
 
 }

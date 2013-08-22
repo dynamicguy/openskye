@@ -50,4 +50,3 @@ http:
     contextParameters:
             swagger.api.basepath: http://localhost:8080
             api.version: 1.0
-            shiroEnvironmentClass: org.skye.security.SkyeWebEnvironment

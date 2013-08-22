@@ -1,7 +1,11 @@
 package org.skye.security;
 
-import com.google.inject.Binder;
+import com.google.inject.Exposed;
+import com.google.inject.Provides;
+import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.apache.shiro.guice.web.ShiroWebModule;
+import org.hibernate.SessionFactory;
+import org.skye.config.SkyeConfiguration;
 
 import javax.servlet.ServletContext;
 
@@ -10,16 +14,25 @@ import javax.servlet.ServletContext;
  */
 public class SkyeShiroModule extends ShiroWebModule {
 
-    public SkyeShiroModule(ServletContext sc) {
+    private final HibernateBundle<SkyeConfiguration> hibernate;
+
+    public SkyeShiroModule(ServletContext sc, HibernateBundle<SkyeConfiguration> hibernate) {
         super(sc);
+        this.hibernate = hibernate;
     }
 
     @Override
     protected void configureShiroWeb() {
         bindRealm().to(SkyeRealm.class).asEagerSingleton();
 
-        addFilterChain("/**", AUTHC_BASIC);
+        addFilterChain("/api/**", AUTHC_BASIC);
         ShiroWebModule.bindGuiceFilter(binder());
+    }
+
+    @Provides
+    @Exposed
+    public SessionFactory provideSessionFactory() {
+        return hibernate.getSessionFactory();
     }
 
 }

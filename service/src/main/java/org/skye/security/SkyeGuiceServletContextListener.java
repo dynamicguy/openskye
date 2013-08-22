@@ -3,6 +3,8 @@ package org.skye.security;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.yammer.dropwizard.hibernate.HibernateBundle;
+import org.skye.config.SkyeConfiguration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -12,15 +14,15 @@ import javax.servlet.ServletContextEvent;
  */
 public class SkyeGuiceServletContextListener extends GuiceServletContextListener {
     private ServletContext servletContext;
-    private Injector injector;
+    private HibernateBundle<SkyeConfiguration> hibernate;
 
-    public SkyeGuiceServletContextListener(Injector injector) {
-        this.injector = injector;
+    public SkyeGuiceServletContextListener(HibernateBundle<SkyeConfiguration> hibernate) {
+        this.hibernate = hibernate;
     }
 
     @Override
     protected Injector getInjector() {
-        Injector childInjector = Guice.createInjector(new SkyeShiroModule(servletContext));
+        Injector childInjector = Guice.createInjector(new SkyeShiroModule(servletContext,hibernate));
         return childInjector;
     }
 
