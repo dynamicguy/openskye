@@ -15,11 +15,15 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StructuredObject extends SimpleObject {
+public abstract class StructuredObject extends SimpleObject {
 
     private List<ColumnMetadata> columns;
 
-    public Iterator<Row> getRows() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
-    }
+    /**
+     * Returns an iterator to the rows in the database
+     *
+     * @return
+     */
+    public abstract Iterator<Row> getRows();
+
 }

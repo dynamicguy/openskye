@@ -7,7 +7,10 @@ import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
 import org.joda.time.DateTime;
-import org.skye.core.*;
+import org.skye.core.ContainerObject;
+import org.skye.core.InformationStore;
+import org.skye.core.SimpleObject;
+import org.skye.core.SkyeException;
 import org.skye.core.structured.ColumnMetadata;
 import org.skye.domain.DomainInformationStore;
 
@@ -34,7 +37,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
     public static final String PASSWORD = "password";
     private DomainInformationStore domainInformationStore;
 
-    private Connection getConnection() {
+    protected Connection getConnection() {
         try {
             Class.forName(domainInformationStore.getProperties().get(DRIVER_CLASS));
 
@@ -105,7 +108,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
             if (schema != null) {
                 List<SimpleObject> tableObjects = new ArrayList<>();
                 for (Table table : schema.getTables()) {
-                    StructuredObject structuredObject = new StructuredObject();
+                    JDBCStructuredObject structuredObject = new JDBCStructuredObject();
                     structuredObject.setPath(schema.getName() + "/" + table.getName());
                     structuredObject.setId(table.getQualifiedLabel());
                     List<ColumnMetadata> colMetas = new ArrayList<>();
@@ -119,6 +122,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
                         colMetas.add(colMeta);
                     }
                     structuredObject.setColumns(colMetas);
+                    structuredObject.setTable(table);
                     tableObjects.add(structuredObject);
                 }
                 return tableObjects;

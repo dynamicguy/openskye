@@ -1,4 +1,4 @@
-package org.skye.stores;
+package org.skye.stores.information;
 
 import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
@@ -6,6 +6,7 @@ import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.ObjectMetadataSearch;
 import org.skye.metadata.impl.InMemoryObjectMetadataRepository;
 import org.skye.metadata.impl.InMemoryObjectMetadataSearch;
+import org.skye.stores.StoreRegistry;
 import org.skye.task.TaskManager;
 import org.skye.task.inmemory.InMemoryTaskManager;
 
