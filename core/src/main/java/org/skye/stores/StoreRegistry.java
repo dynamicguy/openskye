@@ -72,6 +72,7 @@ public class StoreRegistry {
                 // Spin up a new instance of the InformationStore
                 try {
                     InformationStore newInstance = is.getClass().newInstance();
+                    newInstance.initialize(dis);
                     return Optional.of(newInstance);
                 } catch (Exception e) {
                     throw new SkyeException("Unable to build a new instance of the information store " + is.getName(), e);

@@ -35,13 +35,14 @@ public class JDBCStructuredInformationStoreTest {
     public void ensureWeCanSeeASimpleObject() {
         DomainInformationStore dis = new DomainInformationStore();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
+        dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
+        dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:skye");
+        dis.getProperties().put(JDBCStructuredInformationStore.USER, "sa");
+        dis.getProperties().put(JDBCStructuredInformationStore.PASSWORD, "");
 
-        assertThat("We can create an instance of the JDBC structured information store", registry.build(dis).isPresent());
+        assertThat("Get metadata for the store", registry.build(dis).get().getMetadata() != null);
 
         JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(dis).get();
-
-
-
     }
 
 }
