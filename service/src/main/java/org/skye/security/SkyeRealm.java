@@ -38,11 +38,15 @@ public class SkyeRealm extends AuthenticatingRealm {
                 // TODO so we need to look up the user using hibernate
                 // by adding the methods to find the username
                 // and check the
-                userDao.list();
 
-                throw new AuthenticationException();
-            } catch (Exception e) {
-                throw new SkyeException("Unable to authenication user", e);
+                if(userDao.findByEmail(authenticationToken.toString()).isPresent()){
+                    return (AuthenticationInfo)userDao.findByEmail(authenticationToken.toString());
+                }
+                else{
+                    throw new AuthenticationException();
+                }
+            } catch (AuthenticationException e) {
+                throw new SkyeException("Unable to authenticate user", e);
             }
         } finally {
             session.close();
