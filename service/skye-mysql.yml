@@ -1,6 +1,6 @@
 database:
   # the name of your JDBC driver
-  driverClass: org.h2.Driver
+  driverClass: com.mysql.jdbc.Driver
 
   # the username
   user: root
@@ -9,7 +9,7 @@ database:
   password: password
 
   # the JDBC URL
-  url: "jdbc:h2:mem:skye"
+  url: "jdbc:mysql://localhost/test"
 
   # any properties specific to your JDBC driver:
   properties:

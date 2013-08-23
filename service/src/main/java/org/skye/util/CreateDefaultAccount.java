@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.skye.core.SkyeException;
 import org.skye.domain.Domain;
@@ -35,7 +36,7 @@ public class CreateDefaultAccount {
             try {
                 if (!userDAO.findByEmail("admin@skye.org").isPresent()) {
                     log.info("Creating default admin account");
-
+                    Transaction trans = session.beginTransaction();
                     Domain domain = new Domain();
                     domain.setName("Skye");
                     domainDAO.persist(domain);
@@ -43,8 +44,10 @@ public class CreateDefaultAccount {
                     User adminUser = new User();
                     adminUser.setName("Skye Admin");
                     adminUser.setDomain(domain);
+                    adminUser.setEmail("admin@skye.org");
                     userDAO.persist(adminUser);
-
+                    session.save(adminUser);
+                    trans.commit();
                 }
             } catch (AuthenticationException e) {
                 throw new SkyeException("Unable to authenticate user", e);
