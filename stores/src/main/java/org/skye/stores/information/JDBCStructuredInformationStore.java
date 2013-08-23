@@ -41,13 +41,12 @@ public class JDBCStructuredInformationStore implements InformationStore {
         try {
             Class.forName(domainInformationStore.getProperties().get(DRIVER_CLASS));
 
-            //STEP 3: Open a connection
             log.info("Connecting to database...");
-            return DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            return DriverManager.getConnection(domainInformationStore.getProperties().get(DB_URL), domainInformationStore.getProperties().get(USER), domainInformationStore.getProperties().get(PASSWORD));
         } catch (ClassNotFoundException e) {
             throw new SkyeException("Unable to find driver class", e);
         } catch (SQLException e) {
-            throw new SkyeException("Unable to connect to database due to SQL exception", e);
+            throw new SkyeException("Unable to connect to database due to exception on URL " + domainInformationStore.getProperties().get(DB_URL), e);
         }
     }
 
