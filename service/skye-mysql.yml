@@ -1,15 +1,15 @@
 database:
   # the name of your JDBC driver
-  driverClass: org.h2.Driver
+  driverClass: com.mysql.jdbc.Driver
 
   # the username
-  user: sa
+  user: root
 
   # the password
-  password:
+  password: password
 
   # the JDBC URL
-  url: "jdbc:h2:mem:skye"
+  url: "jdbc:mysql://localhost/test"
 
   # any properties specific to your JDBC driver:
   properties:
@@ -46,7 +46,7 @@ logging:
         threshold: DEBUG
 
 http:
-    port: 5000 
+    port: 8080
     contextParameters:
             swagger.api.basepath: http://localhost:8080
             api.version: 1.0

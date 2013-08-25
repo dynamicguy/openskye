@@ -6,6 +6,7 @@ import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.hibernate.SessionFactory;
 import org.skye.config.SkyeConfiguration;
+import org.skye.util.CreateDefaultAccount;
 
 import javax.servlet.ServletContext;
 
@@ -24,6 +25,8 @@ public class SkyeShiroModule extends ShiroWebModule {
     @Override
     protected void configureShiroWeb() {
         bindRealm().to(SkyeRealm.class).asEagerSingleton();
+
+        bind(CreateDefaultAccount.class).asEagerSingleton();
 
         addFilterChain("/api/**", AUTHC_BASIC);
         ShiroWebModule.bindGuiceFilter(binder());

@@ -1,15 +1,17 @@
 package org.skye.security;
 
+import com.google.common.base.Optional;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.realm.AuthenticatingRealm;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.skye.core.SkyeException;
+import org.skye.domain.User;
 import org.skye.resource.dao.UserDAO;
 
 import javax.inject.Inject;
@@ -17,7 +19,7 @@ import javax.inject.Inject;
 /**
  * SkyeRealm: a realm specific to Skye
  */
-public class SkyeRealm extends AuthenticatingRealm {
+public class SkyeRealm extends AuthorizingRealm {
 
     @Inject
     private UserDAO userDao;
@@ -29,20 +31,33 @@ public class SkyeRealm extends AuthenticatingRealm {
     }
 
     @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
+        authInfo.addStringPermission("*");
+        return authInfo;
+    }
+
+    @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         final Session session = sessionFactory.openSession();
         try {
-
             ManagedSessionContext.bind(session);
             try {
-                // TODO so we need to look up the user using hibernate
-                // by adding the methods to find the username
-                // and check the
-                userDao.list();
+                if (authenticationToken instanceof UsernamePasswordToken) {
+                    UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+                    Optional<User> user = userDao.findByEmail(token.getUsername());
+                    if (user.isPresent()) {
+                        SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
+                        return simpleAuthInfo;
+                    } else {
+                        throw new AuthenticationException();
+                    }
+                } else {
+                    throw new AuthenticationException();
+                }
 
-                throw new AuthenticationException();
-            } catch (Exception e) {
-                throw new SkyeException("Unable to authenication user", e);
+            } catch (AuthenticationException e) {
+                throw new SkyeException("Unable to authenticate user", e);
             }
         } finally {
             session.close();
