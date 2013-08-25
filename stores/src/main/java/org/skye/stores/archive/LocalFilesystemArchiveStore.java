@@ -3,9 +3,13 @@ package org.skye.stores.archive;
 import org.omg.CORBA.portable.InputStream;
 import org.skye.core.ArchiveStore;
 import org.skye.core.SimpleObject;
+import org.skye.core.SkyeException;
 import org.skye.domain.DomainArchiveStore;
+import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.metadata.ObjectMetadataSearch;
+import org.skye.stores.information.JDBCStructuredObject;
 
-import javax.tools.FileObject;
+import javax.inject.Inject;
 
 /**
  * An implementation of an {@link ArchiveStore} that simply uses the local
@@ -15,6 +19,10 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     public final static String IMPLEMENTATION = "localFS";
     private DomainArchiveStore domainArchiveStore;
+    @Inject
+    private ObjectMetadataRepository omr;
+    @Inject
+    private ObjectMetadataSearch oms;
 
     @Override
     public void initialize(DomainArchiveStore das) {
@@ -33,7 +41,7 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     @Override
     public boolean isSupported(SimpleObject so) {
-        return true;
+        return so instanceof JDBCStructuredObject;
     }
 
     @Override
@@ -43,9 +51,20 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     @Override
     public void put(SimpleObject simpleObject) {
-        if (simpleObject instanceof FileObject) {
-
+        if (!isSupported(simpleObject)) {
+            throw new SkyeException("Unsupported simple object type " + simpleObject.getClass().getName());
         }
+
+        // Lets try and put it
+        if (simpleObject instanceof JDBCStructuredObject) {
+            putJDBCStructuredObject((JDBCStructuredObject) simpleObject);
+        }
+
+        oms.index(simpleObject);
+        omr.put(simpleObject);
+    }
+
+    private void putJDBCStructuredObject(JDBCStructuredObject simpleObject) {
     }
 
     @Override

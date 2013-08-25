@@ -8,7 +8,7 @@ import org.skye.domain.DomainArchiveStore;
 /**
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
  */
-public class HdfsArchiveStore implements ArchiveStore {
+public class HDFSArchiveStore implements ArchiveStore {
 
     @Override
     public void initialize(DomainArchiveStore das) {

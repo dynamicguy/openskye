@@ -43,6 +43,8 @@ public class ArchiveTaskStep extends AbstractTaskStep {
         // look for all SimpleObject's that from the OMR
 
         for (SimpleObject simpleObject : omr.getSimpleObjects(task.getChannel().getDomainInformationStore())) {
+            simpleObject.setIngested(true);
+            simpleObject.setTaskId(task.getId());
             for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
                 channelStoreMap.get(cas).put(simpleObject);
             }

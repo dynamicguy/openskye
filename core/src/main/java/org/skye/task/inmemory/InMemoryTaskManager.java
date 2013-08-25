@@ -1,6 +1,7 @@
 package org.skye.task.inmemory;
 
 import com.google.inject.Injector;
+import lombok.extern.slf4j.Slf4j;
 import org.skye.core.SkyeException;
 import org.skye.domain.Task;
 import org.skye.task.TaskManager;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
  * NOTE: This is not thread-safe and is really in place to allow for testing of the
  * core components without a job running infrastructure in placeø
  */
+@Slf4j
 public class InMemoryTaskManager implements TaskManager {
 
     @Inject
@@ -20,8 +22,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void submit(Task task) {
+        log.info("Submitted task " + task);
         TaskStep newTask = getTaskStep(task);
+        log.info("Creating task step for " + task);
         injector.injectMembers(newTask);
+        log.info("Start task step for " + task);
         newTask.start();
     }
 

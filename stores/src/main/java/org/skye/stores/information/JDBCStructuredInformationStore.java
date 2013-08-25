@@ -3,6 +3,7 @@ package org.skye.stores.information;
 import lombok.extern.slf4j.Slf4j;
 import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.DataContextFactory;
+import org.eobjects.metamodel.UpdateableDataContext;
 import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
@@ -88,7 +89,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getRoot() {
-        DataContext dataContext = DataContextFactory.createJdbcDataContext(getConnection());
+        DataContext dataContext = getDataContext();
         List<SimpleObject> schemaObjects = new ArrayList<>();
         for (Schema schema : dataContext.getSchemas()) {
             ContainerObject container = new ContainerObject();
@@ -102,7 +103,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
     @Override
     public Iterable<SimpleObject> getChildren(SimpleObject simpleObject) {
         if (simpleObject instanceof ContainerObject) {
-            DataContext dataContext = DataContextFactory.createJdbcDataContext(getConnection());
+            DataContext dataContext = getDataContext();
             Schema schema = dataContext.getSchemaByName(simpleObject.getId());
             if (schema != null) {
                 List<SimpleObject> tableObjects = new ArrayList<>();
@@ -132,11 +133,15 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getRelated(SimpleObject simpleObject) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new ArrayList<>();
     }
 
     @Override
     public boolean isImplementing(String implementation) {
         return implementation.equals(IMPLEMENTATION);
+    }
+
+    public UpdateableDataContext getDataContext() {
+        return DataContextFactory.createJdbcDataContext(getConnection());
     }
 }

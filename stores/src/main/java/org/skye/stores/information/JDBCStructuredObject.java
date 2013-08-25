@@ -17,7 +17,6 @@ public class JDBCStructuredObject extends StructuredObject {
 
     @Override
     public Iterator<Row> getRows() {
-
         return null;
     }
 
