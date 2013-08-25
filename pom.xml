@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.skye</groupId>
@@ -11,6 +12,11 @@
     <description>Open Information Lifecycle Management Framework</description>
     <url>https://github.com/infobelt/skye</url>
     <inceptionYear>2013</inceptionYear>
+
+    <properties>
+        <!-- github server corresponds to entry in ~/.m2/settings.xml -->
+        <github.global.server>github</github.global.server>
+    </properties>
 
     <developers>
         <developer>
@@ -105,15 +111,10 @@
 
     <distributionManagement>
         <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>http://nexus.infobelt.com/nexus/content/repositories/infobelt-releases/</url>
+            <id>github</id>
+            <name>GitHub ${project.artifactId} Repository</name>
+            <url>https://raw.github.com/YOUR-GITHUB-USERNAME/${project.artifactId}/mvn-repo</url>
         </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>http://nexus.infobelt.com/nexus/content/repositories/infobelt-snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <build>
@@ -168,6 +169,14 @@
                         <phase>site</phase>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo
+                    </altDeploymentRepository>
+                </configuration>
             </plugin>
         </plugins>
     </build>
