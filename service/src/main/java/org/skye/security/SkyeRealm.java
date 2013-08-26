@@ -5,6 +5,7 @@ import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.hibernate.Session;
@@ -27,7 +28,7 @@ public class SkyeRealm extends AuthorizingRealm {
     private SessionFactory sessionFactory;
 
     public SkyeRealm() {
-        super();
+        super(new MemoryConstrainedCacheManager());
     }
 
     @Override
@@ -75,6 +76,5 @@ public class SkyeRealm extends AuthorizingRealm {
     public boolean supports(AuthenticationToken authenticationToken) {
         return authenticationToken instanceof UsernamePasswordToken;
     }
-
 
 }

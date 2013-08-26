@@ -2,11 +2,9 @@ package org.skye.resource;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.skye.domain.Domain;
 import org.skye.domain.MetadataTemplate;
 import org.skye.domain.Permission;
 import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.DomainDAO;
 import org.skye.resource.dao.MetadataTemplateDAO;
 import org.skye.util.PaginatedResult;
 

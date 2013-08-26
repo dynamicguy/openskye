@@ -8,7 +8,7 @@ import org.skye.config.SkyeConfiguration;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.impl.InMemoryObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
-import org.skye.util.CreateDefaultAccount;
+
 
 /**
  * A basic module for Skye using the testing components

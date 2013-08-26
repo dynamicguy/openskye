@@ -22,7 +22,7 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
 
     @Override
     protected Injector getInjector() {
-        Injector childInjector = Guice.createInjector(new SkyeShiroModule(servletContext,hibernate));
+        Injector childInjector = Guice.createInjector(new SkyeShiroModule(servletContext, hibernate));
         return childInjector;
     }
 
