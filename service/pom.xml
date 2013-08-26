@@ -22,6 +22,10 @@
             <groupId>org.skye</groupId>
             <artifactId>skye-stores</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.skye</groupId>
+            <artifactId>skye-hadoop</artifactId>
+        </dependency>
 
         <!-- Hibernate -->
         <dependency>
