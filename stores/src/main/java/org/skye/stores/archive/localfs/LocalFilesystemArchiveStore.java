@@ -19,15 +19,18 @@ import javax.inject.Inject;
 public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     public final static String IMPLEMENTATION = "localFS";
+    public static final String LOCALFS_PATH = "localFsPath";
     private DomainArchiveStore domainArchiveStore;
     @Inject
     private ObjectMetadataRepository omr;
     @Inject
     private ObjectMetadataSearch oms;
+    private String localPath;
 
     @Override
     public void initialize(DomainArchiveStore das) {
         this.domainArchiveStore = das;
+        this.localPath = das.getProperties().get(LOCALFS_PATH);
     }
 
     @Override
@@ -52,11 +55,15 @@ public class LocalFilesystemArchiveStore implements ArchiveStore {
 
     @Override
     public ArchiveStoreWriter getWriter(Task task) {
-        return new LocalFilesystemArchiveWriter(task,this);
+        return new LocalFilesystemArchiveWriter(task, this);
     }
 
     @Override
     public InputStream getStream(SimpleObject simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getLocalPath() {
+        return localPath;
     }
 }

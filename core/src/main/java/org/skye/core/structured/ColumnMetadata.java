@@ -12,4 +12,5 @@ public class ColumnMetadata {
     private String nativeType;
     private int size;
     private String remarks;
+
 }
