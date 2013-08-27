@@ -2,8 +2,10 @@ package org.skye.stores.inmemory;
 
 import org.omg.CORBA.portable.InputStream;
 import org.skye.core.ArchiveStore;
+import org.skye.core.ArchiveStoreWriter;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.Task;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +44,8 @@ public class InMemoryArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public void put(SimpleObject simpleObject) {
-        objects.put(simpleObject, simpleObject);
+    public ArchiveStoreWriter getWriter(Task task) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.skye.stores.information;
+package org.skye.stores.information.localfs;
 
 import org.joda.time.DateTime;
 import org.skye.core.*;

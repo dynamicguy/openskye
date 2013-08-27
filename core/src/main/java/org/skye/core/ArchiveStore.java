@@ -2,6 +2,7 @@ package org.skye.core;
 
 import org.omg.CORBA.portable.InputStream;
 import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.Task;
 
 /**
  * Represents the interface for an <code>ArchiveStore</code>.
@@ -47,12 +48,12 @@ public interface ArchiveStore {
     boolean isImplementing(String implementation);
 
     /**
-     * Will load the @{link SimpleObject} content into the store and then it will update
-     * the links to the {@link ArchiveContentBlock}
+     * Returns an instance of an {@link ArchiveStoreWriter} for this given task
      *
-     * @param simpleObject the object to archive
+     * @param task the task to create the writer for
+     * @return An instance of an archive store writer
      */
-    void put(SimpleObject simpleObject);
+    ArchiveStoreWriter getWriter(Task task);
 
     /**
      * Will get a stream of the content of the @{link SimpleObject}

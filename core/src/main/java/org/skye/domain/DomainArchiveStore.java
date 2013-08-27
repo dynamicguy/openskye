@@ -22,6 +22,8 @@ public class DomainArchiveStore {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
+    private String name;
+    private String description;
     @ManyToOne
     private Domain domain;
     @ManyToOne

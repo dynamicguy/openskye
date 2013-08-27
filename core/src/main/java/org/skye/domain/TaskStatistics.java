@@ -7,13 +7,13 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 /**
- * A log entry for a {@link Task}
+ * A log entry for a {@link org.skye.domain.Task}
  */
 @Entity
-@Table(name = "TASK_LOG")
+@Table(name = "TASK_STATISTICS")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaskLog {
+public class TaskStatistics {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -21,6 +21,14 @@ public class TaskLog {
     @Column(unique = true)
     protected String id;
     private Task task;
-    private String message;
+    private long simpleObjectsIngested;
+    private long simpleObjectsDiscovered;
 
+    public void incrementSimpleObjectsIngested() {
+        simpleObjectsIngested++;
+    }
+
+    public void incrementSimpleObjectsDiscovered() {
+        simpleObjectsDiscovered++;
+    }
 }

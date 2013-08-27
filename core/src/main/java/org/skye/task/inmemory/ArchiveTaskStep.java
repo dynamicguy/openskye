@@ -1,6 +1,6 @@
 package org.skye.task.inmemory;
 
-import org.skye.core.ArchiveStore;
+import org.skye.core.ArchiveStoreWriter;
 import org.skye.core.InformationStore;
 import org.skye.core.SimpleObject;
 import org.skye.core.SkyeException;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class ArchiveTaskStep extends AbstractTaskStep {
 
     private final Task task;
-    private Map<ChannelArchiveStore, ArchiveStore> channelStoreMap = new HashMap<>();
+    private Map<ChannelArchiveStore, ArchiveStoreWriter> channelStoreWriters = new HashMap<>();
 
     public ArchiveTaskStep(Task task) {
         this.task = task;
@@ -36,7 +36,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
 
         InformationStore is = buildInformationStore(task.getChannel().getDomainInformationStore());
         for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
-            channelStoreMap.put(cas, buildArchiveStore(cas.getDomainArchiveStore()));
+            channelStoreWriters.put(cas, buildArchiveStore(cas.getDomainArchiveStore()).getWriter(task));
         }
 
         // Based on the fact that we have done discovery then we will
@@ -46,7 +46,8 @@ public class ArchiveTaskStep extends AbstractTaskStep {
             simpleObject.setIngested(true);
             simpleObject.setTaskId(task.getId());
             for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
-                channelStoreMap.get(cas).put(simpleObject);
+                task.getStatistics().incrementSimpleObjectsIngested();
+                channelStoreWriters.get(cas).put(simpleObject);
             }
         }
     }

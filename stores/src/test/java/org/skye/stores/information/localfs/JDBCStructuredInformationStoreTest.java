@@ -1,4 +1,4 @@
-package org.skye.stores.information;
+package org.skye.stores.information.localfs;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.eobjects.metamodel.UpdateCallback;
@@ -11,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.skye.domain.*;
 import org.skye.stores.StoreRegistry;
+import org.skye.stores.information.InMemoryTestModule;
+import org.skye.stores.information.jdbc.JDBCStructuredInformationStore;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.task.TaskManager;
 
@@ -19,7 +21,7 @@ import javax.inject.Inject;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * A test to determine that the {@link JDBCStructuredInformationStore} is working
+ * A test to determine that the {@link org.skye.stores.information.jdbc.JDBCStructuredInformationStore} is working
  */
 public class JDBCStructuredInformationStoreTest {
 
@@ -46,7 +48,7 @@ public class JDBCStructuredInformationStoreTest {
     }
 
     @Test
-    public void ensureWeCanSeeASimpleObject() {
+    public void ensureWeCanDiscoverObjects() {
         assertThat("Get metadata for the store", registry.build(getDis()).get().getMetadata() != null);
         JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getDis()).get();
 
@@ -88,6 +90,7 @@ public class JDBCStructuredInformationStoreTest {
         newTask.setTaskType(TaskType.DISCOVER);
         taskManager.submit(newTask);
 
+        assertThat("We have 1 discovered simple objects", newTask.getStatistics().getSimpleObjectsDiscovered() == 1);
     }
 
 }

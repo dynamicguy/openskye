@@ -1,4 +1,4 @@
-package org.skye.stores.information;
+package org.skye.stores.information.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eobjects.metamodel.DataContext;
@@ -42,7 +42,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
         try {
             Class.forName(domainInformationStore.getProperties().get(DRIVER_CLASS));
 
-            log.info("Connecting to database...");
+            JDBCStructuredInformationStore.log.info("Connecting to database...");
             return DriverManager.getConnection(domainInformationStore.getProperties().get(DB_URL), domainInformationStore.getProperties().get(USER), domainInformationStore.getProperties().get(PASSWORD));
         } catch (ClassNotFoundException e) {
             throw new SkyeException("Unable to find driver class", e);
@@ -108,7 +108,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
             if (schema != null) {
                 List<SimpleObject> tableObjects = new ArrayList<>();
                 for (Table table : schema.getTables()) {
-                    JDBCStructuredObject structuredObject = new JDBCStructuredObject();
+                    JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext,table);
                     structuredObject.setPath(schema.getName() + "/" + table.getName());
                     structuredObject.setId(table.getQualifiedLabel());
                     List<ColumnMetadata> colMetas = new ArrayList<>();
@@ -122,7 +122,6 @@ public class JDBCStructuredInformationStore implements InformationStore {
                         colMetas.add(colMeta);
                     }
                     structuredObject.setColumns(colMetas);
-                    structuredObject.setTable(table);
                     tableObjects.add(structuredObject);
                 }
                 return tableObjects;

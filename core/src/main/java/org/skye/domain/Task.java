@@ -21,6 +21,7 @@ public class Task {
     @Column(unique = true)
     protected String id;
     private TaskType taskType;
+    private TaskStatistics statistics = new TaskStatistics();
     @ManyToOne
     private Channel channel;
 }

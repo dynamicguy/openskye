@@ -34,8 +34,11 @@ public class DiscoverTaskStep extends AbstractTaskStep {
         for (SimpleObject simpleObject : simpleObjects) {
             if (simpleObject instanceof ContainerObject)
                 discover(is, is.getChildren(simpleObject));
-            else
+            else {
+                task.getStatistics().incrementSimpleObjectsDiscovered();
                 omr.put(simpleObject);
+            }
+
         }
     }
 

@@ -2,8 +2,10 @@ package org.skye.hadoop.stores;
 
 import org.omg.CORBA.portable.InputStream;
 import org.skye.core.ArchiveStore;
+import org.skye.core.ArchiveStoreWriter;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.Task;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
@@ -36,8 +38,8 @@ public class HdfsArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public void put(SimpleObject simpleObject) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public ArchiveStoreWriter getWriter(Task task) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
