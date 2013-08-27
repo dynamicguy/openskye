@@ -2,10 +2,8 @@ package org.skye.resource;
 
 import com.wordnik.swagger.annotations.Api;
 import org.skye.domain.AttributeDefinition;
-import org.skye.domain.Domain;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.AttributeDefinitionDAO;
-import org.skye.resource.dao.DomainDAO;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;

@@ -11,7 +11,6 @@ import com.yammer.dropwizard.ConfiguredBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Configuration;
 import com.yammer.dropwizard.config.Environment;
-import org.skye.security.SkyeShiroModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
