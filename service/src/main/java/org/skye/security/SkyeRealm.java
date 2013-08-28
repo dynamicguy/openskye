@@ -2,6 +2,7 @@ package org.skye.security;
 
 import com.google.common.base.Optional;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -17,6 +18,7 @@ import org.skye.resource.dao.UserDAO;
 
 import javax.inject.Inject;
 
+
 /**
  * SkyeRealm: a realm specific to Skye
  */
@@ -28,11 +30,12 @@ public class SkyeRealm extends AuthorizingRealm {
     private SessionFactory sessionFactory;
 
     public SkyeRealm() {
-        super(new MemoryConstrainedCacheManager());
+        super();
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        User user = (User)principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
         authInfo.addStringPermission("*");
         return authInfo;

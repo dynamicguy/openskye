@@ -2,8 +2,10 @@ package org.skye.resource.dao;
 
 import com.google.common.base.Optional;
 import org.hibernate.criterion.Restrictions;
+import org.mindrot.jbcrypt.BCrypt;
 import org.skye.domain.User;
 
+import javax.persistence.PrePersist;
 import java.util.List;
 
 /**
@@ -19,5 +21,7 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
             return Optional.of(user.get(0));
         }
     }
+
+
 
 }

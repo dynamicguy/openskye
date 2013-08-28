@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,10 +28,24 @@ public class User {
     private String email;
     private String name;
     private String passwordHash;
+    @Transient
+    @JsonIgnore
+    private String password;
     @ManyToOne
     private Domain domain;
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<UserRole> userRoles = new ArrayList<>();
+
+    @PrePersist
+    public void encryptPassword() {
+        if (password != null) {
+            setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
+        } else {
+            setPasswordHash(BCrypt.hashpw("changeme", BCrypt.gensalt()));
+        }
+    }
+
+
 
 }

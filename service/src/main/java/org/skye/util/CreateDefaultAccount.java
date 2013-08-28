@@ -45,6 +45,7 @@ public class CreateDefaultAccount {
                     adminUser.setName("Skye Admin");
                     adminUser.setDomain(domain);
                     adminUser.setEmail("admin@skye.org");
+                    adminUser.setPassword("changeme");
                     userDAO.persist(adminUser);
                     session.save(adminUser);
                     trans.commit();
