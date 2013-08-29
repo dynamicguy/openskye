@@ -1,4 +1,4 @@
-package org.skye.stores.information.localfs;
+package org.skye.stores.information.jdbc;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.eobjects.metamodel.UpdateCallback;
@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.skye.domain.*;
 import org.skye.stores.StoreRegistry;
 import org.skye.stores.information.InMemoryTestModule;
-import org.skye.stores.information.jdbc.JDBCStructuredInformationStore;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.task.TaskManager;
 

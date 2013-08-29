@@ -1,6 +1,8 @@
 package org.skye.stores;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.skye.core.ArchiveStore;
@@ -19,6 +21,8 @@ import java.util.Set;
 @Slf4j
 public class StoreRegistry {
 
+    @Inject
+    Injector injector;
     // These are local caches of the stores that we
     // use to allow registry
     private Set<ArchiveStore> archiveStores = new HashSet<>();
@@ -71,7 +75,7 @@ public class StoreRegistry {
             if (is.isImplementing(dis.getImplementation())) {
                 // Spin up a new instance of the InformationStore
                 try {
-                    InformationStore newInstance = is.getClass().newInstance();
+                    InformationStore newInstance = injector.getInstance(is.getClass());
                     newInstance.initialize(dis);
                     return Optional.of(newInstance);
                 } catch (Exception e) {
@@ -92,14 +96,15 @@ public class StoreRegistry {
      */
     public Optional<ArchiveStore> build(DomainArchiveStore das) {
         log.debug("Creating new archive store for " + das);
-        for (ArchiveStore is : archiveStores) {
-            if (is.isImplementing(das.getArchiveStoreInstance().getImplementation())) {
+        for (ArchiveStore as : archiveStores) {
+            if (as.isImplementing(das.getArchiveStoreInstance().getImplementation())) {
                 // Spin up a new instance of the InformationStore
                 try {
-                    ArchiveStore newInstance = is.getClass().newInstance();
+                    ArchiveStore newInstance = injector.getInstance(as.getClass());
+                    newInstance.initialize(das);
                     return Optional.of(newInstance);
                 } catch (Exception e) {
-                    throw new SkyeException("Unable to build a new instance of the archive store " + is.getName(), e);
+                    throw new SkyeException("Unable to build a new instance of the archive store " + as.getName(), e);
                 }
             }
         }

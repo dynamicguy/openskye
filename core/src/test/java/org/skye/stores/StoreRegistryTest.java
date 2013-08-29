@@ -1,11 +1,15 @@
 package org.skye.stores;
 
+import com.google.guiceberry.junit4.GuiceBerryRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.skye.domain.ArchiveStoreInstance;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.DomainInformationStore;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.stores.inmemory.InMemoryInformationStore;
+
+import javax.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,7 +20,10 @@ import static org.hamcrest.Matchers.is;
  */
 public class StoreRegistryTest {
 
-    StoreRegistry registry = new StoreRegistry();
+    @Rule
+    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(InMemoryTestModule.class);
+    @Inject
+    public StoreRegistry registry;
 
     @Test
     public void checkWeHaveInMemoryStores() {
