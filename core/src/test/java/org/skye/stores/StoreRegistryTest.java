@@ -38,7 +38,6 @@ public class StoreRegistryTest {
 
         assertThat("We can create an in-memory information store and we get something", registry.build(dis).isPresent());
         assertThat("We can create an in-memory information store and we get an in-memory one", registry.build(dis).get().getUrl().equals("mem://."));
-
     }
 
     @Test
