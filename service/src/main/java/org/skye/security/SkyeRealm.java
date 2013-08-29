@@ -6,10 +6,15 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.mindrot.jbcrypt.BCrypt;
+import org.apache.shiro.authz.Permission;
 import org.skye.domain.User;
+import org.skye.domain.UserRole;
 import org.skye.resource.dao.UserDAO;
 
 import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -26,7 +31,7 @@ public class SkyeRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        User user = (User) principals.getPrimaryPrincipal();
+        User u = (User)getAvailablePrincipal(principals);
         SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
         authInfo.addStringPermission("*");
         return authInfo;
@@ -37,7 +42,9 @@ public class SkyeRealm extends AuthorizingRealm {
         if (authenticationToken instanceof UsernamePasswordToken) {
             UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
             Optional<User> user = userDao.findByEmail(token.getUsername());
-            if (user.isPresent()) {
+            String pwd = new String(token.getPassword());
+            Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
+            if (user.isPresent() && passwordsMatch) { //user is found and their password matches
                 SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
                 return simpleAuthInfo;
             } else {
