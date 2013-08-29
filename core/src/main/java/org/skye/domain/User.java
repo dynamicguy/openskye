@@ -25,7 +25,6 @@ public class User {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
-    private String username;
     private String email;
     private String name;
     private String passwordHash;
