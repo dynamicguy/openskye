@@ -55,6 +55,8 @@ public class LocalFilesystemInformationStore implements InformationStore {
 
         try (DirectoryStream<Path> ds =
                      Files.newDirectoryStream(getFileSystem())) {
+
+            // TODO is this going to be a problem on a large filesystem?
             List<SimpleObject> all = new ArrayList<>();
             for (Path p : ds) {
                 if (Files.isDirectory(p)) {

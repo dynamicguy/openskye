@@ -23,10 +23,15 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
     @Timed
     public T create(T newInstance) {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":create")) {
+            onCreate(newInstance);
             return getDAO().persist(newInstance);
         } else {
             throw new UnauthorizedException();
         }
+    }
+
+    protected void onCreate(T newInstance) {
+        // Do nothing by default
     }
 
     @ApiOperation(value = "Update instance", notes = "Update the instance")

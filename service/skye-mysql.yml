@@ -9,7 +9,7 @@ database:
   password: password
 
   # the JDBC URL
-  url: "jdbc:mysql://localhost/test"
+  url: "jdbc:mysql://localhost/skye"
 
   # any properties specific to your JDBC driver:
   properties:

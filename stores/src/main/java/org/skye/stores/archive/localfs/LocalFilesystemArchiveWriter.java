@@ -41,7 +41,7 @@ public class LocalFilesystemArchiveWriter extends AbstractArchiveStoreWriter {
             dataContext.executeUpdate(new UpdateScript() {
                 public void run(UpdateCallback callback) {
 
-                    // CREATING A TABLE
+                    // Create the table in a file representing the Archive Content Block
                     JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
                     Table table = callback.createTable(structuredObject.getTable().getSchema(), structuredObject.getTable().getName())
                             .execute();
