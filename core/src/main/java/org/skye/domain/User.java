@@ -34,7 +34,7 @@ public class User {
     private String password;
     @ManyToOne
     private Domain domain;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<UserRole> userRoles = new ArrayList<>();
 

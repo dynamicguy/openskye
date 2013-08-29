@@ -7,14 +7,13 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.mindrot.jbcrypt.BCrypt;
-import org.apache.shiro.authz.Permission;
+import org.skye.domain.Permission;
 import org.skye.domain.User;
 import org.skye.domain.UserRole;
 import org.skye.resource.dao.UserDAO;
 
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -32,8 +31,18 @@ public class SkyeRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         User u = (User)getAvailablePrincipal(principals);
+        List<UserRole> roles = u.getUserRoles();
+        Iterator<UserRole> rolesIterator = roles.iterator();
         SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
-        authInfo.addStringPermission("*");
+        while(rolesIterator.hasNext()){
+            UserRole current = rolesIterator.next();
+            authInfo.addRole((current.getRole().getName()));
+            Iterator<Permission> permissionIterator = current.getRole().getPermissions().iterator();
+            while(permissionIterator.hasNext()){
+                authInfo.addStringPermission(permissionIterator.next().getPermission());
+            }
+        }
+        //authInfo.addStringPermission("*");
         return authInfo;
     }
 
