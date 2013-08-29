@@ -37,6 +37,7 @@ public class User {
     @JsonIgnore
     private List<UserRole> userRoles = new ArrayList<>();
 
+    @PrePersist
     public void encryptPassword() {
         if (password != null) {
             setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));

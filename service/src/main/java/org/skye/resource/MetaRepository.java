@@ -1,9 +1,9 @@
 package org.skye.resource;
 
 import com.google.common.base.Optional;
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.core.ArchiveContentBlock;
@@ -41,7 +41,7 @@ public class MetaRepository {
     @ApiOperation(value = "Get simple object by id", notes = "Return an instance by id")
     @Path("/{id}")
     @GET
-    @UnitOfWork
+    @Transactional
     @Timed
     public Optional<SimpleObject> get(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {
@@ -54,7 +54,7 @@ public class MetaRepository {
     @ApiOperation(value = "Get content blocks for simple object with id", notes = "Return content block meta data")
     @Path("/{id}/blocks")
     @GET
-    @UnitOfWork
+    @Transactional
     @Timed
     public Iterable<ArchiveContentBlock> getContentBlocks(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {
@@ -71,7 +71,7 @@ public class MetaRepository {
     @ApiOperation(value = "Get the raw content of the simple object", notes = "Return raw content of the simple object")
     @Path("/{id}/content")
     @GET
-    @UnitOfWork
+    @Transactional
     @Timed
     public Response getContent(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {

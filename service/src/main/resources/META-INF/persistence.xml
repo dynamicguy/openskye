@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="Default" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>org.skye.domain.User</class>
+        <class>org.skye.domain.UserRole</class>
+        <class>org.skye.domain.Role</class>
+        <class>org.skye.domain.ArchiveStoreInstance</class>
+        <class>org.skye.domain.AttributeInstance</class>
+        <class>org.skye.domain.AuditEvent</class>
+        <class>org.skye.domain.AttributeDefinition</class>
+        <class>org.skye.domain.AuditLog</class>
+        <class>org.skye.domain.AuditLogProperty</class>
+        <class>org.skye.domain.Channel</class>
+        <class>org.skye.domain.ChannelArchiveStore</class>
+        <class>org.skye.domain.Domain</class>
+        <class>org.skye.domain.DomainArchiveStore</class>
+        <class>org.skye.domain.DomainInformationStore</class>
+        <class>org.skye.domain.MetadataTemplate</class>
+        <class>org.skye.domain.Permission</class>
+        <class>org.skye.domain.Project</class>
+        <class>org.skye.domain.RetentionPolicy</class>
+        <class>org.skye.domain.RolePermission</class>
+        <class>org.skye.domain.Task</class>
+        <class>org.skye.domain.TaskLog</class>
+        <class>org.skye.domain.TaskStatistics</class>
+        <properties>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.ddl-generation.output-mode" value="database"/>
+        </properties>
+    </persistence-unit>
+</persistence>

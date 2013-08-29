@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.GuiceFilter;
 import com.yammer.dropwizard.ConfiguredBundle;
 import com.yammer.dropwizard.config.Bootstrap;
@@ -60,6 +61,7 @@ public class GuiceBundle<T extends Configuration> implements ConfiguredBundle<T>
         container.setResourceConfig(environment.getJerseyResourceConfig());
         environment.setJerseyServletContainer(container);
         environment.addFilter(GuiceFilter.class, configuration.getHttpConfiguration().getRootPath());
+        environment.addFilter(injector.getInstance(PersistFilter.class), "/*");
         setEnvironment(configuration, environment);
 
         if (autoConfig != null) {

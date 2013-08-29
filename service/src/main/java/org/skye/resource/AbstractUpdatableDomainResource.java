@@ -1,7 +1,7 @@
 package org.skye.resource;
 
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.util.UnauthorizedException;
@@ -19,25 +19,20 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
 
     @ApiOperation(value = "Create new", notes = "Create a new instance and return with id")
     @POST
-    @UnitOfWork
+    @Transactional
     @Timed
     public T create(T newInstance) {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":create")) {
-            onCreate(newInstance);
             return getDAO().persist(newInstance);
         } else {
             throw new UnauthorizedException();
         }
     }
 
-    protected void onCreate(T newInstance) {
-        // Do nothing by default
-    }
-
     @ApiOperation(value = "Update instance", notes = "Update the instance")
     @Path("/{id}")
     @PUT
-    @UnitOfWork
+    @Transactional
     @Timed
     public T update(@PathParam("id") String id, T newInstance) {
         // TODO need to do the merge here?
@@ -51,7 +46,7 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
     @ApiOperation(value = "Delete instance", notes = "Delete the instance")
     @Path("/{id}")
     @DELETE
-    @UnitOfWork
+    @Transactional
     @Timed
     public Response delete(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":delete")) {

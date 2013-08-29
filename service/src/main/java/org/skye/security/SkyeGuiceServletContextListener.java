@@ -2,9 +2,8 @@ package org.skye.security;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.yammer.dropwizard.hibernate.HibernateBundle;
-import org.skye.config.SkyeConfiguration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -13,16 +12,16 @@ import javax.servlet.ServletContextEvent;
  * An implementation
  */
 public class SkyeGuiceServletContextListener extends GuiceServletContextListener {
+    private final JpaPersistModule jpaPersistModule;
     private ServletContext servletContext;
-    private HibernateBundle<SkyeConfiguration> hibernate;
 
-    public SkyeGuiceServletContextListener(HibernateBundle<SkyeConfiguration> hibernate) {
-        this.hibernate = hibernate;
+    public SkyeGuiceServletContextListener(JpaPersistModule jpaPersistModule) {
+        this.jpaPersistModule = jpaPersistModule;
     }
 
     @Override
     protected Injector getInjector() {
-        Injector childInjector = Guice.createInjector(new SkyeShiroModule(servletContext, hibernate));
+        Injector childInjector = Guice.createInjector(jpaPersistModule, new SkyeShiroModule(servletContext));
         return childInjector;
     }
 

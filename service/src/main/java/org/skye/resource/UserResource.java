@@ -24,11 +24,6 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     protected UserDAO userDAO;
 
     @Override
-    protected void onCreate(User newInstance) {
-        newInstance.encryptPassword();
-    }
-
-    @Override
     protected AbstractPaginatingDAO<User> getDAO() {
         return userDAO;
     }

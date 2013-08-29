@@ -20,6 +20,7 @@ public class AuditLogProperty {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
+    @ManyToOne
     private AuditLog auditLog;
     private String propertyName;
     private String propertyValue;

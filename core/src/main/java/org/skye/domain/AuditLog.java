@@ -23,6 +23,7 @@ public class AuditLog {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
+    @ManyToOne
     private User user;
     private String auditEntity;
     private AuditEvent auditEvent;

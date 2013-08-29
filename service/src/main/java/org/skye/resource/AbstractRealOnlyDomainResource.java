@@ -1,8 +1,8 @@
 package org.skye.resource;
 
 import com.google.common.base.Optional;
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.dropwizard.hibernate.UnitOfWork;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.resource.dao.AbstractPaginatingDAO;
@@ -29,7 +29,7 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure")
     @GET
-    @UnitOfWork
+    @Transactional
     @Timed
     public PaginatedResult<T> getAll() {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":list")) {
@@ -42,7 +42,7 @@ public abstract class AbstractRealOnlyDomainResource<T> {
     @ApiOperation(value = "Find by id", notes = "Return an instance by id")
     @Path("/{id}")
     @GET
-    @UnitOfWork
+    @Transactional
     @Timed
     public T get(@PathParam("id") String id) {
         // TODO need to do the merge here?

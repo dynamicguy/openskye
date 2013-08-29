@@ -1,13 +1,16 @@
 package org.skye.resource.dao;
 
 import com.google.common.base.Optional;
+import com.google.inject.Provider;
 import com.yammer.dropwizard.util.Generics;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,23 +23,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class AbstractPaginatingDAO<T> {
 
     @Inject
-    private SessionFactory sessionFactory;
-    private Class<?> entityClass = Generics.getTypeParameter(getClass());
+    private Provider<EntityManager> emf;
+    private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
 
     public PaginatedResult<T> list() {
         PaginatedResult<T> result = new PaginatedResult<>();
-        result.setResults(criteria().list());
+        CriteriaQuery<T> criteria = createCriteriaQuery();
+        Root<T> selectEntity = criteria.from(entityClass);
+        criteria.select(selectEntity);
+        result.setResults(currentEntityManager().createQuery(criteria).getResultList());
         return result;
     }
 
-    /**
-     * Creates a new {@link org.hibernate.Criteria} query for {@code <E>}.
-     *
-     * @return a new {@link org.hibernate.Criteria} query
-     * @see Session#createCriteria(Class)
-     */
-    protected Criteria criteria() {
-        return currentSession().createCriteria(entityClass);
+    protected CriteriaQuery<T> createCriteriaQuery() {
+        return createCriteriaBuilder().createQuery(entityClass);
+    }
+
+    protected CriteriaBuilder createCriteriaBuilder() {
+        return currentEntityManager().getCriteriaBuilder();
     }
 
     /**
@@ -46,7 +50,7 @@ public abstract class AbstractPaginatingDAO<T> {
      * @return
      */
     public T persist(T newInstance) {
-        currentSession().persist(newInstance);
+        currentEntityManager().persist(newInstance);
         return newInstance;
     }
 
@@ -55,8 +59,8 @@ public abstract class AbstractPaginatingDAO<T> {
      *
      * @return the current session
      */
-    protected Session currentSession() {
-        return sessionFactory.getCurrentSession();
+    protected EntityManager currentEntityManager() {
+        return emf.get();
     }
 
     /**
@@ -72,7 +76,7 @@ public abstract class AbstractPaginatingDAO<T> {
      */
     @SuppressWarnings("unchecked")
     public Optional<T> get(String id) {
-        T result = (T) currentSession().get(entityClass, checkNotNull(id));
+        T result = (T) currentEntityManager().find(entityClass, checkNotNull(id));
         if (result == null)
             return Optional.absent();
         else
@@ -80,9 +84,9 @@ public abstract class AbstractPaginatingDAO<T> {
     }
 
     public boolean delete(String id) {
-        Object entity = currentSession().get(entityClass, checkNotNull(id));
+        Object entity = currentEntityManager().find(entityClass, checkNotNull(id));
         if (entity != null) {
-            currentSession().delete(entity);
+            currentEntityManager().remove(entity);
             return true;
         } else return false;
     }

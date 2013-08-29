@@ -1,13 +1,8 @@
 package org.skye.security;
 
-import com.google.inject.Exposed;
-import com.google.inject.Provides;
-import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.guice.web.ShiroWebModule;
-import org.hibernate.SessionFactory;
-import org.skye.config.SkyeConfiguration;
 import org.skye.util.CreateDefaultAccount;
 
 import javax.servlet.ServletContext;
@@ -17,11 +12,8 @@ import javax.servlet.ServletContext;
  */
 public class SkyeShiroModule extends ShiroWebModule {
 
-    private final HibernateBundle<SkyeConfiguration> hibernate;
-
-    public SkyeShiroModule(ServletContext sc, HibernateBundle<SkyeConfiguration> hibernate) {
+    public SkyeShiroModule(ServletContext sc) {
         super(sc);
-        this.hibernate = hibernate;
     }
 
     @Override
@@ -31,12 +23,6 @@ public class SkyeShiroModule extends ShiroWebModule {
         bind(CacheManager.class).to(MemoryConstrainedCacheManager.class).asEagerSingleton();
         addFilterChain("/api/**", NO_SESSION_CREATION, AUTHC_BASIC);
         ShiroWebModule.bindGuiceFilter(binder());
-    }
-
-    @Provides
-    @Exposed
-    public SessionFactory provideSessionFactory() {
-        return hibernate.getSessionFactory();
     }
 
 }

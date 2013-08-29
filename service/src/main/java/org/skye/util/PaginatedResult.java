@@ -15,8 +15,6 @@ public class PaginatedResult<T> {
     private long totalResults;
     private List<T> results;
 
-    // TODO This isn't great since we are doing some messy stuff in
-    // here
     public PaginatedResult<T> paginate(List<T> list) {
         results = list;
         return this;
@@ -27,7 +25,6 @@ public class PaginatedResult<T> {
         if (o instanceof PaginatedResult) {
             PaginatedResult<T> other = (PaginatedResult<T>) o;
             if (other.getPage() == this.page && other.getPageSize() == this.pageSize) {
-
                 return true;
             } else {
                 return false;
@@ -36,6 +33,4 @@ public class PaginatedResult<T> {
             return false;
         }
     }
-
-
 }

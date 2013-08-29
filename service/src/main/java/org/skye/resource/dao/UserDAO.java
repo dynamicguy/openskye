@@ -1,11 +1,11 @@
 package org.skye.resource.dao;
 
 import com.google.common.base.Optional;
-import org.hibernate.criterion.Restrictions;
-import org.mindrot.jbcrypt.BCrypt;
 import org.skye.domain.User;
 
-import javax.persistence.PrePersist;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -14,14 +14,18 @@ import java.util.List;
 public class UserDAO extends AbstractPaginatingDAO<User> {
 
     public Optional<User> findByEmail(String email) {
-        List<User> user = criteria().add(Restrictions.eq("email", email)).setMaxResults(1).list();
-        if (user.size() == 0) {
+        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaQuery<User> criteria = builder.createQuery(User.class);
+        Root<User> userRoot = criteria.from(User.class);
+        criteria.select(userRoot);
+        criteria.where(builder.equal(userRoot.get("email"), email));
+        List<User> users = currentEntityManager().createQuery(criteria).getResultList();
+        if (users.size() == 0) {
             return Optional.absent();
         } else {
-            return Optional.of(user.get(0));
+            return Optional.of(users.get(0));
         }
     }
-
 
 
 }
