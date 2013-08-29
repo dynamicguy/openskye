@@ -19,7 +19,7 @@ import java.util.Properties;
  * Can be used to pull from a local filesystem and return a set of {@link org.skye.core.UnstructuredObject}
  * instances
  */
-public class LocalFilesystemInformationStore implements InformationStore {
+public class LocalFSInformationStore implements InformationStore {
 
     public final static String IMPLEMENTATION = "localFS";
     private static final String FILE_PATH = "filePath";

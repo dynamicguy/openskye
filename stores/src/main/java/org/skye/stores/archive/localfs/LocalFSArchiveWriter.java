@@ -7,7 +7,9 @@ import org.eobjects.metamodel.DataContextFactory;
 import org.eobjects.metamodel.UpdateCallback;
 import org.eobjects.metamodel.UpdateScript;
 import org.eobjects.metamodel.UpdateableDataContext;
+import org.eobjects.metamodel.create.TableCreationBuilder;
 import org.eobjects.metamodel.insert.RowInsertionBuilder;
+import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Table;
 import org.skye.core.*;
 import org.skye.core.structured.Row;
@@ -20,14 +22,14 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * An implementation of an {@link ArchiveStoreWriter} for the {@link LocalFilesystemArchiveStore}
+ * An implementation of an {@link ArchiveStoreWriter} for the {@link LocalFSArchiveStore}
  */
 @Slf4j
-public class LocalFilesystemArchiveWriter extends AbstractArchiveStoreWriter {
+public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     private final Task task;
-    private final LocalFilesystemArchiveStore localFilesystemArchiveStore;
+    private final LocalFSArchiveStore localFilesystemArchiveStore;
 
-    public LocalFilesystemArchiveWriter(Task task, LocalFilesystemArchiveStore localFilesystemArchiveStore) {
+    public LocalFSArchiveWriter(Task task, LocalFSArchiveStore localFilesystemArchiveStore) {
         this.localFilesystemArchiveStore = localFilesystemArchiveStore;
         this.task = task;
     }
@@ -37,15 +39,20 @@ public class LocalFilesystemArchiveWriter extends AbstractArchiveStoreWriter {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
-            UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(getSimpleObjectPath(simpleObject));
+            log.info("Writing structured object to " + getSimpleObjectPath(simpleObject).getAbsolutePath());
+            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(getSimpleObjectPath(simpleObject));
             dataContext.executeUpdate(new UpdateScript() {
                 public void run(UpdateCallback callback) {
 
                     // Create the table in a file representing the Archive Content Block
                     JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
-                    Table table = callback.createTable(structuredObject.getTable().getSchema(), structuredObject.getTable().getName())
-                            .execute();
+                    TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
 
+                    for (Column column : structuredObject.getTable().getColumns()) {
+                        tableCreator.withColumn(column.getName()).ofType(column.getType()).ofSize(column.getColumnSize());
+                    }
+
+                    Table table = tableCreator.execute();
                     Iterator<Row> rows = structuredObject.getRows();
                     while (rows.hasNext()) {
                         Row row = rows.next();

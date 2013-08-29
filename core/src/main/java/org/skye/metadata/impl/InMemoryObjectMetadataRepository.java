@@ -6,27 +6,38 @@ import org.skye.core.SimpleObject;
 import org.skye.domain.DomainInformationStore;
 import org.skye.metadata.ObjectMetadataRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * An in-memory object metadata repository that can be used for testing
  */
 public class InMemoryObjectMetadataRepository implements ObjectMetadataRepository {
+
+    private Map<String, SimpleObject> objects = new HashMap<>();
+
     @Override
     public Optional<SimpleObject> get(String id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (objects.containsKey(id))
+            return Optional.of(objects.get(id));
+        else
+            return Optional.absent();
     }
 
     @Override
     public void put(SimpleObject simpleObject) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        simpleObject.setId(UUID.randomUUID().toString());
+        objects.put(simpleObject.getId(), simpleObject);
     }
 
     @Override
     public Iterable<ArchiveContentBlock> getArchiveContentBlocks(SimpleObject simpleObject) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return simpleObject.getArchiveContentBlocks();
     }
 
     @Override
     public Iterable<SimpleObject> getSimpleObjects(DomainInformationStore domainInformationStore) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return objects.values();
     }
 }
