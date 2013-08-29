@@ -27,6 +27,7 @@ public class User {
     protected String id;
     private String email;
     private String name;
+    @JsonIgnore
     private String passwordHash;
     @Transient
     @JsonIgnore

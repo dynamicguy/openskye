@@ -51,10 +51,6 @@ public class AutoConfig {
         addManaged(environment, injector);
     }
 
-    public void initialize(Bootstrap<?> bootstrap, Injector injector) {
-        addBundles(bootstrap, injector);
-    }
-
     private void addManaged(Environment environment, Injector injector) {
         Set<Class<? extends Managed>> managedClasses = reflections
                 .getSubTypesOf(Managed.class);
