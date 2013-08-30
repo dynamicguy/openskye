@@ -18,10 +18,8 @@ public class UserRole {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
-
     @ManyToOne
     private User user;
-
     @ManyToOne
     private Role role;
 

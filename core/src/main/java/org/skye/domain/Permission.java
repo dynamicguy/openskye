@@ -21,4 +21,6 @@ public class Permission {
     @Column(unique = true)
     protected String id;
 
+    private String permission;
+
 }
