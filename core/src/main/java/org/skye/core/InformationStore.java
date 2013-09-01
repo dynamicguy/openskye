@@ -85,4 +85,14 @@ public interface InformationStore {
      * @return true if the store can implement this implementation
      */
     boolean isImplementing(String implementation);
+
+    /**
+     * Used by the information store to take {@link ObjectMetadata} and materialize
+     * a simple object that represents this object in that information store,  including
+     * the ability to access its information
+     *
+     * @param objectMetadata the object that needs to be materialized
+     * @return the simple object having been materialized
+     */
+    SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException;
 }

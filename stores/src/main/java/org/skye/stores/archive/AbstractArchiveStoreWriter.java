@@ -23,7 +23,7 @@ public abstract class AbstractArchiveStoreWriter implements ArchiveStoreWriter {
     public void updateMetadata(SimpleObject simpleObject) {
         if (log.isDebugEnabled())
             log.debug("Updating metadata for " + simpleObject);
-        omr.put(simpleObject);
-        oms.index(simpleObject);
+        omr.put(simpleObject.getObjectMetadata());
+        oms.index(simpleObject.getObjectMetadata());
     }
 }

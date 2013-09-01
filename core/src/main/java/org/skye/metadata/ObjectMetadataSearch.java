@@ -1,6 +1,6 @@
 package org.skye.metadata;
 
-import org.skye.core.SimpleObject;
+import org.skye.core.ObjectMetadata;
 import org.skye.domain.Domain;
 import org.skye.domain.Project;
 import org.skye.util.Page;
@@ -17,9 +17,9 @@ public interface ObjectMetadataSearch {
      * @param domain The domain in which to search
      * @param query  The query
      * @param page   The paging information
-     * @return The resulting {@link org.skye.core.SimpleObject}s
+     * @return The resulting {@link org.skye.core.ObjectMetadata}s
      */
-    Iterable<SimpleObject> search(Domain domain, String query, Page page);
+    Iterable<ObjectMetadata> search(Domain domain, String query, Page page);
 
     /**
      * Perform a search over repository for a single project using a query
@@ -28,15 +28,15 @@ public interface ObjectMetadataSearch {
      * @param project The project
      * @param query   The query
      * @param page    The paging information
-     * @return The resulting {@link org.skye.core.SimpleObject}s
+     * @return The resulting {@link org.skye.core.ObjectMetadata}s
      */
-    Iterable<SimpleObject> search(Domain domain, Project project, String query, Page page);
+    Iterable<ObjectMetadata> search(Domain domain, Project project, String query, Page page);
 
     /**
-     * Add {@link SimpleObject} to the search
+     * Add {@link ObjectMetadata} to the search
      *
-     * @param simpleObject the simple object to index
+     * @param objectMetadata the object metadata to index
      */
-    void index(SimpleObject simpleObject);
+    void index(ObjectMetadata objectMetadata);
 
 }

@@ -74,19 +74,24 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             try {
                 FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), getSimpleObjectPath(simpleObject));
             } catch (IOException e) {
-                throw new SkyeException("An I/O exception occured while trying to write unstructured data for simple object " + simpleObject.getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
+                throw new SkyeException("An I/O exception occured while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
             }
             localFilesystemArchiveStore.getLocalPath();
         } else {
             throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
         }
 
-        simpleObject.setArchiveContentBlocks(ImmutableList.of(acb));
+        simpleObject.getObjectMetadata().setArchiveContentBlocks(ImmutableList.of(acb));
         updateMetadata(simpleObject);
     }
 
     private File getSimpleObjectPath(SimpleObject simpleObject) {
-        return new File(localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getId());
+        File simpleObjectDir = new File(localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId());
+        if (simpleObjectDir.exists())
+            throw new SkyeException("Simple object already archived? " + simpleObject.getObjectMetadata());
+        simpleObjectDir.mkdirs();
+        simpleObjectDir.delete();
+        return simpleObjectDir;
     }
 
     @Override

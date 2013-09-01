@@ -56,11 +56,11 @@ public interface ArchiveStore {
     ArchiveStoreWriter getWriter(Task task);
 
     /**
-     * Will get a stream of the content of the @{link SimpleObject}
+     * Will get a stream of the content of the @{link ObjectMetadata}
      *
-     * @param simpleObject the object to get a stream to
+     * @param metadata the object to get a stream to
      */
-    InputStream getStream(SimpleObject simpleObject);
+    InputStream getStream(ObjectMetadata metadata);
 
 
 }

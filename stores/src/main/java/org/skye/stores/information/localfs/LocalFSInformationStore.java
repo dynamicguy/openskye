@@ -61,11 +61,14 @@ public class LocalFSInformationStore implements InformationStore {
             for (Path p : ds) {
                 if (Files.isDirectory(p)) {
                     ContainerObject container = new ContainerObject();
-                    container.setPath(p.toAbsolutePath().toString());
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setPath(p.toAbsolutePath().toString());
+                    container.setObjectMetadata(metadata);
                     all.add(container);
                 } else {
                     UnstructuredObject unstructObj = new UnstructuredObject();
-                    unstructObj.setPath(p.toAbsolutePath().toString());
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setPath(p.toAbsolutePath().toString());
                     all.add(unstructObj);
                 }
             }
@@ -88,6 +91,14 @@ public class LocalFSInformationStore implements InformationStore {
     @Override
     public boolean isImplementing(String implementation) {
         return implementation.equals(IMPLEMENTATION);
+    }
+
+    @Override
+    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
+        UnstructuredObject unstructObj = new UnstructuredObject();
+        ObjectMetadata metadata = new ObjectMetadata();
+        unstructObj.setObjectMetadata(metadata);
+        return unstructObj;
     }
 
     public Path getFileSystem() {

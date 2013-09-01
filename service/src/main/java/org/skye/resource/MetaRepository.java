@@ -8,6 +8,7 @@ import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ArchiveStore;
+import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
@@ -43,7 +44,7 @@ public class MetaRepository {
     @GET
     @Transactional
     @Timed
-    public Optional<SimpleObject> get(@PathParam("id") String id) {
+    public Optional<ObjectMetadata> get(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {
             return objectMetadataRepository.get(id);
         } else {
@@ -59,7 +60,7 @@ public class MetaRepository {
     public Iterable<ArchiveContentBlock> getContentBlocks(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {
             if (objectMetadataRepository.get(id).isPresent()) {
-                return objectMetadataRepository.getArchiveContentBlocks(objectMetadataRepository.get(id).get());
+                return objectMetadataRepository.get(id).get().getArchiveContentBlocks();
             }
             ;
         } else {
@@ -75,14 +76,14 @@ public class MetaRepository {
     @Timed
     public Response getContent(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted("repository:get")) {
-            Optional<SimpleObject> optionalSimpleObject = objectMetadataRepository.get(id);
-            if (optionalSimpleObject.isPresent()) {
-                SimpleObject simpleObject = optionalSimpleObject.get();
-                Optional<ArchiveStore> archiveStore = storeRegistry.build(simpleObject.getDomainArchiveStore());
+            Optional<ObjectMetadata> objectMetadata = objectMetadataRepository.get(id);
+            if (objectMetadata.isPresent()) {
+                ObjectMetadata metadata = objectMetadata.get();
+                Optional<ArchiveStore> archiveStore = storeRegistry.build(metadata.getDomainArchiveStore());
                 if (archiveStore.isPresent()) {
-                    org.omg.CORBA.portable.InputStream inputStream = archiveStore.get().getStream(simpleObject);
+                    org.omg.CORBA.portable.InputStream inputStream = archiveStore.get().getStream(metadata);
                     return Response.ok(inputStream).
-                            header("Content-Disposition", "attachment; filename=" + simpleObject.getPath()).build();
+                            header("Content-Disposition", "attachment; filename=" + metadata.getPath()).build();
                 }
             }
         } else {

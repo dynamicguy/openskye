@@ -1,6 +1,6 @@
 package org.skye.metadata.impl;
 
-import org.skye.core.SimpleObject;
+import org.skye.core.ObjectMetadata;
 import org.skye.domain.Domain;
 import org.skye.domain.Project;
 import org.skye.metadata.ObjectMetadataRepository;
@@ -13,17 +13,17 @@ import org.skye.util.Page;
 public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
 
     @Override
-    public Iterable<SimpleObject> search(Domain domain, String query, Page page) {
+    public Iterable<ObjectMetadata> search(Domain domain, String query, Page page) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Iterable<SimpleObject> search(Domain domain, Project project, String query, Page page) {
+    public Iterable<ObjectMetadata> search(Domain domain, Project project, String query, Page page) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void index(SimpleObject simpleObject) {
+    public void index(ObjectMetadata objectMetadata) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

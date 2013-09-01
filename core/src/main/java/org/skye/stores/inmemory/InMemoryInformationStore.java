@@ -2,12 +2,12 @@ package org.skye.stores.inmemory;
 
 import org.joda.time.DateTime;
 import org.skye.core.InformationStore;
+import org.skye.core.InvalidSimpleObjectException;
+import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainInformationStore;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * An in-memory {@link InformationStore} that can be used for testing
@@ -15,6 +15,7 @@ import java.util.Properties;
 public class InMemoryInformationStore implements InformationStore {
 
     public static final String IMPLEMENTATION = "In-memory";
+    private Map<ObjectMetadata, SimpleObject> store = new HashMap<>();
     private List<SimpleObject> root = new ArrayList<>();
 
     @Override
@@ -62,5 +63,10 @@ public class InMemoryInformationStore implements InformationStore {
     @Override
     public boolean isImplementing(String implementation) {
         return implementation.equals(IMPLEMENTATION);
+    }
+
+    @Override
+    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
+        return store.get(objectMetadata);
     }
 }

@@ -36,7 +36,7 @@ public class DiscoverTaskStep extends AbstractTaskStep {
                 discover(is, is.getChildren(simpleObject));
             else {
                 task.getStatistics().incrementSimpleObjectsDiscovered();
-                omr.put(simpleObject);
+                omr.put(simpleObject.getObjectMetadata());
             }
 
         }

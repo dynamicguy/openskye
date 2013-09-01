@@ -3,6 +3,7 @@ package org.skye.hadoop.stores;
 import org.omg.CORBA.portable.InputStream;
 import org.skye.core.ArchiveStore;
 import org.skye.core.ArchiveStoreWriter;
+import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.Task;
@@ -43,7 +44,7 @@ public class HdfsArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public InputStream getStream(SimpleObject simpleObject) {
+    public InputStream getStream(ObjectMetadata metadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

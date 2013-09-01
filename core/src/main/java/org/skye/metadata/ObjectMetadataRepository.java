@@ -1,7 +1,7 @@
 package org.skye.metadata;
 
 import com.google.common.base.Optional;
-import org.skye.core.ArchiveContentBlock;
+import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainInformationStore;
 
@@ -12,32 +12,24 @@ import org.skye.domain.DomainInformationStore;
 public interface ObjectMetadataRepository {
 
     /**
-     * Gets the details of a single simple object
+     * Gets the details of a single object's metadata
      *
-     * @param id The identifier of the simple object
-     * @return optionally the simple object
+     * @param id The identifier of the object
+     * @return optionally the object
      */
-    Optional<SimpleObject> get(String id);
+    Optional<ObjectMetadata> get(String id);
 
     /**
-     * Puts a simple object
+     * Puts a object metadata
      *
-     * @param simpleObject
+     * @param objectMetadata
      */
-    void put(SimpleObject simpleObject);
+    void put(ObjectMetadata objectMetadata);
 
     /**
-     * Returns the metadata for the archive content blocks for the simple object
-     *
-     * @param simpleObject
-     * @return An iterable for the archive content blocks
-     */
-    Iterable<ArchiveContentBlock> getArchiveContentBlocks(SimpleObject simpleObject);
-
-    /**
-     * Returns an iterator over all the {@link SimpleObject} for the given {@link DomainInformationStore}
+     * Returns an iterator over all the {@link ObjectMetadata} for the given {@link DomainInformationStore}
      *
      * @param domainInformationStore
      */
-    Iterable<SimpleObject> getSimpleObjects(DomainInformationStore domainInformationStore);
+    Iterable<ObjectMetadata> getObjects(DomainInformationStore domainInformationStore);
 }

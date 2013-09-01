@@ -8,10 +8,7 @@ import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
 import org.joda.time.DateTime;
-import org.skye.core.ContainerObject;
-import org.skye.core.InformationStore;
-import org.skye.core.SimpleObject;
-import org.skye.core.SkyeException;
+import org.skye.core.*;
 import org.skye.core.structured.ColumnMetadata;
 import org.skye.domain.DomainInformationStore;
 
@@ -93,8 +90,10 @@ public class JDBCStructuredInformationStore implements InformationStore {
         List<SimpleObject> schemaObjects = new ArrayList<>();
         for (Schema schema : dataContext.getSchemas()) {
             ContainerObject container = new ContainerObject();
-            container.setPath(schema.getName());
-            container.setId(schema.getQualifiedLabel());
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setPath(schema.getName());
+            metadata.setId(schema.getQualifiedLabel());
+            container.setObjectMetadata(metadata);
             schemaObjects.add(container);
         }
         return schemaObjects;
@@ -104,13 +103,15 @@ public class JDBCStructuredInformationStore implements InformationStore {
     public Iterable<SimpleObject> getChildren(SimpleObject simpleObject) {
         if (simpleObject instanceof ContainerObject) {
             DataContext dataContext = getDataContext();
-            Schema schema = dataContext.getSchemaByName(simpleObject.getId());
+            Schema schema = dataContext.getSchemaByName(simpleObject.getObjectMetadata().getPath());
             if (schema != null) {
                 List<SimpleObject> tableObjects = new ArrayList<>();
                 for (Table table : schema.getTables()) {
-                    JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext,table);
-                    structuredObject.setPath(schema.getName() + "/" + table.getName());
-                    structuredObject.setId(table.getQualifiedLabel());
+                    JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setPath(schema.getName() + "/" + table.getName());
+                    metadata.setId(table.getQualifiedLabel());
+                    structuredObject.setObjectMetadata(metadata);
                     List<ColumnMetadata> colMetas = new ArrayList<>();
                     for (Column column : table.getColumns()) {
                         // need to work out what we need in a column?
@@ -138,6 +139,16 @@ public class JDBCStructuredInformationStore implements InformationStore {
     @Override
     public boolean isImplementing(String implementation) {
         return implementation.equals(IMPLEMENTATION);
+    }
+
+    @Override
+    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
+        DataContext dataContext = getDataContext();
+        Schema schema = dataContext.getSchemaByName(objectMetadata.getPath().split("/")[0]);
+        Table table = schema.getTableByName(objectMetadata.getPath().split("/")[1]);
+        JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
+        structuredObject.setObjectMetadata(objectMetadata);
+        return structuredObject;
     }
 
     public UpdateableDataContext getDataContext() {

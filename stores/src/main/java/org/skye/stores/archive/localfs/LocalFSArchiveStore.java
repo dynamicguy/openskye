@@ -4,10 +4,7 @@ import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.omg.CORBA.portable.InputStream;
-import org.skye.core.ArchiveStore;
-import org.skye.core.ArchiveStoreWriter;
-import org.skye.core.SimpleObject;
-import org.skye.core.SkyeException;
+import org.skye.core.*;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
@@ -81,7 +78,7 @@ public class LocalFSArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public InputStream getStream(SimpleObject simpleObject) {
+    public InputStream getStream(ObjectMetadata metadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

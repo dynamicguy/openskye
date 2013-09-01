@@ -1,9 +1,6 @@
 package org.skye.task.inmemory;
 
-import org.skye.core.ArchiveStoreWriter;
-import org.skye.core.InformationStore;
-import org.skye.core.SimpleObject;
-import org.skye.core.SkyeException;
+import org.skye.core.*;
 import org.skye.domain.ChannelArchiveStore;
 import org.skye.domain.Task;
 
@@ -42,13 +39,19 @@ public class ArchiveTaskStep extends AbstractTaskStep {
         // Based on the fact that we have done discovery then we will
         // look for all SimpleObject's that from the OMR
 
-        for (SimpleObject simpleObject : omr.getSimpleObjects(task.getChannel().getDomainInformationStore())) {
-            simpleObject.setIngested(true);
-            simpleObject.setTaskId(task.getId());
-            for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
-                task.getStatistics().incrementSimpleObjectsIngested();
-                channelStoreWriters.get(cas).put(simpleObject);
+        for (ObjectMetadata objectMetadata : omr.getObjects(task.getChannel().getDomainInformationStore())) {
+            objectMetadata.setIngested(true);
+            objectMetadata.setTaskId(task.getId());
+            try {
+                SimpleObject simpleObject = is.materialize(objectMetadata);
+                for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
+                    task.getStatistics().incrementSimpleObjectsIngested();
+                    channelStoreWriters.get(cas).put(simpleObject);
+                }
+            } catch (InvalidSimpleObjectException e) {
+                throw new SkyeException("Unable to materialize object " + objectMetadata, e);
             }
+
         }
     }
 
