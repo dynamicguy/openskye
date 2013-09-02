@@ -71,7 +71,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public String getName() {
-        return domainInformationStore.getProperties().get(InformationStore.NAME);
+        return domainInformationStore.getName();
     }
 
     @Override

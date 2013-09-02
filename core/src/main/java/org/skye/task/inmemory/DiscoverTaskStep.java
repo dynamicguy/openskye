@@ -1,9 +1,6 @@
 package org.skye.task.inmemory;
 
-import org.skye.core.ContainerObject;
-import org.skye.core.InformationStore;
-import org.skye.core.SimpleObject;
-import org.skye.core.SkyeException;
+import org.skye.core.*;
 import org.skye.domain.Task;
 
 /**
@@ -27,16 +24,19 @@ public class DiscoverTaskStep extends AbstractTaskStep {
     @Override
     public void start() {
         InformationStore is = buildInformationStore(task.getChannel().getDomainInformationStore());
-        discover(is, is.getRoot());
+        discover(is, is.getRoot(), task);
     }
 
-    private void discover(InformationStore is, Iterable<SimpleObject> simpleObjects) {
+    private void discover(InformationStore is, Iterable<SimpleObject> simpleObjects, Task task) {
         for (SimpleObject simpleObject : simpleObjects) {
             if (simpleObject instanceof ContainerObject)
-                discover(is, is.getChildren(simpleObject));
+                discover(is, is.getChildren(simpleObject), task);
             else {
-                task.getStatistics().incrementSimpleObjectsDiscovered();
-                omr.put(simpleObject.getObjectMetadata());
+                this.task.getStatistics().incrementSimpleObjectsDiscovered();
+                ObjectMetadata om = simpleObject.getObjectMetadata();
+                om.setTaskId(task.getId());
+                om.setProject(task.getProject());
+                omr.put(om);
             }
 
         }

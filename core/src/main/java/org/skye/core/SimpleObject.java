@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public abstract class SimpleObject {
 
-    private ObjectMetadata objectMetadata;
+    private ObjectMetadata objectMetadata = new ObjectMetadata();
 
 }

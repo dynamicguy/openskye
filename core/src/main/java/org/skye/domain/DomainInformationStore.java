@@ -21,7 +21,8 @@ public class DomainInformationStore {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
+    private String name;
     @ManyToOne
     private Domain domain;
     // The name of the {@link InformationStore} implementation

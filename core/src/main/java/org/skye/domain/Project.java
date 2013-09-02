@@ -29,5 +29,8 @@ public class Project {
     @JsonIgnore
     private List<Channel> channels = new ArrayList<>();
     private String name;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Task> tasks = new ArrayList<>();
 
 }
