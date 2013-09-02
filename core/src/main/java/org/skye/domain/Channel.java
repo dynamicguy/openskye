@@ -31,5 +31,8 @@ public class Channel {
     @JsonIgnore
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     private String name;
+    @JsonIgnore
+    @OneToMany
+    private List<AttributeInstance> attributeInstances = new ArrayList<>();
 
 }

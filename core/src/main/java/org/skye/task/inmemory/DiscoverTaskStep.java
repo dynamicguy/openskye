@@ -1,6 +1,7 @@
 package org.skye.task.inmemory;
 
 import org.skye.core.*;
+import org.skye.domain.AttributeInstance;
 import org.skye.domain.Task;
 
 /**
@@ -33,7 +34,11 @@ public class DiscoverTaskStep extends AbstractTaskStep {
                 discover(is, is.getChildren(simpleObject), task);
             else {
                 this.task.getStatistics().incrementSimpleObjectsDiscovered();
+
                 ObjectMetadata om = simpleObject.getObjectMetadata();
+                for (AttributeInstance attrInstance : task.getChannel().getAttributeInstances()) {
+                    om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
+                }
                 om.setTaskId(task.getId());
                 om.setProject(task.getProject());
                 omr.put(om);

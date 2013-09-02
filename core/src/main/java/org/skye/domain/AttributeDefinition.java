@@ -21,8 +21,8 @@ public class AttributeDefinition {
     @Column(unique = true)
     protected String id;
     private String name;
+    private String shortLabel;
     private String description;
-
     // A flag that determines is the metadata is embedded in the archive
     private boolean embedInArchive;
 

@@ -22,7 +22,7 @@ public class ObjectMetadata {
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
 
-    private DateTime lastModified;
+    private DateTime lastModified = new DateTime();
     private DateTime created = new DateTime();
     private long size = 0;
 

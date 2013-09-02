@@ -23,6 +23,8 @@ public class AttributeInstance {
     private MetadataOwnerType metadataOwnerType;
     private String ownerId;
     @ManyToOne
+    private Channel channel;
+    @ManyToOne
     private AttributeDefinition attributeDefinition;
     private String attributeValue;
 }
