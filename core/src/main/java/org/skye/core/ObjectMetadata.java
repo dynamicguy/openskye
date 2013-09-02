@@ -2,6 +2,8 @@ package org.skye.core;
 
 import lombok.Data;
 import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.DomainInformationStore;
+import org.skye.domain.Project;
 
 import java.util.*;
 
@@ -19,7 +21,8 @@ public class ObjectMetadata {
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
     private String mimeType;
-    private InformationStore informationStore;
+    private Project project;
+    private DomainInformationStore informationStore;
     private DomainArchiveStore domainArchiveStore;
     private boolean ingested;
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
