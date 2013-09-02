@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 /**
  * A JDBC based structured information store
@@ -110,7 +111,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
                     JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setPath(schema.getName() + "/" + table.getName());
-                    metadata.setId(table.getQualifiedLabel());
+                    metadata.setId(UUID.randomUUID().toString());
                     structuredObject.setObjectMetadata(metadata);
                     List<ColumnMetadata> colMetas = new ArrayList<>();
                     for (Column column : table.getColumns()) {
