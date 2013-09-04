@@ -23,9 +23,9 @@ public class Role {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     protected String id;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JsonIgnore
-    private List<Permission> permissions = new ArrayList<>();
+    private List<RolePermission> rolePermissions = new ArrayList<>();
     private String name;
 
 }

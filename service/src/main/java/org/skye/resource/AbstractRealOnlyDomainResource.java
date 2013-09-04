@@ -27,7 +27,7 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     protected abstract String getPermissionDomain();
 
-    @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure")
+    @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure", response=PaginatedResult.class)
     @GET
     @Transactional
     @Timed

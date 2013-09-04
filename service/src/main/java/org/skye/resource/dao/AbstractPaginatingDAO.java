@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.yammer.dropwizard.util.Generics;
 import org.hibernate.Session;
+import org.skye.util.BadRequestException;
 import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
@@ -50,7 +51,9 @@ public abstract class AbstractPaginatingDAO<T> {
      * @return
      */
     public T persist(T newInstance) {
-        currentEntityManager().persist(newInstance);
+        if (newInstance!=null)
+            currentEntityManager().persist(newInstance);
+        else throw new BadRequestException();
         return newInstance;
     }
 

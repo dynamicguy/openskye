@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * A permission
@@ -22,5 +23,9 @@ public class Permission {
     protected String id;
 
     private String permission;
+
+    @OneToMany
+    private List<RolePermission> rolePermissions;
+
 
 }

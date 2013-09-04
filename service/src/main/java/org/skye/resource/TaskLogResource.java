@@ -1,13 +1,16 @@
 package org.skye.resource;
 
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.yammer.metrics.annotation.Timed;
+import org.skye.domain.AttributeDefinition;
 import org.skye.domain.TaskLog;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.TaskLogDAO;
 
 import javax.inject.Inject;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -23,6 +26,34 @@ public class TaskLogResource extends AbstractUpdatableDomainResource<TaskLog> {
 
     @Inject
     protected TaskLogDAO taskLogDAO;
+
+    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = TaskLog.class)
+    @POST
+    @Transactional
+    @Timed
+    public TaskLog create(TaskLog newInstance) {
+        return super.create(newInstance);
+    }
+
+    @ApiOperation(value = "Update instance", notes = "Update the instance", response = TaskLog.class)
+    @Path("/{id}")
+    @PUT
+    @Transactional
+    @Timed
+    @Override
+    public TaskLog update(@PathParam("id") String id, TaskLog newInstance) {
+        return super.update(id, newInstance);
+    }
+
+    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = TaskLog.class)
+    @Path("/{id}")
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public TaskLog get(@PathParam("id") String id) {
+        return super.get(id);
+    }
 
     @Override
     protected AbstractPaginatingDAO<TaskLog> getDAO() {

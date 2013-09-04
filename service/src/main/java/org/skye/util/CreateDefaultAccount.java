@@ -1,5 +1,6 @@
 package org.skye.util;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.persist.PersistService;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.domain.*;
@@ -50,16 +51,21 @@ public class CreateDefaultAccount {
             domain.setName("Skye");
             domainDAO.persist(domain);
 
-            List<Permission> perms = new ArrayList<>();
             Permission p = new Permission();
             p.setPermission("*");
             permissionDAO.persist(p);
 
-            perms.add(p);
             Role role = new Role();
             role.setName("administrator");
-            role.setPermissions(perms);
+
+            RolePermission rp = new RolePermission();
+            rp.setRole(role);
+            rp.setPermission(p);
+            role.setRolePermissions(ImmutableList.of(rp));
+
+
             roleDAO.persist(role);
+
 
             User adminUser = new User();
             adminUser.setName("Skye Admin");
@@ -69,11 +75,8 @@ public class CreateDefaultAccount {
             adminUser.encryptPassword();
             UserRole uRole = new UserRole();
             uRole.setRole(role);
-            uRole.setUser(adminUser);
-
-            List<UserRole> userRoleList = new ArrayList<>();
-            userRoleList.add(uRole);
-            adminUser.setUserRoles(userRoleList);
+            uRole.setUser(adminUser);;
+            adminUser.setUserRoles(ImmutableList.of(uRole));
             userDAO.persist(adminUser);
             entityManager.getTransaction().commit();
         }

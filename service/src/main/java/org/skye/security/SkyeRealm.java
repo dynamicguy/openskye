@@ -8,12 +8,12 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.mindrot.jbcrypt.BCrypt;
 import org.skye.domain.Permission;
+import org.skye.domain.RolePermission;
 import org.skye.domain.User;
 import org.skye.domain.UserRole;
 import org.skye.resource.dao.UserDAO;
 
 import javax.inject.Inject;
-import java.util.*;
 
 
 /**
@@ -30,19 +30,15 @@ public class SkyeRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        User u = (User)getAvailablePrincipal(principals);
-        List<UserRole> roles = u.getUserRoles();
-        Iterator<UserRole> rolesIterator = roles.iterator();
+        User u = (User) getAvailablePrincipal(principals);
         SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
-        while(rolesIterator.hasNext()){
-            UserRole current = rolesIterator.next();
-            authInfo.addRole((current.getRole().getName()));
-            Iterator<Permission> permissionIterator = current.getRole().getPermissions().iterator();
-            while(permissionIterator.hasNext()){
-                authInfo.addStringPermission(permissionIterator.next().getPermission());
+        for (UserRole role : u.getUserRoles()) {
+            authInfo.addRole((role.getRole().getName()));
+            for (RolePermission rp : role.getRole().getRolePermissions()) {
+                authInfo.addStringPermission(rp.getPermission().getPermission());
             }
         }
-        //authInfo.addStringPermission("*");
+
         return authInfo;
     }
 
@@ -51,11 +47,15 @@ public class SkyeRealm extends AuthorizingRealm {
         if (authenticationToken instanceof UsernamePasswordToken) {
             UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
             Optional<User> user = userDao.findByEmail(token.getUsername());
-            String pwd = new String(token.getPassword());
-            Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
-            if (user.isPresent() && passwordsMatch) { //user is found and their password matches
-                SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
-                return simpleAuthInfo;
+            if (user.isPresent()) { //user is found
+                String pwd = new String(token.getPassword());
+                Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
+                if (passwordsMatch) { //user has correct password
+                    SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
+                    return simpleAuthInfo;
+                } else {
+                    throw new AuthenticationException();
+                }
             } else {
                 throw new AuthenticationException();
             }

@@ -1,7 +1,9 @@
 package org.skye.resource;
 
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Channel;
 import org.skye.domain.Project;
 import org.skye.resource.dao.AbstractPaginatingDAO;
@@ -9,9 +11,7 @@ import org.skye.resource.dao.ProjectDAO;
 import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -22,6 +22,34 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
 
     @Inject
     protected ProjectDAO projectDAO;
+
+    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Project.class)
+    @POST
+    @Transactional
+    @Timed
+    public Project create(Project newInstance) {
+        return super.create(newInstance);
+    }
+
+    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Project.class)
+    @Path("/{id}")
+    @PUT
+    @Transactional
+    @Timed
+    @Override
+    public Project update(@PathParam("id") String id, Project newInstance) {
+        return super.update(id, newInstance);
+    }
+
+    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Project.class)
+    @Path("/{id}")
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public Project get(@PathParam("id") String id) {
+        return super.get(id);
+    }
 
     @Override
     protected AbstractPaginatingDAO<Project> getDAO() {

@@ -1,7 +1,9 @@
 package org.skye.resource;
 
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Domain;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.DomainInformationStore;
@@ -10,10 +12,7 @@ import org.skye.resource.dao.DomainDAO;
 import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -26,6 +25,34 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
     @Inject
     protected DomainDAO domainDAO;
+
+    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Domain.class)
+    @POST
+    @Transactional
+    @Timed
+    public Domain create(Domain newInstance) {
+        return super.create(newInstance);
+    }
+
+    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Domain.class)
+    @Path("/{id}")
+    @PUT
+    @Transactional
+    @Timed
+    @Override
+    public Domain update(@PathParam("id") String id, Domain newInstance) {
+        return super.update(id, newInstance);
+    }
+
+    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Domain.class)
+    @Path("/{id}")
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public Domain get(@PathParam("id") String id) {
+        return super.get(id);
+    }
 
     @Override
     protected AbstractPaginatingDAO<Domain> getDAO() {

@@ -2,6 +2,7 @@ package org.skye.util;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class PaginatedResult<T> {
     private long page;
     private long pageSize;
     private long totalResults;
-    private List<T> results;
+    private List<T> results = new ArrayList<>();
 
     public PaginatedResult<T> paginate(List<T> list) {
         results = list;
