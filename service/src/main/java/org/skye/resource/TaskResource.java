@@ -29,7 +29,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     protected TaskDAO taskDAO;
 
     @Inject
-    private TaskManager taskManager;
+    protected TaskManager taskManager;
 
     @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Task.class)
     @POST

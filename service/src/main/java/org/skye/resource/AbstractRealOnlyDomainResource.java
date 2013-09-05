@@ -27,6 +27,10 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     protected abstract String getPermissionDomain();
 
+    @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure", response=PaginatedResult.class)
+    @GET
+    @Transactional
+    @Timed
     public PaginatedResult<T> getAll() {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":list")) {
             return getDAO().list();

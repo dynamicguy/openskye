@@ -9,6 +9,7 @@ import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.Task;
 import org.skye.resource.dao.TaskDAO;
+import org.skye.task.TaskManager;
 import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.*;
 public class TaskResourceTest extends ResourceTest {
     private final Task task = new Task();
     private final TaskDAO dao = mock(TaskDAO.class);
+    private final TaskManager taskManager = mock(TaskManager.class);
     private final Subject subject = mock(Subject.class);
     private PaginatedResult<Task> expectedResult = new PaginatedResult<>();
 
@@ -32,6 +34,7 @@ public class TaskResourceTest extends ResourceTest {
         when(dao.persist(task)).thenReturn(task);
         TaskResource taskResource = new TaskResource();
         taskResource.taskDAO = dao;
+        taskResource.taskManager = taskManager;
         addResource(taskResource);
     }
 
