@@ -8,6 +8,7 @@ import org.skye.domain.AttributeDefinition;
 import org.skye.domain.Task;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.TaskDAO;
+import org.skye.task.TaskManager;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -27,12 +28,17 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Inject
     protected TaskDAO taskDAO;
 
+    @Inject
+    private TaskManager taskManager;
+
     @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Task.class)
     @POST
     @Transactional
     @Timed
     public Task create(Task newInstance){
-        return super.create(newInstance);
+        Task task = super.create(newInstance);
+        taskManager.submit(task);
+        return task;
     }
 
     @ApiOperation(value = "Update instance", notes = "Update the instance", response = Task.class)
