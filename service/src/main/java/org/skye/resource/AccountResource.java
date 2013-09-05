@@ -26,7 +26,7 @@ public class AccountResource {
 
     @Path("/")
     @GET
-    @ApiOperation(value = "Based on your login will return the subjects user information")
+    @ApiOperation(value = "Based on your login will return the subjects user information", response = User.class)
     public User getAuditLogProperties(@PathParam("id") String id) {
         if (SecurityUtils.getSubject() != null) {
             if (SecurityUtils.getSubject() instanceof User) {

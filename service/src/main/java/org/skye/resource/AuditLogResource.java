@@ -28,7 +28,7 @@ public class AuditLogResource extends AbstractUpdatableDomainResource<AuditLog> 
     @Inject
     protected AuditLogDAO auditLogDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = AuditLog.class)
+    @ApiOperation(value = "Create new audit log", notes = "Create a new audit log and return with its unique id", response = AuditLog.class)
     @POST
     @Transactional
     @Timed
@@ -36,7 +36,7 @@ public class AuditLogResource extends AbstractUpdatableDomainResource<AuditLog> 
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = AuditLog.class)
+    @ApiOperation(value = "Update audit log", notes = "Update the audit log by its id", response = AuditLog.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -46,7 +46,7 @@ public class AuditLogResource extends AbstractUpdatableDomainResource<AuditLog> 
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = AuditLog.class)
+    @ApiOperation(value = "Find audit log by id", notes = "Return an audit log by its unique id", response = AuditLog.class)
     @Path("/{id}")
     @GET
     @Transactional

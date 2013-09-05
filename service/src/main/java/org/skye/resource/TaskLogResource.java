@@ -27,7 +27,7 @@ public class TaskLogResource extends AbstractUpdatableDomainResource<TaskLog> {
     @Inject
     protected TaskLogDAO taskLogDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = TaskLog.class)
+    @ApiOperation(value = "Create new task log", notes = "Create a new task log and return with its unique id", response = TaskLog.class)
     @POST
     @Transactional
     @Timed
@@ -35,7 +35,7 @@ public class TaskLogResource extends AbstractUpdatableDomainResource<TaskLog> {
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = TaskLog.class)
+    @ApiOperation(value = "Update task log", notes = "Find the task log by id and enter new information. Returns updated task log", response = TaskLog.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -45,7 +45,7 @@ public class TaskLogResource extends AbstractUpdatableDomainResource<TaskLog> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = TaskLog.class)
+    @ApiOperation(value = "Find task log by id", notes = "Return a task log by id", response = TaskLog.class)
     @Path("/{id}")
     @GET
     @Transactional

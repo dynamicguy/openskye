@@ -23,7 +23,7 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
     @Inject
     protected ProjectDAO projectDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Project.class)
+    @ApiOperation(value = "Create new project", notes = "Create a new project and return with its unique id", response = Project.class)
     @POST
     @Transactional
     @Timed
@@ -31,7 +31,7 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Project.class)
+    @ApiOperation(value = "Update project", notes = "Enter the id of the project to update, return the updated project", response = Project.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -41,7 +41,7 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Project.class)
+    @ApiOperation(value = "Find project by id", notes = "Return a project by its unique id", response = Project.class)
     @Path("/{id}")
     @GET
     @Transactional

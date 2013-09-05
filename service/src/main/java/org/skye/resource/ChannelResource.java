@@ -23,7 +23,7 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Inject
     protected ChannelDAO channelDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Channel.class)
+    @ApiOperation(value = "Create new channel", notes = "Create a new channel and return with its unique id", response = Channel.class)
     @POST
     @Transactional
     @Timed
@@ -31,7 +31,7 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Channel.class)
+    @ApiOperation(value = "Update channel", notes = "Enter the id of the channel to update and new information. Returns the updated channel", response = Channel.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -41,7 +41,7 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Channel.class)
+    @ApiOperation(value = "Find chanel by id", notes = "Return a channel by its unique id", response = Channel.class)
     @Path("/{id}")
     @GET
     @Transactional

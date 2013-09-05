@@ -29,7 +29,7 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
     @Inject
     protected RoleDAO roleDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Role.class)
+    @ApiOperation(value = "Create new role", notes = "Create a new Role and return with a unique id", response = Role.class)
     @POST
     @Transactional
     @Timed
@@ -37,7 +37,7 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Role.class)
+    @ApiOperation(value = "Update role", notes = "Find a role by id and enter new information. Return updated role information", response = Role.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -47,7 +47,7 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Role.class)
+    @ApiOperation(value = "Find role by id", notes = "Return a role by its unique id", response = Role.class)
     @Path("/{id}")
     @GET
     @Transactional

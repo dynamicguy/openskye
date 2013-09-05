@@ -26,7 +26,7 @@ public class PermissionResource extends AbstractUpdatableDomainResource<Permissi
     @Inject
     protected PermissionDAO permissionDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Permission.class)
+    @ApiOperation(value = "Create new permission", notes = "Create a new permission and return with its id", response = Permission.class)
     @POST
     @Transactional
     @Timed
@@ -34,7 +34,7 @@ public class PermissionResource extends AbstractUpdatableDomainResource<Permissi
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Permission.class)
+    @ApiOperation(value = "Update permission", notes = "Enter the id of the permission to update and new information. Returns the updated permission", response = Permission.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -44,7 +44,7 @@ public class PermissionResource extends AbstractUpdatableDomainResource<Permissi
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Permission.class)
+    @ApiOperation(value = "Find permission by id", notes = "Return a permission by its id", response = Permission.class)
     @Path("/{id}")
     @GET
     @Transactional

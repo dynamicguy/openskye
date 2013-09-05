@@ -25,7 +25,7 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
     @Inject
     protected MetadataTemplateDAO metadataTemplateDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = MetadataTemplate.class)
+    @ApiOperation(value = "Create new metadata template", notes = "Create a new metadata template and return with its unique id", response = MetadataTemplate.class)
     @POST
     @Transactional
     @Timed
@@ -33,7 +33,7 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = MetadataTemplate.class)
+    @ApiOperation(value = "Update metadata template", notes = "Enter the id of the metadata template to update, returns updated metadata template", response = MetadataTemplate.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -43,7 +43,7 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = MetadataTemplate.class)
+    @ApiOperation(value = "Find metadata template by id", notes = "Return a metadata template by its id", response = MetadataTemplate.class)
     @Path("/{id}")
     @GET
     @Transactional

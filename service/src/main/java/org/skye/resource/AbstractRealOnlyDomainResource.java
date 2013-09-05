@@ -11,7 +11,6 @@ import org.skye.util.PaginatedResult;
 import org.skye.util.UnauthorizedException;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -27,7 +26,7 @@ public abstract class AbstractRealOnlyDomainResource<T> {
 
     protected abstract String getPermissionDomain();
 
-    @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure", response=PaginatedResult.class)
+    @ApiOperation(value = "List all", notes = "Returns all results in a paginated structure", response = PaginatedResult.class)
     @GET
     @Transactional
     @Timed

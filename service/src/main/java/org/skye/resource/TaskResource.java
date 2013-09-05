@@ -31,7 +31,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Inject
     protected TaskManager taskManager;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Task.class)
+    @ApiOperation(value = "Create new task", notes = "Create a new task and return with its unique id", response = Task.class)
     @POST
     @Transactional
     @Timed
@@ -41,7 +41,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         return task;
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Task.class)
+    @ApiOperation(value = "Update task", notes = "Find a task by id and enter updated info. Returns updated task information", response = Task.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -51,7 +51,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Task.class)
+    @ApiOperation(value = "Find task by id", notes = "Return a task by id", response = Task.class)
     @Path("/{id}")
     @GET
     @Transactional

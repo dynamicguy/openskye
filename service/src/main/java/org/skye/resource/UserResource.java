@@ -24,7 +24,7 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @Inject
     protected UserDAO userDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = User.class)
+    @ApiOperation(value = "Create new user", notes = "Create a new user and return with its unique id", response = User.class)
     @POST
     @Transactional
     @Timed
@@ -33,7 +33,7 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = User.class)
+    @ApiOperation(value = "Update instance", notes = "Find the user to update by id and enter the new information. Returns updated user information", response = User.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -43,7 +43,7 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = User.class)
+    @ApiOperation(value = "Find user by id", notes = "Return a user by their unique id", response = User.class)
     @Path("/{id}")
     @GET
     @Transactional

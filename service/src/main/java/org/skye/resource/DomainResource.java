@@ -26,7 +26,7 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     @Inject
     protected DomainDAO domainDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = Domain.class)
+    @ApiOperation(value = "Create new channel", notes = "Create a new channel and return with its unique id", response = Domain.class)
     @POST
     @Transactional
     @Timed
@@ -34,7 +34,7 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = Domain.class)
+    @ApiOperation(value = "Update domain", notes = "Enter the id of the domain to update and the new information. Returns the updated domain", response = Domain.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -44,7 +44,7 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = Domain.class)
+    @ApiOperation(value = "Find domain by id", notes = "Return a domain by its id", response = Domain.class)
     @Path("/{id}")
     @GET
     @Transactional

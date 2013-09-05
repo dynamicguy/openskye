@@ -24,7 +24,7 @@ public class RetentionPolicyResource extends AbstractUpdatableDomainResource<Ret
     @Inject
     protected RetentionPolicyDAO retentionPolicyDAO;
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = RetentionPolicy.class)
+    @ApiOperation(value = "Create new retention policy", notes = "Create a new retention policy and return with its unique id", response = RetentionPolicy.class)
     @POST
     @Transactional
     @Timed
@@ -32,7 +32,7 @@ public class RetentionPolicyResource extends AbstractUpdatableDomainResource<Ret
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = RetentionPolicy.class)
+    @ApiOperation(value = "Update retention policy", notes = "Update the retention policy by id, returns the updated policy", response = RetentionPolicy.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -42,7 +42,7 @@ public class RetentionPolicyResource extends AbstractUpdatableDomainResource<Ret
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = RetentionPolicy.class)
+    @ApiOperation(value = "Find retention policy by id", notes = "Return retention policy by its unique id", response = RetentionPolicy.class)
     @Path("/{id}")
     @GET
     @Transactional

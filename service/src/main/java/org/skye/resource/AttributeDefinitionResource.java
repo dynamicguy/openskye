@@ -24,7 +24,7 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     @Inject
     protected AttributeDefinitionDAO attributeDefinitionDAO;
 
-    @ApiOperation(value = "Update instance", notes = "Update the instance", response = AttributeDefinition.class)
+    @ApiOperation(value = "Update attribute definition", notes = "Enter the id of the attribute definition to update and enter the new information, returns updated attribute definition", response = AttributeDefinition.class)
     @Path("/{id}")
     @PUT
     @Transactional
@@ -34,7 +34,7 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
         return super.update(id, newInstance);
     }
 
-    @ApiOperation(value = "Create new", notes = "Create a new instance and return with id", response = AttributeDefinition.class)
+    @ApiOperation(value = "Create new attribute definition", notes = "Create a new attribute definition and return with its unique id", response = AttributeDefinition.class)
     @POST
     @Transactional
     @Timed
@@ -42,7 +42,7 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Find by id", notes = "Return an instance by id", response = AttributeDefinition.class)
+    @ApiOperation(value = "Find attribute definition by id", notes = "Return an attribute definition by searching for its id", response = AttributeDefinition.class)
     @Path("/{id}")
     @GET
     @Transactional
