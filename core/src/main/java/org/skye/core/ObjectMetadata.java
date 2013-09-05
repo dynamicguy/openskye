@@ -14,18 +14,16 @@ import java.util.*;
 @Data
 public class ObjectMetadata {
 
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private String path;
     // The taskId for the task that found/ingested the simple object
     private String taskId;
     private Set<Tag> tags = new HashSet<>();
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
-
     private DateTime lastModified = new DateTime();
     private DateTime created = new DateTime();
     private long size = 0;
-
     private String mimeType;
     private Project project;
     private DomainInformationStore informationStore;

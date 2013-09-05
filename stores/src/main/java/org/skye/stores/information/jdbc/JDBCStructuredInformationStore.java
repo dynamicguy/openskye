@@ -35,6 +35,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
     public static final String USER = "user";
     public static final String PASSWORD = "password";
     private DomainInformationStore domainInformationStore;
+    private UpdateableDataContext dataContext;
 
     protected Connection getConnection() {
         try {
@@ -93,7 +94,6 @@ public class JDBCStructuredInformationStore implements InformationStore {
             ContainerObject container = new ContainerObject();
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setPath(schema.getName());
-            metadata.setId(schema.getQualifiedLabel());
             container.setObjectMetadata(metadata);
             schemaObjects.add(container);
         }
@@ -111,7 +111,6 @@ public class JDBCStructuredInformationStore implements InformationStore {
                     JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setPath(schema.getName() + "/" + table.getName());
-                    metadata.setId(UUID.randomUUID().toString());
                     structuredObject.setObjectMetadata(metadata);
                     List<ColumnMetadata> colMetas = new ArrayList<>();
                     for (Column column : table.getColumns()) {
@@ -153,6 +152,8 @@ public class JDBCStructuredInformationStore implements InformationStore {
     }
 
     public UpdateableDataContext getDataContext() {
-        return DataContextFactory.createJdbcDataContext(getConnection());
+        if (this.dataContext == null)
+            this.dataContext = DataContextFactory.createJdbcDataContext(getConnection());
+        return this.dataContext;
     }
 }

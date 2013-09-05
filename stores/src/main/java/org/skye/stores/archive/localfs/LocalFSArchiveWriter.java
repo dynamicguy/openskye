@@ -39,8 +39,9 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
-            log.info("Writing structured object to " + getSimpleObjectPath(simpleObject).getAbsolutePath());
-            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(getSimpleObjectPath(simpleObject));
+            File storagePath = getSimpleObjectPath(simpleObject);
+            log.info("Writing structured object to " + storagePath.getAbsolutePath());
+            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(storagePath);
             dataContext.executeUpdate(new UpdateScript() {
                 public void run(UpdateCallback callback) {
 
@@ -76,7 +77,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             } catch (IOException e) {
                 throw new SkyeException("An I/O exception occured while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
             }
-            localFilesystemArchiveStore.getLocalPath();
         } else {
             throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
         }
@@ -87,6 +87,8 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
     private File getSimpleObjectPath(SimpleObject simpleObject) {
         File simpleObjectDir = new File(localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId());
+        log.info("Storing object ["+localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId()+"]");
+
         if (simpleObjectDir.exists())
             throw new SkyeException("Simple object already archived? " + simpleObject.getObjectMetadata());
         simpleObjectDir.mkdirs();

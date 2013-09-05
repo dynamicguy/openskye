@@ -26,7 +26,6 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public void put(ObjectMetadata objectMetadata) {
-        objectMetadata.setId(UUID.randomUUID().toString());
         objects.put(objectMetadata.getId(), objectMetadata);
     }
 
