@@ -24,6 +24,12 @@
             <url>https://github.com/pdodds</url>
             <id>pdodds</id>
         </developer>
+        <developer>
+            <email>nickylogic@gmail.com</email>
+            <name>Matt Taylor</name>
+            <url>https://github.com/nickylogic</url>
+            <id>nickylogic</id>
+        </developer>
     </developers>
 
     <modules>
