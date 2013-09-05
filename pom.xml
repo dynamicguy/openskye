@@ -30,6 +30,12 @@
             <url>https://github.com/nickylogic</url>
             <id>nickylogic</id>
         </developer>
+        <developer>
+            <email>atcmostafavi@gmail.com</email>
+            <name>Amanda Mostafavi</name>
+            <url>https://github.com/atcmostafavi</url>
+            <id>atcmostafavi</id>
+        </developer>
     </developers>
 
     <modules>
