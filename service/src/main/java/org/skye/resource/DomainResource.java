@@ -14,6 +14,7 @@ import org.skye.util.PaginatedResult;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link Domain}
@@ -52,6 +53,25 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     @Override
     public Domain get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all audit logs", notes = "Returns all audit logs in a paginated structure", responseContainer = "List", response = Domain.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<Domain> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete domain", notes = "Deletes the domain(found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override

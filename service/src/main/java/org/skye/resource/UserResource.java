@@ -13,6 +13,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -71,4 +72,22 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         return new PaginatedResult<UserRole>().paginate(user.getUserRoles());
     }
 
+    @ApiOperation(value = "List all users", notes = "Returns all users in a paginated structure", responseContainer = "List", response = User.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<User> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete user", notes = "Delete the user (found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
+    }
 }

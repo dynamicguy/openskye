@@ -1,13 +1,8 @@
 package org.skye.resource;
 
-import com.google.inject.persist.Transactional;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.util.UnauthorizedException;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -37,11 +32,6 @@ public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnl
         }
     }
 
-    @ApiOperation(value = "Delete instance", notes = "Delete the instance")
-    @Path("/{id}")
-    @DELETE
-    @Transactional
-    @Timed
     public Response delete(@PathParam("id") String id) {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":delete")) {
             getDAO().delete(id);

@@ -15,6 +15,7 @@ import org.skye.util.PaginatedResult;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,25 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
     @Override
     public Role get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all roles", notes = "Returns all roles in a paginated structure", responseContainer = "List", response = Role.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<Role> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete role", notes = "Deletes the role(found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override

@@ -7,10 +7,12 @@ import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Permission;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.PermissionDAO;
+import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -52,6 +54,25 @@ public class PermissionResource extends AbstractUpdatableDomainResource<Permissi
     @Override
     public Permission get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all permissions", notes = "Returns all permissions in a paginated structure", responseContainer = "List", response = Permission.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<Permission> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete permission", notes = "Deletes the permission(found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override

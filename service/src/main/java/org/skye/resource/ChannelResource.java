@@ -12,6 +12,7 @@ import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -27,7 +28,7 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @POST
     @Transactional
     @Timed
-    public Channel create(Channel newInstance){
+    public Channel create(Channel newInstance) {
         return super.create(newInstance);
     }
 
@@ -49,6 +50,25 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Override
     public Channel get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all channels", notes = "Returns all channels in a paginated structure", responseContainer = "List", response = Channel.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<Channel> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete channel", notes = "Deletes the channel(found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override

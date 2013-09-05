@@ -7,10 +7,12 @@ import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AttributeInstance;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.AttributeInstanceDAO;
+import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -27,7 +29,7 @@ public class AttributeInstanceResource extends AbstractUpdatableDomainResource<A
     @POST
     @Transactional
     @Timed
-    public AttributeInstance create(AttributeInstance newInstance){
+    public AttributeInstance create(AttributeInstance newInstance) {
         return super.create(newInstance);
     }
 
@@ -49,6 +51,25 @@ public class AttributeInstanceResource extends AbstractUpdatableDomainResource<A
     @Override
     public AttributeInstance get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all", notes = "Returns all attribute definitions in a paginated structure", responseContainer = "List", response = AttributeInstance.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<AttributeInstance> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete attribute instance", notes = "Deletes the attribute instance (found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override

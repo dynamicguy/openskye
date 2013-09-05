@@ -9,10 +9,12 @@ import org.skye.domain.Task;
 import org.skye.resource.dao.AbstractPaginatingDAO;
 import org.skye.resource.dao.TaskDAO;
 import org.skye.task.TaskManager;
+import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -59,6 +61,25 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Override
     public Task get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all tasks", notes = "Returns all tasks in a paginated structure", responseContainer = "List", response = Task.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<Task> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete task", notes = "Deletes the task(found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override

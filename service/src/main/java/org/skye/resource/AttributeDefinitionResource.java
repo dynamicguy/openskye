@@ -12,6 +12,7 @@ import org.skye.util.PaginatedResult;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -62,5 +63,22 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
         return "attributeDefinition";
     }
 
+    @ApiOperation(value = "List all", notes = "Returns all attribute definitions in a paginated structure", responseContainer = "List", response = AttributeDefinition.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<AttributeDefinition> getAll() {
+        return super.getAll();
+    }
 
+    @ApiOperation(value = "Delete attribute definition", notes = "Deletes the attribute definition (found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
+    }
 }

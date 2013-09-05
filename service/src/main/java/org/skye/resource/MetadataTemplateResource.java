@@ -13,6 +13,7 @@ import org.skye.util.PaginatedResult;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -51,6 +52,25 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
     @Override
     public MetadataTemplate get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "List all metadata templates", notes = "Returns all metadata templates in a paginated structure", responseContainer = "List", response = MetadataTemplate.class)
+    @GET
+    @Transactional
+    @Timed
+    @Override
+    public PaginatedResult<MetadataTemplate> getAll() {
+        return super.getAll();
+    }
+
+    @ApiOperation(value = "Delete metadata template", notes = "Deletes the metadata template(found by unique id)")
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    @Timed
+    @Override
+    public Response delete(@PathParam("id") String id) {
+        return super.delete(id);
     }
 
     @Override
