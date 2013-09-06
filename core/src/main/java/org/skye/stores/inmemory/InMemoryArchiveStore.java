@@ -1,10 +1,8 @@
 package org.skye.stores.inmemory;
 
+import com.google.common.base.Optional;
 import org.omg.CORBA.portable.InputStream;
-import org.skye.core.ArchiveStore;
-import org.skye.core.ArchiveStoreWriter;
-import org.skye.core.ObjectMetadata;
-import org.skye.core.SimpleObject;
+import org.skye.core.*;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.Task;
 
@@ -14,10 +12,10 @@ import java.util.Map;
 /**
  * An in-memory {@link org.skye.core.ArchiveStore} that can be used for testing
  */
-public class InMemoryArchiveStore implements ArchiveStore {
+public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     public static final String IMPLEMENTATION = "In-memory";
-    private Map<SimpleObject, SimpleObject> objects = new HashMap<>();
+    private Map<String, SimpleObject> objects = new HashMap<>();
 
     @Override
     public void initialize(DomainArchiveStore das) {
@@ -46,11 +44,33 @@ public class InMemoryArchiveStore implements ArchiveStore {
 
     @Override
     public ArchiveStoreWriter getWriter(Task task) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this;
     }
 
     @Override
     public InputStream getStream(ObjectMetadata simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+        if (objects.containsKey(metadata.getId())) {
+            return Optional.of(objects.get(metadata.getId()));
+        } else
+            return Optional.absent();
+    }
+
+    @Override
+    public void put(SimpleObject simpleObject) {
+        if (objects.containsKey(simpleObject.getObjectMetadata().getId())) {
+            throw new SkyeException("Simple Object already archived?");
+        } else {
+            objects.put(simpleObject.getObjectMetadata().getId(), simpleObject);
+        }
+    }
+
+    @Override
+    public void close() {
+        // nothing to do
     }
 }

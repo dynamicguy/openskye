@@ -1,5 +1,6 @@
 package org.skye.core;
 
+import com.google.common.base.Optional;
 import org.omg.CORBA.portable.InputStream;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.Task;
@@ -61,6 +62,14 @@ public interface ArchiveStore {
      * @param metadata the object to get a stream to
      */
     InputStream getStream(ObjectMetadata metadata);
+
+    /**
+     * Get the simple object back based on the {@link ObjectMetadata}
+     *
+     * @param metadata the metadata for the object you want to get back
+     * @return optionally the {@link SimpleObject}
+     */
+    Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata);
 
 
 }
