@@ -1,5 +1,6 @@
 package org.skye.hadoop.stores;
 
+import com.google.common.base.Optional;
 import org.omg.CORBA.portable.InputStream;
 import org.skye.core.ArchiveStore;
 import org.skye.core.ArchiveStoreWriter;
@@ -45,6 +46,11 @@ public class HdfsArchiveStore implements ArchiveStore {
 
     @Override
     public InputStream getStream(ObjectMetadata metadata) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

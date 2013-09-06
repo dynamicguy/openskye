@@ -31,7 +31,17 @@ public class JDBCStructuredInformationStoreTest {
     @Inject
     public StoreRegistry registry;
 
-    public DomainInformationStore getDis() {
+    public DomainInformationStore getLocalMySQLDis() {
+        DomainInformationStore dis = new DomainInformationStore();
+        dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
+        dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "com.mysql.jdbc.Driver");
+        dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:mysql://localhost:3306/orion_dev?autoreconnect=true");
+        dis.getProperties().put(JDBCStructuredInformationStore.USER, "root");
+        dis.getProperties().put(JDBCStructuredInformationStore.PASSWORD, "password");
+        return dis;
+    }
+
+    public DomainInformationStore getInMemoryDis() {
         DomainInformationStore dis = new DomainInformationStore();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
@@ -43,13 +53,13 @@ public class JDBCStructuredInformationStoreTest {
 
     @Test
     public void createInformationStore() {
-        assertThat("We can create an instance of the JDBC structured information store", registry.build(getDis()).isPresent());
+        assertThat("We can create an instance of the JDBC structured information store", registry.build(getInMemoryDis()).isPresent());
     }
 
     @Test
     public void ensureWeCanDiscoverObjects() {
-        assertThat("Get metadata for the store", registry.build(getDis()).get().getMetadata() != null);
-        JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getDis()).get();
+        assertThat("Get metadata for the store", registry.build(getInMemoryDis()).get().getMetadata() != null);
+        JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getInMemoryDis()).get();
 
         final UpdateableDataContext dataContext = is.getDataContext();
         final Schema schema = dataContext.getDefaultSchema();
@@ -75,7 +85,7 @@ public class JDBCStructuredInformationStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
-        DomainInformationStore dis = getDis();
+        DomainInformationStore dis = getInMemoryDis();
         DomainArchiveStore das = new DomainArchiveStore();
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
@@ -90,6 +100,32 @@ public class JDBCStructuredInformationStoreTest {
         taskManager.submit(newTask);
 
         assertThat("We have 1 discovered simple objects", newTask.getStatistics().getSimpleObjectsDiscovered() == 1);
+    }
+
+    // Note this test can't always run on the build server
+    public void ensureWeCanArchiveToALocalMySQLDB() {
+
+        ArchiveStoreInstance asi = new ArchiveStoreInstance();
+        asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
+        DomainInformationStore dis = getLocalMySQLDis();
+        DomainArchiveStore das = new DomainArchiveStore();
+        das.setArchiveStoreInstance(asi);
+        ChannelArchiveStore cas = new ChannelArchiveStore();
+        cas.setDomainArchiveStore(das);
+        Channel channel = new Channel();
+        channel.getChannelArchiveStores().add(cas);
+        channel.setDomainInformationStore(dis);
+
+        Task newTask = new Task();
+        newTask.setChannel(channel);
+        newTask.setTaskType(TaskType.DISCOVER);
+        taskManager.submit(newTask);
+
+        Task archiveTask = new Task();
+        archiveTask.setChannel(channel);
+        archiveTask.setTaskType(TaskType.ARCHIVE);
+        taskManager.submit(newTask);
+
     }
 
 }

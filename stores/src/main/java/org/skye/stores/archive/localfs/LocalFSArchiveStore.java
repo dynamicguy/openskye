@@ -1,5 +1,6 @@
 package org.skye.stores.archive.localfs;
 
+import com.google.common.base.Optional;
 import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -79,6 +80,11 @@ public class LocalFSArchiveStore implements ArchiveStore {
 
     @Override
     public InputStream getStream(ObjectMetadata metadata) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

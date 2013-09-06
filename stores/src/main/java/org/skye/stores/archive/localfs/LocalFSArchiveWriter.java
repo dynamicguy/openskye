@@ -35,18 +35,20 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     }
 
     @Override
-    public void put(final SimpleObject simpleObject) {
+    public void put(SimpleObject simpleObject) {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
-            File storagePath = getSimpleObjectPath(simpleObject);
-            log.info("Writing structured object to " + storagePath.getAbsolutePath());
+            final File storagePath = getSimpleObjectPath(simpleObject);
+            final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
+            if (log.isDebugEnabled())
+                log.debug("Writing structured object to " + storagePath.getAbsolutePath());
             final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(storagePath);
             dataContext.executeUpdate(new UpdateScript() {
                 public void run(UpdateCallback callback) {
 
                     // Create the table in a file representing the Archive Content Block
-                    JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
+
                     TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
 
                     for (Column column : structuredObject.getTable().getColumns()) {
@@ -75,7 +77,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             try {
                 FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), getSimpleObjectPath(simpleObject));
             } catch (IOException e) {
-                throw new SkyeException("An I/O exception occured while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
+                throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
             }
         } else {
             throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
@@ -87,7 +89,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
     private File getSimpleObjectPath(SimpleObject simpleObject) {
         File simpleObjectDir = new File(localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId());
-        log.info("Storing object ["+localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId()+"]");
+        log.info("Storing object [" + localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId() + "]");
 
         if (simpleObjectDir.exists())
             throw new SkyeException("Simple object already archived? " + simpleObject.getObjectMetadata());
