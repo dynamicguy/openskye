@@ -1,5 +1,6 @@
 package org.skye.filters;
 
+import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.domain.ChannelFilterDefinition;
 
@@ -18,12 +19,12 @@ public interface ChannelFilter {
     void initialize(ChannelFilterDefinition channelFilterDefinition);
 
     /**
-     * A method to test a {@link SimpleObject},  it will return true if the SimpleObject was filtered
+     * A method to test a {@link ObjectMetadata},  it will return true if the ObjectMetadata was filtered
      *
-     * @param simpleObject
-     * @return
+     * @param objectMetadata
+     * @return true if the object met the filter
      */
-    boolean isFiltered(SimpleObject simpleObject);
+    boolean isFiltered(ObjectMetadata objectMetadata);
 
     /**
      * Returns true if the filter is including simple objects based on the filter,  if it is false
