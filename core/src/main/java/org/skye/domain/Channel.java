@@ -34,5 +34,8 @@ public class Channel {
     @JsonIgnore
     @OneToMany
     private List<AttributeInstance> attributeInstances = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany
+    private List<ChannelFilterDefinition> channelFilters = new ArrayList<>();
 
 }

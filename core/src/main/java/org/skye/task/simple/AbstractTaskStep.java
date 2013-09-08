@@ -1,4 +1,4 @@
-package org.skye.task.inmemory;
+package org.skye.task.simple;
 
 import com.google.common.base.Optional;
 import org.skye.core.ArchiveStore;

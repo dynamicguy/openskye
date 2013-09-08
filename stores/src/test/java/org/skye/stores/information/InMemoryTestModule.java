@@ -8,7 +8,7 @@ import org.skye.metadata.impl.InMemoryObjectMetadataRepository;
 import org.skye.metadata.impl.InMemoryObjectMetadataSearch;
 import org.skye.stores.StoreRegistry;
 import org.skye.task.TaskManager;
-import org.skye.task.inmemory.InMemoryTaskManager;
+import org.skye.task.simple.InMemoryTaskManager;
 
 /**
  * A guice module that sets up everything for in-memory operation
