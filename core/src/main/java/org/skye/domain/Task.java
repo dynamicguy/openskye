@@ -22,6 +22,8 @@ public class Task {
     protected String id;
     private TaskType taskType;
     @ManyToOne
+    private Task parentTask;
+    @ManyToOne
     private Project project;
     @OneToOne
     private TaskStatistics statistics = new TaskStatistics();

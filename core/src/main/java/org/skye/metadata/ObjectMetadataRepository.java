@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.domain.DomainInformationStore;
+import org.skye.domain.Task;
 
 /**
  * This is the standard interface to allow the storage of {@link SimpleObject} instances
@@ -32,4 +33,11 @@ public interface ObjectMetadataRepository {
      * @param domainInformationStore
      */
     Iterable<ObjectMetadata> getObjects(DomainInformationStore domainInformationStore);
+
+    /**
+     * Returns an iterator over all the {@link ObjectMetadata} for the given {@link Task}
+     *
+     * @param task
+     */
+    Iterable<ObjectMetadata> getObjects(Task task);
 }

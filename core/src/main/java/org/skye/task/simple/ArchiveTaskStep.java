@@ -14,6 +14,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
 
     private final Task task;
     private Map<ChannelArchiveStore, ArchiveStoreWriter> channelStoreWriters = new HashMap<>();
+    private ObjectMetadata[] objectMetadataIterator;
 
     public ArchiveTaskStep(Task task) {
         this.task = task;
@@ -40,7 +41,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
         // Based on the fact that we have done discovery then we will
         // look for all SimpleObject's that from the OMR
 
-        for (ObjectMetadata objectMetadata : omr.getObjects(task.getChannel().getDomainInformationStore())) {
+        for (ObjectMetadata objectMetadata : getObjectMetadataIterator()) {
             objectMetadata.setIngested(true);
             objectMetadata.setTaskId(task.getId());
             try {
@@ -56,4 +57,10 @@ public class ArchiveTaskStep extends AbstractTaskStep {
         }
     }
 
+    private Iterable<ObjectMetadata> getObjectMetadataIterator() {
+        if (task.getParentTask() == null)
+            return omr.getObjects(task.getChannel().getDomainInformationStore());
+        else
+            return omr.getObjects(task.getParentTask());
+    }
 }
