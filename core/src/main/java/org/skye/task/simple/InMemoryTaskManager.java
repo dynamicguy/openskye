@@ -1,4 +1,4 @@
-package org.skye.task.inmemory;
+package org.skye.task.simple;
 
 import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;

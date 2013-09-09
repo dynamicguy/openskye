@@ -1,4 +1,4 @@
-package org.skye.task.inmemory;
+package org.skye.task.simple;
 
 import org.skye.core.*;
 import org.skye.domain.ChannelArchiveStore;
@@ -32,6 +32,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
         // Build up the information and archive stores
 
         InformationStore is = buildInformationStore(task.getChannel().getDomainInformationStore());
+
         for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
             channelStoreWriters.put(cas, buildArchiveStore(cas.getDomainArchiveStore()).getWriter(task));
         }

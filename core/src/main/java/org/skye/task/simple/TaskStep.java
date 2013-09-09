@@ -1,4 +1,4 @@
-package org.skye.task.inmemory;
+package org.skye.task.simple;
 
 /**
  * A simple representation of the step for a task
