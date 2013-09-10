@@ -18,6 +18,8 @@ import org.skye.stores.archive.AbstractArchiveStoreWriter;
 import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -39,11 +41,11 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
-            final File storagePath = getSimpleObjectPath(simpleObject);
+            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(simpleObject.getObjectMetadata());
             final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
             if (log.isDebugEnabled())
-                log.debug("Writing structured object to " + storagePath.getAbsolutePath());
-            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(storagePath);
+                log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
+            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(tempStoragePath);
             dataContext.executeUpdate(new UpdateScript() {
                 public void run(UpdateCallback callback) {
 
@@ -71,11 +73,19 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
             });
 
+            try {
+                FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), localFilesystemArchiveStore.getSimpleObjectPath(simpleObject.getObjectMetadata()));
+            } catch (FileNotFoundException e) {
+                throw new SkyeException("Unable to process filters since we can't find the archived file?");
+            } catch (IOException e) {
+                throw new SkyeException("IO exception while trying to write output of filters to final archive location", e);
+            }
+
         } else if (simpleObject instanceof UnstructuredObject) {
             // we can just store this as a file
             UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
             try {
-                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), getSimpleObjectPath(simpleObject));
+                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), localFilesystemArchiveStore.getSimpleObjectPath(simpleObject.getObjectMetadata()));
             } catch (IOException e) {
                 throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
             }
@@ -85,17 +95,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
         simpleObject.getObjectMetadata().setArchiveContentBlocks(ImmutableList.of(acb));
         updateMetadata(simpleObject);
-    }
-
-    private File getSimpleObjectPath(SimpleObject simpleObject) {
-        File simpleObjectDir = new File(localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId());
-        log.info("Storing object [" + localFilesystemArchiveStore.getLocalPath() + "/" + simpleObject.getObjectMetadata().getId() + "]");
-
-        if (simpleObjectDir.exists())
-            throw new SkyeException("Simple object already archived? " + simpleObject.getObjectMetadata());
-        simpleObjectDir.mkdirs();
-        simpleObjectDir.delete();
-        return simpleObjectDir;
     }
 
     @Override

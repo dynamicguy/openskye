@@ -1,13 +1,11 @@
 package org.skye.hadoop.stores;
 
 import com.google.common.base.Optional;
-import org.omg.CORBA.portable.InputStream;
-import org.skye.core.ArchiveStore;
-import org.skye.core.ArchiveStoreWriter;
-import org.skye.core.ObjectMetadata;
-import org.skye.core.SimpleObject;
+import org.skye.core.*;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.Task;
+
+import java.util.ArrayList;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
@@ -45,12 +43,17 @@ public class HdfsArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public InputStream getStream(ObjectMetadata metadata) {
+    public java.io.InputStream getStream(ObjectMetadata metadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Iterable<ObjectStreamFilter> getFilters() {
+        return new ArrayList<>();
     }
 }

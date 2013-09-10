@@ -9,7 +9,6 @@ import org.apache.shiro.SecurityUtils;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ArchiveStore;
 import org.skye.core.ObjectMetadata;
-import org.skye.core.SimpleObject;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
 import org.skye.util.NotFoundException;
@@ -22,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 
 /**
  * Search and access information from the {@link ObjectMetadataRepository}
@@ -81,7 +81,7 @@ public class MetaRepository {
                 ObjectMetadata metadata = objectMetadata.get();
                 Optional<ArchiveStore> archiveStore = storeRegistry.build(metadata.getDomainArchiveStore());
                 if (archiveStore.isPresent()) {
-                    org.omg.CORBA.portable.InputStream inputStream = archiveStore.get().getStream(metadata);
+                    InputStream inputStream = archiveStore.get().getStream(metadata);
                     return Response.ok(inputStream).
                             header("Content-Disposition", "attachment; filename=" + metadata.getPath()).build();
                 }
