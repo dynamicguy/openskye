@@ -1,11 +1,11 @@
 package org.skye.stores.inmemory;
 
 import com.google.common.base.Optional;
-import org.omg.CORBA.portable.InputStream;
 import org.skye.core.*;
 import org.skye.domain.DomainArchiveStore;
 import org.skye.domain.Task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public InputStream getStream(ObjectMetadata simpleObject) {
+    public java.io.InputStream getStream(ObjectMetadata simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -58,6 +58,11 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
             return Optional.of(objects.get(metadata.getId()));
         } else
             return Optional.absent();
+    }
+
+    @Override
+    public Iterable<ObjectStreamFilter> getFilters() {
+        return new ArrayList<>();
     }
 
     @Override

@@ -61,7 +61,7 @@ public interface ArchiveStore {
      *
      * @param metadata the object to get a stream to
      */
-    InputStream getStream(ObjectMetadata metadata);
+    java.io.InputStream getStream(ObjectMetadata metadata);
 
     /**
      * Get the simple object back based on the {@link ObjectMetadata}
@@ -70,6 +70,16 @@ public interface ArchiveStore {
      * @return optionally the {@link SimpleObject}
      */
     Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata);
+
+    /**
+     * Returns a list of the {@link ObjectStreamFilter}s that have been
+     * enabled on this archive store
+     * <p/>
+     * Note that not all archive stores honour the {@link ObjectStreamFilter}
+     *
+     * @return iterable of the filters
+     */
+    Iterable<ObjectStreamFilter> getFilters();
 
 
 }
