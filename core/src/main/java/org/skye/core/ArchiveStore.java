@@ -61,7 +61,7 @@ public interface ArchiveStore {
      *
      * @param metadata the object to get a stream to
      */
-    java.io.InputStream getStream(ObjectMetadata metadata);
+    Optional<java.io.InputStream> getStream(ObjectMetadata metadata);
 
     /**
      * Get the simple object back based on the {@link ObjectMetadata}

@@ -3,9 +3,9 @@ package org.skye.hadoop.stores;
 import com.google.common.base.Optional;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
-import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -44,7 +44,7 @@ public class HBaseArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public java.io.InputStream getStream(ObjectMetadata objectMetadata) {
+    public Optional<InputStream> getStream(ObjectMetadata objectMetadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

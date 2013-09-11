@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * An implementation of an {@link ArchiveStoreWriter} for the {@link LocalFSArchiveStore}
@@ -41,9 +42,11 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
         ArchiveContentBlock acb = new ArchiveContentBlock();
+        acb.setId(UUID.randomUUID().toString());
+
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
-            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(simpleObject.getObjectMetadata());
+            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb);
             final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
             if (log.isDebugEnabled())
                 log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
@@ -76,15 +79,15 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             });
 
             try {
-                simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
-                File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(simpleObject.getObjectMetadata());
+                acb.setOriginalSize(tempStoragePath.length());
+                File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb);
                 FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
 
                 FileInputStream fis = new FileInputStream(targetPath);
-                simpleObject.getObjectMetadata().setChecksum(DigestUtils.md5Hex(fis));
+                acb.setChecksum(DigestUtils.md5Hex(fis));
                 simpleObject.getObjectMetadata().setIngested(DateTime.now());
-                simpleObject.getObjectMetadata().setMimeType("text/csv");
-                simpleObject.getObjectMetadata().setArchiveSize(targetPath.length());
+                acb.setMimeType("text/csv");
+                acb.setArchiveSize(targetPath.length());
                 tempStoragePath.delete();
             } catch (FileNotFoundException e) {
                 throw new SkyeException("Unable to process filters since we can't find the archived file?");
@@ -96,7 +99,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             // we can just store this as a file
             UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
             try {
-                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), localFilesystemArchiveStore.getSimpleObjectPath(simpleObject.getObjectMetadata()));
+                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), localFilesystemArchiveStore.getSimpleObjectPath(acb));
             } catch (IOException e) {
                 throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
             }

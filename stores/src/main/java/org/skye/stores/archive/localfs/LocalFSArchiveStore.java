@@ -88,11 +88,14 @@ public class LocalFSArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public InputStream getStream(ObjectMetadata metadata) {
+    public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
-            return new FileInputStream(getSimpleObjectPath(metadata));
+            if (metadata.getArchiveContentBlock(this).isPresent()) {
+                InputStream is = new FileInputStream(getSimpleObjectPath(metadata.getArchiveContentBlock(this).get()));
+                return Optional.of(is);
+            } else return Optional.absent();
         } catch (FileNotFoundException e) {
-            throw new SkyeException("Unable to access archive for " + metadata);
+            throw new SkyeException("ACB references storage, but unable to find archive file?");
         }
     }
 
@@ -114,23 +117,23 @@ public class LocalFSArchiveStore implements ArchiveStore {
         return tmpPath;
     }
 
-    public File getSimpleObjectPath(ObjectMetadata objectMetadata) {
-        File simpleObjectDir = new File(getLocalPath() + "/" + objectMetadata.getId());
-        log.info("Storing object [" + getLocalPath() + "/" + objectMetadata.getId() + "]");
+    public File getSimpleObjectPath(ArchiveContentBlock acb) {
+        File simpleObjectDir = new File(getLocalPath() + "/" + acb.getId());
+        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "]");
 
         if (simpleObjectDir.exists())
-            throw new SkyeException("Simple object already archived? " + objectMetadata);
+            throw new SkyeException("Simple object already archived? " + acb);
         simpleObjectDir.mkdirs();
         simpleObjectDir.delete();
         return simpleObjectDir;
     }
 
-    public File getTempSimpleObjectPath(ObjectMetadata objectMetadata) {
-        File simpleObjectDir = new File(getTempPath() + "/" + objectMetadata.getId());
-        log.info("Storing temp object [" + getTempPath() + "/" + objectMetadata.getId() + "]");
+    public File getTempSimpleObjectPath(ArchiveContentBlock acb) {
+        File simpleObjectDir = new File(getTempPath() + "/" + acb.getId());
+        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "]");
 
         if (simpleObjectDir.exists())
-            throw new SkyeException("Simple object already in temp? " + objectMetadata);
+            throw new SkyeException("Simple object already in temp? " + acb);
         simpleObjectDir.mkdirs();
         simpleObjectDir.delete();
         return simpleObjectDir;

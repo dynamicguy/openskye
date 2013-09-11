@@ -79,11 +79,17 @@ public class MetaRepository {
             Optional<ObjectMetadata> objectMetadata = objectMetadataRepository.get(id);
             if (objectMetadata.isPresent()) {
                 ObjectMetadata metadata = objectMetadata.get();
-                Optional<ArchiveStore> archiveStore = storeRegistry.build(metadata.getArchiveStoreDefinition());
-                if (archiveStore.isPresent()) {
-                    InputStream inputStream = archiveStore.get().getStream(metadata);
-                    return Response.ok(inputStream).
-                            header("Content-Disposition", "attachment; filename=" + metadata.getPath()).build();
+
+                // Lets just pick up the first ACB containing the information
+                if (metadata.getArchiveContentBlocks().size() > 0) {
+                    ArchiveStore archiveStore = metadata.getArchiveContentBlocks().get(0).getArchiveStore();
+                    Optional<InputStream> inputStream = archiveStore.getStream(metadata);
+                    if (inputStream.isPresent()) {
+                        return Response.ok(inputStream.get()).
+                                header("Content-Disposition", "attachment; filename=" + metadata.getPath()).build();
+                    } else {
+                        throw new NotFoundException();
+                    }
                 }
             }
         } else {

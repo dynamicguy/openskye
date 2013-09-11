@@ -1,8 +1,8 @@
 package org.skye.core;
 
+import com.google.common.base.Optional;
 import lombok.Data;
 import org.joda.time.DateTime;
-import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Project;
 
@@ -22,13 +22,17 @@ public class ObjectMetadata {
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
     private DateTime created = new DateTime();
-    private long originalSize = 0;
-    private long archiveSize = 0;
-    private String mimeType;
-    private String checksum;
     private DateTime ingested;
     private Project project;
     private InformationStoreDefinition informationStore;
-    private ArchiveStoreDefinition archiveStoreDefinition;
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
+
+    public Optional<ArchiveContentBlock> getArchiveContentBlock(ArchiveStore archiveStore) {
+        for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
+            if (acb.getArchiveStore().getUrl().equals(archiveStore.getUrl())) {
+                return Optional.of(acb);
+            }
+        }
+        return Optional.absent();
+    }
 }

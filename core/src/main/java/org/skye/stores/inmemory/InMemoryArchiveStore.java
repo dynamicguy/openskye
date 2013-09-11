@@ -3,9 +3,9 @@ package org.skye.stores.inmemory;
 import com.google.common.base.Optional;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
-import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public java.io.InputStream getStream(ObjectMetadata simpleObject) {
+    public Optional<InputStream> getStream(ObjectMetadata simpleObject) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
