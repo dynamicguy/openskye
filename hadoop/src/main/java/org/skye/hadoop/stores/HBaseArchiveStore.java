@@ -3,7 +3,6 @@ package org.skye.hadoop.stores;
 import com.google.common.base.Optional;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
-import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 
 import java.util.ArrayList;
@@ -13,9 +12,11 @@ import java.util.ArrayList;
  */
 public class HBaseArchiveStore implements ArchiveStore {
 
+    private ArchiveStoreDefinition archiveStoreDefinition;
+
     @Override
     public void initialize(ArchiveStoreDefinition das) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.archiveStoreDefinition = das;
     }
 
     @Override
