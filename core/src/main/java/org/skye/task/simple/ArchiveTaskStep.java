@@ -32,17 +32,16 @@ public class ArchiveTaskStep extends AbstractTaskStep {
 
         // Build up the information and archive stores
 
-        InformationStore is = buildInformationStore(task.getChannel().getDomainInformationStore());
+        InformationStore is = buildInformationStore(task.getChannel().getInformationStoreDefinition());
 
         for (ChannelArchiveStore cas : task.getChannel().getChannelArchiveStores()) {
-            channelStoreWriters.put(cas, buildArchiveStore(cas.getDomainArchiveStore()).getWriter(task));
+            channelStoreWriters.put(cas, buildArchiveStore(cas.getArchiveStoreDefinition()).getWriter(task));
         }
 
         // Based on the fact that we have done discovery then we will
         // look for all SimpleObject's that from the OMR
 
         for (ObjectMetadata objectMetadata : getObjectMetadataIterator()) {
-            objectMetadata.setIngested(true);
             objectMetadata.setTaskId(task.getId());
             try {
                 SimpleObject simpleObject = is.materialize(objectMetadata);
@@ -59,7 +58,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
 
     private Iterable<ObjectMetadata> getObjectMetadataIterator() {
         if (task.getParentTask() == null)
-            return omr.getObjects(task.getChannel().getDomainInformationStore());
+            return omr.getObjects(task.getChannel().getInformationStoreDefinition());
         else
             return omr.getObjects(task.getParentTask());
     }

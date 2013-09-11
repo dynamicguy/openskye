@@ -1,7 +1,7 @@
 package org.skye.stores.archive.filters;
 
 import org.skye.core.ObjectStreamFilter;
-import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.ArchiveStoreDefinition;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +15,7 @@ import java.util.zip.InflaterOutputStream;
  */
 public class ZipCompressionFilter implements ObjectStreamFilter {
     @Override
-    public void initialize(DomainArchiveStore domainArchiveStore) {
+    public void initialize(ArchiveStoreDefinition archiveStoreDefinition) {
         // nothing to do
     }
 

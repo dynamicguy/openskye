@@ -31,8 +31,8 @@ public class JDBCStructuredInformationStoreTest {
     @Inject
     public StoreRegistry registry;
 
-    public DomainInformationStore getLocalMySQLDis() {
-        DomainInformationStore dis = new DomainInformationStore();
+    public InformationStoreDefinition getLocalMySQLDis() {
+        InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "com.mysql.jdbc.Driver");
         dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:mysql://localhost:3306/orion_dev?autoreconnect=true");
@@ -41,8 +41,8 @@ public class JDBCStructuredInformationStoreTest {
         return dis;
     }
 
-    public DomainInformationStore getInMemoryDis() {
-        DomainInformationStore dis = new DomainInformationStore();
+    public InformationStoreDefinition getInMemoryDis() {
+        InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
         dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:skye");
@@ -85,14 +85,14 @@ public class JDBCStructuredInformationStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
-        DomainInformationStore dis = getInMemoryDis();
-        DomainArchiveStore das = new DomainArchiveStore();
+        InformationStoreDefinition dis = getInMemoryDis();
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
-        cas.setDomainArchiveStore(das);
+        cas.setArchiveStoreDefinition(das);
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
-        channel.setDomainInformationStore(dis);
+        channel.setInformationStoreDefinition(dis);
 
         Task newTask = new Task();
         newTask.setChannel(channel);
@@ -107,14 +107,14 @@ public class JDBCStructuredInformationStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
-        DomainInformationStore dis = getLocalMySQLDis();
-        DomainArchiveStore das = new DomainArchiveStore();
+        InformationStoreDefinition dis = getLocalMySQLDis();
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
-        cas.setDomainArchiveStore(das);
+        cas.setArchiveStoreDefinition(das);
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
-        channel.setDomainInformationStore(dis);
+        channel.setInformationStoreDefinition(dis);
 
         Task newTask = new Task();
         newTask.setChannel(channel);

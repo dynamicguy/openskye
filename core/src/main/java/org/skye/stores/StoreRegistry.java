@@ -8,8 +8,8 @@ import org.reflections.Reflections;
 import org.skye.core.ArchiveStore;
 import org.skye.core.InformationStore;
 import org.skye.core.SkyeException;
-import org.skye.domain.DomainArchiveStore;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -63,13 +63,13 @@ public class StoreRegistry {
     }
 
     /**
-     * Given a {@link DomainInformationStore} it is resolve the implementation and then
+     * Given a {@link org.skye.domain.InformationStoreDefinition} it is resolve the implementation and then
      * return an instance of the {@link InformationStore}
      *
      * @param dis The DomainInformationStore
      * @return A new instance of the relevant InformationStore
      */
-    public Optional<InformationStore> build(DomainInformationStore dis) {
+    public Optional<InformationStore> build(InformationStoreDefinition dis) {
         log.debug("Creating new information store for " + dis);
         for (InformationStore is : informationStores) {
             if (is.isImplementing(dis.getImplementation())) {
@@ -88,13 +88,13 @@ public class StoreRegistry {
     }
 
     /**
-     * Given a {@link DomainArchiveStore} it is resolve the implementation and then
+     * Given a {@link org.skye.domain.ArchiveStoreDefinition} it is resolve the implementation and then
      * return an instance of the {@link ArchiveStore}
      *
      * @param das The DomainArchiveStore
      * @return A new instance of the relevant ArchiveStore
      */
-    public Optional<ArchiveStore> build(DomainArchiveStore das) {
+    public Optional<ArchiveStore> build(ArchiveStoreDefinition das) {
         log.debug("Creating new archive store for " + das);
         for (ArchiveStore as : archiveStores) {
             if (as.isImplementing(das.getArchiveStoreInstance().getImplementation())) {

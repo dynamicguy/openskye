@@ -79,7 +79,7 @@ public class MetaRepository {
             Optional<ObjectMetadata> objectMetadata = objectMetadataRepository.get(id);
             if (objectMetadata.isPresent()) {
                 ObjectMetadata metadata = objectMetadata.get();
-                Optional<ArchiveStore> archiveStore = storeRegistry.build(metadata.getDomainArchiveStore());
+                Optional<ArchiveStore> archiveStore = storeRegistry.build(metadata.getArchiveStoreDefinition());
                 if (archiveStore.isPresent()) {
                     InputStream inputStream = archiveStore.get().getStream(metadata);
                     return Response.ok(inputStream).

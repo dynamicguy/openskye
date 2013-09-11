@@ -10,8 +10,9 @@ public interface ArchiveStoreWriter {
      * the links to the {@link ArchiveContentBlock}
      *
      * @param simpleObject the object to archive
+     * @return The simple object enriched with information such as size, checksum etc
      */
-    void put(SimpleObject simpleObject);
+    SimpleObject put(SimpleObject simpleObject);
 
     /**
      * Closes the resources for this writer

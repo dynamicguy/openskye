@@ -4,6 +4,7 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.skye.domain.*;
+import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.stores.inmemory.InMemoryInformationStore;
 import org.skye.task.TaskManager;
@@ -24,15 +25,15 @@ public class InMemoryArchiveTest {
     public void testBasicArchiving() throws Exception {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
-        DomainInformationStore dis = new DomainInformationStore();
+        InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
-        DomainArchiveStore das = new DomainArchiveStore();
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
-        cas.setDomainArchiveStore(das);
+        cas.setArchiveStoreDefinition(das);
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
-        channel.setDomainInformationStore(dis);
+        channel.setInformationStoreDefinition(dis);
 
         Task newTask = new Task();
         newTask.setChannel(channel);

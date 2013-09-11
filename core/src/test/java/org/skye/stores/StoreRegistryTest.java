@@ -3,9 +3,11 @@ package org.skye.stores;
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.ArchiveStoreInstance;
-import org.skye.domain.DomainArchiveStore;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.stores.inmemory.InMemoryInformationStore;
 
@@ -33,7 +35,7 @@ public class StoreRegistryTest {
 
     @Test
     public void creationOfInMemoryInformationStore() {
-        DomainInformationStore dis = new DomainInformationStore();
+        InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
 
         assertThat("We can create an in-memory information store and we get something", registry.build(dis).isPresent());
@@ -42,7 +44,7 @@ public class StoreRegistryTest {
 
     @Test
     public void creationOfInMemoryArchiveStore() {
-        DomainArchiveStore das = new DomainArchiveStore();
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
 
         asi.setImplementation(InMemoryInformationStore.IMPLEMENTATION);

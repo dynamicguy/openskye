@@ -3,7 +3,7 @@ package org.skye.metadata;
 import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 
 /**
@@ -28,11 +28,11 @@ public interface ObjectMetadataRepository {
     void put(ObjectMetadata objectMetadata);
 
     /**
-     * Returns an iterator over all the {@link ObjectMetadata} for the given {@link DomainInformationStore}
+     * Returns an iterator over all the {@link ObjectMetadata} for the given {@link org.skye.domain.InformationStoreDefinition}
      *
-     * @param domainInformationStore
+     * @param informationStoreDefinition
      */
-    Iterable<ObjectMetadata> getObjects(DomainInformationStore domainInformationStore);
+    Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition);
 
     /**
      * Returns an iterator over all the {@link ObjectMetadata} for the given {@link Task}

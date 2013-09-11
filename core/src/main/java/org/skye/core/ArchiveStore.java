@@ -2,7 +2,7 @@ package org.skye.core;
 
 import com.google.common.base.Optional;
 import org.omg.CORBA.portable.InputStream;
-import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 
 /**
@@ -15,7 +15,7 @@ public interface ArchiveStore {
      *
      * @param das the domain archive store
      */
-    void initialize(DomainArchiveStore das);
+    void initialize(ArchiveStoreDefinition das);
 
     /**
      * Returns the name of the store

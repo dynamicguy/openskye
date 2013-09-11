@@ -2,7 +2,8 @@ package org.skye.hadoop.metadata;
 
 import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.InformationStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
 
@@ -23,7 +24,7 @@ public class HBaseObjectMetadataRepository implements ObjectMetadataRepository {
     }
 
     @Override
-    public Iterable<ObjectMetadata> getObjects(DomainInformationStore domainInformationStore) {
+    public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
