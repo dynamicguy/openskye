@@ -24,6 +24,8 @@ public class ChannelFilterDefinition {
     private String implementation;
     private String description;
     private String definition;
+    @ManyToOne
+    private Channel channel;
     // Determines if the filter is to include,  if this is true then we will include
     // based on the filter.  If it is false we will exclude based on the filter.
     private boolean include = true;

@@ -4,8 +4,9 @@ import com.google.common.base.Optional;
 import org.skye.core.ArchiveStore;
 import org.skye.core.InformationStore;
 import org.skye.core.SkyeException;
-import org.skye.domain.DomainArchiveStore;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
 
@@ -21,15 +22,15 @@ public abstract class AbstractTaskStep implements TaskStep {
     @Inject
     protected ObjectMetadataRepository omr;
 
-    protected InformationStore buildInformationStore(DomainInformationStore dis) {
+    protected InformationStore buildInformationStore(InformationStoreDefinition dis) {
         Optional<InformationStore> is = storeRegistry.build(dis);
         if (!is.isPresent())
             throw new SkyeException("Unable to build information store");
         return is.get();
     }
 
-    protected ArchiveStore buildArchiveStore(DomainArchiveStore domainArchiveStore) {
-        Optional<ArchiveStore> as = storeRegistry.build(domainArchiveStore);
+    protected ArchiveStore buildArchiveStore(ArchiveStoreDefinition archiveStoreDefinition) {
+        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreDefinition);
         if (!as.isPresent())
             throw new SkyeException("Unable to build archive store");
         return as.get();

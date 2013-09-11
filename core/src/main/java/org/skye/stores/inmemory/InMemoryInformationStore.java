@@ -5,7 +5,8 @@ import org.skye.core.InformationStore;
 import org.skye.core.InvalidSimpleObjectException;
 import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.InformationStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
 
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class InMemoryInformationStore implements InformationStore {
     private List<SimpleObject> root = new ArrayList<>();
 
     @Override
-    public void initialize(DomainInformationStore dis) {
+    public void initialize(InformationStoreDefinition dis) {
 
     }
 

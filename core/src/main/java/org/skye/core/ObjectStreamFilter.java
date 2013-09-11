@@ -1,6 +1,7 @@
 package org.skye.core;
 
-import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.ArchiveStoreDefinition;
 
 import java.io.InputStream;
 
@@ -13,7 +14,7 @@ import java.io.InputStream;
  */
 public interface ObjectStreamFilter {
 
-    void initialize(DomainArchiveStore domainArchiveStore);
+    void initialize(ArchiveStoreDefinition archiveStoreDefinition);
 
     String getSuffix();
 

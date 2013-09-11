@@ -2,7 +2,8 @@ package org.skye.stores.inmemory;
 
 import com.google.common.base.Optional;
 import org.skye.core.*;
-import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     private Map<String, SimpleObject> objects = new HashMap<>();
 
     @Override
-    public void initialize(DomainArchiveStore das) {
+    public void initialize(ArchiveStoreDefinition das) {
 
     }
 
@@ -66,12 +67,13 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public void put(SimpleObject simpleObject) {
+    public SimpleObject put(SimpleObject simpleObject) {
         if (objects.containsKey(simpleObject.getObjectMetadata().getId())) {
             throw new SkyeException("Simple Object already archived?");
         } else {
             objects.put(simpleObject.getObjectMetadata().getId(), simpleObject);
         }
+        return simpleObject;
     }
 
     @Override

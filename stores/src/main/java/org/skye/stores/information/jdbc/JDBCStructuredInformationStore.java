@@ -10,7 +10,8 @@ import org.eobjects.metamodel.schema.Table;
 import org.joda.time.DateTime;
 import org.skye.core.*;
 import org.skye.core.structured.ColumnMetadata;
-import org.skye.domain.DomainInformationStore;
+import org.skye.domain.InformationStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,25 +35,25 @@ public class JDBCStructuredInformationStore implements InformationStore {
     public static final String DB_URL = "dbUrl";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
-    private DomainInformationStore domainInformationStore;
+    private InformationStoreDefinition informationStoreDefinition;
     private UpdateableDataContext dataContext;
 
     protected Connection getConnection() {
         try {
-            Class.forName(domainInformationStore.getProperties().get(DRIVER_CLASS));
+            Class.forName(informationStoreDefinition.getProperties().get(DRIVER_CLASS));
 
-            JDBCStructuredInformationStore.log.info("Connecting to database...");
-            return DriverManager.getConnection(domainInformationStore.getProperties().get(DB_URL), domainInformationStore.getProperties().get(USER), domainInformationStore.getProperties().get(PASSWORD));
+            log.info("Connecting to database...");
+            return DriverManager.getConnection(informationStoreDefinition.getProperties().get(DB_URL), informationStoreDefinition.getProperties().get(USER), informationStoreDefinition.getProperties().get(PASSWORD));
         } catch (ClassNotFoundException e) {
             throw new SkyeException("Unable to find driver class", e);
         } catch (SQLException e) {
-            throw new SkyeException("Unable to connect to database due to exception on URL " + domainInformationStore.getProperties().get(DB_URL), e);
+            throw new SkyeException("Unable to connect to database due to exception on URL " + informationStoreDefinition.getProperties().get(DB_URL), e);
         }
     }
 
     @Override
-    public void initialize(DomainInformationStore dis) {
-        this.domainInformationStore = dis;
+    public void initialize(InformationStoreDefinition dis) {
+        this.informationStoreDefinition = dis;
     }
 
     @Override
@@ -73,12 +74,12 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public String getName() {
-        return domainInformationStore.getName();
+        return informationStoreDefinition.getName();
     }
 
     @Override
     public String getUrl() {
-        return domainInformationStore.getProperties().get(DB_URL);
+        return informationStoreDefinition.getProperties().get(DB_URL);
     }
 
     @Override

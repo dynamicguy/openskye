@@ -14,8 +14,8 @@
         <class>org.skye.domain.Channel</class>
         <class>org.skye.domain.ChannelArchiveStore</class>
         <class>org.skye.domain.Domain</class>
-        <class>org.skye.domain.DomainArchiveStore</class>
-        <class>org.skye.domain.DomainInformationStore</class>
+        <class>org.skye.domain.ArchiveStoreDefinition</class>
+        <class>org.skye.domain.InformationStoreDefinition</class>
         <class>org.skye.domain.MetadataTemplate</class>
         <class>org.skye.domain.Permission</class>
         <class>org.skye.domain.Project</class>
@@ -24,6 +24,7 @@
         <class>org.skye.domain.Task</class>
         <class>org.skye.domain.TaskLog</class>
         <class>org.skye.domain.TaskStatistics</class>
+        <class>org.skye.domain.ChannelFilterDefinition</class>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>

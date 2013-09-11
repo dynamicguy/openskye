@@ -15,10 +15,10 @@ public class DomainArchiveStoreTest {
 
     @Test
     public void serializesToJSON() throws Exception {
-        final DomainArchiveStore domainArchiveStore = new DomainArchiveStore();
-        domainArchiveStore.setId("44252357-f7bb-4e77-8d0c-c478e129bf1d");
+        final ArchiveStoreDefinition archiveStoreDefinition = new ArchiveStoreDefinition();
+        archiveStoreDefinition.setId("44252357-f7bb-4e77-8d0c-c478e129bf1d");
         assertThat("a DomainArchiveStore can be serialized to JSON",
-                asJson(domainArchiveStore),
+                asJson(archiveStoreDefinition),
                 is(equalTo(jsonFixture("fixtures/DomainArchiveStore.json"))));
     }
 }

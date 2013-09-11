@@ -26,7 +26,7 @@ public class Channel {
     @ManyToOne
     private Project project;
     @ManyToOne
-    private DomainInformationStore domainInformationStore;
+    private InformationStoreDefinition informationStoreDefinition;
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();

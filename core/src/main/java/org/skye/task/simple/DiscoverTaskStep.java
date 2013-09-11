@@ -31,13 +31,13 @@ public class DiscoverTaskStep extends AbstractTaskStep {
 
     @Override
     public void start() {
-        InformationStore is = buildInformationStore(task.getChannel().getDomainInformationStore());
-        discover(is, is.getRoot(), task);
+        InformationStore is = buildInformationStore(task.getChannel().getInformationStoreDefinition());
 
         for (ChannelFilterDefinition cfd : task.getChannel().getChannelFilters()) {
             filters.add(ChannelFilterFactory.getInstance(cfd));
         }
 
+        discover(is, is.getRoot(), task);
     }
 
     private void discover(InformationStore is, Iterable<SimpleObject> simpleObjects, Task task) {

@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.skye.core.*;
-import org.skye.domain.DomainArchiveStore;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.ObjectMetadataSearch;
@@ -26,7 +26,7 @@ public class LocalFSArchiveStore implements ArchiveStore {
     public final static String IMPLEMENTATION = "localFS";
     public static final String LOCALFS_PATH = "localFsPath";
     public static final String LOCALFS_TMP_PATH = "localFsTmpPath";
-    private DomainArchiveStore domainArchiveStore;
+    private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
     @Inject
@@ -37,8 +37,8 @@ public class LocalFSArchiveStore implements ArchiveStore {
     private String tmpPath;
 
     @Override
-    public void initialize(DomainArchiveStore das) {
-        this.domainArchiveStore = das;
+    public void initialize(ArchiveStoreDefinition das) {
+        this.archiveStoreDefinition = das;
         this.localPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_PATH);
 
         this.tmpPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_TMP_PATH);
@@ -60,12 +60,12 @@ public class LocalFSArchiveStore implements ArchiveStore {
 
     @Override
     public String getName() {
-        return domainArchiveStore.getName() + " (Local filesystem)";
+        return archiveStoreDefinition.getName() + " (Local filesystem)";
     }
 
     @Override
     public String getUrl() {
-        return "localFS://" + domainArchiveStore.getId();
+        return "localFS://" + archiveStoreDefinition.getId();
     }
 
     @Override

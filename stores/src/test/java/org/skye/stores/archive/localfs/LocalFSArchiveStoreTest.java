@@ -32,8 +32,8 @@ public class LocalFSArchiveStoreTest {
     @Inject
     public StoreRegistry registry;
 
-    public DomainInformationStore getDis() {
-        DomainInformationStore dis = new DomainInformationStore();
+    public InformationStoreDefinition getDis() {
+        InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
         dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:skye");
@@ -74,14 +74,14 @@ public class LocalFSArchiveStoreTest {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj");
-        DomainInformationStore dis = getDis();
-        DomainArchiveStore das = new DomainArchiveStore();
+        InformationStoreDefinition dis = getDis();
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
-        cas.setDomainArchiveStore(das);
+        cas.setArchiveStoreDefinition(das);
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
-        channel.setDomainInformationStore(dis);
+        channel.setInformationStoreDefinition(dis);
 
         Task discovery = new Task();
         discovery.setChannel(channel);

@@ -2,6 +2,7 @@ package org.skye.stores.archive.localfs;
 
 import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.eobjects.metamodel.DataContextFactory;
 import org.eobjects.metamodel.UpdateCallback;
@@ -11,6 +12,7 @@ import org.eobjects.metamodel.create.TableCreationBuilder;
 import org.eobjects.metamodel.insert.RowInsertionBuilder;
 import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Table;
+import org.joda.time.DateTime;
 import org.skye.core.*;
 import org.skye.core.structured.Row;
 import org.skye.domain.Task;
@@ -37,7 +39,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     }
 
     @Override
-    public void put(SimpleObject simpleObject) {
+    public SimpleObject put(SimpleObject simpleObject) {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
@@ -74,7 +76,16 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             });
 
             try {
-                FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), localFilesystemArchiveStore.getSimpleObjectPath(simpleObject.getObjectMetadata()));
+                simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
+                File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(simpleObject.getObjectMetadata());
+                FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
+
+                FileInputStream fis = new FileInputStream(targetPath);
+                simpleObject.getObjectMetadata().setChecksum(DigestUtils.md5Hex(fis));
+                simpleObject.getObjectMetadata().setIngested(DateTime.now());
+                simpleObject.getObjectMetadata().setMimeType("text/csv");
+                simpleObject.getObjectMetadata().setArchiveSize(targetPath.length());
+                tempStoragePath.delete();
             } catch (FileNotFoundException e) {
                 throw new SkyeException("Unable to process filters since we can't find the archived file?");
             } catch (IOException e) {
@@ -95,6 +106,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
         simpleObject.getObjectMetadata().setArchiveContentBlocks(ImmutableList.of(acb));
         updateMetadata(simpleObject);
+        return simpleObject;
     }
 
     @Override

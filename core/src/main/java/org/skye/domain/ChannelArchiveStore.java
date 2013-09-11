@@ -23,6 +23,6 @@ public class ChannelArchiveStore {
     @ManyToOne
     private Channel channel;
     @ManyToOne
-    private DomainArchiveStore domainArchiveStore;
+    private ArchiveStoreDefinition archiveStoreDefinition;
 
 }
