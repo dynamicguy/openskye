@@ -45,6 +45,12 @@
             <url>https://github.com/atcmostafavi</url>
             <id>atcmostafavi</id>
         </developer>
+        <developer>
+            <email>josh@infobelt.com</email>
+            <name>Joshua Soles</name>
+            <url>https://github.com/jsoles</url>
+            <id>jsoles</id>
+        </developer>
     </developers>
 
     <modules>
@@ -53,6 +59,7 @@
         <module>cli</module>
         <module>service</module>
         <module>hadoop</module>
+        <module>mysql</module>
     </modules>
 
     <issueManagement>
@@ -86,6 +93,11 @@
             <dependency>
                 <groupId>org.skye</groupId>
                 <artifactId>skye-hadoop</artifactId>
+                <version>0.0.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.skye</groupId>
+                <artifactId>skye-mysql</artifactId>
                 <version>0.0.3-SNAPSHOT</version>
             </dependency>
         </dependencies>
