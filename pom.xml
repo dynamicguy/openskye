@@ -45,6 +45,12 @@
             <url>https://github.com/atcmostafavi</url>
             <id>atcmostafavi</id>
         </developer>
+        <developer>
+            <email>josh@infobelt.com</email>
+            <name>Joshua Soles</name>
+            <url>https://github.com/jsoles</url>
+            <id>jsoles</id>
+        </developer>
     </developers>
 
     <modules>
