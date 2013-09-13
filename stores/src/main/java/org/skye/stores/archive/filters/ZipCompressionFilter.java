@@ -20,11 +20,6 @@ public class ZipCompressionFilter implements ObjectStreamFilter {
     }
 
     @Override
-    public String getSuffix() {
-        return ".zip";
-    }
-
-    @Override
     public InputStream process(InputStream inputStream) {
         return new DeflaterInputStream(inputStream);
     }

@@ -1,7 +1,6 @@
 package org.skye.core;
 
 import org.skye.domain.ArchiveStoreDefinition;
-import org.skye.domain.ArchiveStoreDefinition;
 
 import java.io.InputStream;
 
@@ -15,8 +14,6 @@ import java.io.InputStream;
 public interface ObjectStreamFilter {
 
     void initialize(ArchiveStoreDefinition archiveStoreDefinition);
-
-    String getSuffix();
 
     InputStream process(InputStream inputStream);
 

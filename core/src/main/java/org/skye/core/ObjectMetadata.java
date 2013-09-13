@@ -16,6 +16,8 @@ public class ObjectMetadata {
 
     private String id = UUID.randomUUID().toString();
     private String path;
+    // Identify the implementation of the simple object
+    private String implementation;
     // The taskId for the task that found/ingested the simple object
     private String taskId;
     private Set<Tag> tags = new HashSet<>();

@@ -5,10 +5,8 @@ import java.io.InputStream;
 /**
  * An <code>UnstructuredObject</code> is the metadata representing an unstructured object (ie. a file)
  */
-public class UnstructuredObject extends SimpleObject {
+public abstract class UnstructuredObject extends SimpleObject {
 
-    public InputStream getContent() {
-        return null;
-    }
+    public abstract InputStream getContent() throws MissingObjectException;
 
 }

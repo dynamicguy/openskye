@@ -78,31 +78,23 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
             });
 
-            try {
-                acb.setOriginalSize(tempStoragePath.length());
-                File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb);
-                FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
-
-                FileInputStream fis = new FileInputStream(targetPath);
-                acb.setChecksum(DigestUtils.md5Hex(fis));
-                simpleObject.getObjectMetadata().setIngested(DateTime.now());
-                acb.setMimeType("text/csv");
-                acb.setArchiveSize(targetPath.length());
-                tempStoragePath.delete();
-            } catch (FileNotFoundException e) {
-                throw new SkyeException("Unable to process filters since we can't find the archived file?");
-            } catch (IOException e) {
-                throw new SkyeException("IO exception while trying to write output of filters to final archive location", e);
-            }
+            // Post process the stored object to handle the filters
+            postProcess(acb, tempStoragePath, simpleObject);
 
         } else if (simpleObject instanceof UnstructuredObject) {
             // we can just store this as a file
             UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
+            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb);
+
             try {
-                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), localFilesystemArchiveStore.getSimpleObjectPath(acb));
+                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), tempStoragePath);
             } catch (IOException e) {
                 throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
             }
+
+            // Post process the stored object to handle the filters
+            postProcess(acb, tempStoragePath, simpleObject);
+
         } else {
             throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
         }
@@ -110,6 +102,25 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         simpleObject.getObjectMetadata().setArchiveContentBlocks(ImmutableList.of(acb));
         updateMetadata(simpleObject);
         return simpleObject;
+    }
+
+    private void postProcess(ArchiveContentBlock acb, File tempStoragePath, SimpleObject simpleObject) {
+        try {
+            acb.setOriginalSize(tempStoragePath.length());
+            File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb);
+            FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
+
+            FileInputStream fis = new FileInputStream(targetPath);
+            acb.setChecksum(DigestUtils.md5Hex(fis));
+            simpleObject.getObjectMetadata().setIngested(DateTime.now());
+            acb.setMimeType("text/csv");
+            acb.setArchiveSize(targetPath.length());
+            tempStoragePath.delete();
+        } catch (FileNotFoundException e) {
+            throw new SkyeException("Unable to process filters since we can't find the archived file?");
+        } catch (IOException e) {
+            throw new SkyeException("IO exception while trying to write output of filters to final archive location", e);
+        }
     }
 
     @Override

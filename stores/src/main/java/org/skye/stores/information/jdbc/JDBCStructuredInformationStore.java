@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 import org.skye.core.*;
 import org.skye.core.structured.ColumnMetadata;
 import org.skye.domain.InformationStoreDefinition;
-import org.skye.domain.InformationStoreDefinition;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +18,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 /**
  * A JDBC based structured information store
@@ -95,6 +93,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
             ContainerObject container = new ContainerObject();
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setPath(schema.getName());
+            metadata.setId(JDBCStructuredObject.class.getCanonicalName());
             container.setObjectMetadata(metadata);
             schemaObjects.add(container);
         }
@@ -111,6 +110,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
                 for (Table table : schema.getTables()) {
                     JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
                     ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setId(JDBCStructuredObject.class.getCanonicalName());
                     metadata.setPath(schema.getName() + "/" + table.getName());
                     structuredObject.setObjectMetadata(metadata);
                     List<ColumnMetadata> colMetas = new ArrayList<>();
@@ -144,6 +144,9 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
+        if (!objectMetadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
+            throw new InvalidSimpleObjectException();
+        }
         DataContext dataContext = getDataContext();
         Schema schema = dataContext.getSchemaByName(objectMetadata.getPath().split("/")[0]);
         Table table = schema.getTableByName(objectMetadata.getPath().split("/")[1]);

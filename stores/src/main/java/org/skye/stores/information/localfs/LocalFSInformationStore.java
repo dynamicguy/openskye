@@ -3,7 +3,6 @@ package org.skye.stores.information.localfs;
 import org.joda.time.DateTime;
 import org.skye.core.*;
 import org.skye.domain.InformationStoreDefinition;
-import org.skye.domain.InformationStoreDefinition;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -63,12 +62,14 @@ public class LocalFSInformationStore implements InformationStore {
                 if (Files.isDirectory(p)) {
                     ContainerObject container = new ContainerObject();
                     ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setImplementation(ContainerObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
                     container.setObjectMetadata(metadata);
                     all.add(container);
                 } else {
-                    UnstructuredObject unstructObj = new UnstructuredObject();
+                    UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
                     ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
                     all.add(unstructObj);
                 }
@@ -96,7 +97,7 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
-        UnstructuredObject unstructObj = new UnstructuredObject();
+        UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
         ObjectMetadata metadata = new ObjectMetadata();
         unstructObj.setObjectMetadata(metadata);
         return unstructObj;
