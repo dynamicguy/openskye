@@ -4,13 +4,12 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
-import org.skye.domain.AttributeDefinition;
 import org.skye.domain.Permission;
 import org.skye.domain.Role;
 import org.skye.domain.RolePermission;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.RoleDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.RoleDAO;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -34,7 +33,7 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
     @POST
     @Transactional
     @Timed
-    public Role create(Role newInstance){
+    public Role create(Role newInstance) {
         return super.create(newInstance);
     }
 
@@ -93,7 +92,7 @@ public class RoleResource extends AbstractUpdatableDomainResource<Role> {
     public PaginatedResult<Permission> getPermissions(@PathParam("id") String id) {
         Role role = get(id);
         List<Permission> permissions = new ArrayList<>();
-        for(RolePermission rp : role.getRolePermissions()) {
+        for (RolePermission rp : role.getRolePermissions()) {
             permissions.add(rp.getPermission());
         }
         return new PaginatedResult<Permission>().paginate(permissions);

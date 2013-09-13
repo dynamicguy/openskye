@@ -5,9 +5,9 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AttributeDefinition;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.AttributeDefinitionDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.AttributeDefinitionDAO;
+import org.skye.domain.dao.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -39,7 +39,7 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     @POST
     @Transactional
     @Timed
-    public AttributeDefinition create(AttributeDefinition newInstance){
+    public AttributeDefinition create(AttributeDefinition newInstance) {
         return super.create(newInstance);
     }
 

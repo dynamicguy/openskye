@@ -4,11 +4,10 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
-import org.skye.domain.AttributeDefinition;
 import org.skye.domain.TaskLog;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.TaskLogDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.TaskLogDAO;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

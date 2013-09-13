@@ -1,11 +1,10 @@
-package org.skye.resource.dao;
+package org.skye.domain.dao;
 
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.yammer.dropwizard.util.Generics;
+import org.eclipse.persistence.exceptions.ValidationException;
 import org.hibernate.Session;
-import org.skye.util.BadRequestException;
-import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -51,9 +50,9 @@ public abstract class AbstractPaginatingDAO<T> {
      * @return
      */
     public T persist(T newInstance) {
-        if (newInstance!=null)
+        if (newInstance != null)
             currentEntityManager().persist(newInstance);
-        else throw new BadRequestException();
+        else throw new ValidationException();
         return newInstance;
     }
 

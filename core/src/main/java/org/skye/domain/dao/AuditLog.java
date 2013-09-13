@@ -1,4 +1,4 @@
-package org.skye.resource.dao;
+package org.skye.domain.dao;
 
 /**
  * DAO for the {@link org.skye.domain.AuditLog}

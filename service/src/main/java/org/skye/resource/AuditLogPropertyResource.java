@@ -5,9 +5,9 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AuditLogProperty;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.AuditLogPropertyDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.AuditLogPropertyDAO;
+import org.skye.domain.dao.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -32,7 +32,7 @@ public class AuditLogPropertyResource extends AbstractUpdatableDomainResource<Au
     @POST
     @Transactional
     @Timed
-    public AuditLogProperty create(AuditLogProperty newInstance){
+    public AuditLogProperty create(AuditLogProperty newInstance) {
         return super.create(newInstance);
     }
 

@@ -4,11 +4,10 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
-import org.skye.domain.AttributeDefinition;
 import org.skye.domain.RetentionPolicy;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.RetentionPolicyDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.RetentionPolicyDAO;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -30,7 +29,7 @@ public class RetentionPolicyResource extends AbstractUpdatableDomainResource<Ret
     @POST
     @Transactional
     @Timed
-    public RetentionPolicy create(RetentionPolicy newInstance){
+    public RetentionPolicy create(RetentionPolicy newInstance) {
         return super.create(newInstance);
     }
 

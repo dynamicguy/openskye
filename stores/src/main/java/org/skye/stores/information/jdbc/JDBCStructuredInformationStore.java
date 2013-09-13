@@ -93,7 +93,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
             ContainerObject container = new ContainerObject();
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setPath(schema.getName());
-            metadata.setId(JDBCStructuredObject.class.getCanonicalName());
+            metadata.setImplementation(JDBCStructuredObject.class.getCanonicalName());
             container.setObjectMetadata(metadata);
             schemaObjects.add(container);
         }
@@ -110,7 +110,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
                 for (Table table : schema.getTables()) {
                     JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
                     ObjectMetadata metadata = new ObjectMetadata();
-                    metadata.setId(JDBCStructuredObject.class.getCanonicalName());
+                    metadata.setImplementation(JDBCStructuredObject.class.getCanonicalName());
                     metadata.setPath(schema.getName() + "/" + table.getName());
                     structuredObject.setObjectMetadata(metadata);
                     List<ColumnMetadata> colMetas = new ArrayList<>();

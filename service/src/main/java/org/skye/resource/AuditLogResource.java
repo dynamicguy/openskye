@@ -6,9 +6,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AuditLog;
 import org.skye.domain.AuditLogProperty;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.AuditLogDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.AuditLogDAO;
+import org.skye.domain.dao.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

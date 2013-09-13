@@ -1,4 +1,4 @@
-package org.skye.util;
+package org.skye.domain.dao;
 
 import lombok.Data;
 

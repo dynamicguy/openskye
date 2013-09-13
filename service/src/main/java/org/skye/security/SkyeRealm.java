@@ -7,11 +7,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.mindrot.jbcrypt.BCrypt;
-import org.skye.domain.Permission;
 import org.skye.domain.RolePermission;
 import org.skye.domain.User;
 import org.skye.domain.UserRole;
-import org.skye.resource.dao.UserDAO;
+import org.skye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
 

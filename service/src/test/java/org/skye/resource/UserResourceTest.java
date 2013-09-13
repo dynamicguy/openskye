@@ -8,14 +8,14 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.User;
-import org.skye.resource.dao.UserDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.UserDAO;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class UserResourceTest extends ResourceTest {

@@ -6,9 +6,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Channel;
 import org.skye.domain.ChannelArchiveStore;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.ChannelDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.ChannelDAO;
+import org.skye.domain.dao.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

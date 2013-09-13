@@ -4,12 +4,11 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.yammer.metrics.annotation.Timed;
-import org.skye.domain.AttributeDefinition;
 import org.skye.domain.Task;
-import org.skye.resource.dao.AbstractPaginatingDAO;
-import org.skye.resource.dao.TaskDAO;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.TaskDAO;
 import org.skye.task.TaskManager;
-import org.skye.util.PaginatedResult;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -29,7 +28,6 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
 
     @Inject
     protected TaskDAO taskDAO;
-
     @Inject
     protected TaskManager taskManager;
 
@@ -37,7 +35,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @POST
     @Transactional
     @Timed
-    public Task create(Task newInstance){
+    public Task create(Task newInstance) {
         Task task = super.create(newInstance);
         taskManager.submit(task);
         return task;

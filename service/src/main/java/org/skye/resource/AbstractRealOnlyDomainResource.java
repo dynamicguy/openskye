@@ -1,16 +1,12 @@
 package org.skye.resource;
 
 import com.google.common.base.Optional;
-import com.google.inject.persist.Transactional;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
-import org.skye.resource.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.PaginatedResult;
 import org.skye.util.NotFoundException;
-import org.skye.util.PaginatedResult;
 import org.skye.util.UnauthorizedException;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;

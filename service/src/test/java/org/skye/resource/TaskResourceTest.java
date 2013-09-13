@@ -8,9 +8,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.Task;
-import org.skye.resource.dao.TaskDAO;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.TaskDAO;
 import org.skye.task.TaskManager;
-import org.skye.util.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 

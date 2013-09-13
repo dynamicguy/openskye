@@ -4,15 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.persist.PersistService;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.domain.*;
-import org.skye.resource.dao.DomainDAO;
-import org.skye.resource.dao.PermissionDAO;
-import org.skye.resource.dao.RoleDAO;
-import org.skye.resource.dao.UserDAO;
+import org.skye.domain.dao.DomainDAO;
+import org.skye.domain.dao.PermissionDAO;
+import org.skye.domain.dao.RoleDAO;
+import org.skye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This will create the infobelt domain and the default accounts if they don't exist

@@ -90,6 +90,8 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
                 FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), tempStoragePath);
             } catch (IOException e) {
                 throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
+            } catch (MissingObjectException e) {
+                throw new SkyeException("Simple object missing from information store?", e);
             }
 
             // Post process the stored object to handle the filters

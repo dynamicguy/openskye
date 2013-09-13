@@ -1,4 +1,4 @@
-package org.skye.resource.dao;
+package org.skye.domain.dao;
 
 import com.google.common.base.Optional;
 import org.skye.domain.User;

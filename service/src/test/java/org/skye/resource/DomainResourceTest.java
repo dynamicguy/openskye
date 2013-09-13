@@ -8,8 +8,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.Domain;
-import org.skye.resource.dao.DomainDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.DomainDAO;
+import org.skye.domain.dao.PaginatedResult;
+
 import static org.junit.Assert.assertEquals;
 import javax.ws.rs.core.MediaType;
 

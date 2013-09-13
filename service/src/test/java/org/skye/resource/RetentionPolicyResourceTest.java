@@ -8,8 +8,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.RetentionPolicy;
-import org.skye.resource.dao.RetentionPolicyDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.PaginatedResult;
+import org.skye.domain.dao.RetentionPolicyDAO;
 
 import javax.ws.rs.core.MediaType;
 

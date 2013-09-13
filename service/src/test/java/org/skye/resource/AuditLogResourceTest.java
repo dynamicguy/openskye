@@ -8,8 +8,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import org.skye.domain.AuditLog;
-import org.skye.resource.dao.AuditLogDAO;
-import org.skye.util.PaginatedResult;
+import org.skye.domain.dao.AuditLogDAO;
+import org.skye.domain.dao.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
