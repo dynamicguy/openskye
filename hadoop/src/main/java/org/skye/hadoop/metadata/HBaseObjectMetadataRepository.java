@@ -3,15 +3,27 @@ package org.skye.hadoop.metadata;
 import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
 import org.skye.domain.InformationStoreDefinition;
-import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.core.ObjectSet;
 
 /**
  * An implementation of the {@link ObjectMetadataRepository} that uses HBase as the
  * storage solution
  */
-public class HBaseObjectMetadataRepository implements ObjectMetadataRepository {
+public class HBaseObjectMetadataRepository implements ObjectMetadataRepository
+{
+    @Override
+    public ObjectSet createObjectSet()
+    {
+        return null;
+    }
+
+    @Override
+    public void deleteObjectSet(ObjectSet objectSet)
+    {
+        return;
+    }
 
     @Override
     public Optional<ObjectMetadata> get(String id) {
