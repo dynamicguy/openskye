@@ -29,4 +29,7 @@ public class Task {
     private TaskStatistics statistics = new TaskStatistics();
     @ManyToOne
     private Channel channel;
+    // We need to be able to handle an ObjectSet
+    private String objectSetId;
+
 }

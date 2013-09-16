@@ -2,6 +2,7 @@ package org.skye.metadata;
 
 import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
+import org.skye.core.ObjectSet;
 import org.skye.core.SimpleObject;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
@@ -11,6 +12,20 @@ import org.skye.domain.Task;
  * that have been discovered
  */
 public interface ObjectMetadataRepository {
+
+    /**
+     * Creates a new {@link ObjectSet}
+     *
+     * @return a new object set
+     */
+    ObjectSet createObjectSet();
+
+    /**
+     * Removes the {@link ObjectSet} from the OMR
+     *
+     * @param objectSet the object set to remove
+     */
+    void deleteObjectSet(ObjectSet objectSet);
 
     /**
      * Gets the details of a single object's metadata
