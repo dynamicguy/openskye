@@ -108,15 +108,15 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
     private void postProcess(ArchiveContentBlock acb, File tempStoragePath, SimpleObject simpleObject) {
         try {
-            acb.setOriginalSize(tempStoragePath.length());
+            simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
             File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb);
             FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
 
             FileInputStream fis = new FileInputStream(targetPath);
-            acb.setChecksum(DigestUtils.md5Hex(fis));
+            simpleObject.getObjectMetadata().setChecksum(DigestUtils.md5Hex(fis));
             simpleObject.getObjectMetadata().setIngested(DateTime.now());
-            acb.setMimeType("text/csv");
-            acb.setArchiveSize(targetPath.length());
+            simpleObject.getObjectMetadata().setMimeType("text/csv");
+            simpleObject.getObjectMetadata().setArchiveSize(targetPath.length());
             tempStoragePath.delete();
         } catch (FileNotFoundException e) {
             throw new SkyeException("Unable to process filters since we can't find the archived file?");

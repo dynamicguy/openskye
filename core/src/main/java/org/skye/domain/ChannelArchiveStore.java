@@ -10,7 +10,7 @@ import javax.persistence.*;
  * The representation of a relationship that exists between a channel and an archive store
  */
 @Entity
-@Table(name = "CHANNEL")
+@Table(name = "CHANNEL_ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChannelArchiveStore {

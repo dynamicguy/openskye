@@ -24,8 +24,13 @@ public class ObjectMetadata {
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
     private DateTime created = new DateTime();
-    private DateTime ingested;
+    private DateTime ingested = new DateTime();
+    private DateTime lastModified = new DateTime();
     private Project project;
+    private long originalSize = 0;
+    private long archiveSize = 0;
+    private String mimeType;
+    private String checksum;
     private InformationStoreDefinition informationStore;
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
