@@ -3,7 +3,6 @@ package org.skye.metadata.impl;
 import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
 import org.skye.domain.InformationStoreDefinition;
-import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
 

@@ -35,14 +35,14 @@
         <provider>com.impetus.kundera.KunderaPersistence</provider>
         <properties>
             <property name="kundera.nodes" value="localhost"/>
-            <property name="kundera.port" value="9160"/>
-            <property name="kundera.keyspace" value="KunderaExamples"/>
-            <property name="kundera.dialect" value="cassandra"/>
-            <property name="kundera.client.lookup.class" value="com.impetus.client.cassandra.pelops.PelopsClientFactory" />
+            <property name="kundera.port" value=""/>
+            <property name="kundera.keyspace" value="skye-hadoop"/>
+            <property name="kundera.dialect" value="hbase"/>
+            <property name="kundera.client.lookup.class" value="com.impetus.client.hbase.HBaseClientFactory"/>
             <property name="kundera.cache.provider.class" value="com.impetus.kundera.cache.ehcache.EhCacheProvider"/>
             <property name="kundera.cache.config.resource" value="/ehcache-test.xml"/>
-            <property name="hbase.zookeeper.quorum" value="localhost" />
-            <property name="hbase.zookeeper.property.clientPort" value="2181" />
+            <property name="hbase.zookeeper.quorum" value="localhost"/>
+            <property name="hbase.zookeeper.property.clientPort" value="2181"/>
         </properties>
     </persistence-unit>
 </persistence>
