@@ -5,7 +5,6 @@ import org.skye.core.ArchiveStore;
 import org.skye.core.InformationStore;
 import org.skye.core.SkyeException;
 import org.skye.domain.ArchiveStoreDefinition;
-import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
