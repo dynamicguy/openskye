@@ -46,7 +46,7 @@ public class LocalFSArchiveStore implements ArchiveStore {
         if (this.localPath == null)
             this.localPath = "/tmp/" + das.getId() + "/archives";
         if (this.tmpPath == null)
-            this.tmpPath = "/tmp" + das.getId() + "/tmp";
+            this.tmpPath = "/tmp/" + das.getId() + "/tmp";
 
         log.info("Creating instance of " + this.getName());
 
