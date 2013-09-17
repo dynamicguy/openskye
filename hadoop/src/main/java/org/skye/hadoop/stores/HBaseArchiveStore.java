@@ -1,6 +1,7 @@
 package org.skye.hadoop.stores;
 
 import com.google.common.base.Optional;
+import com.impetus.client.hbase.HBaseClient;
 import com.impetus.client.hbase.admin.HBaseDataHandler;
 import com.impetus.kundera.metadata.KunderaMetadataManager;
 import com.impetus.kundera.metadata.model.EntityMetadata;
@@ -17,6 +18,9 @@ import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,7 +32,7 @@ import java.util.List;
 
 @Slf4j
 
-public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
+public class HBaseArchiveStore implements ArchiveStore {
 
     public final static String IMPLEMENTATION = "hbase";
     public static final String HBASE_CONFIG_PATH = "hbase config path";
@@ -36,10 +40,12 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
+    private HBaseClient hBaseClient;
     private HConnection conn;
     private HBaseConfiguration hBaseConfiguration = new HBaseConfiguration();
     private HTablePool hTablePool;
-    private HBaseDataHandler hBaseDataHandler;
+    private EntityManager hBaseEntityManager;
+
 
     @Override
     public void initialize(ArchiveStoreDefinition das) {
@@ -55,7 +61,8 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
             throw new SkyeException("Unable to connect to HBase Table", e);
         }
         this.hTablePool = new HTablePool(hBaseConfiguration, Integer.getInteger(das.getProperties().get(HBASE_POOL_SIZE)));
-        this.hBaseDataHandler = new HBaseDataHandler(hBaseConfiguration, hTablePool);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hbase");
+        this.hBaseEntityManager = emf.createEntityManager();
     }
 
     @Override
@@ -80,7 +87,7 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     @Override
     public ArchiveStoreWriter getWriter(Task task) {
-        return this;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -90,21 +97,14 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
-        /**
-        Class SimpleObjectClass;
-        try {
-            SimpleObjectClass = Class.forName(metadata.getImplementation());
-        } catch (ClassNotFoundException e) {
-            log.error("Entity Class not found");
-            throw new SkyeException("Entity Class not found", e);
+
+        SimpleObject result=hBaseEntityManager.find(SimpleObject.class, metadata.getId());
+        if(result==null){
+            return Optional.absent();
         }
-        EntityMetadata entityMetadata = new EntityMetadata(SimpleObjectClass);
-        entityMetadata.setPersistenceUnit("hbase");
-        entityMetadata = KunderaMetadataManager.getEntityMetadata(SimpleObjectClass);
-
-        **/
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-
+        else{
+            return Optional.of(result);
+        }
     }
 
     @Override
@@ -113,18 +113,12 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public SimpleObject put(SimpleObject simpleObject) {
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void close() {
-        try {
-            hTablePool.close();
-        } catch (IOException e) {
-            log.error("Unable to close HBase connection");
-            throw new SkyeException("Unable to close HBase connection", e);
+    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
+        if(this.archiveStoreDefinition==null){
+            return Optional.absent();
+        }
+        else{
+            return Optional.of(this.archiveStoreDefinition);
         }
     }
 }
