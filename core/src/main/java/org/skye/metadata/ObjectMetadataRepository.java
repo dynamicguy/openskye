@@ -28,6 +28,22 @@ public interface ObjectMetadataRepository {
     void deleteObjectSet(ObjectSet objectSet);
 
     /**
+     * Adds an {@link ObjectMetadata} to a given {@link ObjectSet}
+     *
+     * @param objectSet      the object set
+     * @param objectMetadata the object metadata to add
+     */
+    void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
+
+    /**
+     * Removes an {@link ObjectMetadata} to a given {@link ObjectSet}
+     *
+     * @param objectSet      the object set
+     * @param objectMetadata the object metadata to remove
+     */
+    void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
+
+    /**
      * Gets the details of a single object's metadata
      *
      * @param id The identifier of the object
@@ -55,4 +71,13 @@ public interface ObjectMetadataRepository {
      * @param task
      */
     Iterable<ObjectMetadata> getObjects(Task task);
+
+    /**
+     * Returns an iterator over all the {@link ObjectMetadata} for the given {@link ObjectSet}
+     *
+     * @param objectSet
+     */
+    Iterable<ObjectMetadata> getObjects(ObjectSet objectSet);
+
+
 }

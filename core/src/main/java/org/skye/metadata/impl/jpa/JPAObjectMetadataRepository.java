@@ -25,6 +25,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     }
 
     @Override
+    public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public Optional<ObjectMetadata> get(String id)
     {
         return null;
@@ -46,5 +56,10 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     public Iterable<ObjectMetadata> getObjects(Task task)
     {
         return null;
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

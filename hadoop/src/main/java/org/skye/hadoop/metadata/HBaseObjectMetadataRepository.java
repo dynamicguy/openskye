@@ -2,10 +2,10 @@ package org.skye.hadoop.metadata;
 
 import com.google.common.base.Optional;
 import org.skye.core.ObjectMetadata;
+import org.skye.core.ObjectSet;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
-import org.skye.core.ObjectSet;
 
 /**
  * An implementation of the {@link ObjectMetadataRepository} that uses HBase as the
@@ -26,6 +26,16 @@ public class HBaseObjectMetadataRepository implements ObjectMetadataRepository
     }
 
     @Override
+    public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public Optional<ObjectMetadata> get(String id) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -42,6 +52,11 @@ public class HBaseObjectMetadataRepository implements ObjectMetadataRepository
 
     @Override
     public Iterable<ObjectMetadata> getObjects(Task task) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

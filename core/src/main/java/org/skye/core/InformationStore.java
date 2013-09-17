@@ -96,4 +96,5 @@ public interface InformationStore {
      * @return the simple object having been materialized
      */
     SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException;
+
 }

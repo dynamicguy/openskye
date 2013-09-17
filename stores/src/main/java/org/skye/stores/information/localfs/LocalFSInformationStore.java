@@ -22,7 +22,7 @@ import java.util.Properties;
 public class LocalFSInformationStore implements InformationStore {
 
     public final static String IMPLEMENTATION = "localFS";
-    private static final String FILE_PATH = "filePath";
+    public final static String FILE_PATH = "filePath";
     private InformationStoreDefinition informationStoreDefinition;
 
     @Override
