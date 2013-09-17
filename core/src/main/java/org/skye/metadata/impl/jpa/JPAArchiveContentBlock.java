@@ -49,7 +49,7 @@ public class JPAArchiveContentBlock
         ArchiveStore archiveStore = null;
         StoreRegistry storeRegistry = null;
 
-        if(this.archivestoredefinition != null)
+        if(this.archiveStoreDefinition != null)
         {
             storeRegistry = new StoreRegistry();
             archiveStore = storeRegistry.build(this.archiveStoreDefinition).get();
