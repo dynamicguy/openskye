@@ -1,7 +1,7 @@
 package org.skye.core;
 
+import com.google.common.base.Optional;
 import org.joda.time.DateTime;
-import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 
 import java.util.Properties;
@@ -96,5 +96,14 @@ public interface InformationStore {
      * @return the simple object having been materialized
      */
     SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException;
+
+    /**
+     * Gets the {@link InformationStoreDefinition} used to initialize this
+     * instance.
+     *
+     * @return An {@link Optional} wrapper which will include the
+     * {@link InformationStoreDefinition} if the instance has been initialized.
+     */
+    Optional<InformationStoreDefinition> getInformationStoreDefinition();
 
 }

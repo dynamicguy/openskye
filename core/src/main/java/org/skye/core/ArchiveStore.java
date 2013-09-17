@@ -81,5 +81,12 @@ public interface ArchiveStore {
      */
     Iterable<ObjectStreamFilter> getFilters();
 
-
+    /**
+     * Gets the {@link ArchiveStoreDefinition} for this instance.
+     *
+     * @return The {@link ArchiveStoreDefinition} used to initialize this
+     * instance, wrapped in an {@link Optional} wrapper, which will be absent
+     * if the instance is not initialized.
+     */
+    Optional<ArchiveStoreDefinition> getArchiveStoreDefinition();
 }
