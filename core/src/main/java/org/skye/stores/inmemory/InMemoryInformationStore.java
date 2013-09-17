@@ -1,5 +1,6 @@
 package org.skye.stores.inmemory;
 
+import com.google.common.base.Optional;
 import org.joda.time.DateTime;
 import org.skye.core.InformationStore;
 import org.skye.core.InvalidSimpleObjectException;
@@ -18,10 +19,14 @@ public class InMemoryInformationStore implements InformationStore {
     public static final String IMPLEMENTATION = "In-memory";
     private Map<ObjectMetadata, SimpleObject> store = new HashMap<>();
     private List<SimpleObject> root = new ArrayList<>();
+    private InformationStoreDefinition informationStoreDefinition;
 
     @Override
-    public void initialize(InformationStoreDefinition dis) {
+    public void initialize(InformationStoreDefinition dis)
+    {
+        this.informationStoreDefinition = dis;
 
+        return;
     }
 
     @Override
@@ -69,5 +74,14 @@ public class InMemoryInformationStore implements InformationStore {
     @Override
     public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
         return store.get(objectMetadata);
+    }
+
+    @Override
+    public Optional<InformationStoreDefinition> getInformationStoreDefinition()
+    {
+        if(this.informationStoreDefinition == null)
+            return Optional.absent();
+
+        return Optional.of(this.informationStoreDefinition);
     }
 }

@@ -37,10 +37,10 @@ public class JPAObjectMetadata
 
     private String taskId;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private Set<Tag> tags;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<JPATag> tags;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> metadata;
 
     private boolean container;
@@ -49,12 +49,14 @@ public class JPAObjectMetadata
 
     private DateTime ingested;
 
+    @ManyToOne
     private Project project;
 
+    @ManyToOne
     private InformationStoreDefinition informationStore;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private List<ArchiveContentBlock> archiveContentBlocks;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<JPAArchiveContentBlock> archiveContentBlocks;
 
     /**
      * The default constructor for the JPAObjectMetadata class.
@@ -87,14 +89,28 @@ public class JPAObjectMetadata
         this.id = objectMetadata.getId();
         this.implementation = objectMetadata.getImplementation();
         this.taskId = objectMetadata.getTaskId();
-        this.tags = objectMetadata.getTags();
         this.metadata = objectMetadata.getMetadata();
         this.container = objectMetadata.isContainer();
         this.created = objectMetadata.getCreated();
         this.ingested = objectMetadata.getIngested();
         this.project = objectMetadata.getProject();
         this.informationStore = objectMetadata.getInformationStore();
-        this.archiveContentBlocks = objectMetadata.getArchiveContentBlocks();
+
+        this.tags = new HashSet<>();
+
+        for(Tag tag : objectMetadata.getTags())
+        {
+            this.tags.add(tag.getName());
+        }
+
+        this.archiveContentBlocks = new ArrayList<>();
+
+        for(ArchiveContentBlock acb : objectMetadata.getArchiveContentBlocks())
+        {
+            this.archiveContentBlocks.add(acb.getId());
+        }
+
+        return;
     }
 
     /**
@@ -109,14 +125,15 @@ public class JPAObjectMetadata
         objectMetadata.setId(this.id);
         objectMetadata.setImplementation(this.implementation);
         objectMetadata.setTaskId(this.taskId);
-        objectMetadata.setTags(this.tags);
         objectMetadata.setMetadata(this.metadata);
         objectMetadata.setContainer(this.container);
         objectMetadata.setCreated(this.created);
         objectMetadata.setIngested(this.ingested);
         objectMetadata.setProject(this.project);
         objectMetadata.setInformationStore(this.informationStore);
-        objectMetadata.setArchiveContentBlocks(this.archiveContentBlocks);
+
+
+        //objectMetadata.setArchiveContentBlocks(this.archiveContentBlocks);
 
         return objectMetadata;
     }

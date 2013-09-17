@@ -1,5 +1,6 @@
 package org.skye.stores.information.jdbc;
 
+import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.DataContextFactory;
@@ -143,7 +144,8 @@ public class JDBCStructuredInformationStore implements InformationStore {
     }
 
     @Override
-    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
+    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException
+    {
         if (!objectMetadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
             throw new InvalidSimpleObjectException();
         }
@@ -153,6 +155,15 @@ public class JDBCStructuredInformationStore implements InformationStore {
         JDBCStructuredObject structuredObject = new JDBCStructuredObject(dataContext, table);
         structuredObject.setObjectMetadata(objectMetadata);
         return structuredObject;
+    }
+
+    @Override
+    public Optional<InformationStoreDefinition> getInformationStoreDefinition()
+    {
+        if(this.informationStoreDefinition == null)
+            return Optional.absent();
+
+        return Optional.of(this.informationStoreDefinition);
     }
 
     public UpdateableDataContext getDataContext() {

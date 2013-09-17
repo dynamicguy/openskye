@@ -17,10 +17,14 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     public static final String IMPLEMENTATION = "In-memory";
     private Map<String, SimpleObject> objects = new HashMap<>();
+    private ArchiveStoreDefinition archiveStoreDefinition;
 
     @Override
-    public void initialize(ArchiveStoreDefinition das) {
+    public void initialize(ArchiveStoreDefinition das)
+    {
+        this.archiveStoreDefinition = das;
 
+        return;
     }
 
     @Override
@@ -79,5 +83,14 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     @Override
     public void close() {
         // nothing to do
+    }
+
+    @Override
+    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition()
+    {
+        if(this.archiveStoreDefinition == null)
+            return Optional.absent();
+
+        return Optional.of(this.archiveStoreDefinition);
     }
 }

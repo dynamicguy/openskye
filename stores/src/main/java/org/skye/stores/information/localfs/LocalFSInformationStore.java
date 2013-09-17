@@ -1,5 +1,6 @@
 package org.skye.stores.information.localfs;
 
+import com.google.common.base.Optional;
 import org.joda.time.DateTime;
 import org.skye.core.*;
 import org.skye.domain.InformationStoreDefinition;
@@ -101,6 +102,15 @@ public class LocalFSInformationStore implements InformationStore {
         ObjectMetadata metadata = new ObjectMetadata();
         unstructObj.setObjectMetadata(metadata);
         return unstructObj;
+    }
+
+    @Override
+    public Optional<InformationStoreDefinition> getInformationStoreDefinition()
+    {
+        if(this.informationStoreDefinition == null)
+            return Optional.absent();
+
+        return Optional.of(this.informationStoreDefinition);
     }
 
     public Path getFileSystem() {

@@ -110,6 +110,15 @@ public class LocalFSArchiveStore implements ArchiveStore {
         return ImmutableList.of((ObjectStreamFilter) new ZipCompressionFilter());
     }
 
+    @Override
+    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition()
+    {
+        if(this.archiveStoreDefinition == null)
+            return Optional.absent();
+
+        return Optional.of(this.archiveStoreDefinition);
+    }
+
     public String getLocalPath() {
         return localPath;
     }
