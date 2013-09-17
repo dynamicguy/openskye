@@ -100,14 +100,16 @@ public class JPAObjectMetadata
 
         for(Tag tag : objectMetadata.getTags())
         {
-            this.tags.add(tag.getName());
+            JPATag jpaTag = new JPATag(tag);
+            this.tags.add(jpaTag);
         }
 
         this.archiveContentBlocks = new ArrayList<>();
 
         for(ArchiveContentBlock acb : objectMetadata.getArchiveContentBlocks())
         {
-            this.archiveContentBlocks.add(acb.getId());
+            JPAArchiveContentBlock jpaACB = new JPAArchiveContentBlock(acb);
+            this.archiveContentBlocks.add(jpaACB);
         }
 
         return;
@@ -121,6 +123,8 @@ public class JPAObjectMetadata
     public ObjectMetadata ToObjectMetadata()
     {
         ObjectMetadata objectMetadata = new ObjectMetadata();
+        Set<Tag> tags = new HashSet<>();
+        List<ArchiveContentBlock> blocks = new ArrayList<>();
 
         objectMetadata.setId(this.id);
         objectMetadata.setImplementation(this.implementation);
@@ -132,8 +136,18 @@ public class JPAObjectMetadata
         objectMetadata.setProject(this.project);
         objectMetadata.setInformationStore(this.informationStore);
 
+        for(JPATag jpaTag : this.tags)
+        {
+            tags.add(jpaTag.ToTag());
+        }
 
-        //objectMetadata.setArchiveContentBlocks(this.archiveContentBlocks);
+        for(JPAArchiveContentBlock jpaBlock : this.archiveContentBlocks)
+        {
+            blocks.add(jpaBlock.ToArchiveContentBlock());
+        }
+
+        objectMetadata.setTags(tags);
+        objectMetadata.setArchiveContentBlocks(blocks);
 
         return objectMetadata;
     }

@@ -58,6 +58,7 @@
         <class>org.skye.domain.TaskLog</class>
         <class>org.skye.domain.TaskStatistics</class>
         <class>org.skye.domain.ChannelFilterDefinition</class>
+        <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
         <properties>
             <property name="kundera.nodes" value="localhost"/>
             <property name="kundera.port" value="9160"/>

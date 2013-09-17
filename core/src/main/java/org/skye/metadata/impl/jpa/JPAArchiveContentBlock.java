@@ -27,6 +27,9 @@ public class JPAArchiveContentBlock
      */
     private ArchiveStoreDefinition archiveStoreDefinition;
 
+    /**
+     * Default constructor.  Initializes an empty block.
+     */
     public JPAArchiveContentBlock()
     {
         this.id = "";
@@ -35,6 +38,12 @@ public class JPAArchiveContentBlock
         return;
     }
 
+    /**
+     * Initializes the instance based on an existing
+     * {@link ArchiveContentBlock}.
+     *
+     * @param acb
+     */
     public JPAArchiveContentBlock(ArchiveContentBlock acb)
     {
         this.id = acb.getId();
