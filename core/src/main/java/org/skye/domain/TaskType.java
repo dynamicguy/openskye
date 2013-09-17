@@ -7,6 +7,7 @@ public enum TaskType {
     ARCHIVE,
     DISCOVER,
     VALIDATE,
+    EXTRACT,
     ANALYZE_RETENTION,
     DESTROY
 }
