@@ -34,33 +34,18 @@ import java.util.List;
 
 public class HBaseArchiveStore implements ArchiveStore {
 
-    public final static String IMPLEMENTATION = "hbase";
+    public static final String IMPLEMENTATION = "hbase";
     public static final String HBASE_CONFIG_PATH = "hbase config path";
     public static final String HBASE_POOL_SIZE = "hbase table pool size";
     private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
-    private HBaseClient hBaseClient;
-    private HConnection conn;
     private HBaseConfiguration hBaseConfiguration = new HBaseConfiguration();
-    private HTablePool hTablePool;
     private EntityManager hBaseEntityManager;
-
 
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
-        this.hBaseConfiguration.addResource(das.getProperties().get((HBASE_CONFIG_PATH)));
-        if(this.hBaseConfiguration==null){
-            throw new SkyeException("No hbase-site.xml file found");
-        }
-        try {
-            conn = HConnectionManager.createConnection(hBaseConfiguration);
-        } catch (ZooKeeperConnectionException e) {
-            log.error("Unable to establish connection");
-            throw new SkyeException("Unable to connect to HBase Table", e);
-        }
-        this.hTablePool = new HTablePool(hBaseConfiguration, Integer.getInteger(das.getProperties().get(HBASE_POOL_SIZE)));
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hbase");
         this.hBaseEntityManager = emf.createEntityManager();
     }
