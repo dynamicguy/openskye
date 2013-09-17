@@ -33,6 +33,30 @@
     </persistence-unit>
     <persistence-unit name="hbase">
         <provider>com.impetus.kundera.KunderaPersistence</provider>
+        <class>org.skye.domain.User</class>
+        <class>org.skye.domain.UserRole</class>
+        <class>org.skye.domain.Role</class>
+        <class>org.skye.domain.ArchiveStoreInstance</class>
+        <class>org.skye.domain.AttributeInstance</class>
+        <class>org.skye.domain.AuditEvent</class>
+        <class>org.skye.domain.AttributeDefinition</class>
+        <class>org.skye.domain.AuditLog</class>
+        <class>org.skye.domain.AuditLogProperty</class>
+        <class>org.skye.domain.Channel</class>
+        <class>org.skye.domain.ChannelFilterDefinition</class>
+        <class>org.skye.domain.ChannelArchiveStore</class>
+        <class>org.skye.domain.Domain</class>
+        <class>org.skye.domain.ArchiveStoreDefinition</class>
+        <class>org.skye.domain.InformationStoreDefinition</class>
+        <class>org.skye.domain.MetadataTemplate</class>
+        <class>org.skye.domain.Permission</class>
+        <class>org.skye.domain.Project</class>
+        <class>org.skye.domain.RetentionPolicy</class>
+        <class>org.skye.domain.RolePermission</class>
+        <class>org.skye.domain.Task</class>
+        <class>org.skye.domain.TaskLog</class>
+        <class>org.skye.domain.TaskStatistics</class>
+        <class>org.skye.domain.ChannelFilterDefinition</class>
         <properties>
             <property name="kundera.nodes" value="localhost"/>
             <property name="kundera.port" value="9160"/>

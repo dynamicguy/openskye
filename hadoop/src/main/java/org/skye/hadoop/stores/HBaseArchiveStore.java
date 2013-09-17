@@ -1,33 +1,71 @@
 package org.skye.hadoop.stores;
 
 import com.google.common.base.Optional;
+import com.impetus.client.hbase.admin.HBaseDataHandler;
+import com.impetus.kundera.metadata.KunderaMetadataManager;
+import com.impetus.kundera.metadata.model.EntityMetadata;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.client.HConnection;
+import org.apache.hadoop.hbase.client.HConnectionManager;
+import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.HTablePool;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
+import org.skye.metadata.ObjectMetadataRepository;
 
+import javax.inject.Inject;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses Apache HBase to store the {@link org.skye.core.ArchiveContentBlock}s
  */
-public class HBaseArchiveStore implements ArchiveStore {
 
+@Slf4j
+
+public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
+
+    public final static String IMPLEMENTATION = "hbase";
+    public static final String HBASE_CONFIG_PATH = "hbase config path";
+    public static final String HBASE_POOL_SIZE = "hbase table pool size";
     private ArchiveStoreDefinition archiveStoreDefinition;
+    @Inject
+    private ObjectMetadataRepository omr;
+    private HConnection conn;
+    private HBaseConfiguration hBaseConfiguration = new HBaseConfiguration();
+    private HTablePool hTablePool;
+    private HBaseDataHandler hBaseDataHandler;
 
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
+        this.hBaseConfiguration.addResource(das.getProperties().get((HBASE_CONFIG_PATH)));
+        if(this.hBaseConfiguration==null){
+            throw new SkyeException("No hbase-site.xml file found");
+        }
+        try {
+            conn = HConnectionManager.createConnection(hBaseConfiguration);
+        } catch (ZooKeeperConnectionException e) {
+            log.error("Unable to establish connection");
+            throw new SkyeException("Unable to connect to HBase Table", e);
+        }
+        this.hTablePool = new HTablePool(hBaseConfiguration, Integer.getInteger(das.getProperties().get(HBASE_POOL_SIZE)));
+        this.hBaseDataHandler = new HBaseDataHandler(hBaseConfiguration, hTablePool);
     }
 
     @Override
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return archiveStoreDefinition.getName() + " (HBase)";
     }
 
     @Override
     public String getUrl() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hBaseConfiguration.get("hbase.zookeeper.quorum");  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -37,12 +75,12 @@ public class HBaseArchiveStore implements ArchiveStore {
 
     @Override
     public boolean isImplementing(String implementation) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return implementation.equals(IMPLEMENTATION);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public ArchiveStoreWriter getWriter(Task task) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -52,11 +90,41 @@ public class HBaseArchiveStore implements ArchiveStore {
 
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+        /**
+        Class SimpleObjectClass;
+        try {
+            SimpleObjectClass = Class.forName(metadata.getImplementation());
+        } catch (ClassNotFoundException e) {
+            log.error("Entity Class not found");
+            throw new SkyeException("Entity Class not found", e);
+        }
+        EntityMetadata entityMetadata = new EntityMetadata(SimpleObjectClass);
+        entityMetadata.setPersistenceUnit("hbase");
+        entityMetadata = KunderaMetadataManager.getEntityMetadata(SimpleObjectClass);
+
+        **/
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public Iterable<ObjectStreamFilter> getFilters() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public SimpleObject put(SimpleObject simpleObject) {
+
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void close() {
+        try {
+            hTablePool.close();
+        } catch (IOException e) {
+            log.error("Unable to close HBase connection");
+            throw new SkyeException("Unable to close HBase connection", e);
+        }
     }
 }
