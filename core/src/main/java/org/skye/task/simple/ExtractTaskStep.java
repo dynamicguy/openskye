@@ -1,11 +1,9 @@
 package org.skye.task.simple;
 
+import com.google.common.base.Optional;
 import org.skye.core.*;
-import org.skye.domain.AttributeInstance;
-import org.skye.domain.ChannelFilterDefinition;
 import org.skye.domain.Task;
 import org.skye.filters.ChannelFilter;
-import org.skye.filters.ChannelFilterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +32,33 @@ public class ExtractTaskStep extends AbstractTaskStep {
 
     @Override
     public void start() {
+        Optional<ObjectSet> objectSet = omr.getObjectSet(task.getObjectSetId());
 
+        Optional<InformationStore> targetInformationStore = storeRegistry.build(task.getTargetInformationStoreDefinition());
 
+        if (targetInformationStore.isPresent()) {
+            if (objectSet.isPresent()) {
+                for (ObjectMetadata om : omr.getObjects(objectSet.get())) {
+                    if (om.getArchiveContentBlocks().size() > 0) {
+                        // Lets just get the first ACB
+                        ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
+                        Optional<SimpleObject> simpleObject = acb.getArchiveStore().getSimpleObject(om);
+                        if (simpleObject.isPresent()) {
+                            targetInformationStore.get().put(simpleObject.get());
+                        } else {
+                            throw new SkyeException("Unable to get simple object from archive content block " + acb);
+                        }
+                    } else {
+                        throw new SkyeException("Missing an archive content block for " + om);
+                    }
 
+                }
+            } else {
+                throw new SkyeException("Unable to find object set with id " + task.getObjectSetId());
+            }
+        } else {
+            throw new SkyeException("Unable to build target information store from definition " + task.getTargetInformationStoreDefinition());
+        }
     }
 
 }

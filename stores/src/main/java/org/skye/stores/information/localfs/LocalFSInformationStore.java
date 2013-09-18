@@ -113,6 +113,11 @@ public class LocalFSInformationStore implements InformationStore {
         return Optional.of(this.informationStoreDefinition);
     }
 
+    @Override
+    public void put(SimpleObject simpleObject) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public Path getFileSystem() {
         return FileSystems.getDefault().getPath(informationStoreDefinition.getProperties().get(FILE_PATH));
     }

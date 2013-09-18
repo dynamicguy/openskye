@@ -166,6 +166,11 @@ public class JDBCStructuredInformationStore implements InformationStore {
         return Optional.of(this.informationStoreDefinition);
     }
 
+    @Override
+    public void put(SimpleObject simpleObject) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public UpdateableDataContext getDataContext() {
         if (this.dataContext == null)
             this.dataContext = DataContextFactory.createJdbcDataContext(getConnection());

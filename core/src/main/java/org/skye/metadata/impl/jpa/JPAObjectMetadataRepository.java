@@ -1,15 +1,15 @@
 package org.skye.metadata.impl.jpa;
 
 import com.google.common.base.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.skye.core.ObjectMetadata;
 import org.skye.core.ObjectSet;
+import org.skye.core.SkyeException;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
-import org.skye.core.SkyeException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * An implementation of the {@link ObjectMetadataRepository} using the Java
@@ -123,6 +123,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
 
     @Override
     public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Optional<ObjectSet> getObjectSet(String objectSetId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
