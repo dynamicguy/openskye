@@ -1,7 +1,6 @@
 package org.skye.core;
 
 import com.google.common.base.Optional;
-import org.omg.CORBA.portable.InputStream;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 
@@ -85,8 +84,16 @@ public interface ArchiveStore {
      * Gets the {@link ArchiveStoreDefinition} for this instance.
      *
      * @return The {@link ArchiveStoreDefinition} used to initialize this
-     * instance, wrapped in an {@link Optional} wrapper, which will be absent
-     * if the instance is not initialized.
+     *         instance, wrapped in an {@link Optional} wrapper, which will be absent
+     *         if the instance is not initialized.
      */
     Optional<ArchiveStoreDefinition> getArchiveStoreDefinition();
+
+    /**
+     * Destroys the object associated to this {@link ObjectMetadata} from this
+     * {@link ArchiveStore}
+     *
+     * @param om the {@link ObjectMetadata} for the object to destroy
+     */
+    void destroy(ObjectMetadata om);
 }

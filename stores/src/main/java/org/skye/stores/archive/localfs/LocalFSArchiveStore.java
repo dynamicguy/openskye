@@ -111,12 +111,19 @@ public class LocalFSArchiveStore implements ArchiveStore {
     }
 
     @Override
-    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition()
-    {
-        if(this.archiveStoreDefinition == null)
+    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
+        if (this.archiveStoreDefinition == null)
             return Optional.absent();
 
         return Optional.of(this.archiveStoreDefinition);
+    }
+
+    @Override
+    public void destroy(ObjectMetadata om) {
+        if (om.getArchiveContentBlock(this).isPresent()) {
+            getSimpleObjectPath(om.getArchiveContentBlock(this).get()).delete();
+
+        }
     }
 
     public String getLocalPath() {

@@ -31,7 +31,6 @@ import java.util.List;
  */
 
 @Slf4j
-
 public class HBaseArchiveStore implements ArchiveStore {
 
     public static final String IMPLEMENTATION = "hbase";
@@ -105,5 +104,10 @@ public class HBaseArchiveStore implements ArchiveStore {
         else{
             return Optional.of(this.archiveStoreDefinition);
         }
+    }
+
+    @Override
+    public void destroy(ObjectMetadata om) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

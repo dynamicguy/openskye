@@ -20,8 +20,7 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     private ArchiveStoreDefinition archiveStoreDefinition;
 
     @Override
-    public void initialize(ArchiveStoreDefinition das)
-    {
+    public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
 
         return;
@@ -86,11 +85,15 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition()
-    {
-        if(this.archiveStoreDefinition == null)
+    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
+        if (this.archiveStoreDefinition == null)
             return Optional.absent();
 
         return Optional.of(this.archiveStoreDefinition);
+    }
+
+    @Override
+    public void destroy(ObjectMetadata om) {
+        objects.remove(om);
     }
 }

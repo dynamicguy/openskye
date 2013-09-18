@@ -64,4 +64,9 @@ public class HdfsArchiveStore implements ArchiveStore {
     public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
         return Optional.of(this.archiveStoreDefinition);
     }
+
+    @Override
+    public void destroy(ObjectMetadata om) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
