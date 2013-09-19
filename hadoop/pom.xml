@@ -7,7 +7,7 @@
         <version>0.0.3-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.skye</groupId>
+    <groupId>org.openskye</groupId>
     <artifactId>skye-hadoop</artifactId>
 
     <name>Skye :: Hadoop Integration</name>
@@ -116,6 +116,11 @@
                     <artifactId>hbase</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.nikhaldimann</groupId>
+            <artifactId>android-view-selector</artifactId>
+            <version>1.0-alpha-4</version>
         </dependency>
     </dependencies>
 </project>
