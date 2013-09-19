@@ -79,5 +79,11 @@ public interface ObjectMetadataRepository {
      */
     Iterable<ObjectMetadata> getObjects(ObjectSet objectSet);
 
-
+    /**
+     * Returns an instance of an {@link ObjectSet} from its id
+     *
+     * @param objectSetId the id of the object set fo lookup
+     * @return the objectset if found
+     */
+    Optional<ObjectSet> getObjectSet(String objectSetId);
 }

@@ -1,16 +1,30 @@
 package org.skye.stores.information.localfs;
 
 import com.google.common.base.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.eobjects.metamodel.DataContextFactory;
+import org.eobjects.metamodel.UpdateCallback;
+import org.eobjects.metamodel.UpdateScript;
+import org.eobjects.metamodel.UpdateableDataContext;
+import org.eobjects.metamodel.create.TableCreationBuilder;
+import org.eobjects.metamodel.insert.RowInsertionBuilder;
+import org.eobjects.metamodel.schema.Column;
+import org.eobjects.metamodel.schema.Table;
 import org.joda.time.DateTime;
 import org.skye.core.*;
+import org.skye.core.structured.Row;
 import org.skye.domain.InformationStoreDefinition;
+import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -20,6 +34,7 @@ import java.util.Properties;
  * Can be used to pull from a local filesystem and return a set of {@link org.skye.core.UnstructuredObject}
  * instances
  */
+@Slf4j
 public class LocalFSInformationStore implements InformationStore {
 
     public final static String IMPLEMENTATION = "localFS";
@@ -105,12 +120,65 @@ public class LocalFSInformationStore implements InformationStore {
     }
 
     @Override
-    public Optional<InformationStoreDefinition> getInformationStoreDefinition()
-    {
-        if(this.informationStoreDefinition == null)
+    public Optional<InformationStoreDefinition> getInformationStoreDefinition() {
+        if (this.informationStoreDefinition == null)
             return Optional.absent();
 
         return Optional.of(this.informationStoreDefinition);
+    }
+
+    @Override
+    public void put(SimpleObject simpleObject) {
+        File targetFile = new File(getName() + "/" + simpleObject.getObjectMetadata().getPath());
+        if (targetFile.exists()) {
+            throw new SkyeException("Unable to put object " + simpleObject + " since it already exists in local filesystem");
+        }
+        targetFile.mkdirs();
+        targetFile.delete();
+
+        if (simpleObject instanceof UnstructuredObject) {
+            UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
+            try {
+                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), targetFile);
+            } catch (Exception e) {
+                throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store");
+            }
+        }
+        if (simpleObject instanceof JDBCStructuredObject) {
+            // we need to store the whole table as a CSV
+            final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
+            if (log.isDebugEnabled())
+                log.debug("Writing temp structured object to " + targetFile.getAbsolutePath());
+            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(targetFile);
+            dataContext.executeUpdate(new UpdateScript() {
+                public void run(UpdateCallback callback) {
+
+                    // Create the table in a file representing the Archive Content Block
+
+                    TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
+
+                    for (Column column : structuredObject.getTable().getColumns()) {
+                        tableCreator.withColumn(column.getName()).ofType(column.getType()).ofSize(column.getColumnSize());
+                    }
+
+                    Table table = tableCreator.execute();
+                    Iterator<Row> rows = structuredObject.getRows();
+                    while (rows.hasNext()) {
+                        Row row = rows.next();
+                        RowInsertionBuilder insert = callback.insertInto(table);
+                        int pos = 0;
+                        for (String name : structuredObject.getTable().getColumnNames()) {
+                            insert.value(name, row.getValues()[pos]);
+                            pos++;
+                        }
+                        insert.execute();
+                    }
+                }
+
+            });
+        } else {
+            throw new SkyeException("Local filesystem information store does not support " + simpleObject + " for put");
+        }
     }
 
     public Path getFileSystem() {

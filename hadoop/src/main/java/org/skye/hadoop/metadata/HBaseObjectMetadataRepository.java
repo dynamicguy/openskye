@@ -59,4 +59,9 @@ public class HBaseObjectMetadataRepository implements ObjectMetadataRepository
     public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public Optional<ObjectSet> getObjectSet(String objectSetId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
