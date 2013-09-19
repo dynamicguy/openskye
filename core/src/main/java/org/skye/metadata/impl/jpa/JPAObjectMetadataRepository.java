@@ -1,15 +1,26 @@
 package org.skye.metadata.impl.jpa;
 
 import com.google.common.base.Optional;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+
 import org.skye.core.ObjectMetadata;
 import org.skye.core.ObjectSet;
-import org.skye.core.SkyeException;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.core.SkyeException;
+import org.skye.stores.StoreRegistry;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An implementation of the {@link ObjectMetadataRepository} using the Java
@@ -19,6 +30,9 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
 {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Inject
+    protected StoreRegistry storeRegistry;
 
     /**
      * Accessor for the {@link EntityManager} in the case that the object is
@@ -43,14 +57,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         return;
     }
 
-    /**
-     * Gets the {@link @ObjectMetadata} associated with the given id.
-     *
-     * @param id The identifier of the object
-     *
-     * @return An Optional wrapper which will include the requested
-     * {@link ObjectMetadata}, if it is found.
-     */
     @Override
     public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -61,6 +67,14 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    /**
+     * Gets the {@link @ObjectMetadata} associated with the given id.
+     *
+     * @param id The identifier of the object
+     *
+     * @return An Optional wrapper which will include the requested
+     * {@link ObjectMetadata}, if it is found.
+     */
     @Override
     public Optional<ObjectMetadata> get(String id)
     {
@@ -109,16 +123,59 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         return;
     }
 
+    /**
+     * Based on an {@link InformationStoreDefinition}, return a collection of
+     * {@link ObjectMetadata} which use the described
+     * {@link org.skye.core.InformationStore}.
+     *
+     * @param informationStoreDefinition The {@link InformationStoreDefinition}
+     *                                   which describes the information store.
+     *
+     * @return An {@link Iterable} collection of {@link ObjectMetadata} based
+     * on the given {@link InformationStoreDefinition}.
+     */
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition)
     {
-        return null;
+        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
+        List<JPAObjectMetadata> listJpaObjectMetadata = null;
+        CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
+        Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
+        TypedQuery<JPAObjectMetadata> q;
+
+        cq.select(root);
+        cq.where(cb.equal(root.get("informationStore"), informationStoreDefinition));
+
+        q = this.getEntityManager().createQuery(cq);
+
+        listJpaObjectMetadata = q.getResultList();
+
+        for(JPAObjectMetadata jpa : listJpaObjectMetadata)
+            listObjectMetadata.add(jpa.ToObjectMetadata());
+
+        return listObjectMetadata;
     }
 
     @Override
     public Iterable<ObjectMetadata> getObjects(Task task)
     {
-        return null;
+        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
+        List<JPAObjectMetadata> listJpaObjectMetadata = null;
+        CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
+        Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
+
+        cq.select(root);
+        cq.where(cb.equal(root.get("taskId"), task.getId()));
+
+        listJpaObjectMetadata = this.getEntityManager().createQuery(cq).getResultList();
+
+        for(JPAObjectMetadata jpa : listJpaObjectMetadata)
+            listObjectMetadata.add(jpa.ToObjectMetadata());
+
+        return listObjectMetadata;
+
     }
 
     @Override

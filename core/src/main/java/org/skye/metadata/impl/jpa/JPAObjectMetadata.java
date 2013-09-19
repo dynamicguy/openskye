@@ -3,14 +3,17 @@ package org.skye.metadata.impl.jpa;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.inject.Inject;
 import javax.persistence.*;
 
 import org.joda.time.DateTime;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ObjectMetadata;
+import org.skye.core.SkyeException;
 import org.skye.core.Tag;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Project;
+import org.skye.stores.StoreRegistry;
 
 import java.util.*;
 
@@ -19,6 +22,11 @@ import java.util.*;
  * persistence purposes.  It also contains methods which allow the Entity to
  * be copied from a non persisted {@link ObjectMetadata}, as well as a method
  * which copies this JPAObjectMetadata to an {@link ObjectMetadata}.
+ *
+ * Note that for this operation to be successful, one must either set the
+ * static storeRegistry field on the {@link JPAArchiveContentBlock} manually
+ * or the GuiceBerry module should use requestStaticInjection on
+ * {@link JPAArchiveContentBlock} in order to perform these translations.
  */
 @Entity
 @Table(name = "OBJECT_METADATA")
@@ -118,9 +126,18 @@ public class JPAObjectMetadata
     /**
      * Creates an {@link ObjectMetadata} copy of the JPA Entity version.
      *
+     * Note that the {@link JPAArchiveContentBlock} must have a valid
+     * {@link StoreRegistry} set statically in order for this translation
+     * to work.  Either set the static field, storeRegistry, directly, or use
+     * GuiceBerry's requestStaticInjection method to ensure that the
+     * storeRegistry is initialized.
+     *
      * @return An {@link ObjectMetadata} copy of this Entity.
+     *
+     * @throws SkyeException See the {@link JPAArchiveContentBlock} method,
+     * ToArchiveContentBlock() for more information on possible exceptions.
      */
-    public ObjectMetadata ToObjectMetadata()
+    public ObjectMetadata ToObjectMetadata() throws SkyeException
     {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         Set<Tag> tags = new HashSet<>();
