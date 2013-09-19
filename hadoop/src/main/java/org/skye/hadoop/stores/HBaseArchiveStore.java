@@ -3,6 +3,7 @@ package org.skye.hadoop.stores;
 import com.google.common.base.Optional;
 import com.impetus.client.hbase.HBaseClient;
 import com.impetus.client.hbase.admin.HBaseDataHandler;
+import com.impetus.kundera.KunderaPersistence;
 import com.impetus.kundera.metadata.KunderaMetadataManager;
 import com.impetus.kundera.metadata.model.EntityMetadata;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,7 @@ import java.util.List;
 public class HBaseArchiveStore implements ArchiveStore {
 
     public static final String IMPLEMENTATION = "hbase";
-    public static final String HBASE_CONFIG_PATH = "hbase config path";
-    public static final String HBASE_POOL_SIZE = "hbase table pool size";
+    public static final String HBASE_SITE = "hbase";
     private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
@@ -46,8 +46,10 @@ public class HBaseArchiveStore implements ArchiveStore {
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
+        this.hBaseConfiguration.addResource(das.getProperties().get(HBASE_SITE));
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hbase");
         this.hBaseEntityManager = emf.createEntityManager();
+
     }
 
     @Override
@@ -57,7 +59,7 @@ public class HBaseArchiveStore implements ArchiveStore {
 
     @Override
     public String getUrl() {
-        return hBaseConfiguration.get("hbase.zookeeper.quorum");  //To change body of implemented methods use File | Settings | File Templates.
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
