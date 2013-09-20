@@ -1,12 +1,11 @@
 package org.skye.task.simple;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import org.skye.core.*;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
-import org.skye.filters.ChannelFilter;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.skye.stores.StoreRegistry;
 
 /**
  * A simple implementation of the destroy task type
@@ -14,7 +13,8 @@ import java.util.List;
 public class DestroyTaskStep extends AbstractTaskStep {
 
     private final Task task;
-    private List<ChannelFilter> filters = new ArrayList<>();
+    @Inject
+    private StoreRegistry storeRegistry;
 
     public DestroyTaskStep(Task task) {
         this.task = task;
@@ -42,7 +42,13 @@ public class DestroyTaskStep extends AbstractTaskStep {
                     for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
                         // TODO do we need to check if this ACB is in use by another
                         // object metadata
-                        acb.getArchiveStore().destroy(om);
+                        ArchiveStoreDefinition asd = omr.getArchiveStoreDefinition(acb);
+                        Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
+                        if (archiveStore.isPresent()) {
+                            archiveStore.get().destroy(om);
+                        } else {
+                            throw new SkyeException("Unable to build archive store " + archiveStore);
+                        }
                     }
                 }
             } else {

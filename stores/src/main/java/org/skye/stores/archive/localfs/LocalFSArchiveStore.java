@@ -90,8 +90,8 @@ public class LocalFSArchiveStore implements ArchiveStore {
     @Override
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
-            if (metadata.getArchiveContentBlock(this).isPresent()) {
-                InputStream is = new FileInputStream(getSimpleObjectPath(metadata.getArchiveContentBlock(this).get()));
+            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+                InputStream is = new FileInputStream(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get()));
                 return Optional.of(is);
             } else return Optional.absent();
         } catch (FileNotFoundException e) {
@@ -120,8 +120,8 @@ public class LocalFSArchiveStore implements ArchiveStore {
 
     @Override
     public void destroy(ObjectMetadata om) {
-        if (om.getArchiveContentBlock(this).isPresent()) {
-            getSimpleObjectPath(om.getArchiveContentBlock(this).get()).delete();
+        if (om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+            getSimpleObjectPath(om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get()).delete();
 
         }
     }

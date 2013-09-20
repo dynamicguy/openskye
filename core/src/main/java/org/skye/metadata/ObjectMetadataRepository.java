@@ -1,9 +1,11 @@
 package org.skye.metadata;
 
 import com.google.common.base.Optional;
+import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ObjectMetadata;
 import org.skye.core.ObjectSet;
 import org.skye.core.SimpleObject;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 
@@ -86,4 +88,22 @@ public interface ObjectMetadataRepository {
      * @return the objectset if found
      */
     Optional<ObjectSet> getObjectSet(String objectSetId);
+
+    /**
+     * Returns an instance of the {@link InformationStoreDefinition} which represents the
+     * source {@link InformationStoreDefinition} for this {@link ObjectMetadata}
+     *
+     * @param objectMetadata the object metadata to find the source for
+     * @return The information store definition
+     */
+    InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata);
+
+    /**
+     * Returns the instance of the {@link ArchiveStoreDefinition} that is linked to this
+     * {@link ArchiveContentBlock}
+     *
+     * @param archiveContentBlock The archive content block to find the archive store definition for
+     * @return the archive store definition
+     */
+    ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock);
 }

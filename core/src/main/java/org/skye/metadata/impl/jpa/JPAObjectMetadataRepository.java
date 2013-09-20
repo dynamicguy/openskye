@@ -1,6 +1,15 @@
 package org.skye.metadata.impl.jpa;
 
 import com.google.common.base.Optional;
+import org.skye.core.ArchiveContentBlock;
+import org.skye.core.ObjectMetadata;
+import org.skye.core.ObjectSet;
+import org.skye.core.SkyeException;
+import org.skye.domain.ArchiveStoreDefinition;
+import org.skye.domain.InformationStoreDefinition;
+import org.skye.domain.Task;
+import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.stores.StoreRegistry;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -9,16 +18,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
-
-import org.skye.core.ObjectMetadata;
-import org.skye.core.ObjectSet;
-import org.skye.domain.InformationStoreDefinition;
-import org.skye.domain.Task;
-import org.skye.metadata.ObjectMetadataRepository;
-import org.skye.core.SkyeException;
-import org.skye.stores.StoreRegistry;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,6 +184,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
 
     @Override
     public Optional<ObjectSet> getObjectSet(String objectSetId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

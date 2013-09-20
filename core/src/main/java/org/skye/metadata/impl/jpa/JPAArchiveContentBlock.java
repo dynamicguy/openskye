@@ -42,37 +42,6 @@ public class JPAArchiveContentBlock
     private ArchiveStoreDefinition archiveStoreDefinition;
 
     /**
-     * Default constructor.  Initializes an empty block.
-     */
-    public JPAArchiveContentBlock()
-    {
-        this.id = "";
-        this.archiveStoreDefinition = null;
-
-        return;
-    }
-
-    /**
-     * Initializes the instance based on an existing
-     * {@link ArchiveContentBlock}.
-     *
-     * @param acb
-     */
-    public JPAArchiveContentBlock(ArchiveContentBlock acb)
-    {
-        Optional<ArchiveStoreDefinition> asd = acb.getArchiveStore().getArchiveStoreDefinition();
-
-        if(asd.isPresent())
-            this.archiveStoreDefinition = asd.get();
-        else
-            this.archiveStoreDefinition = null;
-
-        this.id = acb.getId();
-
-        return;
-    }
-
-    /**
      * Converts the persistable JPAArchiveContentBlock into a
      * {@link ArchiveContentBlock}.  Note that this method requires that
      * the storeRegistry static field be set to a valid {@link StoreRegistry},
@@ -85,7 +54,7 @@ public class JPAArchiveContentBlock
      * {@link ArchiveContentBlock} can't be created, perhaps due to an invalid
      * {@link ArchiveStoreDefinition}.
      */
-    public ArchiveContentBlock ToArchiveContentBlock() throws SkyeException
+    public ArchiveContentBlock toArchiveContentBlock()
     {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         Optional<ArchiveStore> archiveStore = null;
@@ -106,10 +75,10 @@ public class JPAArchiveContentBlock
                 throw new SkyeException("The ArchiveStore could not be built.");
             }
 
-            acb.setArchiveStore(archiveStore.get());
+            acb.setArchiveStoreDefinitionId(archiveStore.get().getArchiveStoreDefinition().get().getId());
         }
         else
-            acb.setArchiveStore(null);
+            acb.setArchiveStoreDefinitionId(null);
 
         return acb;
     }

@@ -3,10 +3,6 @@ package org.skye.task.simple;
 import com.google.common.base.Optional;
 import org.skye.core.*;
 import org.skye.domain.Task;
-import org.skye.filters.ChannelFilter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple implementation of the discover task type
@@ -14,7 +10,6 @@ import java.util.List;
 public class ExtractTaskStep extends AbstractTaskStep {
 
     private final Task task;
-    private List<ChannelFilter> filters = new ArrayList<>();
 
     public ExtractTaskStep(Task task) {
         this.task = task;
@@ -42,12 +37,18 @@ public class ExtractTaskStep extends AbstractTaskStep {
                     if (om.getArchiveContentBlocks().size() > 0) {
                         // Lets just get the first ACB
                         ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                        Optional<SimpleObject> simpleObject = acb.getArchiveStore().getSimpleObject(om);
-                        if (simpleObject.isPresent()) {
-                            targetInformationStore.get().put(simpleObject.get());
+                        Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreDefinition(acb));
+                        if (archiveStore.isPresent()) {
+                            Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
+                            if (simpleObject.isPresent()) {
+                                targetInformationStore.get().put(simpleObject.get());
+                            } else {
+                                throw new SkyeException("Unable to get simple object from archive content block " + acb);
+                            }
                         } else {
-                            throw new SkyeException("Unable to get simple object from archive content block " + acb);
+                            throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
                         }
+
                     } else {
                         throw new SkyeException("Missing an archive content block for " + om);
                     }

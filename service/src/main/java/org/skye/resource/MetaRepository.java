@@ -9,6 +9,7 @@ import org.apache.shiro.SecurityUtils;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ArchiveStore;
 import org.skye.core.ObjectMetadata;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.StoreRegistry;
 import org.skye.util.NotFoundException;
@@ -82,14 +83,17 @@ public class MetaRepository {
 
                 // Lets just pick up the first ACB containing the information
                 if (metadata.getArchiveContentBlocks().size() > 0) {
-                    ArchiveStore archiveStore = metadata.getArchiveContentBlocks().get(0).getArchiveStore();
-                    Optional<InputStream> inputStream = archiveStore.getStream(metadata);
-                    if (inputStream.isPresent()) {
-                        return Response.ok(inputStream.get()).
-                                header("Content-Disposition", "attachment; filename=" + metadata.getPath()).build();
-                    } else {
-                        throw new NotFoundException();
-                    }
+                    ArchiveStoreDefinition archiveStoreDefinition = objectMetadataRepository.getArchiveStoreDefinition(metadata.getArchiveContentBlocks().get(0));
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(archiveStoreDefinition);
+                    if (archiveStore.isPresent()) {
+                        Optional<InputStream> inputStream = archiveStore.get().getStream(metadata);
+                        if (inputStream.isPresent()) {
+                            return Response.ok(inputStream.get()).
+                                    header("Content-Disposition", "attachment; filename=" + metadata.getPath()).build();
+                        } else {
+                            throw new NotFoundException();
+                        }
+                    } else throw new NotFoundException();
                 }
             }
         } else {
