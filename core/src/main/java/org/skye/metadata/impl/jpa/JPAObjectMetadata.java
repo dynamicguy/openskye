@@ -99,7 +99,7 @@ public class JPAObjectMetadata {
      * @throws SkyeException See the {@link JPAArchiveContentBlock} method,
      *                       ToArchiveContentBlock() for more information on possible exceptions.
      */
-    public ObjectMetadata ToObjectMetadata() throws SkyeException {
+    public ObjectMetadata toObjectMetadata() throws SkyeException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         Set<Tag> tags = new HashSet<>();
         List<ArchiveContentBlock> blocks = new ArrayList<>();

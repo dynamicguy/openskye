@@ -43,6 +43,12 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
+    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
+    {
+        return false;
+    }
+
+    @Override
     public Optional<ObjectMetadata> get(String id) {
         if (objects.containsKey(id))
             return Optional.of(objects.get(id));

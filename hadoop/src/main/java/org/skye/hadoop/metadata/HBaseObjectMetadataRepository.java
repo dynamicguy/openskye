@@ -33,6 +33,12 @@ public class HBaseObjectMetadataRepository implements ObjectMetadataRepository
     }
 
     @Override
+    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
+    {
+        return false;
+    }
+
+    @Override
     public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         //To change body of implemented methods use File | Settings | File Templates.
     }

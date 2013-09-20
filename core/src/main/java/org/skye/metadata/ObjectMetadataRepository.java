@@ -48,6 +48,20 @@ public interface ObjectMetadataRepository {
     void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
 
     /**
+     * Determines if the {@link ObjectMetadata} is already included in the
+     * {@link ObjectSet}.
+     *
+     * @param objectSet The {@link ObjectSet} against which the query will run.
+     *
+     * @param objectMetadata The {@link ObjectMetadata} for which the query is
+     *                       run.
+     *
+     * @return True if the {@link ObjectMetadata} is found in the
+     * {@link ObjectSet}, or false if it is not.
+     */
+    boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
+
+    /**
      * Gets the details of a single object's metadata
      *
      * @param id The identifier of the object
