@@ -68,9 +68,12 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getRoot() {
+        return buildObjectsForPath("");
+    }
 
+    private Iterable<SimpleObject> buildObjectsForPath(String path) {
         try (DirectoryStream<Path> ds =
-                     Files.newDirectoryStream(getFileSystem())) {
+                     Files.newDirectoryStream(getFileSystem(path))) {
 
             // TODO is this going to be a problem on a large filesystem?
             List<SimpleObject> all = new ArrayList<>();
@@ -80,6 +83,7 @@ public class LocalFSInformationStore implements InformationStore {
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(ContainerObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
+                    metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
                     container.setObjectMetadata(metadata);
                     all.add(container);
                 } else {
@@ -87,6 +91,7 @@ public class LocalFSInformationStore implements InformationStore {
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
+                    metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
                     all.add(unstructObj);
                 }
             }
@@ -98,12 +103,12 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getChildren(SimpleObject simpleObject) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return buildObjectsForPath(simpleObject.getObjectMetadata().getPath());
     }
 
     @Override
     public Iterable<SimpleObject> getRelated(SimpleObject simpleObject) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new ArrayList<>();
     }
 
     @Override
@@ -181,7 +186,7 @@ public class LocalFSInformationStore implements InformationStore {
         }
     }
 
-    public Path getFileSystem() {
-        return FileSystems.getDefault().getPath(informationStoreDefinition.getProperties().get(FILE_PATH));
+    public Path getFileSystem(String path) {
+        return FileSystems.getDefault().getPath(informationStoreDefinition.getProperties().get(FILE_PATH) + path);
     }
 }

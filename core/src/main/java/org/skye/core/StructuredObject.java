@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public abstract class StructuredObject extends SimpleObject {
 
-    private List<ColumnMetadata> columns;
+    public abstract List<ColumnMetadata> getColumns();
 
     /**
      * Returns an iterator to the rows in the database
