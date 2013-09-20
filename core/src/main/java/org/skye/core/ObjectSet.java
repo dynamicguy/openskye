@@ -14,6 +14,4 @@ public class ObjectSet {
 
     private String id;
     private String name;
-    private Set<String> simpleObjectIds = new HashSet<>();
-
 }

@@ -5,12 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.DataContextFactory;
 import org.eobjects.metamodel.UpdateableDataContext;
-import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
 import org.joda.time.DateTime;
 import org.skye.core.*;
-import org.skye.core.structured.ColumnMetadata;
 import org.skye.domain.InformationStoreDefinition;
 
 import java.sql.Connection;
@@ -95,6 +93,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setPath(schema.getName());
             metadata.setImplementation(JDBCStructuredObject.class.getCanonicalName());
+            metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
             container.setObjectMetadata(metadata);
             schemaObjects.add(container);
         }
@@ -113,18 +112,8 @@ public class JDBCStructuredInformationStore implements InformationStore {
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(JDBCStructuredObject.class.getCanonicalName());
                     metadata.setPath(schema.getName() + "/" + table.getName());
+                    metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
                     structuredObject.setObjectMetadata(metadata);
-                    List<ColumnMetadata> colMetas = new ArrayList<>();
-                    for (Column column : table.getColumns()) {
-                        // need to work out what we need in a column?
-                        ColumnMetadata colMeta = new ColumnMetadata();
-                        colMeta.setName(column.getName());
-                        colMeta.setSize(column.getColumnSize());
-                        colMeta.setNativeType(column.getNativeType());
-                        colMeta.setRemarks(column.getRemarks());
-                        colMetas.add(colMeta);
-                    }
-                    structuredObject.setColumns(colMetas);
                     tableObjects.add(structuredObject);
                 }
                 return tableObjects;
@@ -144,8 +133,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
     }
 
     @Override
-    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException
-    {
+    public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
         if (!objectMetadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
             throw new InvalidSimpleObjectException();
         }
@@ -158,12 +146,16 @@ public class JDBCStructuredInformationStore implements InformationStore {
     }
 
     @Override
-    public Optional<InformationStoreDefinition> getInformationStoreDefinition()
-    {
-        if(this.informationStoreDefinition == null)
+    public Optional<InformationStoreDefinition> getInformationStoreDefinition() {
+        if (this.informationStoreDefinition == null)
             return Optional.absent();
 
         return Optional.of(this.informationStoreDefinition);
+    }
+
+    @Override
+    public void put(SimpleObject simpleObject) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public UpdateableDataContext getDataContext() {

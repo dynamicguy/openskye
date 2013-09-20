@@ -7,7 +7,6 @@ import org.skye.core.InvalidSimpleObjectException;
 import org.skye.core.ObjectMetadata;
 import org.skye.core.SimpleObject;
 import org.skye.domain.InformationStoreDefinition;
-import org.skye.domain.InformationStoreDefinition;
 
 import java.util.*;
 
@@ -22,8 +21,7 @@ public class InMemoryInformationStore implements InformationStore {
     private InformationStoreDefinition informationStoreDefinition;
 
     @Override
-    public void initialize(InformationStoreDefinition dis)
-    {
+    public void initialize(InformationStoreDefinition dis) {
         this.informationStoreDefinition = dis;
 
         return;
@@ -77,11 +75,15 @@ public class InMemoryInformationStore implements InformationStore {
     }
 
     @Override
-    public Optional<InformationStoreDefinition> getInformationStoreDefinition()
-    {
-        if(this.informationStoreDefinition == null)
+    public Optional<InformationStoreDefinition> getInformationStoreDefinition() {
+        if (this.informationStoreDefinition == null)
             return Optional.absent();
 
         return Optional.of(this.informationStoreDefinition);
+    }
+
+    @Override
+    public void put(SimpleObject simpleObject) {
+        root.add(simpleObject);
     }
 }

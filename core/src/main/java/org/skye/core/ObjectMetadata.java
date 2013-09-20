@@ -3,7 +3,6 @@ package org.skye.core;
 import com.google.common.base.Optional;
 import lombok.Data;
 import org.joda.time.DateTime;
-import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Project;
 
 import java.util.*;
@@ -31,12 +30,12 @@ public class ObjectMetadata {
     private long archiveSize = 0;
     private String mimeType;
     private String checksum;
-    private InformationStoreDefinition informationStore;
+    private String informationStoreId;
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
-    public Optional<ArchiveContentBlock> getArchiveContentBlock(ArchiveStore archiveStore) {
+    public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreDefinitionId) {
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
-            if (acb.getArchiveStore().getUrl().equals(archiveStore.getUrl())) {
+            if (acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinitionId)) {
                 return Optional.of(acb);
             }
         }

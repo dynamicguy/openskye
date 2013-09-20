@@ -9,6 +9,6 @@ import lombok.Data;
 public class ArchiveContentBlock {
 
     private String id;
-    private ArchiveStore archiveStore;
+    private String archiveStoreDefinitionId;
 
 }

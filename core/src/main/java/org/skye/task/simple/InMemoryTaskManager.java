@@ -38,6 +38,8 @@ public class InMemoryTaskManager implements TaskManager {
                 return new DiscoverTaskStep(task);
             case EXTRACT:
                 return new ExtractTaskStep(task);
+            case DESTROY:
+                return new DestroyTaskStep(task);
             default:
                 throw new SkyeException("Unsupported task type " + task.getTaskType());
         }

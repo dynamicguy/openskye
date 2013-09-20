@@ -13,9 +13,11 @@ import java.util.ArrayList;
  */
 public class HdfsArchiveStore implements ArchiveStore {
 
+    ArchiveStoreDefinition archiveStoreDefinition;
+
     @Override
     public void initialize(ArchiveStoreDefinition das) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.archiveStoreDefinition = das;
     }
 
     @Override
@@ -56,5 +58,15 @@ public class HdfsArchiveStore implements ArchiveStore {
     @Override
     public Iterable<ObjectStreamFilter> getFilters() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
+        return Optional.of(this.archiveStoreDefinition);
+    }
+
+    @Override
+    public void destroy(ObjectMetadata om) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -102,8 +102,17 @@ public interface InformationStore {
      * instance.
      *
      * @return An {@link Optional} wrapper which will include the
-     * {@link InformationStoreDefinition} if the instance has been initialized.
+     *         {@link InformationStoreDefinition} if the instance has been initialized.
      */
     Optional<InformationStoreDefinition> getInformationStoreDefinition();
 
+    /**
+     * This method allows you to put a simple object back onto an {@link InformationStore}
+     * <p/>
+     * Used when an extract has an {@link InformationStore} as a target to extract the simple objects from archive
+     * and back to the {@link InformationStore}
+     *
+     * @param simpleObject the simple object that you want to put back into the {@link InformationStore}
+     */
+    void put(SimpleObject simpleObject);
 }

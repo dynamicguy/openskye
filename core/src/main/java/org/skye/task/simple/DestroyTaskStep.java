@@ -1,17 +1,22 @@
 package org.skye.task.simple;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import org.skye.core.*;
+import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
+import org.skye.stores.StoreRegistry;
 
 /**
- * A simple implementation of the discover task type
+ * A simple implementation of the destroy task type
  */
-public class ExtractTaskStep extends AbstractTaskStep {
+public class DestroyTaskStep extends AbstractTaskStep {
 
     private final Task task;
+    @Inject
+    private StoreRegistry storeRegistry;
 
-    public ExtractTaskStep(Task task) {
+    public DestroyTaskStep(Task task) {
         this.task = task;
     }
 
@@ -34,25 +39,17 @@ public class ExtractTaskStep extends AbstractTaskStep {
         if (targetInformationStore.isPresent()) {
             if (objectSet.isPresent()) {
                 for (ObjectMetadata om : omr.getObjects(objectSet.get())) {
-                    if (om.getArchiveContentBlocks().size() > 0) {
-                        // Lets just get the first ACB
-                        ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                        Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreDefinition(acb));
+                    for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
+                        // TODO do we need to check if this ACB is in use by another
+                        // object metadata
+                        ArchiveStoreDefinition asd = omr.getArchiveStoreDefinition(acb);
+                        Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
                         if (archiveStore.isPresent()) {
-                            Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
-                            if (simpleObject.isPresent()) {
-                                targetInformationStore.get().put(simpleObject.get());
-                            } else {
-                                throw new SkyeException("Unable to get simple object from archive content block " + acb);
-                            }
+                            archiveStore.get().destroy(om);
                         } else {
-                            throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
+                            throw new SkyeException("Unable to build archive store " + archiveStore);
                         }
-
-                    } else {
-                        throw new SkyeException("Missing an archive content block for " + om);
                     }
-
                 }
             } else {
                 throw new SkyeException("Unable to find object set with id " + task.getObjectSetId());
