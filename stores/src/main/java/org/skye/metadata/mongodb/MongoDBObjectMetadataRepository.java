@@ -15,7 +15,7 @@ import org.skye.metadata.ObjectMetadataRepository;
 public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository
 {
     @Override
-    public ObjectSet createObjectSet()
+    public ObjectSet createObjectSet(String name)
     {
         return null;
     }

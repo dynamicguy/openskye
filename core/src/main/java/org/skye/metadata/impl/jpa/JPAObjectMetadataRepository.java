@@ -28,24 +28,10 @@ import java.util.List;
 public class JPAObjectMetadataRepository implements ObjectMetadataRepository
 {
     @PersistenceContext
-    private EntityManager entityManager;
-
-    @Inject
-    protected StoreRegistry storeRegistry;
-
-    /**
-     * Accessor for the {@link EntityManager} in the case that the object is
-     * inherited.
-     *
-     * @return The injected {@link EntityManager} for the instance.
-     */
-    protected EntityManager getEntityManager()
-    {
-        return this.entityManager;
-    }
+    protected EntityManager entityManager;
 
     @Override
-    public ObjectSet createObjectSet()
+    public ObjectSet createObjectSet(String name) throws SkyeException
     {
         return null;
     }
@@ -77,7 +63,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     @Override
     public Optional<ObjectMetadata> get(String id)
     {
-        JPAObjectMetadata jpaObjectMetadata = this.getEntityManager().find(JPAObjectMetadata.class, id);
+        JPAObjectMetadata jpaObjectMetadata = this.entityManager.find(JPAObjectMetadata.class, id);
 
         if(jpaObjectMetadata == null)
             return Optional.absent();
@@ -99,22 +85,21 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     public void put(ObjectMetadata objectMetadata) throws SkyeException
     {
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
-        EntityManager manager = this.getEntityManager();
 
-        manager.getTransaction().begin();
+        this.entityManager.getTransaction().begin();
 
         try
         {
             if(this.get(jpaObjectMetadata.getId()).isPresent())
-                manager.remove(jpaObjectMetadata);
+                this.entityManager.remove(jpaObjectMetadata);
 
-            manager.persist(jpaObjectMetadata);
+            this.entityManager.persist(jpaObjectMetadata);
 
-            manager.getTransaction().commit();
+            this.entityManager.getTransaction().commit();
         }
         catch(Exception ex)
         {
-            manager.getTransaction().rollback();
+            this.entityManager.getTransaction().rollback();
 
             throw new SkyeException("Failed to write the given ObjectMetadata with id " + objectMetadata.getId(), ex);
         }
@@ -138,7 +123,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     {
         List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
         List<JPAObjectMetadata> listJpaObjectMetadata = null;
-        CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
+        CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
         Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
         TypedQuery<JPAObjectMetadata> q;
@@ -146,7 +131,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         cq.select(root);
         cq.where(cb.equal(root.get("informationStore"), informationStoreDefinition));
 
-        q = this.getEntityManager().createQuery(cq);
+        q = this.entityManager.createQuery(cq);
 
         listJpaObjectMetadata = q.getResultList();
 
@@ -161,14 +146,14 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     {
         List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
         List<JPAObjectMetadata> listJpaObjectMetadata = null;
-        CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
+        CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
         Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
 
         cq.select(root);
         cq.where(cb.equal(root.get("taskId"), task.getId()));
 
-        listJpaObjectMetadata = this.getEntityManager().createQuery(cq).getResultList();
+        listJpaObjectMetadata = this.entityManager.createQuery(cq).getResultList();
 
         for(JPAObjectMetadata jpa : listJpaObjectMetadata)
             listObjectMetadata.add(jpa.ToObjectMetadata());
