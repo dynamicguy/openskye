@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.skye</groupId>
+    <groupId>org.openskye</groupId>
     <artifactId>platform</artifactId>
     <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -20,6 +20,12 @@
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <properties>
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
@@ -75,22 +81,22 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.skye</groupId>
+                <groupId>org.openskye</groupId>
                 <artifactId>skye-core</artifactId>
                 <version>0.0.3-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.skye</groupId>
+                <groupId>org.openskye</groupId>
                 <artifactId>skye-stores</artifactId>
                 <version>0.0.3-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.skye</groupId>
+                <groupId>org.openskye</groupId>
                 <artifactId>skye-service</artifactId>
                 <version>0.0.3-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.skye</groupId>
+                <groupId>org.openskye</groupId>
                 <artifactId>skye-hadoop</artifactId>
                 <version>0.0.3-SNAPSHOT</version>
             </dependency>
@@ -99,9 +105,9 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub ${project.artifactId} Repository</name>
-            <url>https://raw.github.com/infobelt/${project.artifactId}/mvn-repo</url>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Snapshot Repository</name>
+            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
@@ -143,6 +149,19 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.8</version>
@@ -161,10 +180,6 @@
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.7</version>
-                <configuration>
-                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo
-                    </altDeploymentRepository>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
