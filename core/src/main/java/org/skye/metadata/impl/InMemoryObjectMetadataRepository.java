@@ -23,7 +23,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     private Map<String, List<ObjectMetadata>> taskMap = new HashMap<>();
 
     @Override
-    public ObjectSet createObjectSet() {
+    public ObjectSet createObjectSet(String name) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

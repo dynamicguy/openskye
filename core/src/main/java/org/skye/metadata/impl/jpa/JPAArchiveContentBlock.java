@@ -27,58 +27,31 @@ import org.skye.stores.StoreRegistry;
 @Data
 public class JPAArchiveContentBlock
 {
-    @Inject
-    @Transient
-    public static StoreRegistry storeRegistry;
+    private String id = "";
+    private String archiveStoreDefinitionId = "";
 
-    private String id;
+    public JPAArchiveContentBlock()
+    {
+        // Do Nothing
+    }
+
+    public JPAArchiveContentBlock(ArchiveContentBlock acb)
+    {
+        this.id = acb.getId();
+        this.archiveStoreDefinitionId = acb.getArchiveStoreDefinitionId();
+    }
 
     /**
-     * The {@link ArchiveStoreDefinition} is used instead of the
-     * {@link ArchiveStore} because only the definition can be persisted.
-     * Conversion is necessary between the definition and the store as
-     * blocks are converted.
-     */
-    private ArchiveStoreDefinition archiveStoreDefinition;
-
-    /**
-     * Converts the persistable JPAArchiveContentBlock into a
-     * {@link ArchiveContentBlock}.  Note that this method requires that
-     * the storeRegistry static field be set to a valid {@link StoreRegistry},
-     * either through static injection or by directly setting it.
+     * Converts this instance into a {@link ArchiveContentBlock}.
      *
-     * @return An {@link ArchiveContentBlock} translation of this instance.
-     *
-     * @throws SkyeException Indicates that either the storeRegistry field is
-     * invalid or that the {@link ArchiveStore} for the
-     * {@link ArchiveContentBlock} can't be created, perhaps due to an invalid
-     * {@link ArchiveStoreDefinition}.
+     * @return A copy of this instance as an {@link ArchiveContentBlock}.
      */
     public ArchiveContentBlock toArchiveContentBlock()
     {
         ArchiveContentBlock acb = new ArchiveContentBlock();
-        Optional<ArchiveStore> archiveStore = null;
 
         acb.setId(this.getId());
-
-        if(this.getArchiveStoreDefinition() != null)
-        {
-            if(storeRegistry == null)
-            {
-                throw new SkyeException("The StoreRegistry is null.");
-            }
-
-            archiveStore = storeRegistry.build(this.getArchiveStoreDefinition());
-
-            if(!archiveStore.isPresent())
-            {
-                throw new SkyeException("The ArchiveStore could not be built.");
-            }
-
-            acb.setArchiveStoreDefinitionId(archiveStore.get().getArchiveStoreDefinition().get().getId());
-        }
-        else
-            acb.setArchiveStoreDefinitionId(null);
+        acb.setArchiveStoreDefinitionId(this.archiveStoreDefinitionId);
 
         return acb;
     }

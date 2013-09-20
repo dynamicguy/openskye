@@ -18,9 +18,11 @@ public interface ObjectMetadataRepository {
     /**
      * Creates a new {@link ObjectSet}
      *
+     * @param name The name to be used for the {@link ObjectSet}.
+     *
      * @return a new object set
      */
-    ObjectSet createObjectSet();
+    ObjectSet createObjectSet(String name);
 
     /**
      * Removes the {@link ObjectSet} from the OMR

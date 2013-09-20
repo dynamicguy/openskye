@@ -32,22 +32,22 @@ public class JPAObjectMetadata {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
-    private String path;
-    private String implementation;
-    private String taskId;
+    private String id;
+    private String path = "";
+    private String implementation = "";
+    private String taskId = "";
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<JPATag> tags;
+    private Set<JPATag> tags = new HashSet<>();
     @ElementCollection(fetch = FetchType.EAGER)
-    private Map<String, String> metadata;
-    private boolean container;
-    private DateTime created;
-    private DateTime ingested;
+    private Map<String, String> metadata = new HashMap<>();
+    private boolean container = false;
+    private DateTime created = new DateTime();
+    private DateTime ingested = new DateTime();
     @ManyToOne
-    private Project project;
-    private String informationStoreDefinitionId;
+    private Project project = null;
+    private String informationStoreDefinitionId = "";
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<JPAArchiveContentBlock> archiveContentBlocks;
+    private List<JPAArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
     /**
      * The default constructor for the JPAObjectMetadata class.
@@ -79,8 +79,6 @@ public class JPAObjectMetadata {
             JPATag jpaTag = new JPATag(tag);
             this.tags.add(jpaTag);
         }
-
-        this.archiveContentBlocks = new ArrayList<>();
 
         for (ArchiveContentBlock acb : objectMetadata.getArchiveContentBlocks()) {
             JPAArchiveContentBlock jpaACB = new JPAArchiveContentBlock();

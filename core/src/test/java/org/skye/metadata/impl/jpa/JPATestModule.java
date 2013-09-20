@@ -19,8 +19,6 @@ public class JPATestModule extends AbstractModule
         bind(ObjectMetadataRepository.class).to(JPAObjectMetadataRepository.class).asEagerSingleton();
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class).asEagerSingleton();
 
-        requestStaticInjection(JPAArchiveContentBlock.class);
-
         install(new GuiceBerryModule());
     }
 }

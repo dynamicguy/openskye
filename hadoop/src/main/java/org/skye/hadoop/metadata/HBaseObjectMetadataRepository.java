@@ -16,7 +16,7 @@ import org.skye.metadata.ObjectMetadataRepository;
 public class HBaseObjectMetadataRepository implements ObjectMetadataRepository
 {
     @Override
-    public ObjectSet createObjectSet()
+    public ObjectSet createObjectSet(String name)
     {
         return null;
     }
