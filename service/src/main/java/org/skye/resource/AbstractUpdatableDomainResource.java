@@ -1,6 +1,7 @@
 package org.skye.resource;
 
 import org.apache.shiro.SecurityUtils;
+import org.skye.domain.Identifiable;
 import org.skye.util.UnauthorizedException;
 
 import javax.ws.rs.PathParam;
@@ -13,20 +14,19 @@ import javax.ws.rs.core.Response;
  * domain objects persisted in hibernate
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractUpdatableDomainResource<T> extends AbstractRealOnlyDomainResource<T> {
-
+public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractRealOnlyDomainResource<T>
+{
     public T create(T newInstance) {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":create")) {
-            return getDAO().persist(newInstance);
+            return getDAO().create(newInstance);
         } else {
             throw new UnauthorizedException();
         }
     }
 
     public T update(@PathParam("id") String id, T newInstance) {
-        // TODO need to do the merge here?
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":update")) {
-            return getDAO().persist(newInstance);
+            return getDAO().update(id, newInstance);
         } else {
             throw new UnauthorizedException();
         }

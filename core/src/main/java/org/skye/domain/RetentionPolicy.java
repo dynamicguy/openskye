@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Table(name = "RETENTION_POLICY")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RetentionPolicy {
-
+public class RetentionPolicy implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

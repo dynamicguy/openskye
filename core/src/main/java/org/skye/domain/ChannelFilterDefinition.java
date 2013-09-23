@@ -14,8 +14,8 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_FILTER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChannelFilterDefinition {
-
+public class ChannelFilterDefinition implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

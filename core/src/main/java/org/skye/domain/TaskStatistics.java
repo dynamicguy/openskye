@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Table(name = "TASK_STATISTICS")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaskStatistics {
-
+public class TaskStatistics implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

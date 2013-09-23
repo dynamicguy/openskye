@@ -15,8 +15,8 @@ import java.util.Map;
 @Table(name = "DOMAIN_INFORMATION_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class InformationStoreDefinition {
-
+public class InformationStoreDefinition implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
