@@ -75,7 +75,6 @@ public class LocalFSInformationStore implements InformationStore {
         try (DirectoryStream<Path> ds =
                      Files.newDirectoryStream(getFileSystem(path))) {
 
-            // TODO is this going to be a problem on a large filesystem?
             List<SimpleObject> all = new ArrayList<>();
             for (Path p : ds) {
                 if (Files.isDirectory(p)) {
@@ -86,7 +85,7 @@ public class LocalFSInformationStore implements InformationStore {
                     metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
                     container.setObjectMetadata(metadata);
                     all.add(container);
-                } else {
+                } else if ( Files.isRegularFile(p) ) {
                     UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
