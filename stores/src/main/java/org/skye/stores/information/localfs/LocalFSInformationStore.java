@@ -19,10 +19,7 @@ import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +70,7 @@ public class LocalFSInformationStore implements InformationStore {
 
     private Iterable<SimpleObject> buildObjectsForPath(String path) {
         try (DirectoryStream<Path> ds =
-                     Files.newDirectoryStream(getFileSystem(path))) {
+                     Files.newDirectoryStream(Paths.get(path))) {
 
             List<SimpleObject> all = new ArrayList<>();
             for (Path p : ds) {
@@ -185,7 +182,4 @@ public class LocalFSInformationStore implements InformationStore {
         }
     }
 
-    public Path getFileSystem(String path) {
-        return FileSystems.getDefault().getPath(informationStoreDefinition.getProperties().get(FILE_PATH) + path);
-    }
 }
