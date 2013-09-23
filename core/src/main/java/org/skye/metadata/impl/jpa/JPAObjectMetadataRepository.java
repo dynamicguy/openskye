@@ -9,15 +9,13 @@ import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
-import org.skye.stores.StoreRegistry;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,25 +29,141 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     protected EntityManager entityManager;
 
     @Override
-    public ObjectSet createObjectSet(String name) throws SkyeException
+    public ObjectSet createObjectSet(String name)
     {
-        return null;
+        JPAObjectSet jpaObjectSet = new JPAObjectSet();
+
+        jpaObjectSet.setName(name);
+
+        this.entityManager.getTransaction().begin();
+
+        try
+        {
+            this.entityManager.persist(jpaObjectSet);
+            this.entityManager.getTransaction().commit();
+        }
+        catch(Exception ex)
+        {
+            this.entityManager.getTransaction().rollback();
+
+            throw new SkyeException("The ObjectSet could not be created.", ex);
+        }
+
+        return jpaObjectSet.toObjectSet();
     }
 
     @Override
     public void deleteObjectSet(ObjectSet objectSet)
     {
+        Optional<JPAObjectSet> jpaObjectSet = this.getJpaObjectSet(objectSet.getId());
+
+        if(!jpaObjectSet.isPresent())
+            throw new SkyeException("The ObjectSet does not exist, and cannot be deleted.");
+
+        this.entityManager.getTransaction().begin();
+
+        try
+        {
+            this.entityManager.remove(jpaObjectSet.get());
+            this.entityManager.getTransaction().commit();
+        }
+        catch(Exception ex)
+        {
+            this.entityManager.getTransaction().rollback();
+
+            throw new SkyeException("The ObjectSet could not be deleted.", ex);
+        }
+
         return;
     }
 
     @Override
-    public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
+    {
+        Optional<JPAObjectSet> jpaObjectSet = this.getJpaObjectSet(objectSet.getId());
+        JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
+
+        if(!jpaObjectSet.isPresent())
+            throw new SkyeException("The ObjectSet to which you are attempting to add does not exist.");
+
+        if(this.isObjectInSet(objectSet, objectMetadata))
+            throw new SkyeException("The ObjectSet already contains the given ObjectMetadata");
+
+        this.entityManager.getTransaction().begin();
+
+        try
+        {
+            jpaObjectSet.get().getObjectMetadataSet().add(jpaObjectMetadata);
+            this.entityManager.merge(jpaObjectSet.get());
+            this.entityManager.getTransaction().commit();
+        }
+        catch(Exception ex)
+        {
+            this.entityManager.getTransaction().rollback();
+
+            throw new SkyeException("The ObjectMetadata could not be added to the ObjectSet.", ex);
+        }
+
+        return;
     }
 
     @Override
-    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
+    {
+        Optional<JPAObjectSet> jpaObjectSet = this.getJpaObjectSet(objectSet.getId());
+        JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
+
+        if(!jpaObjectSet.isPresent())
+            throw new SkyeException("The ObjectSet from which you are attempting to remove does not exist.");
+
+        if(!this.isObjectInSet(objectSet, objectMetadata))
+            throw new SkyeException("The ObjectSet does not contain the given ObjectMetadata.");
+
+        this.entityManager.getTransaction().begin();
+
+        try
+        {
+            jpaObjectSet.get().getObjectMetadataSet().remove(jpaObjectMetadata);
+            this.entityManager.merge(jpaObjectSet.get());
+            this.entityManager.getTransaction().commit();
+        }
+        catch(Exception ex)
+        {
+            this.entityManager.getTransaction().rollback();
+
+            throw new SkyeException("The ObjectMetadata count not be removed from the ObjectSet.", ex);
+        }
+
+        return;
+    }
+
+    /**
+     * Checks to see if the {@link ObjectMetadata} is found in the given
+     * {@link ObjectSet}.
+     *
+     * @param objectSet The {@link ObjectSet} against which the query will run.
+     *
+     * @param objectMetadata The {@link ObjectMetadata} for which the query is
+     *                       run.
+     *
+     * @return True if the {@link ObjectMetadata} is found in the
+     * {@link ObjectSet}, or false if it is not found.
+     */
+    @Override
+    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
+    {
+        CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<JPAObjectSet> root = cq.from(JPAObjectSet.class);
+        SetJoin<JPAObjectSet, JPAObjectMetadata> objectToMetadata = root.join(JPAObjectSet_.objectMetadataSet);
+
+        cq.select(cb.count(root));
+        cq.where(cb.equal(objectToMetadata.get(JPAObjectMetadata_.id), objectMetadata.getId()));
+
+        if(this.entityManager.createQuery(cq).getSingleResult() > 0)
+            return true;
+
+        return false;
     }
 
     /**
@@ -68,7 +182,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         if(jpaObjectMetadata == null)
             return Optional.absent();
 
-        return Optional.of(jpaObjectMetadata.ToObjectMetadata());
+        return Optional.of(jpaObjectMetadata.toObjectMetadata());
     }
 
     /**
@@ -82,7 +196,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
      *                       repository.
      */
     @Override
-    public void put(ObjectMetadata objectMetadata) throws SkyeException
+    public void put(ObjectMetadata objectMetadata)
     {
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
 
@@ -91,9 +205,9 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         try
         {
             if(this.get(jpaObjectMetadata.getId()).isPresent())
-                this.entityManager.remove(jpaObjectMetadata);
-
-            this.entityManager.persist(jpaObjectMetadata);
+                this.entityManager.merge(jpaObjectMetadata);
+            else
+                this.entityManager.persist(jpaObjectMetadata);
 
             this.entityManager.getTransaction().commit();
         }
@@ -126,17 +240,14 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
         Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
-        TypedQuery<JPAObjectMetadata> q;
 
         cq.select(root);
-        cq.where(cb.equal(root.get("informationStore"), informationStoreDefinition));
+        cq.where(cb.equal(root.get(JPAObjectMetadata_.informationStoreDefinitionId), informationStoreDefinition.getId()));
 
-        q = this.entityManager.createQuery(cq);
-
-        listJpaObjectMetadata = q.getResultList();
+        listJpaObjectMetadata = this.entityManager.createQuery(cq).getResultList();
 
         for(JPAObjectMetadata jpa : listJpaObjectMetadata)
-            listObjectMetadata.add(jpa.ToObjectMetadata());
+            listObjectMetadata.add(jpa.toObjectMetadata());
 
         return listObjectMetadata;
     }
@@ -151,12 +262,12 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
 
         cq.select(root);
-        cq.where(cb.equal(root.get("taskId"), task.getId()));
+        cq.where(cb.equal(root.get(JPAObjectMetadata_.taskId), task.getId()));
 
         listJpaObjectMetadata = this.entityManager.createQuery(cq).getResultList();
 
         for(JPAObjectMetadata jpa : listJpaObjectMetadata)
-            listObjectMetadata.add(jpa.ToObjectMetadata());
+            listObjectMetadata.add(jpa.toObjectMetadata());
 
         return listObjectMetadata;
 
@@ -180,5 +291,15 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
     @Override
     public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    protected Optional<JPAObjectSet> getJpaObjectSet(String objectSetId)
+    {
+        JPAObjectSet jpaObjectSet = this.entityManager.find(JPAObjectSet.class, objectSetId);
+
+        if(jpaObjectSet == null)
+            return Optional.absent();
+
+        return Optional.of(jpaObjectSet);
     }
 }

@@ -57,7 +57,7 @@ public abstract class AbstractPaginatingDAO<T> {
     }
 
     /**
-     * Returns the current {@link org.hibernate.Session}.
+     * Returns the current {@link EntityManager}.
      *
      * @return the current session
      */

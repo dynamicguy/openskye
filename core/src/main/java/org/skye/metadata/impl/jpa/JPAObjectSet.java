@@ -82,7 +82,7 @@ public class JPAObjectSet
      *
      * @return An {@link ObjectSet} copy of the instance.
      */
-    public ObjectSet ToObjectSet()
+    public ObjectSet toObjectSet()
     {
         ObjectSet objectSet = new ObjectSet();
 
