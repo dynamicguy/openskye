@@ -4,9 +4,7 @@ import com.google.common.base.Optional;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple context for a query that is executed against a {@link QueryableStore}
@@ -18,11 +16,11 @@ public class QueryContext {
 
     // Default the offset to 0
     private long offset = 0;
-    private Map<String, ObjectMetadata> objects = new HashMap<>();
+    private List<ObjectMetadata> objects = new ArrayList<>();
 
     public List<StructuredObject> resolveObjects(ArchiveStore archiveStore) {
         List<StructuredObject> structuredObjects = new ArrayList<>();
-        for (ObjectMetadata om : objects.values()) {
+        for (ObjectMetadata om : objects) {
             Optional<SimpleObject> optionObject = archiveStore.getSimpleObject(om);
             if (optionObject.isPresent() && optionObject.get() instanceof StructuredObject)
                 structuredObjects.add((StructuredObject) optionObject.get());

@@ -1,19 +1,12 @@
 package org.skye.stores.information.localfs;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
-import org.eobjects.metamodel.UpdateCallback;
-import org.eobjects.metamodel.UpdateScript;
-import org.eobjects.metamodel.UpdateableDataContext;
-import org.eobjects.metamodel.schema.ColumnType;
-import org.eobjects.metamodel.schema.Schema;
-import org.eobjects.metamodel.schema.Table;
 import org.junit.Rule;
 import org.junit.Test;
 import org.skye.domain.*;
 import org.skye.stores.StoreRegistry;
 import org.skye.stores.archive.localfs.LocalFSArchiveStore;
 import org.skye.stores.information.InMemoryTestModule;
-import org.skye.stores.information.jdbc.JDBCStructuredInformationStore;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.task.TaskManager;
 
@@ -22,11 +15,7 @@ import javax.inject.Inject;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Created with IntelliJ IDEA.
- * User: mftaylor
- * Date: 9/23/13
- * Time: 2:58 PM
- * To change this template use File | Settings | File Templates.
+ * This is a set of tests for the {@link LocalFSInformationStore}
  */
 public class LocalFSInformationStoreTest {
 
@@ -73,7 +62,7 @@ public class LocalFSInformationStoreTest {
         taskManager.submit(newTask);
 
         long objectCount = newTask.getStatistics().getSimpleObjectsDiscovered();
-        assertThat("We have discovered "+objectCount+" simple objects", objectCount > 0);
+        assertThat("We have discovered " + objectCount + " simple objects", objectCount > 0);
     }
 
     @Test
