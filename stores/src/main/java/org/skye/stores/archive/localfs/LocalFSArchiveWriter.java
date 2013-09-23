@@ -1,6 +1,5 @@
 package org.skye.stores.archive.localfs;
 
-import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -42,11 +41,13 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
         ArchiveContentBlock acb = new ArchiveContentBlock();
+        ObjectMetadata om = simpleObject.getObjectMetadata();
         acb.setId(UUID.randomUUID().toString());
+        acb.setArchiveStoreDefinitionId(this.localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId());
 
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
-            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb);
+            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb, om, true);
             final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
             if (log.isDebugEnabled())
                 log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
@@ -55,7 +56,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
                 public void run(UpdateCallback callback) {
 
                     // Create the table in a file representing the Archive Content Block
-
                     TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
 
                     for (Column column : structuredObject.getTable().getColumns()) {
@@ -84,7 +84,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         } else if (simpleObject instanceof UnstructuredObject) {
             // we can just store this as a file
             UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
-            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb);
+            final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb, om, true);
 
             try {
                 FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), tempStoragePath);
@@ -101,7 +101,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
         }
 
-        simpleObject.getObjectMetadata().setArchiveContentBlocks(ImmutableList.of(acb));
+        simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
         updateMetadata(simpleObject);
         return simpleObject;
     }
@@ -109,7 +109,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     private void postProcess(ArchiveContentBlock acb, File tempStoragePath, SimpleObject simpleObject) {
         try {
             simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
-            File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb);
+            File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb, simpleObject.getObjectMetadata(), true);
             FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
 
             FileInputStream fis = new FileInputStream(targetPath);

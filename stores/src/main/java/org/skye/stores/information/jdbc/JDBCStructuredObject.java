@@ -2,6 +2,7 @@ package org.skye.stores.information.jdbc;
 
 import lombok.Data;
 import org.eobjects.metamodel.DataContext;
+import org.eobjects.metamodel.UpdateableDataContext;
 import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Table;
 import org.skye.core.StructuredObject;
@@ -24,6 +25,11 @@ public class JDBCStructuredObject extends StructuredObject {
     public JDBCStructuredObject(DataContext dataContext, Table table) {
         this.table = table;
         this.dataContext = dataContext;
+    }
+
+    public JDBCStructuredObject(UpdateableDataContext dataContext) {
+        this.dataContext = dataContext;
+        this.table = dataContext.getDefaultSchema().getTable(0);
     }
 
     @Override
