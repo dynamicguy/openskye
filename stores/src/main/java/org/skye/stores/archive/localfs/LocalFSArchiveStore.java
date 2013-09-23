@@ -5,6 +5,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.eobjects.metamodel.DataContext;
+import org.eobjects.metamodel.DataContextFactory;
+import org.eobjects.metamodel.UpdateableDataContext;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
@@ -15,13 +18,17 @@ import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
 import javax.inject.Inject;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
 
 /**
  * An implementation of an {@link ArchiveStore} that simply uses the local
  * filesystem to store archives
  */
 @Slf4j
-public class LocalFSArchiveStore implements ArchiveStore {
+public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     public final static String IMPLEMENTATION = "localFS";
     public static final String LOCALFS_PATH = "localFsPath";
@@ -101,8 +108,21 @@ public class LocalFSArchiveStore implements ArchiveStore {
 
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+        try {
+            if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
+                if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
 
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+                    UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get()));
+                    SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+                    return Optional.of(simpleObject);
+                } else return Optional.absent();
+            } else {
+                return Optional.absent();
+            }
+        } catch (Exception e) {
+            throw new SkyeException("Unable to create object for metadata " + metadata, e);
+        }
+
     }
 
     @Override
@@ -154,5 +174,21 @@ public class LocalFSArchiveStore implements ArchiveStore {
         simpleObjectDir.mkdirs();
         simpleObjectDir.delete();
         return simpleObjectDir;
+    }
+
+    @Override
+    public StructuredObject executeQuery(QueryContext context, String query) {
+        // First we need to get all the objects back so we can build the context
+        List<StructuredObject> contextObjects = context.resolveObjects(this);
+        List<DataContext> dataContexts = new ArrayList<>();
+        for (StructuredObject obj : contextObjects) {
+            dataContexts.add(((JDBCStructuredObject) obj).getDataContext());
+        }
+
+        // Build a composite context
+        DataContext compositeDataContext = DataContextFactory.createCompositeDataContext(dataContexts);
+
+        QueryResultStructuredObject result = new QueryResultStructuredObject(compositeDataContext.executeQuery(query));
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
