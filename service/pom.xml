@@ -7,7 +7,7 @@
         <version>0.0.4-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.openskye</groupId>
+    <groupId>org.skye</groupId>
     <artifactId>skye-service</artifactId>
 
     <name>Skye :: Service</name>

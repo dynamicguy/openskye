@@ -16,6 +16,7 @@ import org.apache.hadoop.hbase.client.HTablePool;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
+import org.skye.hadoop.metadata.HBaseObjectMetadataRepository;
 import org.skye.metadata.ObjectMetadataRepository;
 
 import javax.inject.Inject;
@@ -39,13 +40,15 @@ public class HBaseArchiveStore implements ArchiveStore {
     private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
-    private HBaseConfiguration hBaseConfiguration = new HBaseConfiguration();
+    private HBaseConfiguration hBaseConfiguration;
     private EntityManager hBaseEntityManager;
 
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
-        this.hBaseConfiguration.addResource(das.getProperties().get(HBASE_SITE));
+        this.omr = new HBaseObjectMetadataRepository();
+        //this.hBaseConfiguration.create(das.getProperties().get(HBASE_SITE));
+        //this.hBaseConfiguration.addResource();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hbase");
         this.hBaseEntityManager = emf.createEntityManager();
 

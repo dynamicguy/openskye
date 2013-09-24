@@ -7,7 +7,7 @@
         <version>0.0.4-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.openskye</groupId>
+    <groupId>org.skye</groupId>
     <artifactId>skye-hadoop</artifactId>
 
     <name>Skye :: Hadoop Integration</name>
@@ -103,6 +103,7 @@
             <groupId>com.impetus.client</groupId>
             <artifactId>kundera-hbase</artifactId>
             <version>RELEASE</version>
+            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
@@ -115,6 +116,25 @@
                 <exclusion>
                     <groupId>org.apache.hbase</groupId>
                     <artifactId>hbase</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -27,7 +27,6 @@
         <class>org.skye.domain.TaskStatistics</class>
         <class>org.skye.domain.ChannelFilterDefinition</class>
         <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
-        <class>org.skye.metadata.impl.jpa.JPAObjectSet</class>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
@@ -35,43 +34,17 @@
     </persistence-unit>
     <persistence-unit name="hbase">
         <provider>com.impetus.kundera.KunderaPersistence</provider>
-        <class>org.skye.domain.User</class>
-        <class>org.skye.domain.UserRole</class>
-        <class>org.skye.domain.Role</class>
-        <class>org.skye.domain.ArchiveStoreInstance</class>
-        <class>org.skye.domain.AttributeInstance</class>
-        <class>org.skye.domain.AuditEvent</class>
-        <class>org.skye.domain.AttributeDefinition</class>
-        <class>org.skye.domain.AuditLog</class>
-        <class>org.skye.domain.AuditLogProperty</class>
-        <class>org.skye.domain.Channel</class>
-        <class>org.skye.domain.ChannelFilterDefinition</class>
-        <class>org.skye.domain.ChannelArchiveStore</class>
-        <class>org.skye.domain.Domain</class>
-        <class>org.skye.domain.ArchiveStoreDefinition</class>
-        <class>org.skye.domain.InformationStoreDefinition</class>
-        <class>org.skye.domain.MetadataTemplate</class>
-        <class>org.skye.domain.Permission</class>
-        <class>org.skye.domain.Project</class>
-        <class>org.skye.domain.RetentionPolicy</class>
-        <class>org.skye.domain.RolePermission</class>
-        <class>org.skye.domain.Task</class>
-        <class>org.skye.domain.TaskLog</class>
-        <class>org.skye.domain.TaskStatistics</class>
-        <class>org.skye.domain.ChannelFilterDefinition</class>
-        <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
-        <class>org.skye.metadata.impl.jpa.JPAObjectSet</class>
         <properties>
             <property name="kundera.nodes" value="192.168.168.58"/>
-            <property name="kundera.port" value="7180"/>
+            <property name="kundera.port" value="7182"/>
             <property name="kundera.dialect" value="hbase"/>
             <property name="kundera.client.lookup.class" value="com.impetus.client.hbase.HBaseClientFactory" />
             <property name="kundera.cache.provider.class" value="com.impetus.kundera.cache.ehcache.EhCacheProvider"/>
             <property name="kundera.cache.config.resource" value="/ehcache-test.xml"/>
             <property name="kundera.ddl.auto.prepare" value="create" />
-            <property name="kundera.client.property" value="/etc/conf/hbase-site.xml" />
-            <property name="hbase.zookeeper.quorum" value="192.168.168.58" />
-            <property name="hbase.zookeeper.property.clientPort" value="" />
+            <property name="kundera.client.property" value="/home/atcmostafavi/hbase-conf/hbase-site.xml" />
+            <property name="hbase.zookeeper.quorum" value="192.168.168.135,192.168.168.119" />
+            <property name="hbase.zookeeper.property.clientPort" value="2181" />
         </properties>
     </persistence-unit>
 </persistence>
