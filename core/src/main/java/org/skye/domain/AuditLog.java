@@ -16,7 +16,8 @@ import java.util.List;
 @Table(name = "AUDIT_LOG")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuditLog {
+public class AuditLog implements Identifiable
+{
 
     @Id
     @GeneratedValue(generator = "uuid")

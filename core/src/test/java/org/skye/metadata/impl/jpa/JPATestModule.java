@@ -2,6 +2,7 @@ package org.skye.metadata.impl.jpa;
 
 import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.ObjectMetadataSearch;
 import org.skye.metadata.impl.InMemoryObjectMetadataSearch;
@@ -19,6 +20,7 @@ public class JPATestModule extends AbstractModule
         bind(ObjectMetadataRepository.class).to(JPAObjectMetadataRepository.class).asEagerSingleton();
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class).asEagerSingleton();
 
+        install(new JpaPersistModule("Default"));
         install(new GuiceBerryModule());
     }
 }

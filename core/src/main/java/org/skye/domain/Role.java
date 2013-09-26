@@ -16,8 +16,8 @@ import java.util.List;
 @Table(name = "ROLE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Role {
-
+public class Role implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

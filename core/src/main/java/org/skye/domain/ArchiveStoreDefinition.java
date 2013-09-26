@@ -15,7 +15,8 @@ import java.util.Map;
 @Table(name = "DOMAIN_ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ArchiveStoreDefinition {
+public class ArchiveStoreDefinition implements Identifiable
+{
 
     @Id
     @GeneratedValue(generator = "uuid")

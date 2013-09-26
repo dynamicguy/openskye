@@ -13,7 +13,8 @@ import javax.persistence.*;
 @Table(name = "ATTRIBUTE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AttributeDefinition {
+public class AttributeDefinition implements Identifiable
+{
 
     @Id
     @GeneratedValue(generator = "uuid")

@@ -13,8 +13,8 @@ import java.util.List;
 @Table(name = "METADATA_TEMPLATE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MetadataTemplate {
-
+public class MetadataTemplate implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
