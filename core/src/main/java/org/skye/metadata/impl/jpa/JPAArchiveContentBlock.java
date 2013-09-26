@@ -1,17 +1,22 @@
 package org.skye.metadata.impl.jpa;
 
 import javax.inject.Inject;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Transient;
 
 import com.google.common.base.Optional;
 import lombok.Data;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.SkyeException;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.core.ArchiveStore;
 import org.skye.stores.StoreRegistry;
+
+import java.util.UUID;
 
 /**
  * A JPA-Embeddable representation of an {@link ArchiveContentBlock}, complete with
@@ -27,7 +32,8 @@ import org.skye.stores.StoreRegistry;
 @Data
 public class JPAArchiveContentBlock
 {
-    private String id = "";
+
+    private String id = UUID.randomUUID().toString();
     private String archiveStoreDefinitionId = "";
 
     public JPAArchiveContentBlock()
@@ -37,7 +43,9 @@ public class JPAArchiveContentBlock
 
     public JPAArchiveContentBlock(ArchiveContentBlock acb)
     {
-        this.id = acb.getId();
+        if(acb.getId() != null)
+            this.id = acb.getId();
+
         this.archiveStoreDefinitionId = acb.getArchiveStoreDefinitionId();
     }
 

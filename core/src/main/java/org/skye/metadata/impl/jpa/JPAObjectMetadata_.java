@@ -16,8 +16,13 @@ public class JPAObjectMetadata_
     public static volatile MapAttribute<JPAObjectMetadata, String, String> metadata;
     public static volatile SingularAttribute<JPAObjectMetadata, Boolean> container;
     public static volatile SingularAttribute<JPAObjectMetadata, DateTime> created;
-    public static volatile SingularAttribute<JPAObjectMetadata, DateTime> injested;
+    public static volatile SingularAttribute<JPAObjectMetadata, DateTime> ingested;
+    public static volatile SingularAttribute<JPAObjectMetadata, DateTime> lastModified;
     public static volatile SingularAttribute<JPAObjectMetadata, Project> project;
+    public static volatile SingularAttribute<JPAObjectMetadata, Long> originalSize;
+    public static volatile SingularAttribute<JPAObjectMetadata, Long> archiveSize;
+    public static volatile SingularAttribute<JPAObjectMetadata, String> mimeType;
+    public static volatile SingularAttribute<JPAObjectMetadata, String> checksum;
     public static volatile SingularAttribute<JPAObjectMetadata, String> informationStoreId;
     public static volatile ListAttribute<JPAObjectMetadata, JPAArchiveContentBlock> archiveContentBlocks;
 }

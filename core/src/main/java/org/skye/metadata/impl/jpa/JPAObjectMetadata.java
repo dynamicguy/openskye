@@ -37,8 +37,13 @@ public class JPAObjectMetadata {
     private boolean container = false;
     private DateTime created = new DateTime();
     private DateTime ingested = new DateTime();
+    private DateTime lastModified = new DateTime();
     @ManyToOne
     private Project project = null;
+    private long originalSize = 0;
+    private long archiveSize = 0;
+    private String mimeType = "";
+    private String checksum = "";
     private String informationStoreId = "";
     @ElementCollection(fetch = FetchType.EAGER)
     private List<JPAArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
@@ -64,7 +69,12 @@ public class JPAObjectMetadata {
         this.container = objectMetadata.isContainer();
         this.created = objectMetadata.getCreated();
         this.ingested = objectMetadata.getIngested();
+        this.lastModified = objectMetadata.getLastModified();
         this.project = objectMetadata.getProject();
+        this.originalSize = objectMetadata.getOriginalSize();
+        this.archiveSize = objectMetadata.getArchiveSize();
+        this.mimeType = objectMetadata.getMimeType();
+        this.checksum = objectMetadata.getChecksum();
         this.informationStoreId = objectMetadata.getInformationStoreId();
 
         this.tags = new HashSet<>();
@@ -75,7 +85,7 @@ public class JPAObjectMetadata {
         }
 
         for (ArchiveContentBlock acb : objectMetadata.getArchiveContentBlocks()) {
-            JPAArchiveContentBlock jpaACB = new JPAArchiveContentBlock();
+            JPAArchiveContentBlock jpaACB = new JPAArchiveContentBlock(acb);
             archiveContentBlocks.add(jpaACB);
         }
     }
@@ -88,7 +98,8 @@ public class JPAObjectMetadata {
      * @throws SkyeException See the {@link JPAArchiveContentBlock} method,
      *                       ToArchiveContentBlock() for more information on possible exceptions.
      */
-    public ObjectMetadata toObjectMetadata() throws SkyeException {
+    public ObjectMetadata toObjectMetadata()
+    {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         Set<Tag> tags = new HashSet<>();
         List<ArchiveContentBlock> blocks = new ArrayList<>();
@@ -100,7 +111,12 @@ public class JPAObjectMetadata {
         objectMetadata.setContainer(this.container);
         objectMetadata.setCreated(this.created);
         objectMetadata.setIngested(this.ingested);
+        objectMetadata.setLastModified(this.lastModified);
         objectMetadata.setProject(this.project);
+        objectMetadata.setOriginalSize(this.originalSize);
+        objectMetadata.setArchiveSize(this.archiveSize);
+        objectMetadata.setMimeType(this.mimeType);
+        objectMetadata.setChecksum(this.checksum);
         objectMetadata.setInformationStoreId(this.informationStoreId);
 
         for (JPATag jpaTag : this.tags) {
