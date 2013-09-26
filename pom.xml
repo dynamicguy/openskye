@@ -4,7 +4,7 @@
 
     <groupId>org.openskye</groupId>
     <artifactId>platform</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Skye</name>
@@ -83,22 +83,22 @@
             <dependency>
                 <groupId>org.openskye</groupId>
                 <artifactId>skye-core</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.openskye</groupId>
                 <artifactId>skye-stores</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.openskye</groupId>
                 <artifactId>skye-service</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.openskye</groupId>
                 <artifactId>skye-hadoop</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
