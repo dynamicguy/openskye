@@ -127,7 +127,8 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public Iterable<ObjectStreamFilter> getFilters() {
-        return ImmutableList.of((ObjectStreamFilter) new ZipCompressionFilter());
+        return new ArrayList<>();
+        //return ImmutableList.of((ObjectStreamFilter) new ZipCompressionFilter());
     }
 
     @Override

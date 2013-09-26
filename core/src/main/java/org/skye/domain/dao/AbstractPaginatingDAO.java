@@ -5,12 +5,12 @@ import com.google.inject.Provider;
 import com.yammer.dropwizard.util.Generics;
 import org.eclipse.persistence.exceptions.ValidationException;
 import org.hibernate.Session;
-import org.skye.core.EntityFoundException;
-import org.skye.core.EntityNotFoundException;
 import org.skye.domain.Identifiable;
 
 import javax.inject.Inject;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -23,8 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * more intelligent that the basic one since we will
  * need to include security and also pagination
  */
-public abstract class AbstractPaginatingDAO<T extends Identifiable>
-{
+public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @Inject
     private Provider<EntityManager> emf;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
@@ -75,19 +74,16 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable>
      * throw an exception.
      *
      * @param newInstance The instance to be created.
-     *
      * @return The created instance.
-     *
-     * @throws EntityFoundException Indicates that the Entity to be created
-     * would be a duplicate record.
+     * @throws EntityExistsException Indicates that the Entity to be created
+     *                              would be a duplicate record.
      */
-    public T create(T newInstance)
-    {
-        if(newInstance == null)
+    public T create(T newInstance) {
+        if (newInstance == null)
             throw new ValidationException();
 
-        if(this.get(newInstance.getId()) != null)
-            throw new EntityFoundException("The Object you wish to create already exists.", newInstance.getId(), this.entityClass);
+        if (this.get(newInstance.getId()) != null)
+            throw new EntityExistsException();
 
         this.currentEntityManager().persist(newInstance);
 
@@ -99,24 +95,20 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable>
      * should check to ensure that the domain object already exists, and if
      * it does not, an exception should be thrown.
      *
-     * @param id The Id of the Entity to be updated.
-     *
+     * @param id              The Id of the Entity to be updated.
      * @param updatedInstance The updated instance of the Entity.
-     *
      * @return The updated instance of the Entity.
-     *
      * @throws EntityNotFoundException Indicates that the Entity to be updated
-     * was not found, and should be created first.
+     *                                 was not found, and should be created first.
      */
-    public T update(String id, T updatedInstance)
-    {
-        if(updatedInstance == null)
+    public T update(String id, T updatedInstance) {
+        if (updatedInstance == null)
             throw new ValidationException();
 
-        if(this.get(id) == null)
-            throw new EntityNotFoundException("The Object you wish to update does not exists.", id, this.entityClass);
+        if (this.get(id) == null)
+            throw new EntityNotFoundException();
 
-        if(id != updatedInstance.getId())
+        if (id != updatedInstance.getId())
             throw new ValidationException();
 
         this.currentEntityManager().persist(updatedInstance);
