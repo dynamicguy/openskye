@@ -46,12 +46,11 @@ public class LocalFSArchiveStoreTest {
 
     @Before
     public void setUp() {
-        assertThat("Get metadata for the store", registry.build(getDis()).get().getMetadata() != null);
-        JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getDis()).get();
+        insertTestData(((JDBCStructuredInformationStore) registry.build(getDis("test1")).get()).getDataContext());
+        insertTestData(((JDBCStructuredInformationStore) registry.build(getDis("test2")).get()).getDataContext());
+    }
 
-        final UpdateableDataContext dataContext = is.getDataContext();
-
-
+    private void insertTestData(UpdateableDataContext dataContext) {
         final Schema schema = dataContext.getDefaultSchema();
 
         if (schema.getTableCount() == 0) {
@@ -78,11 +77,11 @@ public class LocalFSArchiveStoreTest {
         }
     }
 
-    public InformationStoreDefinition getDis() {
+    public InformationStoreDefinition getDis(String dbName) {
         InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
-        dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:skye");
+        dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:" + dbName);
         dis.getProperties().put(JDBCStructuredInformationStore.USER, "sa");
         dis.getProperties().put(JDBCStructuredInformationStore.PASSWORD, "");
         return dis;
@@ -94,7 +93,7 @@ public class LocalFSArchiveStoreTest {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj");
-        InformationStoreDefinition dis = getDis();
+        InformationStoreDefinition dis = getDis("test1");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
@@ -125,7 +124,7 @@ public class LocalFSArchiveStoreTest {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj");
-        InformationStoreDefinition dis = getDis();
+        InformationStoreDefinition dis = getDis("test2");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
         das.setArchiveStoreInstance(asi);
