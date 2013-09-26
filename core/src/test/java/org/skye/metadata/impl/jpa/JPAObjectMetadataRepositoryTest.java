@@ -11,7 +11,6 @@ import org.skye.core.ObjectSet;
 import org.skye.domain.*;
 import org.skye.domain.dao.*;
 import org.skye.metadata.ObjectMetadataRepository;
-import org.skye.stores.StoreRegistry;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.stores.inmemory.InMemoryInformationStore;
 import org.skye.task.TaskManager;
@@ -21,7 +20,6 @@ import javax.persistence.EntityManager;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.is;
 
 /**
