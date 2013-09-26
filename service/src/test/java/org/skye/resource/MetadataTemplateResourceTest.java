@@ -12,9 +12,9 @@ import org.skye.domain.dao.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.ResourceTest {
@@ -28,7 +28,9 @@ public class MetadataTemplateResourceTest extends com.yammer.dropwizard.testing.
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(metadataTemplate));
-        when(dao.persist(metadataTemplate)).thenReturn(metadataTemplate);
+        when(dao.create(metadataTemplate)).thenReturn(metadataTemplate);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", metadataTemplate)).thenReturn(metadataTemplate);
+
         MetadataTemplateResource metadataTemplateResource = new MetadataTemplateResource();
         metadataTemplateResource.metadataTemplateDAO = dao;
         addResource(metadataTemplateResource);

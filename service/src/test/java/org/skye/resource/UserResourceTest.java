@@ -29,7 +29,8 @@ public class UserResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(user));
-        when(dao.persist(user)).thenReturn(user);
+        when(dao.create(user)).thenReturn(user);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", user)).thenReturn(user);
         UserResource userResource = new UserResource();
         userResource.userDAO = dao;
         addResource(userResource);

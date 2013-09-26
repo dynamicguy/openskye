@@ -13,9 +13,9 @@ import org.skye.domain.dao.RetentionPolicyDAO;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RetentionPolicyResourceTest extends ResourceTest {
@@ -29,7 +29,8 @@ public class RetentionPolicyResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(retentionPolicy));
-        when(dao.persist(retentionPolicy)).thenReturn(retentionPolicy);
+        when(dao.create(retentionPolicy)).thenReturn(retentionPolicy);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", retentionPolicy)).thenReturn(retentionPolicy);
         RetentionPolicyResource retentionPolicyResource = new RetentionPolicyResource();
         retentionPolicyResource.retentionPolicyDAO = dao;
         addResource(retentionPolicyResource);

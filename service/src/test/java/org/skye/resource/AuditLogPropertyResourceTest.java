@@ -28,7 +28,9 @@ public class AuditLogPropertyResourceTest extends ResourceTest {
     protected void setUpResources() {
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(auditLogProperty));
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(dao.persist(auditLogProperty)).thenReturn(auditLogProperty);
+        when(dao.create(auditLogProperty)).thenReturn(auditLogProperty);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", auditLogProperty)).thenReturn(auditLogProperty);
+
         AuditLogPropertyResource auditLogPropertyResource = new AuditLogPropertyResource();
         auditLogPropertyResource.auditLogPropertyDAO = dao;
         addResource(auditLogPropertyResource);

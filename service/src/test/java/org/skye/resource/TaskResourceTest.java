@@ -14,9 +14,9 @@ import org.skye.task.TaskManager;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TaskResourceTest extends ResourceTest {
@@ -31,7 +31,9 @@ public class TaskResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(task));
-        when(dao.persist(task)).thenReturn(task);
+        when(dao.create(task)).thenReturn(task);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", task)).thenReturn(task);
+
         TaskResource taskResource = new TaskResource();
         taskResource.taskDAO = dao;
         taskResource.taskManager = taskManager;

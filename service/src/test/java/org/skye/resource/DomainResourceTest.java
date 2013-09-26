@@ -11,11 +11,11 @@ import org.skye.domain.Domain;
 import org.skye.domain.dao.DomainDAO;
 import org.skye.domain.dao.PaginatedResult;
 
-import static org.junit.Assert.assertEquals;
 import javax.ws.rs.core.MediaType;
 
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class DomainResourceTest extends ResourceTest {
@@ -29,7 +29,9 @@ public class DomainResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(domain));
-        when(dao.persist(domain)).thenReturn(domain);
+        when(dao.create(domain)).thenReturn(domain);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", domain)).thenReturn(domain);
+
         DomainResource domainResource = new DomainResource();
         domainResource.domainDAO = dao;
         addResource(domainResource);

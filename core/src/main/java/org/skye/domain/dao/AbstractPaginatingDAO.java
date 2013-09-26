@@ -46,19 +46,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     }
 
     /**
-     * Persists the instance
-     *
-     * @param newInstance
-     * @return
-     */
-    public T persist(T newInstance) {
-        if (newInstance != null)
-            currentEntityManager().persist(newInstance);
-        else throw new ValidationException();
-        return newInstance;
-    }
-
-    /**
      * Returns the current {@link EntityManager}.
      *
      * @return the current session

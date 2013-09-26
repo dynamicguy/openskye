@@ -13,9 +13,9 @@ import org.skye.domain.dao.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class AttributeDefinitionResourceTest extends ResourceTest {
@@ -29,7 +29,8 @@ public class AttributeDefinitionResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(attributeDefinition));
-        when(dao.persist(attributeDefinition)).thenReturn(attributeDefinition);
+        when(dao.create(attributeDefinition)).thenReturn(attributeDefinition);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", attributeDefinition)).thenReturn(attributeDefinition);
         AttributeDefinitionResource attributeDefinitionResource = new AttributeDefinitionResource();
         attributeDefinitionResource.attributeDefinitionDAO = dao;
         addResource(attributeDefinitionResource);

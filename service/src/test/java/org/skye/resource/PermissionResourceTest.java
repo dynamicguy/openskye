@@ -13,9 +13,9 @@ import org.skye.domain.dao.PermissionDAO;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class PermissionResourceTest extends ResourceTest {
@@ -29,7 +29,9 @@ public class PermissionResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(permission));
-        when(dao.persist(permission)).thenReturn(permission);
+        when(dao.create(permission)).thenReturn(permission);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", permission)).thenReturn(permission);
+
         PermissionResource permissionResource = new PermissionResource();
         permissionResource.permissionDAO = dao;
         addResource(permissionResource);

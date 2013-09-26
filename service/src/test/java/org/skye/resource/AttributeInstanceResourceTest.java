@@ -29,7 +29,9 @@ public class AttributeInstanceResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(attributeInstance));
-        when(dao.persist(attributeInstance)).thenReturn(attributeInstance);
+        when(dao.create(attributeInstance)).thenReturn(attributeInstance);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9",attributeInstance)).thenReturn(attributeInstance);
+
         AttributeInstanceResource attributeInstanceResource = new AttributeInstanceResource();
         attributeInstanceResource.attributeInstanceDAO = dao;
         addResource(attributeInstanceResource);

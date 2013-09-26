@@ -47,11 +47,11 @@ public class CreateDefaultAccount {
             log.info("Creating default admin account");
             Domain domain = new Domain();
             domain.setName("Skye");
-            domainDAO.persist(domain);
+            domainDAO.create(domain);
 
             Permission p = new Permission();
             p.setPermission("*");
-            permissionDAO.persist(p);
+            permissionDAO.create(p);
 
             Role role = new Role();
             role.setName("administrator");
@@ -60,11 +60,7 @@ public class CreateDefaultAccount {
             rp.setRole(role);
             rp.setPermission(p);
             role.setRolePermissions(ImmutableList.of(rp));
-
-
-            roleDAO.persist(role);
-
-
+            roleDAO.create(role);
             User adminUser = new User();
             adminUser.setName("Skye Admin");
             adminUser.setDomain(domain);
@@ -75,7 +71,7 @@ public class CreateDefaultAccount {
             uRole.setRole(role);
             uRole.setUser(adminUser);;
             adminUser.setUserRoles(ImmutableList.of(uRole));
-            userDAO.persist(adminUser);
+            userDAO.create(adminUser);
             entityManager.getTransaction().commit();
         }
     }

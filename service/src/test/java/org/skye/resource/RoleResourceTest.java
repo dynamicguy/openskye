@@ -13,9 +13,9 @@ import org.skye.domain.dao.RoleDAO;
 
 import javax.ws.rs.core.MediaType;
 
-import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RoleResourceTest extends ResourceTest {
@@ -29,7 +29,8 @@ public class RoleResourceTest extends ResourceTest {
         when(dao.list()).thenReturn(expectedResult);
         when(dao.delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(dao.get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(role));
-        when(dao.persist(role)).thenReturn(role);
+        when(dao.create(role)).thenReturn(role);
+        when(dao.update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", role)).thenReturn(role);
         RoleResource roleResource = new RoleResource();
         roleResource.roleDAO = dao;
         addResource(roleResource);
