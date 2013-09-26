@@ -18,8 +18,8 @@ import java.util.UUID;
 @Table(name = "USER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
-
+public class User implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

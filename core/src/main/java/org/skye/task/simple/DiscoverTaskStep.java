@@ -72,11 +72,9 @@ public class DiscoverTaskStep extends AbstractTaskStep {
     private boolean isIncludedByFilter(SimpleObject simpleObject) {
         for (ChannelFilter filter : filters) {
             if (filter.isFiltered(simpleObject.getObjectMetadata())) {
-                if (filter.isInclude())
-                    return true;
-                if (!filter.isInclude()) {
-                    return false;
-                }
+                return filter.isInclude();
+            } else {
+                return false;
             }
         }
         return true;

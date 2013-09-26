@@ -16,8 +16,8 @@ import java.util.List;
 @Table(name = "DOMAIN")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Domain {
-
+public class Domain implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

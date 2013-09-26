@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Table(name = "TASK_LOG")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaskLog {
-
+public class TaskLog implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

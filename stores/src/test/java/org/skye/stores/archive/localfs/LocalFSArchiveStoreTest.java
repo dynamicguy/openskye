@@ -9,6 +9,7 @@ import org.eobjects.metamodel.create.ColumnCreationBuilder;
 import org.eobjects.metamodel.schema.ColumnType;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.skye.core.ArchiveStore;
@@ -43,6 +44,40 @@ public class LocalFSArchiveStoreTest {
     @Inject
     public ObjectMetadataRepository omr;
 
+    @Before
+    public void setUp() {
+        assertThat("Get metadata for the store", registry.build(getDis()).get().getMetadata() != null);
+        JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getDis()).get();
+
+        final UpdateableDataContext dataContext = is.getDataContext();
+
+
+        final Schema schema = dataContext.getDefaultSchema();
+
+        if (schema.getTableCount() == 0) {
+            dataContext.executeUpdate(new UpdateScript() {
+
+                public void run(UpdateCallback callback) {
+
+                    // CREATING A TABLE
+
+                    ColumnCreationBuilder tableCreator = callback.createTable(schema, "my_table")
+                            .withColumn("name").ofType(ColumnType.VARCHAR)
+                            .withColumn("gender").ofType(ColumnType.CHAR)
+                            .withColumn("age").ofType(ColumnType.INTEGER);
+
+
+                    Table table = tableCreator.execute();
+
+                    // INSERTING SOME ROWS
+
+                    callback.insertInto(table).value("name", "John Doe").value("gender", 'M').value("age", 42).execute();
+                    callback.insertInto(table).value("name", "Jane Doe").value("gender", 'F').value("age", 42).execute();
+                }
+            });
+        }
+    }
+
     public InformationStoreDefinition getDis() {
         InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
@@ -55,32 +90,6 @@ public class LocalFSArchiveStoreTest {
 
     @Test
     public void ensureWeCanDiscoverObjects() {
-        assertThat("Get metadata for the store", registry.build(getDis()).get().getMetadata() != null);
-        JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getDis()).get();
-
-        final UpdateableDataContext dataContext = is.getDataContext();
-        final Schema schema = dataContext.getDefaultSchema();
-        dataContext.executeUpdate(new UpdateScript() {
-
-            public void run(UpdateCallback callback) {
-
-                // CREATING A TABLE
-
-                ColumnCreationBuilder tableCreator = callback.createTable(schema, "my_table")
-                        .withColumn("name").ofType(ColumnType.VARCHAR)
-                        .withColumn("gender").ofType(ColumnType.CHAR)
-                        .withColumn("age").ofType(ColumnType.INTEGER);
-
-
-                Table table = tableCreator.execute();
-
-                // INSERTING SOME ROWS
-
-                callback.insertInto(table).value("name", "John Doe").value("gender", 'M').value("age", 42).execute();
-                callback.insertInto(table).value("name", "Jane Doe").value("gender", 'F').value("age", 42).execute();
-            }
-        });
-
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
@@ -111,31 +120,6 @@ public class LocalFSArchiveStoreTest {
 
     @Test
     public void letsArchiveThenQuery() {
-        assertThat("Get metadata for the store", registry.build(getDis()).get().getMetadata() != null);
-        JDBCStructuredInformationStore is = (JDBCStructuredInformationStore) registry.build(getDis()).get();
-
-        final UpdateableDataContext dataContext = is.getDataContext();
-        final Schema schema = dataContext.getDefaultSchema();
-        dataContext.executeUpdate(new UpdateScript() {
-
-            public void run(UpdateCallback callback) {
-
-                // CREATING A TABLE
-
-                ColumnCreationBuilder tableCreator = callback.createTable(schema, "my_table")
-                        .withColumn("name").ofType(ColumnType.VARCHAR)
-                        .withColumn("gender").ofType(ColumnType.CHAR)
-                        .withColumn("age").ofType(ColumnType.INTEGER);
-
-
-                Table table = tableCreator.execute();
-
-                // INSERTING SOME ROWS
-
-                callback.insertInto(table).value("name", "John Doe").value("gender", 'M').value("age", 42).execute();
-                callback.insertInto(table).value("name", "Jane Doe").value("gender", 'F').value("age", 42).execute();
-            }
-        });
 
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
@@ -162,7 +146,7 @@ public class LocalFSArchiveStoreTest {
         taskManager.submit(archive);
 
         assertThat("We have 1 discovered simple objects", discovery.getStatistics().getSimpleObjectsDiscovered() == 1);
-        assertThat("We have 1 ingested simple objects", archive.getStatistics().getSimpleObjectsIngested() == 1);
+        assertThat("We have 2 ingested simple objects", archive.getStatistics().getSimpleObjectsIngested() == 2);
 
         Optional<ArchiveStore> archiveStore = registry.build(das);
 
@@ -173,7 +157,7 @@ public class LocalFSArchiveStoreTest {
         QueryableStore queryableStore = (QueryableStore) archiveStore.get();
         QueryContext context = new QueryContext();
         context.getObjects().add(omr.getObjects(dis).iterator().next());
-        StructuredObject result = queryableStore.executeQuery(context, "select * from MY_TABLE");
+        StructuredObject result = queryableStore.executeQuery(context, "select * from my_table");
 
         Iterator<Row> iter = result.getRows();
         assertThat("we have a row", iter.hasNext());

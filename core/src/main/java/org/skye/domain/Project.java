@@ -16,7 +16,8 @@ import java.util.List;
 @Table(name = "PROJECT")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Project {
+public class Project implements Identifiable
+{
 
     @Id
     @GeneratedValue(generator = "uuid")

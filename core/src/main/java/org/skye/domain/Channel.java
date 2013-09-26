@@ -16,7 +16,8 @@ import java.util.List;
 @Table(name = "CHANNEL")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Channel {
+public class Channel implements Identifiable
+{
 
     @Id
     @GeneratedValue(generator = "uuid")

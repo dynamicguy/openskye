@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChannelArchiveStore {
-
+public class ChannelArchiveStore implements Identifiable
+{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

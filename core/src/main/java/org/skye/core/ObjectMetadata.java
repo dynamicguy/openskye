@@ -33,6 +33,13 @@ public class ObjectMetadata {
     private String informationStoreId;
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
+    /**
+     * A mechanism to find it there is an {@link ArchiveContentBlock} for a given
+     * {@link org.skye.domain.ArchiveStoreDefinition} by id
+     *
+     * @param archiveStoreDefinitionId The id of the {@link org.skye.domain.ArchiveStoreDefinition}
+     * @return return an instance of the {@link ArchiveContentBlock} if one is found for the archive store
+     */
     public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreDefinitionId) {
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
             if (acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinitionId)) {

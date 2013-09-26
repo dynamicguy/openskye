@@ -18,6 +18,6 @@ public class JPAObjectMetadata_
     public static volatile SingularAttribute<JPAObjectMetadata, DateTime> created;
     public static volatile SingularAttribute<JPAObjectMetadata, DateTime> injested;
     public static volatile SingularAttribute<JPAObjectMetadata, Project> project;
-    public static volatile SingularAttribute<JPAObjectMetadata, String> informationStoreDefinitionId;
+    public static volatile SingularAttribute<JPAObjectMetadata, String> informationStoreId;
     public static volatile ListAttribute<JPAObjectMetadata, JPAArchiveContentBlock> archiveContentBlocks;
 }

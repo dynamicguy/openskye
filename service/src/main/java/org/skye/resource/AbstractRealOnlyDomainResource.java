@@ -2,6 +2,7 @@ package org.skye.resource;
 
 import com.google.common.base.Optional;
 import org.apache.shiro.SecurityUtils;
+import org.skye.domain.Identifiable;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
 import org.skye.util.NotFoundException;
@@ -16,8 +17,8 @@ import javax.ws.rs.core.MediaType;
  * domain objects persisted in hibernate
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractRealOnlyDomainResource<T> {
-
+public abstract class AbstractRealOnlyDomainResource<T extends Identifiable>
+{
     protected abstract AbstractPaginatingDAO<T> getDAO();
 
     protected abstract String getPermissionDomain();

@@ -8,7 +8,6 @@ import org.skye.core.ObjectMetadata;
 import org.skye.core.SkyeException;
 import org.skye.core.Tag;
 import org.skye.domain.Project;
-import org.skye.stores.StoreRegistry;
 
 import javax.persistence.*;
 import java.util.*;
@@ -18,11 +17,6 @@ import java.util.*;
  * persistence purposes.  It also contains methods which allow the Entity to
  * be copied from a non persisted {@link ObjectMetadata}, as well as a method
  * which copies this JPAObjectMetadata to an {@link ObjectMetadata}.
- * <p/>
- * Note that for this operation to be successful, one must either set the
- * static storeRegistry field on the {@link JPAArchiveContentBlock} manually
- * or the GuiceBerry module should use requestStaticInjection on
- * {@link JPAArchiveContentBlock} in order to perform these translations.
  */
 @Entity
 @Table(name = "OBJECT_METADATA")
@@ -45,7 +39,7 @@ public class JPAObjectMetadata {
     private DateTime ingested = new DateTime();
     @ManyToOne
     private Project project = null;
-    private String informationStoreDefinitionId = "";
+    private String informationStoreId = "";
     @ElementCollection(fetch = FetchType.EAGER)
     private List<JPAArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
@@ -71,7 +65,7 @@ public class JPAObjectMetadata {
         this.created = objectMetadata.getCreated();
         this.ingested = objectMetadata.getIngested();
         this.project = objectMetadata.getProject();
-        this.informationStoreDefinitionId = objectMetadata.getInformationStoreId();
+        this.informationStoreId = objectMetadata.getInformationStoreId();
 
         this.tags = new HashSet<>();
 
@@ -88,14 +82,9 @@ public class JPAObjectMetadata {
 
     /**
      * Creates an {@link ObjectMetadata} copy of the JPA Entity version.
-     * <p/>
-     * Note that the {@link JPAArchiveContentBlock} must have a valid
-     * {@link StoreRegistry} set statically in order for this translation
-     * to work.  Either set the static field, storeRegistry, directly, or use
-     * GuiceBerry's requestStaticInjection method to ensure that the
-     * storeRegistry is initialized.
      *
      * @return An {@link ObjectMetadata} copy of this Entity.
+     *
      * @throws SkyeException See the {@link JPAArchiveContentBlock} method,
      *                       ToArchiveContentBlock() for more information on possible exceptions.
      */
@@ -112,7 +101,7 @@ public class JPAObjectMetadata {
         objectMetadata.setCreated(this.created);
         objectMetadata.setIngested(this.ingested);
         objectMetadata.setProject(this.project);
-        objectMetadata.setInformationStoreId(this.informationStoreDefinitionId);
+        objectMetadata.setInformationStoreId(this.informationStoreId);
 
         for (JPATag jpaTag : this.tags) {
             tags.add(jpaTag.ToTag());

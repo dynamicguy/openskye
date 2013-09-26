@@ -27,6 +27,7 @@
         <class>org.skye.domain.TaskStatistics</class>
         <class>org.skye.domain.ChannelFilterDefinition</class>
         <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
+        <class>org.skye.metadata.impl.jpa.JPAObjectSet</class>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
@@ -59,6 +60,7 @@
         <class>org.skye.domain.TaskStatistics</class>
         <class>org.skye.domain.ChannelFilterDefinition</class>
         <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
+        <class>org.skye.metadata.impl.jpa.JPAObjectSet</class>
         <properties>
             <property name="kundera.nodes" value="192.168.168.58"/>
             <property name="kundera.port" value="7180"/>

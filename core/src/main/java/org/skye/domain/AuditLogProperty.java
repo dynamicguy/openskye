@@ -13,7 +13,8 @@ import javax.persistence.*;
 @Table(name = "AUDIT_LOG_PROPERTY")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuditLogProperty {
+public class AuditLogProperty implements Identifiable
+{
 
     @Id
     @GeneratedValue(generator = "uuid")
