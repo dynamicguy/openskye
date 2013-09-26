@@ -25,7 +25,7 @@ public class QueryContext {
             if (optionObject.isPresent() && optionObject.get() instanceof StructuredObject)
                 structuredObjects.add((StructuredObject) optionObject.get());
             else {
-                throw new SkyeException("Unable to resolve objects since they are not structured");
+                throw new SkyeException("Unable to resolve objects since they are not structured, check "+optionObject);
             }
         }
         return structuredObjects;
