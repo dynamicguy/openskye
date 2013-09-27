@@ -1,7 +1,6 @@
 package org.skye.stores.archive.localfs;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -13,7 +12,6 @@ import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.ObjectMetadataSearch;
-import org.skye.stores.archive.filters.ZipCompressionFilter;
 import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
 import javax.inject.Inject;
@@ -115,8 +113,12 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
                     UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
                     SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
                     return Optional.of(simpleObject);
-                } else return Optional.absent();
+                } else {
+                    log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                    return Optional.absent();
+                }
             } else {
+                log.debug("Simple object type not supported! " + metadata);
                 return Optional.absent();
             }
         } catch (Exception e) {
