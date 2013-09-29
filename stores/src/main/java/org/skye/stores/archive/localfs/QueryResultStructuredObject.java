@@ -29,7 +29,7 @@ public class QueryResultStructuredObject extends StructuredObject {
             colMeta.setName(item.getColumn().getName());
             colMeta.setNativeType(item.getColumn().getNativeType());
             colMeta.setRemarks(item.getColumn().getRemarks());
-            colMeta.setSize(item.getColumn().getColumnSize());
+            //colMeta.setSize(item.getColumn().getColumnSize());
             cols.add(colMeta);
         }
         return cols;
