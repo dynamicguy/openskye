@@ -69,9 +69,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (newInstance == null)
             throw new ValidationException();
 
-        if (this.get(newInstance.getId()) != null)
-            throw new EntityExistsException();
-
         this.currentEntityManager().persist(newInstance);
 
         return newInstance;
