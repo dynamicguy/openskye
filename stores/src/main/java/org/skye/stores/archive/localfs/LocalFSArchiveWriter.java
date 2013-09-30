@@ -42,7 +42,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     public SimpleObject put(SimpleObject simpleObject) {
         ArchiveContentBlock acb = new ArchiveContentBlock();
         ObjectMetadata om = simpleObject.getObjectMetadata();
-        acb.setId(UUID.randomUUID().toString());
         acb.setArchiveStoreDefinitionId(this.localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId());
 
         if (simpleObject instanceof JDBCStructuredObject) {
