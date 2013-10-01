@@ -14,16 +14,15 @@ import org.skye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
 
-
 /**
- * SkyeRealm: a realm specific to Skye
+ * SkyeBasicAuthRealm: a realm specific to Skye with BASIC_AUTH security model
  */
-public class SkyeRealm extends AuthorizingRealm {
+public class SkyeSslRealm extends AuthorizingRealm {
 
     @Inject
     private UserDAO userDao;
 
-    public SkyeRealm() {
+    public SkyeSslRealm() {
         super();
     }
 
@@ -46,15 +45,8 @@ public class SkyeRealm extends AuthorizingRealm {
         if (authenticationToken instanceof UsernamePasswordToken) {
             UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
             Optional<User> user = userDao.findByEmail(token.getUsername());
-            if (user.isPresent()) { //user is found
-                String pwd = new String(token.getPassword());
-                Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
-                if (passwordsMatch) { //user has correct password
-                    SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
-                    return simpleAuthInfo;
-                } else {
-                    throw new AuthenticationException();
-                }
+            if (user.isPresent()) { //user is found -- password is not checked in SSL security model
+                return new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
             } else {
                 throw new AuthenticationException();
             }
@@ -65,7 +57,7 @@ public class SkyeRealm extends AuthorizingRealm {
 
     @Override
     public String getName() {
-        return "SkyeRealm";
+        return "SkyeSslRealm";
     }
 
     @Override
@@ -74,3 +66,4 @@ public class SkyeRealm extends AuthorizingRealm {
     }
 
 }
+

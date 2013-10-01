@@ -8,20 +8,20 @@ import org.skye.util.CreateDefaultAccount;
 import javax.servlet.ServletContext;
 
 /**
- * Skye's Shiro Module
+ * Skye's Shiro Module for the ANON security model, where all API calls are unsecured
  */
-public class SkyeShiroModule extends ShiroWebModule {
+public class SkyeAnonShiroModule extends ShiroWebModule {
 
-    public SkyeShiroModule(ServletContext sc) {
+    public SkyeAnonShiroModule(ServletContext sc) {
         super(sc);
     }
 
     @Override
     protected void configureShiroWeb() {
-        bindRealm().to(SkyeRealm.class).asEagerSingleton();
+        bindRealm().to(SkyeAnonRealm.class).asEagerSingleton();
         bind(CreateDefaultAccount.class).asEagerSingleton();
         bind(CacheManager.class).to(MemoryConstrainedCacheManager.class).asEagerSingleton();
-        addFilterChain("/api/**", NO_SESSION_CREATION, AUTHC_BASIC);
+        addFilterChain("/api/**", NO_SESSION_CREATION, ANON); // TODO: not allowing anonymous access as advertised
         ShiroWebModule.bindGuiceFilter(binder());
     }
 

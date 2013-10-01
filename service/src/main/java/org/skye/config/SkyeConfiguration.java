@@ -16,8 +16,17 @@ public class SkyeConfiguration extends Configuration {
     @JsonProperty
     private DatabaseConfiguration database = new DatabaseConfiguration();
 
+    @Valid
+    @NotNull
+    @JsonProperty
+    private SecurityConfiguration security = new SecurityConfiguration();
+
     public DatabaseConfiguration getDatabaseConfiguration() {
         return database;
+    }
+
+    public SecurityConfiguration getSecurityConfiguration() {
+        return security;
     }
 
 }
