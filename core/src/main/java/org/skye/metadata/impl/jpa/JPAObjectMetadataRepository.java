@@ -228,6 +228,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository
         Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
 
         cq.select(root);
+
         cq.where(cb.equal(root.get(JPAObjectMetadata_.informationStoreId), informationStoreDefinition.getId()));
 
         listJpaObjectMetadata = this.getEntityManager().createQuery(cq).getResultList();

@@ -63,14 +63,11 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      * @param newInstance The instance to be created.
      * @return The created instance.
      * @throws EntityExistsException Indicates that the Entity to be created
-     *                               would be a duplicate record.
+     *                              would be a duplicate record.
      */
     public T create(T newInstance) {
         if (newInstance == null)
             throw new ValidationException();
-
-        if (newInstance.getId() != null && this.get(newInstance.getId()) != null)
-            throw new EntityExistsException();
 
         this.currentEntityManager().persist(newInstance);
 
@@ -89,7 +86,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      *                                 was not found, and should be created first.
      */
     public T update(String id, T updatedInstance) {
-        if (updatedInstance == null || id == null)
+        if (updatedInstance == null)
             throw new ValidationException();
 
         if (this.get(id) == null)

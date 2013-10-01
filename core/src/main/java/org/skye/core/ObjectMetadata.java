@@ -2,6 +2,7 @@ package org.skye.core;
 
 import com.google.common.base.Optional;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.skye.domain.Project;
 
@@ -11,6 +12,7 @@ import java.util.*;
  * A set of the metadata for an instance of an Object within Skye
  */
 @Data
+@Slf4j
 public class ObjectMetadata {
 
     private String id = UUID.randomUUID().toString();
@@ -41,11 +43,14 @@ public class ObjectMetadata {
      * @return return an instance of the {@link ArchiveContentBlock} if one is found for the archive store
      */
     public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreDefinitionId) {
+        log.debug("Resolving ACB for " + archiveStoreDefinitionId);
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
             if (acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinitionId)) {
+                log.debug("Found ACB " + acb);
                 return Optional.of(acb);
             }
         }
+        log.debug("No ACB found for " + archiveStoreDefinitionId);
         return Optional.absent();
     }
 }
