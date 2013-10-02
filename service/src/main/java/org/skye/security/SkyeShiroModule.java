@@ -22,8 +22,7 @@ public class SkyeShiroModule extends ShiroWebModule {
 
     @Override
     protected void configureShiroWeb() {
-        bindRealm().to(SkyeBasicAuthRealm.class).asEagerSingleton();
-        bindRealm().to(ApiKeyRealm.class).asEagerSingleton();
+        bindRealm().to(SkyeRealm.class).asEagerSingleton();
         bind(CreateDefaultAccount.class).asEagerSingleton();
         bind(CacheManager.class).to(MemoryConstrainedCacheManager.class).asEagerSingleton();
         addFilterChain("/api/*/account", NO_SESSION_CREATION, AUTHC_BASIC);

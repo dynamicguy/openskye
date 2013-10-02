@@ -1,14 +1,12 @@
 package org.skye.security;
 
 import com.google.common.base.Optional;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.mindrot.jbcrypt.BCrypt;
 import org.skye.domain.RolePermission;
 import org.skye.domain.User;
 import org.skye.domain.UserRole;
@@ -16,15 +14,16 @@ import org.skye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
 
+
 /**
- * Authenticates a previously issued API Key
+ * SkyeRealm: a realm specific to Skye with basic auth and/or API key security
  */
-public class ApiKeyRealm extends AuthorizingRealm {
+public class SkyeRealm extends AuthorizingRealm {
 
     @Inject
     private UserDAO userDao;
 
-    public ApiKeyRealm() {
+    public SkyeRealm() {
         super();
     }
 
@@ -44,7 +43,22 @@ public class ApiKeyRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        if (authenticationToken instanceof ApiKeyToken) {
+        if (authenticationToken instanceof UsernamePasswordToken) {
+            UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+            Optional<User> user = userDao.findByEmail(token.getUsername());
+            if (user.isPresent()) { //user is found
+                String pwd = new String(token.getPassword());
+                Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
+                if (passwordsMatch) { //user has correct password
+                    SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
+                    return simpleAuthInfo;
+                } else {
+                    throw new AuthenticationException();
+                }
+            } else {
+                throw new AuthenticationException();
+            }
+        } else if (authenticationToken instanceof ApiKeyToken) {
             ApiKeyToken token = (ApiKeyToken) authenticationToken;
             Optional<User> user = userDao.findByEmail(token.getUsername());
             if (user.isPresent()) { //user is found
@@ -62,14 +76,15 @@ public class ApiKeyRealm extends AuthorizingRealm {
         }
     }
 
-
     @Override
     public String getName() {
-        return "ApiKeyRealm";
+        return "SkyeRealm";
     }
 
     @Override
     public boolean supports(AuthenticationToken authenticationToken) {
-        return authenticationToken instanceof ApiKeyToken;
+        return ( authenticationToken instanceof UsernamePasswordToken
+              || authenticationToken instanceof ApiKeyToken );
     }
+
 }
