@@ -18,23 +18,13 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
     private ServletContext servletContext;
     private String securityModel;
 
-    public SkyeGuiceServletContextListener(JpaPersistModule jpaPersistModule,String securityModel) {
+    public SkyeGuiceServletContextListener(JpaPersistModule jpaPersistModule) {
         this.jpaPersistModule = jpaPersistModule;
-        this.securityModel = securityModel;
     }
 
     @Override
     protected Injector getInjector() {
-        ShiroWebModule shiroWebModule = null;
-        if ( securityModel.equals("ANON") ) {
-            shiroWebModule = new SkyeAnonShiroModule(servletContext);
-        } else if ( securityModel.equals("BASIC_AUTH") ) {
-            shiroWebModule = new SkyeBasicAuthShiroModule(servletContext);
-        } else if ( securityModel.equals("SSL") ) {
-            shiroWebModule = new SkyeSslShiroModule(servletContext);
-        } else {
-            throw new SkyeException("Unsupported security model "+securityModel);
-        }
+        ShiroWebModule shiroWebModule = new SkyeBasicAuthShiroModule(servletContext);
         Injector childInjector = Guice.createInjector(jpaPersistModule, shiroWebModule);
         return childInjector;
     }

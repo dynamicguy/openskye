@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 
 /**
- * SkyeBasicAuthRealm: a realm specific to Skye with BASIC_AUTH security model
+ * SkyeBasicAuthRealm: a realm specific to Skye with basic auth security model
  */
 public class SkyeBasicAuthRealm extends AuthorizingRealm {
 

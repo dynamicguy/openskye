@@ -11,9 +11,6 @@ database:
   # the JDBC URL
   url: "jdbc:h2:mem:skye"
 
-security:
-  model: BASIC_AUTH
-
 logging:
     level: INFO
     console:
