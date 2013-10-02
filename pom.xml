@@ -65,6 +65,7 @@
         <module>cli</module>
         <module>service</module>
         <module>hadoop</module>
+        <module>assembly</module>
     </modules>
 
     <issueManagement>
