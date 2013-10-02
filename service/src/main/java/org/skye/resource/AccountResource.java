@@ -45,7 +45,7 @@ public class AccountResource {
 
     @GET
     @Path("/key")
-    @ApiOperation(value = "Based on your login will return the subjects user information", response = User.class)
+    @ApiOperation(value = "Based on your login will generate a time-limited API key", response = User.class)
     public String getApiKey() {
         Subject subject = SecurityUtils.getSubject();
         if (subject != null) {
@@ -53,6 +53,24 @@ public class AccountResource {
             if (principal instanceof User) {
                 User user = (User) principal;
                 return new ApiKeyToken(user).getKey();
+            } else {
+                throw new NotFoundException();
+            }
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @GET
+    @Path("/key-eternal")
+    @ApiOperation(value = "Based on your login will generate an API key with no time limit", response = User.class)
+    public String getEternalApiKey() {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject != null) {
+            Object principal = subject.getPrincipal();
+            if (principal instanceof User) {
+                User user = (User) principal;
+                return new ApiKeyToken(user,0L).getKey();
             } else {
                 throw new NotFoundException();
             }
