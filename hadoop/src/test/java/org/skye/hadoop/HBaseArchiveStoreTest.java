@@ -8,9 +8,9 @@ public class HBaseArchiveStoreTest {
 
     @Test
     public void testHBaseConfig(){
-       /* HBaseArchiveStore testStore = new HBaseArchiveStore();
+        HBaseArchiveStore testStore = new HBaseArchiveStore();
         ArchiveStoreDefinition definition = new ArchiveStoreDefinition();
-        definition.getProperties().put(HBaseArchiveStore.HBASE_SITE, "/etc/conf/hbase-site.xml");
-        testStore.initialize(definition);                 */
+        definition.getProperties().put(HBaseArchiveStore.HBASE_SITE, "/home/atcmostafavi/hbase-conf/hbase-site.xml");
+        testStore.initialize(definition);
     }
 }
