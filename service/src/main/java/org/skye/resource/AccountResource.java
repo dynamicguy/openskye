@@ -63,25 +63,4 @@ public class AccountResource extends AbstractUpdatableDomainResource<User> {
         }
     }
 
-    @ApiOperation(value = "Deletes your old API key and generates a new one")
-    @DELETE
-    @Transactional
-    @Timed
-    public Response deleteApiKey() {
-        Subject subject = SecurityUtils.getSubject();
-        if (subject != null) {
-            Object principal = subject.getPrincipal();
-            if (principal instanceof User) {
-                User user = (User) principal;
-                user.resetApiKey();
-                super.update(user.getId(), user); //TODO -- doesn't seem to actually update the User table
-                return Response.ok().build();
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
 }
