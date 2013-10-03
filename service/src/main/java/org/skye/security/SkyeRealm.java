@@ -16,14 +16,14 @@ import javax.inject.Inject;
 
 
 /**
- * SkyeBasicAuthRealm: a realm specific to Skye with basic auth security model
+ * SkyeRealm: a realm specific to Skye with basic auth and/or API key security
  */
-public class SkyeBasicAuthRealm extends AuthorizingRealm {
+public class SkyeRealm extends AuthorizingRealm {
 
     @Inject
     private UserDAO userDao;
 
-    public SkyeBasicAuthRealm() {
+    public SkyeRealm() {
         super();
     }
 
@@ -58,6 +58,19 @@ public class SkyeBasicAuthRealm extends AuthorizingRealm {
             } else {
                 throw new AuthenticationException();
             }
+        } else if (authenticationToken instanceof ApiKeyToken) {
+            ApiKeyToken token = (ApiKeyToken) authenticationToken;
+            Optional<User> user = userDao.findByEmail(token.getUsername());
+            if (user.isPresent()) { //user is found
+                if (token.isValid()) { //this is a valid API key
+                    SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getKey(), this.getName());
+                    return simpleAuthInfo;
+                } else {
+                    throw new AuthenticationException();
+                }
+            } else {
+                throw new AuthenticationException();
+            }
         } else {
             throw new AuthenticationException();
         }
@@ -65,12 +78,13 @@ public class SkyeBasicAuthRealm extends AuthorizingRealm {
 
     @Override
     public String getName() {
-        return "SkyeBasicAuthRealm";
+        return "SkyeRealm";
     }
 
     @Override
     public boolean supports(AuthenticationToken authenticationToken) {
-        return authenticationToken instanceof UsernamePasswordToken;
+        return ( authenticationToken instanceof UsernamePasswordToken
+              || authenticationToken instanceof ApiKeyToken );
     }
 
 }

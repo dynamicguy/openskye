@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import org.apache.shiro.guice.web.ShiroWebModule;
-import org.skye.core.SkyeException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -24,7 +23,7 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
 
     @Override
     protected Injector getInjector() {
-        ShiroWebModule shiroWebModule = new SkyeBasicAuthShiroModule(servletContext);
+        ShiroWebModule shiroWebModule = new SkyeShiroModule(servletContext);
         Injector childInjector = Guice.createInjector(jpaPersistModule, shiroWebModule);
         return childInjector;
     }
