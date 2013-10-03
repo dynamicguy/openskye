@@ -1,20 +1,24 @@
 package org.skye.resource;
 
+import com.google.common.base.Optional;
+import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.subject.support.WebDelegatingSubject;
 import org.skye.domain.User;
+import org.skye.domain.dao.AbstractPaginatingDAO;
+import org.skye.domain.dao.UserDAO;
 import org.skye.security.ApiKeyToken;
 import org.skye.util.NotFoundException;
 import org.skye.util.UnauthorizedException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.inject.Inject;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The REST endpoint for {@link org.skye.domain.Domain}
@@ -25,34 +29,32 @@ import javax.ws.rs.core.MediaType;
 /**
  * Manage account information for the currently authorized user
  */
-public class AccountResource {
+public class AccountResource extends AbstractUpdatableDomainResource<User> {
 
-    @GET
-    @ApiOperation(value = "Based on your login will return the subjects user information", response = User.class)
-    public User getAuditLogProperties() {
-        Subject subject = SecurityUtils.getSubject();
-        if (subject != null) {
-            Object principal = subject.getPrincipal();
-            if (principal instanceof User) {
-                return (User) principal;
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
-            throw new UnauthorizedException();
-        }
+    @Inject
+    private UserDAO userDao;
+
+    @Override
+    protected AbstractPaginatingDAO<User> getDAO() {
+        return userDao;
+    }
+
+    @Override
+    protected String getPermissionDomain() {
+        return "user";
     }
 
     @GET
-    @Path("/key")
-    @ApiOperation(value = "Based on your login will generate a time-limited API key", response = User.class)
+    @ApiOperation(value = "Based on your login will return your API key", response = String.class)
+    @Transactional
     public String getApiKey() {
         Subject subject = SecurityUtils.getSubject();
         if (subject != null) {
             Object principal = subject.getPrincipal();
             if (principal instanceof User) {
                 User user = (User) principal;
-                return new ApiKeyToken(user).getKey();
+                ApiKeyToken token = new ApiKeyToken(user);
+                return token.getKey();
             } else {
                 throw new NotFoundException();
             }
@@ -61,21 +63,4 @@ public class AccountResource {
         }
     }
 
-    @GET
-    @Path("/key-eternal")
-    @ApiOperation(value = "Based on your login will generate an API key with no time limit", response = User.class)
-    public String getEternalApiKey() {
-        Subject subject = SecurityUtils.getSubject();
-        if (subject != null) {
-            Object principal = subject.getPrincipal();
-            if (principal instanceof User) {
-                User user = (User) principal;
-                return new ApiKeyToken(user,0L).getKey();
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
 }

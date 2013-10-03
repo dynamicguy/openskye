@@ -60,14 +60,10 @@ public class SkyeRealm extends AuthorizingRealm {
             }
         } else if (authenticationToken instanceof ApiKeyToken) {
             ApiKeyToken token = (ApiKeyToken) authenticationToken;
-            Optional<User> user = userDao.findByEmail(token.getUsername());
+            Optional<User> user = userDao.findByApiKey(token.getKey());
             if (user.isPresent()) { //user is found
-                if (token.isValid()) { //this is a valid API key
-                    SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getKey(), this.getName());
-                    return simpleAuthInfo;
-                } else {
-                    throw new AuthenticationException();
-                }
+                SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getKey(), this.getName());
+                return simpleAuthInfo;
             } else {
                 throw new AuthenticationException();
             }

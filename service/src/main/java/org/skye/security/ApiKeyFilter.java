@@ -30,9 +30,16 @@ public class ApiKeyFilter extends BasicHttpAuthenticationFilter {
     private UserDAO userDao;
 
     @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        ApiKeyToken token = (ApiKeyToken) createToken(request,response);
+        boolean valid = token.isValid();
+        return valid;
+    }
+
+    @Override
     protected Subject getSubject(ServletRequest request, ServletResponse response) {
         ApiKeyToken token = (ApiKeyToken) createToken(request,response);
-        Optional<User> user = userDao.findByEmail(token.getUsername());
+        Optional<User> user = userDao.findByApiKey(token.getKey());
         PrincipalCollection principals = new SimplePrincipalCollection(user, "ApiKeyRealm");
         WebDelegatingSubject subject = new WebDelegatingSubject( principals, true, getHost(request), null, false,
             request, response, SecurityUtils.getSecurityManager() );

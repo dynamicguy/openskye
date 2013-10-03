@@ -8,6 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,8 @@ public class User implements Identifiable
     private String name;
     @JsonIgnore
     private String passwordHash;
+    @JsonIgnore
+    private String apiKey;
     @Transient
     @JsonIgnore
     private String password;
@@ -39,6 +42,11 @@ public class User implements Identifiable
     private List<UserRole> userRoles = new ArrayList<>();
 
     @PrePersist
+    public void setKeys() {
+        encryptPassword();
+        resetApiKey();
+    }
+
     public void encryptPassword() {
         if (password != null) {
             setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
@@ -46,6 +54,12 @@ public class User implements Identifiable
             // Generate a UUID as a password
             setPasswordHash(BCrypt.hashpw(UUID.randomUUID().toString(), BCrypt.gensalt()));
         }
+    }
+
+    public void resetApiKey() {
+        // Generate a UUID as an API key
+        String newKey = UUID.randomUUID().toString();
+        setApiKey(newKey);
     }
 
 }
