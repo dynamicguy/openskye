@@ -27,5 +27,17 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
         }
     }
 
-
+    public Optional<User> findByApiKey(String key) {
+        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaQuery<User> criteria = builder.createQuery(User.class);
+        Root<User> userRoot = criteria.from(User.class);
+        criteria.select(userRoot);
+        criteria.where(builder.equal(userRoot.get("apiKey"), key));
+        List<User> users = currentEntityManager().createQuery(criteria).getResultList();
+        if (users.size() == 0) {
+            return Optional.absent();
+        } else {
+            return Optional.of(users.get(0));
+        }
+    }
 }
