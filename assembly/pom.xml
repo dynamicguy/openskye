@@ -50,7 +50,7 @@
                             <name>skye-server</name>
                         </program>
                         <program>
-                            <mainClass>org.skye.cli.SkyeCommand</mainClass>
+                            <mainClass>org.skye.cli.SkyeCli</mainClass>
                             <name>skye</name>
                         </program>
                     </programs>
