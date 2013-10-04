@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Parameters(commandDescription = "Login to the server")
 @Data
 @Slf4j
-public class LoginCommand implements ExecutableCommand {
+public class LoginCommand extends ExecutableCommand {
 
     private final String name = "login";
     @Parameter(names = "--username")

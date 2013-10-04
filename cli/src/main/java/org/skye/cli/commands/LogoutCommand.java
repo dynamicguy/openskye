@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Parameters(commandDescription = "Login to the server")
 @Data
 @Slf4j
-public class LogoutCommand implements ExecutableCommand {
+public class LogoutCommand extends ExecutableCommand {
 
     private final String name = "logout";
 

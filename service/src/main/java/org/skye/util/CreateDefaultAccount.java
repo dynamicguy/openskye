@@ -26,11 +26,11 @@ public class CreateDefaultAccount {
     private RoleDAO roleDAO;
     @Inject
     private PermissionDAO permissionDAO;
-
     @Inject
     private EntityManager entityManager;
 
-    @Inject CreateDefaultAccount(PersistService service) {
+    @Inject
+    CreateDefaultAccount(PersistService service) {
 
         service.start();
 
@@ -66,10 +66,12 @@ public class CreateDefaultAccount {
             adminUser.setDomain(domain);
             adminUser.setEmail("admin@skye.org");
             adminUser.setPassword("changeme");
+            adminUser.setApiKey("123");
             adminUser.encryptPassword();
             UserRole uRole = new UserRole();
             uRole.setRole(role);
-            uRole.setUser(adminUser);;
+            uRole.setUser(adminUser);
+            ;
             adminUser.setUserRoles(ImmutableList.of(uRole));
             userDAO.create(adminUser);
             entityManager.getTransaction().commit();

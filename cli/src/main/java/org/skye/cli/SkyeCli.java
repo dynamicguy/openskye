@@ -27,8 +27,12 @@ public class SkyeCli {
         List<ExecutableCommand> commands = new ArrayList<>();
         commands.add(new LoginCommand());
 
+        SkyeCliSettings skyeCliSettings = new SkyeCliSettings();
+        skyeCliSettings.load();
+
         // Add all the commands to JCommander
         for (ExecutableCommand command : commands) {
+            command.initialize(skyeCliSettings);
             jc.addCommand(command.getName(), command);
         }
 

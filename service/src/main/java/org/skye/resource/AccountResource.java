@@ -1,27 +1,25 @@
 package org.skye.resource;
 
-import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.subject.support.WebDelegatingSubject;
 import org.skye.domain.User;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.UserDAO;
-import org.skye.security.ApiKeyToken;
-import org.skye.util.NotFoundException;
-import org.skye.util.UnauthorizedException;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
- * The REST endpoint for {@link org.skye.domain.Domain}
+ * The REST endpoint for accessing the logged in user's information
+ * <p/>
+ * This is a good endpoint for getting information about who is logged in,
+ * also when you use this endpoint you see all the user's information about themselves
  */
 @Api(value = "/api/1/account", description = "Access and manage your account information")
 @Path("/api/1/account")
@@ -45,22 +43,11 @@ public class AccountResource extends AbstractUpdatableDomainResource<User> {
     }
 
     @GET
-    @ApiOperation(value = "Based on your login will return your API key", response = String.class)
+    @ApiOperation(value = "Based on your login will return your API key", response = User.class)
     @Transactional
-    public String getApiKey() {
+    public User getUserSelf() {
         Subject subject = SecurityUtils.getSubject();
-        if (subject != null) {
-            Object principal = subject.getPrincipal();
-            if (principal instanceof User) {
-                User user = (User) principal;
-                ApiKeyToken token = new ApiKeyToken(user);
-                return token.getKey();
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
-            throw new UnauthorizedException();
-        }
+        return (User) subject.getPrincipal();
     }
 
 }

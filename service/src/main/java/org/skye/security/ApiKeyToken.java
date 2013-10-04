@@ -14,15 +14,10 @@ import javax.inject.Inject;
 public class ApiKeyToken implements AuthenticationToken {
 
     String key;
-
     @Inject
     private UserDAO userDao;
 
-    public ApiKeyToken( User user ) {
-        key = user.getApiKey();
-    }
-
-    public ApiKeyToken( String key ) {
+    public ApiKeyToken(String key) {
         this.key = key;
     }
 
@@ -30,18 +25,13 @@ public class ApiKeyToken implements AuthenticationToken {
         return key;
     }
 
-    public Boolean isValid() {
-        Optional<User> user = userDao.findByApiKey(key);
-        return user.isPresent();
-    }
-
     @Override
     public Object getPrincipal() {
         Optional<User> user = userDao.findByApiKey(key);
-        if ( user.isPresent() ) {
-            return user.get().getEmail();
+        if (user.isPresent()) {
+            return user.get();
         } else {
-            return new String("");
+            return "";
         }
     }
 

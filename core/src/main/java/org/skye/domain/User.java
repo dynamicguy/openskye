@@ -44,7 +44,6 @@ public class User implements Identifiable
     @PrePersist
     public void setKeys() {
         encryptPassword();
-        resetApiKey();
     }
 
     public void encryptPassword() {
@@ -54,12 +53,6 @@ public class User implements Identifiable
             // Generate a UUID as a password
             setPasswordHash(BCrypt.hashpw(UUID.randomUUID().toString(), BCrypt.gensalt()));
         }
-    }
-
-    public void resetApiKey() {
-        // Generate a UUID as an API key
-        String newKey = UUID.randomUUID().toString();
-        setApiKey(newKey);
     }
 
 }
