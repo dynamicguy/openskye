@@ -19,6 +19,10 @@ public class DomainsCommand extends ExecutableCommand {
     private final String name = "domains";
     @Parameter(names = "--list")
     private boolean list;
+    @Parameter(names = "--delete")
+    private boolean delete;
+    @Parameter(names = "--create")
+    private boolean create;
 
     @Override
     public void execute() {
@@ -27,8 +31,11 @@ public class DomainsCommand extends ExecutableCommand {
             });
 
             DomainsCommand.log.info(paginatedResult.toString());
-
             // Need a nice way to display a table of results?
+        } else if (create) {
+
+        } else if (delete) {
+
         }
     }
 }

@@ -18,7 +18,6 @@ public class SkyeCli {
     }
 
     private void run(String[] args) {
-        log.info("Loading settings...");
         SkyeCommand skyeCommand = new SkyeCommand();
         JCommander jc = new JCommander(skyeCommand);
 
