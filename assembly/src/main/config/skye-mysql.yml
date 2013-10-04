@@ -11,9 +11,6 @@ database:
   # the JDBC URL
   url: "jdbc:mysql://localhost/skye"
 
-security:
-    model: BASIC_AUTH
-
 logging:
     level: INFO
     console:
