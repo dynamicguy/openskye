@@ -7,4 +7,5 @@ public interface ExecutableCommand {
 
     void execute();
 
+    String getName();
 }

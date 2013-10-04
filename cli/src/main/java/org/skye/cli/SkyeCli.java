@@ -1,11 +1,17 @@
 package org.skye.cli;
 
 import com.beust.jcommander.JCommander;
+import lombok.extern.slf4j.Slf4j;
+import org.skye.cli.commands.ExecutableCommand;
 import org.skye.cli.commands.LoginCommand;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The CLI for Skye
  */
+@Slf4j
 public class SkyeCli {
 
     public static void main(String[] args) throws Exception {
@@ -13,13 +19,27 @@ public class SkyeCli {
     }
 
     private void run(String[] args) {
-
+        log.info("Loading settings...");
         SkyeCommand skyeCommand = new SkyeCommand();
         JCommander jc = new JCommander(skyeCommand);
-        jc.addCommand("login", new LoginCommand());
+
+        // Set-up the all the commands
+        List<ExecutableCommand> commands = new ArrayList<>();
+        commands.add(new LoginCommand());
+
+        // Add all the commands to JCommander
+        for (ExecutableCommand command : commands) {
+            jc.addCommand(command.getName(), command);
+        }
+
+        // Parse the command line arguments
         jc.parse(args);
 
-        JCommander selectedCommand = jc.getCommands().get(jc.getParsedCommand());
-
+        // Resolve which command we have
+        for (ExecutableCommand command : commands) {
+            if (command.getName().equals(jc.getParsedCommand())) {
+                command.execute();
+            }
+        }
     }
 }
