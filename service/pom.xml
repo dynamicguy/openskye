@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openskye</groupId>
@@ -106,34 +107,6 @@
             <artifactId>h2</artifactId>
             <version>1.3.172</version>
         </dependency>
-
     </dependencies>
 
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>appassembler-maven-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <programs>
-                        <program>
-                            <mainClass>org.skye.SkyeService</mainClass>
-                            <commandLineArguments>
-                                <commandLineArgument>server</commandLineArgument>
-                                <commandLineArgument>$BASEDIR/etc/skye.yml</commandLineArgument>
-                            </commandLineArguments>
-                            <name>skye</name>
-                        </program>
-                    </programs>
-                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
-                    <!-- Include the target configuration directory in the beginning of
-                         the classpath declaration in the bin scripts -->
-                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
 </project>

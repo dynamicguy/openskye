@@ -65,6 +65,7 @@
         <module>cli</module>
         <module>service</module>
         <module>hadoop</module>
+        <module>assembly</module>
     </modules>
 
     <issueManagement>
@@ -98,6 +99,11 @@
             <dependency>
                 <groupId>org.openskye</groupId>
                 <artifactId>skye-hadoop</artifactId>
+                <version>0.0.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openskye</groupId>
+                <artifactId>skye-cli</artifactId>
                 <version>0.0.4-SNAPSHOT</version>
             </dependency>
         </dependencies>

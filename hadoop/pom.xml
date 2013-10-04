@@ -10,7 +10,7 @@
     <groupId>org.skye</groupId>
     <artifactId>skye-hadoop</artifactId>
 
-    <name>Skye :: Hadoop Integration</name>
+    <name>Skye :: Hadoop</name>
 
     <repositories>
         <repository>
