@@ -2,8 +2,12 @@ package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.sun.jersey.api.client.WebResource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.skye.resource.UserSelf;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * The login command
@@ -23,6 +27,12 @@ public class LoginCommand extends ExecutableCommand {
 
     @Override
     public void execute() {
-        log.info("Starting login as " + user + " to " + url);
+
+        log.info("Logging in as " + user + " to " + url);
+        settings.setUrl(url);
+        UserSelf userSelf = getResource("account").get(UserSelf.class);
+        System.out.println(userSelf);
     }
+
+
 }

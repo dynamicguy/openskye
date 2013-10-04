@@ -2,8 +2,7 @@ package org.skye.cli;
 
 import com.beust.jcommander.JCommander;
 import lombok.extern.slf4j.Slf4j;
-import org.skye.cli.commands.ExecutableCommand;
-import org.skye.cli.commands.LoginCommand;
+import org.skye.cli.commands.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,9 @@ public class SkyeCli {
         // Set-up the all the commands
         List<ExecutableCommand> commands = new ArrayList<>();
         commands.add(new LoginCommand());
+        commands.add(new PlatformCommand());
+        commands.add(new ProjectsCommand());
+        commands.add(new DomainsCommand());
 
         SkyeCliSettings skyeCliSettings = new SkyeCliSettings();
         skyeCliSettings.load();

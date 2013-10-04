@@ -43,11 +43,11 @@ public class AccountResource extends AbstractUpdatableDomainResource<User> {
     }
 
     @GET
-    @ApiOperation(value = "Based on your login will return your API key", response = User.class)
+    @ApiOperation(value = "Based on your login will return your API key", response = UserSelf.class)
     @Transactional
-    public User getUserSelf() {
+    public UserSelf getUserSelf() {
         Subject subject = SecurityUtils.getSubject();
-        return (User) subject.getPrincipal();
+        return new UserSelf((User) subject.getPrincipal());
     }
 
 }
