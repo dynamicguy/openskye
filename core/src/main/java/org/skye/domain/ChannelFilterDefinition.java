@@ -18,9 +18,8 @@ public class ChannelFilterDefinition implements Identifiable
 {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private String implementation;
     private String description;
     private String definition;

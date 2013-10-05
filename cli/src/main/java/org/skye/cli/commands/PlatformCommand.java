@@ -15,7 +15,7 @@ import org.skye.stores.StoreRegistryMetadata;
 @Slf4j
 public class PlatformCommand extends ExecutableCommand {
 
-    private final String name = "platform";
+    private final String commandName = "platform";
     @Parameter(names = "--registry")
     private boolean registry;
 

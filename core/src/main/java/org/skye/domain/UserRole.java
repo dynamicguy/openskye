@@ -21,9 +21,8 @@ public class UserRole implements Identifiable
 {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     @ManyToOne
     private User user;
     @ManyToOne

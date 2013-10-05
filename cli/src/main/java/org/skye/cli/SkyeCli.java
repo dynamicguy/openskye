@@ -1,6 +1,7 @@
 package org.skye.cli;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.MissingCommandException;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.cli.commands.*;
 
@@ -20,6 +21,7 @@ public class SkyeCli {
     private void run(String[] args) {
         SkyeCommand skyeCommand = new SkyeCommand();
         JCommander jc = new JCommander(skyeCommand);
+        jc.setProgramName("skye");
 
         // Set-up the all the commands
         List<ExecutableCommand> commands = new ArrayList<>();
@@ -34,17 +36,24 @@ public class SkyeCli {
         // Add all the commands to JCommander
         for (ExecutableCommand command : commands) {
             command.initialize(skyeCliSettings);
-            jc.addCommand(command.getName(), command);
+            jc.addCommand(command.getCommandName(), command);
         }
 
         // Parse the command line arguments
-        jc.parse(args);
+        try {
+            jc.parse(args);
 
-        // Resolve which command we have
-        for (ExecutableCommand command : commands) {
-            if (command.getName().equals(jc.getParsedCommand())) {
-                command.execute();
+            // Resolve which command we have
+            for (ExecutableCommand command : commands) {
+                if (command.getCommandName().equals(jc.getParsedCommand())) {
+                    command.execute();
+                }
             }
+        } catch (MissingCommandException e) {
+            jc.usage();
+        } catch (CliException c) {
+            System.out.println("ERROR: " + c.getLocalizedMessage());
         }
+
     }
 }

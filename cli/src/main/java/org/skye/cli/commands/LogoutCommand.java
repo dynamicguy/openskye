@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LogoutCommand extends ExecutableCommand {
 
-    private final String name = "logout";
+    private final String commandName = "logout";
 
     @Override
     public void execute() {

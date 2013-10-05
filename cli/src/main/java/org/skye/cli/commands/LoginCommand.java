@@ -2,12 +2,9 @@ package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.sun.jersey.api.client.WebResource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.resource.UserSelf;
-
-import javax.ws.rs.core.MediaType;
 
 /**
  * The login command
@@ -17,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 public class LoginCommand extends ExecutableCommand {
 
-    private final String name = "login";
+    private final String commandName = "login";
     @Parameter(names = "--username")
     private String user;
     @Parameter(names = "--password")

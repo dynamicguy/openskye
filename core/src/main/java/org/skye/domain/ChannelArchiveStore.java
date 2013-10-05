@@ -17,9 +17,8 @@ public class ChannelArchiveStore implements Identifiable
 {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     @ManyToOne
     private Channel channel;
     @ManyToOne

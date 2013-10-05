@@ -27,7 +27,7 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     @Inject
     protected DomainDAO domainDAO;
 
-    @ApiOperation(value = "Create new channel", notes = "Create a new channel and return with its unique id", response = Domain.class)
+    @ApiOperation(value = "Create new domain", notes = "Create a new domain and return with its unique id", response = Domain.class)
     @POST
     @Transactional
     @Timed

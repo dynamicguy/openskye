@@ -18,7 +18,6 @@ public class AuditLogProperty implements Identifiable
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
     @ManyToOne

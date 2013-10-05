@@ -18,9 +18,8 @@ public class AttributeInstance implements Identifiable
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private MetadataOwnerType metadataOwnerType;
     private String ownerId;
     @ManyToOne

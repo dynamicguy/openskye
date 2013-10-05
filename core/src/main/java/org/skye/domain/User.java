@@ -3,12 +3,10 @@ package org.skye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,13 +17,11 @@ import java.util.UUID;
 @Table(name = "USER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User implements Identifiable
-{
+public class User implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private String email;
     private String name;
     @JsonIgnore

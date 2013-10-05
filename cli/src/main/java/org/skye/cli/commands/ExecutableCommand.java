@@ -25,5 +25,5 @@ public abstract class ExecutableCommand {
 
     public abstract void execute();
 
-    public abstract String getName();
+    public abstract String getCommandName();
 }

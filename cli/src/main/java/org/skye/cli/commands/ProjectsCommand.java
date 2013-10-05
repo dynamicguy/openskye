@@ -11,12 +11,12 @@ import org.skye.domain.dao.PaginatedResult;
 /**
  * The login command
  */
-@Parameters(commandDescription = "Login to the server")
+@Parameters(commandDescription = "Manage projects")
 @Data
 @Slf4j
 public class ProjectsCommand extends ExecutableCommand {
 
-    private final String name = "projects";
+    private final String commandName = "projects";
     @Parameter(names = "--list")
     private boolean list;
 

@@ -3,7 +3,6 @@ package org.skye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,14 +15,12 @@ import java.util.List;
 @Table(name = "PROJECT")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Project implements Identifiable
-{
+public class Project implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     @ManyToOne
     private Domain domain;
     @OneToMany(cascade = CascadeType.REMOVE)

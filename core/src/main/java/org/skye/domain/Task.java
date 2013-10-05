@@ -2,7 +2,6 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -13,13 +12,11 @@ import javax.persistence.*;
 @Table(name = "TASK")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Task implements Identifiable
-{
+public class Task implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private TaskType taskType;
     @ManyToOne
     private Task parentTask;

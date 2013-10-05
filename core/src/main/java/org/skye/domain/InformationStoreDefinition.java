@@ -2,7 +2,6 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -15,11 +14,9 @@ import java.util.Map;
 @Table(name = "DOMAIN_INFORMATION_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class InformationStoreDefinition implements Identifiable
-{
+public class InformationStoreDefinition implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
     private String name;

@@ -20,7 +20,6 @@ public class ArchiveStoreInstance implements Identifiable
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
     // The name of the {@link ArchiveStore} implementation
