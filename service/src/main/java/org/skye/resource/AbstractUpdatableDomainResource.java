@@ -14,8 +14,7 @@ import javax.ws.rs.core.Response;
  * domain objects persisted in hibernate
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractRealOnlyDomainResource<T>
-{
+public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractRealOnlyDomainResource<T> {
     public T create(T newInstance) {
         if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":create")) {
             return getDAO().create(newInstance);

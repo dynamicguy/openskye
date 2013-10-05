@@ -52,7 +52,7 @@ public class TaskStatisticsResource extends AbstractUpdatableDomainResource<Task
     @Transactional
     @Timed
     @Override
-    public TaskStatistics get(@PathParam("id") String id){
+    public TaskStatistics get(@PathParam("id") String id) {
         return super.get(id);
     }
 

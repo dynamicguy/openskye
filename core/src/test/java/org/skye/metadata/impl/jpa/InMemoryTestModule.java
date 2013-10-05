@@ -13,11 +13,9 @@ import org.skye.task.simple.InMemoryTaskManager;
 
 import java.util.Properties;
 
-public class InMemoryTestModule extends AbstractModule
-{
+public class InMemoryTestModule extends AbstractModule {
     @Override
-    protected void configure()
-    {
+    protected void configure() {
         JpaPersistModule jpaModule = new JpaPersistModule("Default");
         Properties props = new Properties();
 

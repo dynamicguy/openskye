@@ -4,11 +4,8 @@ import org.skye.core.ObjectStreamFilter;
 import org.skye.domain.ArchiveStoreDefinition;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.DeflaterInputStream;
-import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
-import java.util.zip.InflaterOutputStream;
 
 /**
  * A Zip compression implementation of an {@link org.skye.core.ObjectStreamFilter}

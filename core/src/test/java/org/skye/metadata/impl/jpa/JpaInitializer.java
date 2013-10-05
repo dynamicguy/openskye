@@ -11,11 +11,9 @@ import javax.inject.Inject;
  * Time: 10:19 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JpaInitializer
-{
+public class JpaInitializer {
     @Inject
-    public JpaInitializer(final PersistService service)
-    {
+    public JpaInitializer(final PersistService service) {
         service.start();
     }
 }

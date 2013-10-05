@@ -2,7 +2,6 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -14,8 +13,7 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_FILTER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChannelFilterDefinition implements Identifiable
-{
+public class ChannelFilterDefinition implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
     @Column(unique = true)

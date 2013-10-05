@@ -63,7 +63,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      * @param newInstance The instance to be created.
      * @return The created instance.
      * @throws EntityExistsException Indicates that the Entity to be created
-     *                              would be a duplicate record.
+     *                               would be a duplicate record.
      */
     public T create(T newInstance) {
         if (newInstance == null)

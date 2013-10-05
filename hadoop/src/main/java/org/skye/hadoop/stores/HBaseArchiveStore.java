@@ -1,18 +1,8 @@
 package org.skye.hadoop.stores;
 
 import com.google.common.base.Optional;
-import com.impetus.client.hbase.HBaseClient;
-import com.impetus.client.hbase.admin.HBaseDataHandler;
-import com.impetus.kundera.KunderaPersistence;
-import com.impetus.kundera.metadata.KunderaMetadataManager;
-import com.impetus.kundera.metadata.model.EntityMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.ZooKeeperConnectionException;
-import org.apache.hadoop.hbase.client.HConnection;
-import org.apache.hadoop.hbase.client.HConnectionManager;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.HTablePool;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
@@ -23,10 +13,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses Apache HBase to store the {@link org.skye.core.ArchiveContentBlock}s
@@ -87,11 +75,10 @@ public class HBaseArchiveStore implements ArchiveStore {
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
 
-        SimpleObject result=hBaseEntityManager.find(SimpleObject.class, metadata.getId());
-        if(result==null){
+        SimpleObject result = hBaseEntityManager.find(SimpleObject.class, metadata.getId());
+        if (result == null) {
             return Optional.absent();
-        }
-        else{
+        } else {
             return Optional.of(result);
         }
     }
@@ -103,10 +90,9 @@ public class HBaseArchiveStore implements ArchiveStore {
 
     @Override
     public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
-        if(this.archiveStoreDefinition==null){
+        if (this.archiveStoreDefinition == null) {
             return Optional.absent();
-        }
-        else{
+        } else {
             return Optional.of(this.archiveStoreDefinition);
         }
     }

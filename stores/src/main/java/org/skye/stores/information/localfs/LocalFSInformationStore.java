@@ -19,7 +19,10 @@ import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -82,7 +85,7 @@ public class LocalFSInformationStore implements InformationStore {
                     metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
                     container.setObjectMetadata(metadata);
                     all.add(container);
-                } else if ( Files.isRegularFile(p) ) {
+                } else if (Files.isRegularFile(p)) {
                     UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());

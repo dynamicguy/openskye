@@ -39,13 +39,13 @@
             <property name="kundera.nodes" value="ec2-54-200-79-14.us-west-2.compute.amazonaws.com"/>
             <property name="kundera.port" value="7182"/>
             <property name="kundera.dialect" value="hbase"/>
-            <property name="kundera.client.lookup.class" value="com.impetus.client.hbase.HBaseClientFactory" />
+            <property name="kundera.client.lookup.class" value="com.impetus.client.hbase.HBaseClientFactory"/>
             <property name="kundera.cache.provider.class" value="com.impetus.kundera.cache.ehcache.EhCacheProvider"/>
             <property name="kundera.cache.config.resource" value="/ehcache-test.xml"/>
-            <property name="kundera.ddl.auto.prepare" value="create" />
-            <property name="kundera.client.property" value="/home/atcmostafavi/hbase-conf/hbase-site.xml" />
-            <property name="hbase.zookeeper.quorum" value="ec2-54-200-72-73.us-west-2.compute.amazonaws.com" />
-            <property name="hbase.zookeeper.property.clientPort" value="2181" />
+            <property name="kundera.ddl.auto.prepare" value="create"/>
+            <property name="kundera.client.property" value="/home/atcmostafavi/hbase-conf/hbase-site.xml"/>
+            <property name="hbase.zookeeper.quorum" value="ec2-54-200-72-73.us-west-2.compute.amazonaws.com"/>
+            <property name="hbase.zookeeper.property.clientPort" value="2181"/>
         </properties>
     </persistence-unit>
 </persistence>

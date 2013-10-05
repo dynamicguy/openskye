@@ -10,7 +10,7 @@ import org.skye.util.Page;
  * An implementation of the {@link ObjectMetadataSearch} that uses HBase as the
  * storage solution
  */
-public class HBaseObjectMetadataSearch implements ObjectMetadataSearch{
+public class HBaseObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public Iterable<ObjectMetadata> search(Domain domain, String query, Page page) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.

@@ -79,8 +79,8 @@ public class SkyeRealm extends AuthorizingRealm {
 
     @Override
     public boolean supports(AuthenticationToken authenticationToken) {
-        return ( authenticationToken instanceof UsernamePasswordToken
-              || authenticationToken instanceof ApiKeyToken );
+        return (authenticationToken instanceof UsernamePasswordToken
+                || authenticationToken instanceof ApiKeyToken);
     }
 
 }

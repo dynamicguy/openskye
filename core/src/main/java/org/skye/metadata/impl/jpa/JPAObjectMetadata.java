@@ -94,12 +94,10 @@ public class JPAObjectMetadata {
      * Creates an {@link ObjectMetadata} copy of the JPA Entity version.
      *
      * @return An {@link ObjectMetadata} copy of this Entity.
-     *
      * @throws SkyeException See the {@link JPAArchiveContentBlock} method,
      *                       ToArchiveContentBlock() for more information on possible exceptions.
      */
-    public ObjectMetadata toObjectMetadata()
-    {
+    public ObjectMetadata toObjectMetadata() {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         Set<Tag> tags = new HashSet<>();
         List<ArchiveContentBlock> blocks = new ArrayList<>();

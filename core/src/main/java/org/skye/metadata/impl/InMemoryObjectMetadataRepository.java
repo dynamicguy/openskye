@@ -43,8 +43,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
-    {
+    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         return false;
     }
 

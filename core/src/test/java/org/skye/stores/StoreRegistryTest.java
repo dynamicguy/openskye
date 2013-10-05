@@ -5,8 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.ArchiveStoreInstance;
-import org.skye.domain.ArchiveStoreDefinition;
-import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.stores.inmemory.InMemoryInformationStore;

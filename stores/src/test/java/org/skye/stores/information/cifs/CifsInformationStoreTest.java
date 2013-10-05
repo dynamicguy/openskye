@@ -7,8 +7,6 @@ import org.skye.domain.*;
 import org.skye.stores.StoreRegistry;
 import org.skye.stores.archive.localfs.LocalFSArchiveStore;
 import org.skye.stores.information.InMemoryTestModule;
-import org.skye.stores.information.localfs.LocalFSInformationStore;
-import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.task.TaskManager;
 
 import javax.inject.Inject;
@@ -73,7 +71,7 @@ public class CifsInformationStoreTest {
         taskManager.submit(newTask);
 
         long objectCount = newTask.getStatistics().getSimpleObjectsDiscovered();
-        assertThat("We have discovered "+objectCount+" simple objects", objectCount > 0);
+        assertThat("We have discovered " + objectCount + " simple objects", objectCount > 0);
     }
 
 }
