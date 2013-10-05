@@ -15,6 +15,9 @@ public class SkyeConfiguration extends Configuration {
     @NotNull
     @JsonProperty
     private DatabaseConfiguration database = new DatabaseConfiguration();
+    @Valid
+    @JsonProperty
+    private ServiceConfiguration services = new ServiceConfiguration();
 
     public DatabaseConfiguration getDatabaseConfiguration() {
         return database;

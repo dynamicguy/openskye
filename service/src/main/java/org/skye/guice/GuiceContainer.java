@@ -14,7 +14,6 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 import com.sun.jersey.spi.container.servlet.WebConfig;
 
 import javax.servlet.ServletException;
-import javax.ws.rs.core.Application;
 import java.util.Map;
 
 @Singleton
@@ -25,17 +24,6 @@ public class GuiceContainer extends ServletContainer {
     private Injector injector;
     private WebApplication webapp;
     private ResourceConfig resourceConfig = new DefaultResourceConfig();
-
-    public GuiceContainer() {
-    }
-
-    public GuiceContainer(Application app) {
-        super(app);
-    }
-
-    public GuiceContainer(Class<? extends Application> app) {
-        super(app);
-    }
 
     public void setResourceConfig(ResourceConfig resourceConfig) {
         this.resourceConfig = resourceConfig;
