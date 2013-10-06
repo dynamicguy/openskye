@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.cli.commands.*;
 import org.slf4j.LoggerFactory;

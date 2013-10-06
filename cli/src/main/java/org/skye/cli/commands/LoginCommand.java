@@ -2,6 +2,7 @@ package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +35,18 @@ public class LoginCommand extends ExecutableCommand {
         // /acccount path
         client.addFilter(new HTTPBasicAuthFilter(user, password));
         settings.setApiKey(null);
-        UserSelf userSelf = getResource("account").get(UserSelf.class);
-        consoleLogger.success("Login successful, storing credentials");
-        settings.setApiKey(userSelf.getApiKey());
-        settings.save();
+        try {
+            UserSelf userSelf = getResource("account").get(UserSelf.class);
+            consoleLogger.success("Login successful, storing credentials");
+            settings.setApiKey(userSelf.getApiKey());
+            settings.save();
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus() == 401) {
+                consoleLogger.error("Your username or password is incorrect");
+            } else {
+                consoleLogger.error(e.getLocalizedMessage());
+            }
+        }
 
     }
 
