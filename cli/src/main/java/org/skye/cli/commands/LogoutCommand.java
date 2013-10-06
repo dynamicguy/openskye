@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * The login command
  */
-@Parameters(commandDescription = "Login to the server")
+@Parameters(commandDescription = "Logout of this server")
 @Data
 @Slf4j
 public class LogoutCommand extends ExecutableCommand {
@@ -16,6 +16,8 @@ public class LogoutCommand extends ExecutableCommand {
 
     @Override
     public void execute() {
-        log.info("Logging out and removing API key");
+        settings.mustHaveApiKey();
+        settings.setApiKey(null);
+        settings.save();
     }
 }

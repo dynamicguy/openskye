@@ -33,6 +33,10 @@ public class DomainsCommand extends ExecutableCommand {
 
     @Override
     public void execute() {
+
+        // Ensure we are logged in
+        settings.mustHaveApiKey();
+
         if (list) {
             PaginatedResult<Domain> paginatedResult = getResource("domains").get(new GenericType<PaginatedResult<Domain>>() {
             });

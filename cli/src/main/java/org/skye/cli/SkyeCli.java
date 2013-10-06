@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.cli.commands.*;
+import org.skye.core.SkyeException;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class SkyeCli {
         jc.setProgramName("skye");
 
         ConsoleLogger consoleLogger = new ConsoleLogger();
-        consoleLogger.message("Skye CLI");
+        consoleLogger.message("Skye");
 
         // Set-up the all the commands
         List<ExecutableCommand> commands = new ArrayList<>();
@@ -71,6 +72,14 @@ public class SkyeCli {
             consoleLogger.error("Unable to connect to server " + e.getLocalizedMessage());
         } catch (CliException c) {
             consoleLogger.error(c.getLocalizedMessage());
+        } catch (SkyeException se) {
+            consoleLogger.error(se.getLocalizedMessage());
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus() == 401) {
+                consoleLogger.error("Not authorized, has your API key changed?");
+            } else {
+                consoleLogger.error(e.getLocalizedMessage());
+            }
         }
 
     }
