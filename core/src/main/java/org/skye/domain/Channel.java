@@ -3,6 +3,7 @@ package org.skye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ import java.util.List;
 @Table(name = "CHANNEL")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "ChannelGenerator")
 public class Channel implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "ChannelGenerator")
     @Column(unique = true)
     private String id;
     @ManyToOne

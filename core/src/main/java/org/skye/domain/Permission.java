@@ -2,6 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,9 +14,10 @@ import java.util.List;
 @Table(name = "PERMISSION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "PermissionGenerator")
 public class Permission implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "PermissionGenerator")
     @Column(unique = true)
     private String id;
     private String permission;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -16,9 +17,10 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "RolePermissionGenerator")
 public class RolePermission implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "RolePermissionGenerator")
     @Column(unique = true)
     private String id;
     @ManyToOne

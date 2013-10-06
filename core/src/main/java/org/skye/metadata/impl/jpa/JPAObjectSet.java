@@ -1,7 +1,6 @@
 package org.skye.metadata.impl.jpa;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 import org.skye.core.ObjectSet;
 
 import javax.persistence.*;
@@ -24,12 +23,9 @@ import java.util.Set;
 public class JPAObjectSet {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
-
     private String name;
-
     @ManyToMany
     @JoinTable(
             name = "OBJECT_SET_TO_MEATDATA",

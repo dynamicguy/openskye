@@ -3,6 +3,7 @@ package org.skye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ import java.util.List;
 @Table(name = "AUDIT_LOG")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "AuditLogGenerator")
 public class AuditLog implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "AuditLogGenerator")
     @Column(unique = true)
     private String id;
     @ManyToOne

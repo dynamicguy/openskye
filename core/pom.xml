@@ -62,13 +62,6 @@
             <version>1.0.10</version>
         </dependency>
 
-        <!-- Domain persistence -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.2.3.Final</version>
-        </dependency>
-
         <!-- We will use Guice to wire everything together -->
         <dependency>
             <groupId>com.google.inject</groupId>

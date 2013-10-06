@@ -2,6 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -12,9 +13,10 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "ChannelArchiveStoreGenerator")
 public class ChannelArchiveStore implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "ChannelArchiveStoreGenerator")
     @Column(unique = true)
     private String id;
     @ManyToOne

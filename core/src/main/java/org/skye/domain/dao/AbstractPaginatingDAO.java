@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.yammer.dropwizard.util.Generics;
 import org.eclipse.persistence.exceptions.ValidationException;
-import org.hibernate.Session;
 import org.skye.domain.Identifiable;
 
 import javax.inject.Inject;
@@ -14,7 +13,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -100,17 +98,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return updatedInstance;
     }
 
-    /**
-     * Return the persistent instance of {@code <E>} with the given identifier, or {@code null} if
-     * there is no such persistent instance. (If the instance, or a proxy for the instance, is
-     * already associated with the session, return that instance or proxy.)
-     *
-     * @param id an identifier
-     * @return a persistent instance or {@code null}
-     * @throws org.hibernate.HibernateException
-     *
-     * @see Session#get(Class, Serializable)
-     */
     @SuppressWarnings("unchecked")
     public Optional<T> get(String id) {
         T result = (T) currentEntityManager().find(entityClass, checkNotNull(id));

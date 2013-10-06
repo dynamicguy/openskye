@@ -1,7 +1,7 @@
 package org.skye.metadata.impl.jpa;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 import org.joda.time.DateTime;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ObjectMetadata;
@@ -21,10 +21,10 @@ import java.util.*;
 @Entity
 @Table(name = "OBJECT_METADATA")
 @Data
+@UuidGenerator(name = "JPAObjectMetadata")
 public class JPAObjectMetadata {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "JPAObjectMetadata")
     @Column(unique = true)
     private String id;
     private String path = "";

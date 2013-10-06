@@ -50,8 +50,8 @@ public class DomainsCommand extends ExecutableCommand {
             Console console = getConsole();
             newDomain.setName(console.readLine("Domain name:"));
             consoleLogger.message("Creating");
-            getResource("domains").post(newDomain);
-            consoleLogger.success("Created");
+            Domain result = getResource("domains").post(Domain.class, newDomain);
+            consoleLogger.success("Created domain " + result);
         } else if (delete) {
             if (id == null)
                 throw new CliException("You must provide an id to delete a domain");

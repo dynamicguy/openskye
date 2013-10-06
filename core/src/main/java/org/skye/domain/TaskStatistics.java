@@ -2,6 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -12,9 +13,10 @@ import javax.persistence.*;
 @Table(name = "TASK_STATISTICS")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "TaskStatisticsGenerator")
 public class TaskStatistics implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "TaskStatisticsGenerator")
     @Column(unique = true)
     private String id;
     private Task task;

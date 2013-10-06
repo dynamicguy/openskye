@@ -2,6 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -12,10 +13,11 @@ import javax.persistence.*;
 @Table(name = "AUDIT_LOG_PROPERTY")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "AuditLogPropertyGenerator")
 public class AuditLogProperty implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "AuditLogPropertyGenerator")
     @Column(unique = true)
     private String id;
     @ManyToOne

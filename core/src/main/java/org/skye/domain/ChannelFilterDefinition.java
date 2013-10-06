@@ -2,6 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -10,12 +11,13 @@ import javax.persistence.*;
  * used to limit the simple objects that will pass through a {@link Channel}
  */
 @Entity
-@Table(name = "CHANNEL_FILTER")
+@Table(name = "CHANNEL_FILTER_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@UuidGenerator(name = "ChannelFilterDefinitionGenerator")
 public class ChannelFilterDefinition implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "ChannelFilterDefinitionGenerator")
     @Column(unique = true)
     private String id;
     private String implementation;
