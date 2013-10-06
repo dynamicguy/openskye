@@ -2,12 +2,16 @@ package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.GenericType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.cli.CliException;
+import org.skye.cli.util.ObjectTableView;
 import org.skye.domain.Domain;
 import org.skye.domain.dao.PaginatedResult;
+
+import java.io.Console;
 
 /**
  * The login command
@@ -25,10 +29,8 @@ public class DomainsCommand extends ExecutableCommand {
     @Parameter(names = "--create")
     private boolean create;
     @Parameter(names = "--file")
-    private String file;
-    @Parameter(names = "--name")
     private String name;
-    @Parameter(names = "--id")
+    @Parameter
     private String id;
 
     @Override
@@ -40,17 +42,21 @@ public class DomainsCommand extends ExecutableCommand {
         if (list) {
             PaginatedResult<Domain> paginatedResult = getResource("domains").get(new GenericType<PaginatedResult<Domain>>() {
             });
-
-            consoleLogger.message(paginatedResult.toString());
-            // Need a nice way to display a table of results?
+            ObjectTableView tableView = new ObjectTableView(paginatedResult, ImmutableList.of("id", "name"));
+            tableView.draw(consoleLogger);
         } else if (create) {
             Domain newDomain = new Domain();
-            newDomain.setName(name);
+            Console console = getConsole();
+            newDomain.setName(console.readLine("Domain name:"));
+            consoleLogger.message("Creating");
             getResource("domains").post(newDomain);
+            consoleLogger.success("Created");
         } else if (delete) {
             if (id == null)
                 throw new CliException("You must provide an id to delete a domain");
             getResource("domains/" + id).delete();
         }
     }
+
+
 }

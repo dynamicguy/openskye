@@ -6,6 +6,7 @@ import org.skye.cli.ConsoleLogger;
 import org.skye.cli.SkyeCliSettings;
 
 import javax.ws.rs.core.MediaType;
+import java.io.Console;
 
 /**
  * The interface for an executable command
@@ -37,4 +38,8 @@ public abstract class ExecutableCommand {
     public abstract void execute();
 
     public abstract String getCommandName();
+
+    public Console getConsole() {
+        return System.console();
+    }
 }
