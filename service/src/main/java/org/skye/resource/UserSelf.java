@@ -19,6 +19,10 @@ public class UserSelf {
     private String name;
     private String apiKey;
 
+    public UserSelf() {
+        // No arg constructor
+    }
+
     public UserSelf(User user) {
         this.id = user.getId();
         this.email = user.getEmail();

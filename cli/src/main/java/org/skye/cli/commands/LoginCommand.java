@@ -2,6 +2,7 @@ package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.resource.UserSelf;
@@ -20,15 +21,24 @@ public class LoginCommand extends ExecutableCommand {
     @Parameter(names = "--password")
     private String password;
     @Parameter(names = "--url")
-    private String url = "http://localhost:5000/api/1";
+    private String url = "http://localhost:5000/api/1/";
 
     @Override
     public void execute() {
 
-        log.info("Logging in as " + user + " to " + url);
+        consoleLogger.message("Logging in as " + user + " at " + url);
         settings.setUrl(url);
+
+        // Since we are trying to test the username and password
+        // lets ignore the api key and use basic auth on the
+        // /acccount path
+        client.addFilter(new HTTPBasicAuthFilter(user, password));
+        settings.setApiKey(null);
         UserSelf userSelf = getResource("account").get(UserSelf.class);
-        System.out.println(userSelf);
+        consoleLogger.success("Login successful, storing credentials");
+        settings.setApiKey(userSelf.getApiKey());
+        settings.save();
+
     }
 
 

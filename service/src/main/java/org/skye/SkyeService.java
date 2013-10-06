@@ -55,7 +55,7 @@ public class SkyeService extends Service<SkyeConfiguration> {
         new AutoConfig(SkyeService.class.getPackage().getName()).run(environment, injector);
         container.setResourceConfig(environment.getJerseyResourceConfig());
         environment.setJerseyServletContainer(container);
-        environment.addFilter(GuiceFilter.class, configuration.getHttpConfiguration().getRootPath());
+        environment.addFilter(new GuiceFilter(), configuration.getHttpConfiguration().getRootPath());
         environment.addFilter(injector.getInstance(PersistFilter.class), "/*");
         environment.addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule));
     }
