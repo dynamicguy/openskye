@@ -47,8 +47,7 @@ public class SkyeCli {
         commands.add(new ProjectsCommand());
         commands.add(new DomainsCommand());
 
-        SkyeCliSettings skyeCliSettings = new SkyeCliSettings();
-        skyeCliSettings.load();
+        SkyeCliSettings skyeCliSettings = SkyeCliSettings.load();
 
         // Add all the commands to JCommander
         for (ExecutableCommand command : commands) {

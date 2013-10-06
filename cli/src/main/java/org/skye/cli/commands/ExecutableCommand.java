@@ -24,13 +24,14 @@ public abstract class ExecutableCommand {
     protected WebResource.Builder getResource(String path) {
         WebResource webResource = client
                 .resource(settings.getUrl() + path);
+        WebResource.Builder result = webResource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
 
         // If we have an API key in place then we will use it
-        if (settings.getApiKey() != null) {
-            webResource.setProperty("x-api-key", settings.getApiKey());
-        }
 
-        return webResource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
+        if (settings.getApiKey() != null) {
+            result.header("X-Api-Key", settings.getApiKey());
+        }
+        return result;
     }
 
     public abstract void execute();

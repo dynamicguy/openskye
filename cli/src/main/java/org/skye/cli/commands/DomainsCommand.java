@@ -41,7 +41,7 @@ public class DomainsCommand extends ExecutableCommand {
             PaginatedResult<Domain> paginatedResult = getResource("domains").get(new GenericType<PaginatedResult<Domain>>() {
             });
 
-            DomainsCommand.log.info(paginatedResult.toString());
+            consoleLogger.message(paginatedResult.toString());
             // Need a nice way to display a table of results?
         } else if (create) {
             Domain newDomain = new Domain();
