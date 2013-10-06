@@ -15,4 +15,8 @@ public class ConsoleLogger {
     public void error(String s) {
         System.err.println(s);
     }
+
+    public void raw(String s) {
+        System.out.println(s);
+    }
 }

@@ -38,7 +38,8 @@ public class SkyeCli {
         jc.setProgramName("skye");
 
         ConsoleLogger consoleLogger = new ConsoleLogger();
-        consoleLogger.message("Skye");
+        consoleLogger.raw("Skye");
+        consoleLogger.raw("----\n");
 
         // Set-up the all the commands
         List<ExecutableCommand> commands = new ArrayList<>();

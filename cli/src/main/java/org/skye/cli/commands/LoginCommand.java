@@ -32,7 +32,7 @@ public class LoginCommand extends ExecutableCommand {
 
         // Since we are trying to test the username and password
         // lets ignore the api key and use basic auth on the
-        // /acccount path
+        // /account path
         client.addFilter(new HTTPBasicAuthFilter(user, password));
         settings.setApiKey(null);
         try {

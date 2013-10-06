@@ -42,6 +42,7 @@ public class DomainsCommand extends ExecutableCommand {
         if (list) {
             PaginatedResult<Domain> paginatedResult = getResource("domains").get(new GenericType<PaginatedResult<Domain>>() {
             });
+            consoleLogger.message("Found " + paginatedResult.getResults().size() + " domain(s)\n\n");
             ObjectTableView tableView = new ObjectTableView(paginatedResult, ImmutableList.of("id", "name"));
             tableView.draw(consoleLogger);
         } else if (create) {
@@ -57,6 +58,4 @@ public class DomainsCommand extends ExecutableCommand {
             getResource("domains/" + id).delete();
         }
     }
-
-
 }
