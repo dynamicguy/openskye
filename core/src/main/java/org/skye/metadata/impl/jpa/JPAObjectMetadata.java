@@ -21,10 +21,10 @@ import java.util.*;
 @Entity
 @Table(name = "OBJECT_METADATA")
 @Data
-@UuidGenerator(name = "JPAObjectMetadata")
+@UuidGenerator(name = "ObjectMetadataGenerator")
 public class JPAObjectMetadata {
     @Id
-    @GeneratedValue(generator = "JPAObjectMetadata")
+    @GeneratedValue(generator = "ObjectMetadataGenerator")
     @Column(unique = true)
     private String id;
     private String path = "";

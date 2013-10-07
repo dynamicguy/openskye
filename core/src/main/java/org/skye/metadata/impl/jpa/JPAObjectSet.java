@@ -1,6 +1,7 @@
 package org.skye.metadata.impl.jpa;
 
 import lombok.Data;
+import org.eclipse.persistence.annotations.UuidGenerator;
 import org.skye.core.ObjectSet;
 
 import javax.persistence.*;
@@ -20,9 +21,10 @@ import java.util.Set;
 @Entity
 @Table(name = "OBJECT_SET")
 @Data
+@UuidGenerator(name = "ObjectSetGenerator")
 public class JPAObjectSet {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "ObjectSetGenerator")
     @Column(unique = true)
     private String id;
     private String name;

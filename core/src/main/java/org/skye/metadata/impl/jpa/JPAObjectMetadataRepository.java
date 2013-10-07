@@ -28,13 +28,11 @@ import java.util.List;
  */
 public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Inject
-    private Provider<EntityManager> emf;
-
-    @Inject
     protected ArchiveStoreDefinitionDAO archiveStores;
-
     @Inject
     protected InformationStoreDefinitionDAO informationStores;
+    @Inject
+    private Provider<EntityManager> emf;
 
     /**
      * Gets the {@link EntityManager} from the Guice-based Provider.
