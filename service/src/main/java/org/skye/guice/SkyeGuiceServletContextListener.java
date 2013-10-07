@@ -1,4 +1,4 @@
-package org.skye.security;
+package org.skye.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

@@ -1,10 +1,12 @@
-package org.skye.security;
+package org.skye.guice;
 
 import com.google.inject.Key;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.guice.web.ShiroWebModule;
-import org.skye.util.CreateDefaultAccount;
+import org.skye.security.SkyeAuthenticatingFilter;
+import org.skye.security.SkyeRealm;
+import org.skye.bootstrap.CreateDefaultAccount;
 
 import javax.servlet.ServletContext;
 

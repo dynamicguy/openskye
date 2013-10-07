@@ -1,4 +1,4 @@
-package org.skye.util;
+package org.skye.bootstrap;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.persist.PersistService;
@@ -40,11 +40,11 @@ public class CreateDefaultAccount {
 
     @Inject
     public void init() {
-        log.info("Checking for default admin account");
+        CreateDefaultAccount.log.info("Checking for default admin account");
 
         if (!userDAO.findByEmail("admin@skye.org").isPresent()) {
             entityManager.getTransaction().begin();
-            log.info("Creating default admin account");
+            CreateDefaultAccount.log.info("Creating default admin account");
             Domain domain = new Domain();
             domain.setName("Skye");
             domainDAO.create(domain);

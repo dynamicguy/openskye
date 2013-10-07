@@ -14,7 +14,7 @@ import org.skye.config.SkyeConfiguration;
 import org.skye.guice.AutoConfig;
 import org.skye.guice.GuiceContainer;
 import org.skye.guice.JerseyContainerModule;
-import org.skye.security.SkyeGuiceServletContextListener;
+import org.skye.guice.SkyeGuiceServletContextListener;
 import org.skye.util.SwaggerBundle;
 
 import java.util.Properties;
@@ -42,7 +42,11 @@ public class SkyeService extends Service<SkyeConfiguration> {
     public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {
 
+
+        // Set-up the container
         GuiceContainer container = new GuiceContainer();
+
+        // Set-up the persistence
         JpaPersistModule jpaPersistModule = new JpaPersistModule("Default");
         Properties props = new Properties();
         props.put("javax.persistence.jdbc.url", configuration.getDatabaseConfiguration().getUrl());
@@ -50,13 +54,23 @@ public class SkyeService extends Service<SkyeConfiguration> {
         props.put("javax.persistence.jdbc.password", configuration.getDatabaseConfiguration().getPassword());
         props.put("javax.persistence.jdbc.driver", configuration.getDatabaseConfiguration().getDriverClass());
         jpaPersistModule.properties(props);
+
+        // Set-up Jersey container
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
+
+        // Create injector
         Injector injector = Guice.createInjector(jpaPersistModule, jerseyContainerModule);
+
+        // Auto config all services based on reflections
         new AutoConfig(SkyeService.class.getPackage().getName()).run(environment, injector);
+
+        // Wire it together
         container.setResourceConfig(environment.getJerseyResourceConfig());
         environment.setJerseyServletContainer(container);
+
+        // Hook in the filters
         environment.addFilter(new GuiceFilter(), configuration.getHttpConfiguration().getRootPath());
-        environment.addFilter(injector.getInstance(PersistFilter.class), "/*");
+        environment.addFilter(injector.getInstance(PersistFilter.class), configuration.getHttpConfiguration().getRootPath());
         environment.addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule));
     }
 
