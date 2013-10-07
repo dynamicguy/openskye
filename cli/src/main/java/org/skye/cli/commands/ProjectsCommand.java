@@ -1,12 +1,11 @@
 package org.skye.cli.commands;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.sun.jersey.api.client.GenericType;
+import com.google.common.collect.ImmutableList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.skye.domain.Project;
-import org.skye.domain.dao.PaginatedResult;
+
+import java.util.List;
 
 /**
  * The login command
@@ -14,21 +13,24 @@ import org.skye.domain.dao.PaginatedResult;
 @Parameters(commandDescription = "Manage projects")
 @Data
 @Slf4j
-public class ProjectsCommand extends ExecutableCommand {
+public class ProjectsCommand extends AbstractCrudCommand {
 
     private final String commandName = "projects";
-    @Parameter(names = "--list")
-    private boolean list;
 
-    @Override
-    public void execute() {
-        if (list) {
-            PaginatedResult<Project> paginatedResult = getResource("projects").get(new GenericType<PaginatedResult<Project>>() {
-            });
-
-            log.info(paginatedResult.toString());
-
-            // Need a nice way to display a table of results?
-        }
+    public List<String> getAttributes() {
+        return ImmutableList.of("name");
     }
+
+    public String getCollectionName() {
+        return "projects";
+    }
+
+    public String getCollectionSingular() {
+        return "project";
+    }
+
+    public String getCollectionPlural() {
+        return "projects";
+    }
+
 }

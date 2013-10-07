@@ -15,11 +15,11 @@ public abstract class ExecutableCommand {
 
     protected SkyeCliSettings settings;
     protected Client client = Client.create();
-    protected ConsoleLogger consoleLogger;
+    protected ConsoleLogger output;
 
     public void initialize(SkyeCliSettings settings, ConsoleLogger consoleLogger) {
         this.settings = settings;
-        this.consoleLogger = consoleLogger;
+        this.output = consoleLogger;
     }
 
     protected WebResource.Builder getResource(String path) {

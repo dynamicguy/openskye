@@ -27,7 +27,7 @@ public class LoginCommand extends ExecutableCommand {
     @Override
     public void execute() {
 
-        consoleLogger.message("Logging in as " + user + " at " + url);
+        output.message("Logging in as " + user + " at " + url);
         settings.setUrl(url);
 
         // Since we are trying to test the username and password
@@ -37,14 +37,14 @@ public class LoginCommand extends ExecutableCommand {
         settings.setApiKey(null);
         try {
             UserSelf userSelf = getResource("account").get(UserSelf.class);
-            consoleLogger.success("Login successful, storing credentials");
+            output.success("Login successful, storing credentials");
             settings.setApiKey(userSelf.getApiKey());
             settings.save();
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus() == 401) {
-                consoleLogger.error("Your username or password is incorrect");
+                output.error("Your username or password is incorrect");
             } else {
-                consoleLogger.error(e.getLocalizedMessage());
+                output.error(e.getLocalizedMessage());
             }
         }
 
