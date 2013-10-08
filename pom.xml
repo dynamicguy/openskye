@@ -22,6 +22,16 @@
         </license>
     </licenses>
 
+    <repositories>
+        <repository>
+            <id>sonatype-oss-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -31,6 +41,7 @@
     <properties>
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
         <github.global.server>github</github.global.server>
+        <dropwizard.version>0.7.0-SNAPSHOT</dropwizard.version>
     </properties>
 
     <developers>

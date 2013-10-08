@@ -11,14 +11,8 @@ database:
   # the JDBC URL
   url: "jdbc:h2:mem:skye"
 
-logging:
-    level: INFO
-    console:
-        enabled: true
-        threshold: DEBUG
-
-http:
-    port: 5000
-    contextParameters:
-            swagger.api.basepath: http://localhost:5000
-            api.version: 1.0
+#http:
+#    port: 5000
+#    contextParameters:
+#            swagger.api.basepath: http://localhost:5000
+#            api.version: 1.0

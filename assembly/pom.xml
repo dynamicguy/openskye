@@ -43,7 +43,7 @@
                 <configuration>
                     <programs>
                         <program>
-                            <mainClass>org.skye.SkyeService</mainClass>
+                            <mainClass>org.skye.SkyeApplication</mainClass>
                             <commandLineArguments>
                                 <commandLineArgument>server</commandLineArgument>
                             </commandLineArguments>

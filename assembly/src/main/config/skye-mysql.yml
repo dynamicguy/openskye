@@ -11,14 +11,8 @@ database:
   # the JDBC URL
   url: "jdbc:mysql://localhost/skye"
 
-logging:
-    level: INFO
-    console:
-        enabled: true
-        threshold: DEBUG
-
-http:
-    port: 5000
-    contextParameters:
-            swagger.api.basepath: http://localhost:8080
-            api.version: 1.0
+#http:
+#    port: 5000
+#    contextParameters:
+#            swagger.api.basepath: http://localhost:8080
+#            api.version: 1.0

@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
+import com.codahale.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ArchiveStore;

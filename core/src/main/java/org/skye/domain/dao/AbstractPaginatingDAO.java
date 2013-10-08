@@ -2,7 +2,7 @@ package org.skye.domain.dao;
 
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
-import com.yammer.dropwizard.util.Generics;
+import io.dropwizard.util.Generics;
 import org.eclipse.persistence.exceptions.ValidationException;
 import org.skye.domain.Identifiable;
 

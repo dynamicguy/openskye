@@ -33,9 +33,9 @@
 
         <!-- Dropwizard - we use this for generics handling -->
         <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
+            <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
-            <version>0.6.2</version>
+            <version>${dropwizard.version}</version>
         </dependency>
 
         <!-- For the domain and also the JPA models for JPA OMR -->
@@ -84,9 +84,9 @@
         <!-- Testing -->
         <!-- Use DropWizard Testing -->
         <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
+            <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-testing</artifactId>
-            <version>0.6.2</version>
+            <version>${dropwizard.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

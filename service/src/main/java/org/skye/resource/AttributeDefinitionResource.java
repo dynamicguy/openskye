@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AttributeDefinition;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.AttributeDefinitionDAO;
@@ -22,8 +22,13 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class AttributeDefinitionResource extends AbstractUpdatableDomainResource<AttributeDefinition> {
 
-    @Inject
+
     protected AttributeDefinitionDAO attributeDefinitionDAO;
+
+    @Inject
+    public AttributeDefinitionResource(AttributeDefinitionDAO dao) {
+        this.attributeDefinitionDAO = dao;
+    }
 
     @ApiOperation(value = "Update attribute definition", notes = "Enter the id of the attribute definition to update and enter the new information, returns updated attribute definition", response = AttributeDefinition.class)
     @Path("/{id}")
