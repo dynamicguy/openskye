@@ -58,7 +58,9 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
 
         DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
 
-        Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule);
+        SkyeModule skyeModule = new SkyeModule();
+
+        Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule, skyeModule);
 
         AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
         autoConfig.initialize(bootstrap, injector);
