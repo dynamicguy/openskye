@@ -10,7 +10,8 @@ import org.skye.domain.dao.PaginatedResult;
 import static org.mockito.Mockito.mock;
 
 public class ChannelResourceTest extends AbstractResourceTest<Channel> {
-    private static final ChannelDAO dao = mock(ChannelDAO.class);
+
+    public static final ChannelDAO dao = mock(ChannelDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new ChannelResource(dao))
@@ -44,7 +45,7 @@ public class ChannelResourceTest extends AbstractResourceTest<Channel> {
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

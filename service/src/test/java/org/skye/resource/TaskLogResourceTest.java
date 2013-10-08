@@ -10,7 +10,8 @@ import org.skye.domain.dao.TaskLogDAO;
 import static org.mockito.Mockito.mock;
 
 public class TaskLogResourceTest extends AbstractResourceTest<TaskLog> {
-    private static final TaskLogDAO dao = mock(TaskLogDAO.class);
+
+    public static final TaskLogDAO dao = mock(TaskLogDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new TaskLogResource(dao))
@@ -44,7 +45,7 @@ public class TaskLogResourceTest extends AbstractResourceTest<TaskLog> {
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

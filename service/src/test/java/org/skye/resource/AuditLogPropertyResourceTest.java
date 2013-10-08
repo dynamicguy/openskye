@@ -10,7 +10,8 @@ import org.skye.domain.dao.PaginatedResult;
 import static org.mockito.Mockito.mock;
 
 public class AuditLogPropertyResourceTest extends AbstractResourceTest<AuditLogProperty> {
-    private static final AuditLogPropertyDAO dao = mock(AuditLogPropertyDAO.class);
+
+    public static final AuditLogPropertyDAO dao = mock(AuditLogPropertyDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new AuditLogPropertyResource(dao))
@@ -20,12 +21,12 @@ public class AuditLogPropertyResourceTest extends AbstractResourceTest<AuditLogP
 
     @Override
     public String getSingular() {
-        return "attributeDefinition";
+        return "auditLogProperty";
     }
 
     @Override
     public String getPlural() {
-        return "attributeDefinitions";
+        return "auditLogProperties";
     }
 
     @Override
@@ -44,7 +45,7 @@ public class AuditLogPropertyResourceTest extends AbstractResourceTest<AuditLogP
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

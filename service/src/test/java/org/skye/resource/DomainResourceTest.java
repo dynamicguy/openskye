@@ -10,7 +10,8 @@ import org.skye.domain.dao.PaginatedResult;
 import static org.mockito.Mockito.mock;
 
 public class DomainResourceTest extends AbstractResourceTest<Domain> {
-    private static final DomainDAO dao = mock(DomainDAO.class);
+
+    public static final DomainDAO dao = mock(DomainDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new DomainResource(dao))
@@ -44,7 +45,7 @@ public class DomainResourceTest extends AbstractResourceTest<Domain> {
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

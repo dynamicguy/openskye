@@ -25,7 +25,7 @@ public class RetentionPolicyResourceTest extends AbstractResourceTest<RetentionP
 
     @Override
     public String getPlural() {
-        return "retentionPolicys";
+        return "retentionPolicies";
     }
 
     @Override
@@ -44,7 +44,7 @@ public class RetentionPolicyResourceTest extends AbstractResourceTest<RetentionP
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

@@ -10,7 +10,8 @@ import org.skye.domain.dao.PermissionDAO;
 import static org.mockito.Mockito.mock;
 
 public class PermissionResourceTest extends AbstractResourceTest<Permission> {
-    private static final PermissionDAO dao = mock(PermissionDAO.class);
+
+    public static final PermissionDAO dao = mock(PermissionDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new PermissionResource(dao))
@@ -44,7 +45,7 @@ public class PermissionResourceTest extends AbstractResourceTest<Permission> {
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

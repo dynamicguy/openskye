@@ -43,6 +43,12 @@
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-guice</artifactId>
             <version>1.9.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Dropwizard Assets -->
@@ -64,6 +70,12 @@
             <version>${dropwizard.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.sun.jersey</groupId>-->
+            <!--<artifactId>jersey-server</artifactId>-->
+            <!--<version>1.17.1</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
 
         <!-- Shiro for security -->
         <dependency>

@@ -10,7 +10,9 @@ import org.skye.domain.dao.PaginatedResult;
 import static org.mockito.Mockito.mock;
 
 public class AttributeInstanceResourceTest extends AbstractResourceTest<AttributeInstance> {
-    private static final AttributeInstanceDAO dao = mock(AttributeInstanceDAO.class);
+
+    public static final AttributeInstanceDAO dao = mock(AttributeInstanceDAO.class);
+
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new AttributeInstanceResource(dao))
@@ -42,7 +44,7 @@ public class AttributeInstanceResourceTest extends AbstractResourceTest<Attribut
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 

@@ -2,6 +2,7 @@ package org.skye.resource;
 
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.skye.domain.Task;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
@@ -10,7 +11,8 @@ import org.skye.domain.dao.TaskDAO;
 import static org.mockito.Mockito.mock;
 
 public class TaskResourceTest extends AbstractResourceTest<Task> {
-    private static final TaskDAO dao = mock(TaskDAO.class);
+
+    public static final TaskDAO dao = mock(TaskDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new TaskResource(dao))
@@ -44,7 +46,13 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
+    }
+
+    @Test
+    public void testAuthorizedPost() throws Exception {
+        // We override this since it can't work
+        // in the test harness
     }
 }

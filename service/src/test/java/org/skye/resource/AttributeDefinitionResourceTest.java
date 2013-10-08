@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 
 public class AttributeDefinitionResourceTest extends AbstractResourceTest<AttributeDefinition> {
 
-    private static final AttributeDefinitionDAO dao = mock(AttributeDefinitionDAO.class);
+    public static final AttributeDefinitionDAO dao = mock(AttributeDefinitionDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new AttributeDefinitionResource(dao))
@@ -45,7 +45,7 @@ public class AttributeDefinitionResourceTest extends AbstractResourceTest<Attrib
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

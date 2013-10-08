@@ -10,7 +10,7 @@ import org.skye.domain.dao.PaginatedResult;
 import static org.mockito.Mockito.mock;
 
 public class MetadataTemplateResourceTest extends AbstractResourceTest<MetadataTemplate> {
-    private static final MetadataTemplateDAO dao = mock(MetadataTemplateDAO.class);
+    public static final MetadataTemplateDAO dao = mock(MetadataTemplateDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new MetadataTemplateResource(dao))
@@ -44,7 +44,7 @@ public class MetadataTemplateResourceTest extends AbstractResourceTest<MetadataT
     }
 
     @Override
-    public Object getExpectedResult() {
+    public PaginatedResult getExpectedResult() {
         return expectedResult;
     }
 }

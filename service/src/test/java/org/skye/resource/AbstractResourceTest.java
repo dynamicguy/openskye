@@ -36,10 +36,11 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
 
     public abstract AbstractPaginatingDAO getDAO();
 
-    public abstract Object getExpectedResult();
+    public abstract PaginatedResult getExpectedResult();
 
     @Before
     public void setUp() {
+        when(getDAO().list()).thenReturn(getExpectedResult());
         when(getDAO().get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(getInstance()));
         when(getDAO().delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
         when(getDAO().create(getInstance())).thenReturn(getInstance());
@@ -85,7 +86,7 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
     public void testUnAuthorizedGetAll() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":list")).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/getInstance()s").get(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural()).get(ClientResponse.class).getStatus(), equalTo(401));
     }
 
     @Test
