@@ -56,15 +56,16 @@ public class ObjectTableView {
         logger.raw(StringUtils.repeat("-", tableWidth));
 
         // Draw rows
-        sb = new StringBuilder();
+
         for (int i = 0; i < paginatedResult.getResults().size(); i++) {
+            sb = new StringBuilder();
             sb.append("|");
             for (TableColumn col : columns) {
                 sb.append(col.getRowValue(i));
                 sb.append("|");
             }
+            logger.raw(sb.toString());
         }
-        logger.raw(sb.toString());
 
         // Close table
         logger.raw(StringUtils.repeat("-", tableWidth));
