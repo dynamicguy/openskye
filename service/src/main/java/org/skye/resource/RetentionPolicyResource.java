@@ -22,8 +22,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class RetentionPolicyResource extends AbstractUpdatableDomainResource<RetentionPolicy> {
 
+    private RetentionPolicyDAO retentionPolicyDAO;
+
     @Inject
-    protected RetentionPolicyDAO retentionPolicyDAO;
+    public RetentionPolicyResource(RetentionPolicyDAO dao) {
+        this.retentionPolicyDAO = dao;
+    }
 
     @ApiOperation(value = "Create new retention policy", notes = "Create a new retention policy and return with its unique id", response = RetentionPolicy.class)
     @POST

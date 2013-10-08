@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.codahale.metrics.annotation.Timed;
 import org.skye.domain.Permission;
 import org.skye.domain.Role;
 import org.skye.domain.RolePermission;
@@ -26,8 +26,12 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class RoleResource extends AbstractUpdatableDomainResource<Role> {
 
+    private RoleDAO roleDAO;
+
     @Inject
-    protected RoleDAO roleDAO;
+    public RoleResource(RoleDAO dao) {
+        this.roleDAO = dao;
+    }
 
     @ApiOperation(value = "Create new role", notes = "Create a new Role and return with a unique id", response = Role.class)
     @POST

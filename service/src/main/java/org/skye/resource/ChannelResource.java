@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.codahale.metrics.annotation.Timed;
 import org.skye.domain.Channel;
 import org.skye.domain.ChannelArchiveStore;
 import org.skye.domain.dao.AbstractPaginatingDAO;
@@ -21,8 +21,12 @@ import javax.ws.rs.core.Response;
 @Path("/api/1/channels")
 public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
 
+    private ChannelDAO channelDAO;
+
     @Inject
-    protected ChannelDAO channelDAO;
+    public ChannelResource(ChannelDAO dao) {
+        this.channelDAO = dao;
+    }
 
     @ApiOperation(value = "Create new channel", notes = "Create a new channel and return with its unique id", response = Channel.class)
     @POST

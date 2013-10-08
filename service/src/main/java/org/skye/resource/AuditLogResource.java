@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.codahale.metrics.annotation.Timed;
 import org.skye.domain.AuditLog;
 import org.skye.domain.AuditLogProperty;
 import org.skye.domain.dao.AbstractPaginatingDAO;
@@ -16,18 +16,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * The REST endpoint for {@link org.skye.domain.Domain}
+ * The REST endpoint for {@link AuditLog}
  */
 @Api(value = "/api/1/auditLogs", description = "Manage audit logs")
 @Path("/api/1/auditLogs")
 @Produces(MediaType.APPLICATION_JSON)
-/**
- * Manage domains
- */
 public class AuditLogResource extends AbstractUpdatableDomainResource<AuditLog> {
 
+    private AuditLogDAO auditLogDAO;
+
     @Inject
-    protected AuditLogDAO auditLogDAO;
+    public AuditLogResource(AuditLogDAO dao) {
+        this.auditLogDAO = dao;
+    }
 
     @ApiOperation(value = "Create new audit log", notes = "Create a new audit log and return with its unique id", response = AuditLog.class)
     @POST

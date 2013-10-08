@@ -21,8 +21,12 @@ import javax.ws.rs.core.Response;
 @Path("/api/1/projects")
 public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
 
+    private ProjectDAO projectDAO;
+
     @Inject
-    protected ProjectDAO projectDAO;
+    public ProjectResource(ProjectDAO dao) {
+        this.projectDAO = dao;
+    }
 
     @ApiOperation(value = "Create new project", notes = "Create a new project and return with its unique id", response = Project.class)
     @POST

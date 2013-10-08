@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.codahale.metrics.annotation.Timed;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Domain;
 import org.skye.domain.InformationStoreDefinition;
@@ -24,8 +24,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
 
+    private DomainDAO domainDAO;
+
     @Inject
-    protected DomainDAO domainDAO;
+    public DomainResource(DomainDAO dao) {
+        this.domainDAO = dao;
+    }
 
     @ApiOperation(value = "Create new domain", notes = "Create a new domain and return with its unique id", response = Domain.class)
     @POST
