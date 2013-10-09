@@ -21,20 +21,52 @@ In order to build the Skye platform you will need to have:
 
 You should then be able to simply run:
 
-     mvn clean install
+     $ mvn clean install
 
 Running
 -
 
 In order to get a basic server running simply build, then
 
-     java -jar service/target/skye.jar server service/skye.yml
+	 $ chmod 755 assembly/target/appassembler/bin/skye-server
+     $ assembly/target/appassembler/bin/skye-server assembly/target/appassembler/etc/skye.yml
+
+If you have [Foreman](http://ddollar.github.io/foreman/) then you change just start that and it'll take care of the chmod.
 
 Once the server is running you should be able to visit [http://localhost:8080/explore/index.html](http://localhost:8080/explore/index.html) to see the REST endpoints for the running instance.
 
 ![screen](https://raw.github.com/infobelt/skye/master/screenshot.png)
 
-N.B. There is also a Procfile in place which you can use with Heroku to quickly deploy a test instance there.
+Interacting with the Server
+-
+
+With the server up you can start interacting with it using the skye command line tool.  First make sure that it is executable.
+
+	 $ chmod 755 assembly/target/appassembler/bin/skye
+
+Then you can login using the default username and password
+
+	 $ assembly/target/appassembler/bin/skye login --username admin@skye.org --password changeme                                          
+	 Logging in as admin@skye.org at http://localhost:5000/api/1/
+	 Login successful, storing credentials
+	 $
+
+This will set-up a your API key in your local skye settings (~/.skye/settings.json)
+
+Then you can use the commands to interact with the server, ie.
+
+	$ assembly/target/appassembler/bin/skye login domains --list
+	Listing domains
+
+
+	-------------------------------------------
+	|id                                  |name|
+	-------------------------------------------
+	|F06FE161-DC34-4A6F-AED7-BFF203DB4DDF|Skye|
+	-------------------------------------------
+
+	Found 1 domains
+	$
 
 Getting Involved
 -
