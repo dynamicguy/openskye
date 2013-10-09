@@ -8,7 +8,7 @@
         <version>0.0.4-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.skye</groupId>
+    <groupId>org.openskye</groupId>
     <artifactId>skye-assembly</artifactId>
 
     <name>Skye :: Assembly</name>
