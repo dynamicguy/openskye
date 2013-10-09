@@ -3,7 +3,7 @@ package org.skye.resource;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
+import com.codahale.metrics.annotation.Timed;
 import org.skye.domain.TaskStatistics;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
@@ -52,7 +52,7 @@ public class TaskStatisticsResource extends AbstractUpdatableDomainResource<Task
     @Transactional
     @Timed
     @Override
-    public TaskStatistics get(@PathParam("id") String id){
+    public TaskStatistics get(@PathParam("id") String id) {
         return super.get(id);
     }
 

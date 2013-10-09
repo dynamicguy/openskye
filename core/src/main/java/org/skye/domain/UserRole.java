@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -14,16 +14,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "USER_ROLE")
 @Data
-@EqualsAndHashCode(of="id")
+@EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserRole implements Identifiable
-{
+@UuidGenerator(name = "UserRoleGenerator")
+public class UserRole implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "UserRoleGenerator")
     @Column(unique = true)
-    protected String id;
+    private String id;
     @ManyToOne
     private User user;
     @ManyToOne

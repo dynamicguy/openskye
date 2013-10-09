@@ -91,14 +91,21 @@ public class LocalFSArchiveStoreTest {
     public void ensureWeCanDiscoverObjects() {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
+        asi.setId(UUID.randomUUID().toString());
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj");
+        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/archive-" + UUID.randomUUID().toString());
         InformationStoreDefinition dis = getDis("test1");
+        dis.setId(UUID.randomUUID().toString());
+
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
+        das.setId(UUID.randomUUID().toString());
+
         das.setArchiveStoreInstance(asi);
         ChannelArchiveStore cas = new ChannelArchiveStore();
+        cas.setId(UUID.randomUUID().toString());
         cas.setArchiveStoreDefinition(das);
         Channel channel = new Channel();
+        channel.setId(UUID.randomUUID().toString());
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
 
@@ -123,7 +130,7 @@ public class LocalFSArchiveStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj");
+        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/archive-" + UUID.randomUUID().toString());
         InformationStoreDefinition dis = getDis("test2");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());

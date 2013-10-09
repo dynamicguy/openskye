@@ -40,9 +40,11 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     @Inject
     private Injector injector;
     private String tmpPath;
+    private boolean initialized = false;
 
     @Override
     public void initialize(ArchiveStoreDefinition das) {
+        initialized = true;
         this.archiveStoreDefinition = das;
         this.localPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_PATH);
 
@@ -65,7 +67,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public String getName() {
-        return archiveStoreDefinition.getName() + " (Local filesystem)";
+        return  "Local filesystem";
     }
 
     @Override

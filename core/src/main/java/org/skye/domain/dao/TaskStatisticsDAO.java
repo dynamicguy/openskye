@@ -9,6 +9,5 @@ import org.skye.domain.TaskStatistics;
  * Time: 12:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TaskStatisticsDAO extends AbstractPaginatingDAO<TaskStatistics>
-{
+public class TaskStatisticsDAO extends AbstractPaginatingDAO<TaskStatistics> {
 }

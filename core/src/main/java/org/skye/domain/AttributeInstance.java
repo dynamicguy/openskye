@@ -1,8 +1,7 @@
 package org.skye.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -10,17 +9,15 @@ import javax.persistence.*;
  * An instance of an attribute defined by an {@link AttributeDefinition}
  */
 @Entity
-@Table(name = "ATTRIBUTE_DEFINITION")
+@Table(name = "ATTRIBUTE_INSTANCE")
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AttributeInstance implements Identifiable
-{
+@UuidGenerator(name = "AttributeInstanceGenerator")
+public class AttributeInstance implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "AttributeInstanceGenerator")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private MetadataOwnerType metadataOwnerType;
     private String ownerId;
     @ManyToOne

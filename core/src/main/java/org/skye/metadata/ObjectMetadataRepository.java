@@ -19,7 +19,6 @@ public interface ObjectMetadataRepository {
      * Creates a new {@link ObjectSet}
      *
      * @param name The name to be used for the {@link ObjectSet}.
-     *
      * @return a new object set
      */
     ObjectSet createObjectSet(String name);
@@ -51,13 +50,11 @@ public interface ObjectMetadataRepository {
      * Determines if the {@link ObjectMetadata} is already included in the
      * {@link ObjectSet}.
      *
-     * @param objectSet The {@link ObjectSet} against which the query will run.
-     *
+     * @param objectSet      The {@link ObjectSet} against which the query will run.
      * @param objectMetadata The {@link ObjectMetadata} for which the query is
      *                       run.
-     *
      * @return True if the {@link ObjectMetadata} is found in the
-     * {@link ObjectSet}, or false if it is not.
+     *         {@link ObjectSet}, or false if it is not.
      */
     boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
 

@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.MetadataTemplate;
 import org.skye.domain.Permission;
 import org.skye.domain.dao.AbstractPaginatingDAO;
@@ -23,8 +23,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class MetadataTemplateResource extends AbstractUpdatableDomainResource<MetadataTemplate> {
 
+    private MetadataTemplateDAO metadataTemplateDAO;
+
     @Inject
-    protected MetadataTemplateDAO metadataTemplateDAO;
+    public MetadataTemplateResource(MetadataTemplateDAO dao) {
+        this.metadataTemplateDAO = dao;
+    }
 
     @ApiOperation(value = "Create new metadata template", notes = "Create a new metadata template and return with its unique id", response = MetadataTemplate.class)
     @POST

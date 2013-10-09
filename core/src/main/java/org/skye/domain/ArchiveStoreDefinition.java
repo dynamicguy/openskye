@@ -2,7 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -15,14 +15,13 @@ import java.util.Map;
 @Table(name = "DOMAIN_ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ArchiveStoreDefinition implements Identifiable
-{
+@UuidGenerator(name = "ArchiveStoreDefinitionGenerator")
+public class ArchiveStoreDefinition implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "ArchiveStoreDefinitionGenerator")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private String name;
     private String description;
     @ManyToOne

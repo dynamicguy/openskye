@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hbase.util.FSHDFSUtils;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
@@ -28,21 +27,27 @@ public class HdfsArchiveStore implements ArchiveStore {
     private FileSystem hdfsFileSystem;
     private ArchiveStoreDefinition archiveStoreDefinition;
 
-
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
         String path = das.getProperties().get(HDFS_CONFIG);
         hdfsConfig = new Configuration();
-        if(!hdfsConfig.get("fs.defaultFS").equals(das.getProperties().get(HDFS_FS_SITE))){
-            hdfsConfig.set("fs.defaultFS", das.getProperties().get(HDFS_FS_SITE));
-            hdfsConfig.set("hadoop.security.group.mapping", "org.apache.hadoop.security.ShellBasedUnixGroupsMapping");
-        }
-        try {
-            hdfsFileSystem = FileSystem.get(URI.create(das.getProperties().get(HDFS_FS_SITE)), hdfsConfig);
-        } catch (IOException e) {
-            log.error("HDFS config file not found");
-            throw new SkyeException("HDFS config file not found", e);
+        if (!hdfsConfig.get("fs.defaultFS").equals(das.getProperties().get(HDFS_FS_SITE))) {
+            Path hdfsSite = new Path(path + "/hdfs-site.xml");
+            Path corePath = new Path(path + "/core-site.xml");
+            hdfsConfig = new Configuration();
+            hdfsConfig.addResource(corePath.toString());
+            hdfsConfig.addResource(hdfsSite.toString());
+            if (!hdfsConfig.get("fs.defaultFS").equals(das.getProperties().get(HDFS_FS_SITE))) {
+                hdfsConfig.set("fs.defaultFS", das.getProperties().get(HDFS_FS_SITE));
+                hdfsConfig.set("hadoop.security.group.mapping", "org.apache.hadoop.security.ShellBasedUnixGroupsMapping");
+            }
+            try {
+                hdfsFileSystem = FileSystem.get(URI.create(das.getProperties().get(HDFS_FS_SITE)), hdfsConfig);
+            } catch (IOException e) {
+                log.error("HDFS config file not found");
+                throw new SkyeException("HDFS config file not found", e);
+            }
         }
     }
 

@@ -6,8 +6,7 @@ import org.skye.domain.Project;
 import javax.persistence.metamodel.*;
 
 @StaticMetamodel(JPAObjectMetadata.class)
-public class JPAObjectMetadata_
-{
+public class JPAObjectMetadata_ {
     public static volatile SingularAttribute<JPAObjectMetadata, String> id;
     public static volatile SingularAttribute<JPAObjectMetadata, String> path;
     public static volatile SingularAttribute<JPAObjectMetadata, String> implementation;

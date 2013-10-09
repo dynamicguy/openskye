@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Task;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
@@ -22,14 +22,18 @@ import javax.ws.rs.core.Response;
 @Path("/api/1/tasks")
 @Produces(MediaType.APPLICATION_JSON)
 /**
- * Manage domains
+ * Manage tasks
  */
 public class TaskResource extends AbstractUpdatableDomainResource<Task> {
 
+    private TaskDAO taskDAO;
     @Inject
-    protected TaskDAO taskDAO;
+    private TaskManager taskManager;
+
     @Inject
-    protected TaskManager taskManager;
+    public TaskResource(TaskDAO dao) {
+        this.taskDAO = dao;
+    }
 
     @ApiOperation(value = "Create new task", notes = "Create a new task and return with its unique id", response = Task.class)
     @POST

@@ -1,7 +1,7 @@
 package org.skye.metadata.impl.jpa;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 import org.skye.core.ObjectSet;
 
 import javax.persistence.*;
@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * A JPA persistable entity which represents an {@link ObjectSet}, complete
  * with methods to translate between the two types.
- *
+ * <p/>
  * This object will tie an Id to a list of ids for
  * {@link org.skye.core.ObjectMetadata} instances, which will be stored
  * in the dataset.  The {@link JPAObjectMetadataRepository} will allow
@@ -21,16 +21,13 @@ import java.util.Set;
 @Entity
 @Table(name = "OBJECT_SET")
 @Data
-public class JPAObjectSet
-{
+@UuidGenerator(name = "ObjectSetGenerator")
+public class JPAObjectSet {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "ObjectSetGenerator")
     @Column(unique = true)
     private String id;
-
     private String name;
-
     @ManyToMany
     @JoinTable(
             name = "OBJECT_SET_TO_MEATDATA",
@@ -52,8 +49,7 @@ public class JPAObjectSet
     /**
      * Default Constructor.
      */
-    public JPAObjectSet()
-    {
+    public JPAObjectSet() {
         this.name = "";
         this.objectMetadataSet = new HashSet<>();
 
@@ -66,8 +62,7 @@ public class JPAObjectSet
      *
      * @param objectSet The {@link ObjectSet} to be persisted.
      */
-    public JPAObjectSet(ObjectSet objectSet)
-    {
+    public JPAObjectSet(ObjectSet objectSet) {
         this.id = objectSet.getId();
         this.name = objectSet.getName();
 
@@ -82,8 +77,7 @@ public class JPAObjectSet
      *
      * @return An {@link ObjectSet} copy of the instance.
      */
-    public ObjectSet toObjectSet()
-    {
+    public ObjectSet toObjectSet() {
         ObjectSet objectSet = new ObjectSet();
 
         objectSet.setId(this.id);

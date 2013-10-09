@@ -1,7 +1,7 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.wordnik.swagger.annotations.Api;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.core.SkyePlatform;
 
 import javax.ws.rs.GET;

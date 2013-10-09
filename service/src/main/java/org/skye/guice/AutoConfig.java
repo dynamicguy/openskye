@@ -1,14 +1,14 @@
 package org.skye.guice;
 
+
 import com.google.common.base.Preconditions;
 import com.google.inject.Injector;
 import com.sun.jersey.spi.inject.InjectableProvider;
-import com.yammer.dropwizard.Bundle;
-import com.yammer.dropwizard.config.Bootstrap;
-import com.yammer.dropwizard.config.Environment;
-import com.yammer.dropwizard.lifecycle.Managed;
-import com.yammer.dropwizard.tasks.Task;
-import com.yammer.metrics.core.HealthCheck;
+import io.dropwizard.Bundle;
+import io.dropwizard.lifecycle.Managed;
+import io.dropwizard.servlets.tasks.Task;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -43,7 +43,7 @@ public class AutoConfig {
     }
 
     public void run(Environment environment, Injector injector) {
-        //addHealthChecks(environment, injector);
+        addHealthChecks(environment, injector);
         addProviders(environment, injector);
         addInjectableProviders(environment, injector);
         addResources(environment, injector);
@@ -51,11 +51,15 @@ public class AutoConfig {
         addManaged(environment, injector);
     }
 
+    public void initialize(Bootstrap<?> bootstrap, Injector injector) {
+        addBundles(bootstrap, injector);
+    }
+
     private void addManaged(Environment environment, Injector injector) {
         Set<Class<? extends Managed>> managedClasses = reflections
                 .getSubTypesOf(Managed.class);
         for (Class<? extends Managed> managed : managedClasses) {
-            environment.manage(injector.getInstance(managed));
+            environment.lifecycle().manage(injector.getInstance(managed));
             logger.info("Added managed: {}", managed);
         }
     }
@@ -64,17 +68,18 @@ public class AutoConfig {
         Set<Class<? extends Task>> taskClasses = reflections
                 .getSubTypesOf(Task.class);
         for (Class<? extends Task> task : taskClasses) {
-            environment.addTask(injector.getInstance(task));
+            environment.admin().addTask(injector.getInstance(task));
             logger.info("Added task: {}", task);
         }
     }
 
     private void addHealthChecks(Environment environment, Injector injector) {
-        Set<Class<? extends HealthCheck>> healthCheckClasses = reflections
-                .getSubTypesOf(HealthCheck.class);
-        for (Class<? extends HealthCheck> healthCheck : healthCheckClasses) {
-            environment.addHealthCheck(injector.getInstance(healthCheck));
-            logger.info("Added healthCheck: {}", healthCheck);
+        Set<Class<? extends InjectableHealthCheck>> healthCheckClasses = reflections
+                .getSubTypesOf(InjectableHealthCheck.class);
+        for (Class<? extends InjectableHealthCheck> healthCheck : healthCheckClasses) {
+            InjectableHealthCheck instance = injector.getInstance(healthCheck);
+            environment.healthChecks().register(instance.getName(), instance);
+            logger.info("Added injectableHealthCheck: {}", healthCheck);
         }
     }
 
@@ -84,7 +89,7 @@ public class AutoConfig {
         Set<Class<? extends InjectableProvider>> injectableProviders = reflections
                 .getSubTypesOf(InjectableProvider.class);
         for (Class<? extends InjectableProvider> injectableProvider : injectableProviders) {
-            environment.addProvider(injectableProvider);
+            environment.jersey().register(injectableProvider);
             logger.info("Added injectableProvider: {}", injectableProvider);
         }
     }
@@ -93,7 +98,7 @@ public class AutoConfig {
         Set<Class<?>> providerClasses = reflections
                 .getTypesAnnotatedWith(Provider.class);
         for (Class<?> provider : providerClasses) {
-            environment.addProvider(provider);
+            environment.jersey().register(provider);
             logger.info("Added provider class: {}", provider);
         }
     }
@@ -102,7 +107,7 @@ public class AutoConfig {
         Set<Class<?>> resourceClasses = reflections
                 .getTypesAnnotatedWith(Path.class);
         for (Class<?> resource : resourceClasses) {
-            environment.addResource(resource);
+            environment.jersey().register(resource);
             logger.info("Added resource class: {}", resource);
         }
     }
@@ -116,3 +121,4 @@ public class AutoConfig {
         }
     }
 }
+

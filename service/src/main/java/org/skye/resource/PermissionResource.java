@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Permission;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
@@ -25,8 +25,12 @@ import javax.ws.rs.core.Response;
  */
 public class PermissionResource extends AbstractUpdatableDomainResource<Permission> {
 
-    @Inject
     protected PermissionDAO permissionDAO;
+
+    @Inject
+    public PermissionResource(PermissionDAO dao) {
+        this.permissionDAO = dao;
+    }
 
     @ApiOperation(value = "Create new permission", notes = "Create a new permission and return with its id", response = Permission.class)
     @POST

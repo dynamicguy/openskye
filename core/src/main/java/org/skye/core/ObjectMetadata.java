@@ -45,7 +45,7 @@ public class ObjectMetadata {
     public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreDefinitionId) {
         log.debug("Resolving ACB for " + archiveStoreDefinitionId);
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
-            if (acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinitionId)) {
+            if (acb.getArchiveStoreDefinitionId() != null && acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinitionId)) {
                 log.debug("Found ACB " + acb);
                 return Optional.of(acb);
             }

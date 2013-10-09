@@ -2,16 +2,14 @@ package org.skye.domain;
 
 import org.junit.Test;
 
-import static com.yammer.dropwizard.testing.JsonHelpers.asJson;
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Test the serialization and handling of the {@link Domain}
  */
-public class DomainTest {
+public class DomainTest extends AbstractDomainTest {
 
     @Test
     public void serializesToJSON() throws Exception {

@@ -2,7 +2,7 @@ package org.skye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
 
@@ -13,13 +13,12 @@ import javax.persistence.*;
 @Table(name = "TASK_LOG")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaskLog implements Identifiable
-{
+@UuidGenerator(name = "TaskLogGenerator")
+public class TaskLog implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "TaskLogGenerator")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private Task task;
     private String message;
 

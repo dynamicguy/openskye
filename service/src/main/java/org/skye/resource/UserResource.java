@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.User;
 import org.skye.domain.UserRole;
 import org.skye.domain.dao.AbstractPaginatingDAO;
@@ -15,14 +15,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 /**
- * The REST endpoint for {@link org.skye.domain.Domain}
+ * The REST endpoint for {@link org.skye.domain.User}
  */
 @Api(value = "/api/1/users", description = "Manage users")
 @Path("/api/1/users")
 public class UserResource extends AbstractUpdatableDomainResource<User> {
 
+    private UserDAO userDAO;
+
     @Inject
-    protected UserDAO userDAO;
+    public UserResource(UserDAO dao) {
+        this.userDAO = dao;
+    }
 
     @ApiOperation(value = "Create new user", notes = "Create a new user and return with its unique id", response = User.class)
     @POST

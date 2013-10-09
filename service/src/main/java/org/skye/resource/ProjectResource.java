@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.Channel;
 import org.skye.domain.Project;
 import org.skye.domain.dao.AbstractPaginatingDAO;
@@ -21,8 +21,12 @@ import javax.ws.rs.core.Response;
 @Path("/api/1/projects")
 public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
 
+    private ProjectDAO projectDAO;
+
     @Inject
-    protected ProjectDAO projectDAO;
+    public ProjectResource(ProjectDAO dao) {
+        this.projectDAO = dao;
+    }
 
     @ApiOperation(value = "Create new project", notes = "Create a new project and return with its unique id", response = Project.class)
     @POST

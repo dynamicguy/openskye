@@ -1,4 +1,4 @@
-package org.skye.security;
+package org.skye.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -15,7 +15,6 @@ import javax.servlet.ServletContextEvent;
 public class SkyeGuiceServletContextListener extends GuiceServletContextListener {
     private final JpaPersistModule jpaPersistModule;
     private ServletContext servletContext;
-    private String securityModel;
 
     public SkyeGuiceServletContextListener(JpaPersistModule jpaPersistModule) {
         this.jpaPersistModule = jpaPersistModule;

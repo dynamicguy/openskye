@@ -3,7 +3,7 @@ package org.skye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -19,13 +19,12 @@ import java.util.UUID;
 @Table(name = "USER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User implements Identifiable
-{
+@UuidGenerator(name = "UserGenerator")
+public class User implements Identifiable {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "UserGenerator")
     @Column(unique = true)
-    protected String id;
+    private String id;
     private String email;
     private String name;
     @JsonIgnore
@@ -44,7 +43,6 @@ public class User implements Identifiable
     @PrePersist
     public void setKeys() {
         encryptPassword();
-        resetApiKey();
     }
 
     public void encryptPassword() {
@@ -55,11 +53,4 @@ public class User implements Identifiable
             setPasswordHash(BCrypt.hashpw(UUID.randomUUID().toString(), BCrypt.gensalt()));
         }
     }
-
-    public void resetApiKey() {
-        // Generate a UUID as an API key
-        String newKey = UUID.randomUUID().toString();
-        setApiKey(newKey);
-    }
-
 }

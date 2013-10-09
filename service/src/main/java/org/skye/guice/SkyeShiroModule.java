@@ -1,10 +1,12 @@
-package org.skye.security;
+package org.skye.guice;
 
 import com.google.inject.Key;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.guice.web.ShiroWebModule;
-import org.skye.util.CreateDefaultAccount;
+import org.skye.bootstrap.CreateDefaultAccount;
+import org.skye.security.SkyeAuthenticatingFilter;
+import org.skye.security.SkyeRealm;
 
 import javax.servlet.ServletContext;
 
@@ -14,7 +16,7 @@ import javax.servlet.ServletContext;
  */
 public class SkyeShiroModule extends ShiroWebModule {
 
-    public static final Key<ApiKeyFilter> API_KEY = Key.get(ApiKeyFilter.class);
+    public static final Key<SkyeAuthenticatingFilter> SKYE_AUTHENTICATING_FILTER_KEY = Key.get(SkyeAuthenticatingFilter.class);
 
     public SkyeShiroModule(ServletContext sc) {
         super(sc);
@@ -25,7 +27,7 @@ public class SkyeShiroModule extends ShiroWebModule {
         bindRealm().to(SkyeRealm.class).asEagerSingleton();
         bind(CreateDefaultAccount.class).asEagerSingleton();
         bind(CacheManager.class).to(MemoryConstrainedCacheManager.class).asEagerSingleton();
-        addFilterChain("/api/**", NO_SESSION_CREATION, API_KEY, AUTHC_BASIC);
+        addFilterChain("/api/**", NO_SESSION_CREATION, SKYE_AUTHENTICATING_FILTER_KEY);
         ShiroWebModule.bindGuiceFilter(binder());
     }
 

@@ -20,15 +20,14 @@ import javax.persistence.EntityManager;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.Is.is;
 
 /**
  * This class performs unit testing for the jpa package of classes, including
  * {@link JPAArchiveContentBlock}, {@link JPAObjectMetadata}, and the
  * {@link JPAObjectMetadataRepository}.
  */
-public class JPAObjectMetadataRepositoryTest
-{
+public class JPAObjectMetadataRepositoryTest {
     @Rule
     public final GuiceBerryRule guiceBerryRule = new GuiceBerryRule(InMemoryTestModule.class);
     @Inject
@@ -49,8 +48,7 @@ public class JPAObjectMetadataRepositoryTest
     public Provider<EntityManager> emf;
 
     @Test
-    public void metadataStorageAndRetrieval()
-    {
+    public void metadataStorageAndRetrieval() {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
         ArchiveContentBlock acb = new JPAArchiveContentBlock().toArchiveContentBlock();
@@ -111,9 +109,8 @@ public class JPAObjectMetadataRepositoryTest
         // store definition.
         metadataList = this.omr.getObjects(isd);
 
-        for(ObjectMetadata metadata : metadataList)
-        {
-            if(metadata.getId().equals(objectMetadata.getId()))
+        for (ObjectMetadata metadata : metadataList) {
+            if (metadata.getId().equals(objectMetadata.getId()))
                 isFound = true;
         }
 
@@ -125,9 +122,8 @@ public class JPAObjectMetadataRepositoryTest
         isFound = false;
         metadataList = this.omr.getObjects(task);
 
-        for(ObjectMetadata metadata : metadataList)
-        {
-            if(metadata.getId().equals(objectMetadata.getId()))
+        for (ObjectMetadata metadata : metadataList) {
+            if (metadata.getId().equals(objectMetadata.getId()))
                 isFound = true;
         }
 
@@ -159,14 +155,13 @@ public class JPAObjectMetadataRepositoryTest
         isFound = false;
         metadataList = this.omr.getObjects(objectSet);
 
-        for(ObjectMetadata metadata : metadataList)
-        {
-            if(metadata.getId().equals(objectMetadata.getId()))
+        for (ObjectMetadata metadata : metadataList) {
+            if (metadata.getId().equals(objectMetadata.getId()))
                 isFound = true;
         }
 
         assertThat("object is found in object set",
-                    isFound);
+                isFound);
 
         // Test that an object can be removed from the object set.
         this.emf.get().getTransaction().begin();

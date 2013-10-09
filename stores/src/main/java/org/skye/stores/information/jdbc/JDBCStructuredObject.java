@@ -1,6 +1,7 @@
 package org.skye.stores.information.jdbc;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.UpdateableDataContext;
 import org.eobjects.metamodel.schema.Column;
@@ -17,6 +18,7 @@ import java.util.List;
  * The implementation of a {@link StructuredObject}
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class JDBCStructuredObject extends StructuredObject {
 
     private final DataContext dataContext;

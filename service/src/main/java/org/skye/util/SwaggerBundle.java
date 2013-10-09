@@ -7,8 +7,8 @@ import com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON;
 import com.wordnik.swagger.jaxrs.listing.ResourceListingProvider;
 import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
 import com.wordnik.swagger.reader.ClassReaders;
-import com.yammer.dropwizard.assets.AssetsBundle;
-import com.yammer.dropwizard.config.Environment;
+import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.setup.Environment;
 
 /**
  * A little bundle to handle hooking in the swagger stuff
@@ -18,10 +18,10 @@ public class SwaggerBundle extends AssetsBundle {
     @Override
     public void run(Environment environment) {
         super.run(environment);
-        environment.addResource(new ApiListingResourceJSON());
+        environment.jersey().register(new ApiListingResourceJSON());
         // add swagger providers
-        environment.addProvider(new ApiDeclarationProvider());
-        environment.addProvider(new ResourceListingProvider());
+        environment.jersey().register(new ApiDeclarationProvider());
+        environment.jersey().register(new ResourceListingProvider());
 
         // add a class scanner.  The DefaultJaxrsScanner will look for an Application context and getSingletons() and getClasses()
         ScannerFactory.setScanner(new DefaultJaxrsScanner());

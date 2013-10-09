@@ -4,7 +4,6 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.skye.domain.*;
-import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.stores.inmemory.InMemoryArchiveStore;
 import org.skye.stores.inmemory.InMemoryInformationStore;
 import org.skye.task.TaskManager;

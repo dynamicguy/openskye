@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.RetentionPolicy;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
@@ -22,8 +22,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class RetentionPolicyResource extends AbstractUpdatableDomainResource<RetentionPolicy> {
 
+    private RetentionPolicyDAO retentionPolicyDAO;
+
     @Inject
-    protected RetentionPolicyDAO retentionPolicyDAO;
+    public RetentionPolicyResource(RetentionPolicyDAO dao) {
+        this.retentionPolicyDAO = dao;
+    }
 
     @ApiOperation(value = "Create new retention policy", notes = "Create a new retention policy and return with its unique id", response = RetentionPolicy.class)
     @POST

@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AttributeInstance;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.AttributeInstanceDAO;
@@ -22,8 +22,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class AttributeInstanceResource extends AbstractUpdatableDomainResource<AttributeInstance> {
 
-    @Inject
     protected AttributeInstanceDAO attributeInstanceDAO;
+
+    @Inject
+    public AttributeInstanceResource(AttributeInstanceDAO dao) {
+        this.attributeInstanceDAO = dao;
+    }
 
     @ApiOperation(value = "Create new attribute", notes = "Create a new attribute and return with its unique id", response = AttributeInstance.class)
     @POST

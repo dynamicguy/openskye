@@ -17,8 +17,7 @@ import javax.ws.rs.core.MediaType;
  * domain objects persisted in hibernate
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractRealOnlyDomainResource<T extends Identifiable>
-{
+public abstract class AbstractRealOnlyDomainResource<T extends Identifiable> {
     protected abstract AbstractPaginatingDAO<T> getDAO();
 
     protected abstract String getPermissionDomain();

@@ -47,4 +47,8 @@ public class SkyePlatform {
     public String getStatus() {
         return status;
     }
+
+    public String toString() {
+        return "Skye " + getVersion() + " (" + getRelease() + ")";
+    }
 }

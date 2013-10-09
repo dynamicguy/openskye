@@ -12,17 +12,14 @@ import org.skye.metadata.ObjectMetadataRepository;
 /**
  * An implementation of the {@link ObjectMetadataRepository} based on MongoDB
  */
-public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository
-{
+public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
-    public ObjectSet createObjectSet(String name)
-    {
+    public ObjectSet createObjectSet(String name) {
         return null;
     }
 
     @Override
-    public void deleteObjectSet(ObjectSet objectSet)
-    {
+    public void deleteObjectSet(ObjectSet objectSet) {
         return;
     }
 
@@ -32,8 +29,7 @@ public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository
     }
 
     @Override
-    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata)
-    {
+    public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         return false;
     }
 

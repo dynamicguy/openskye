@@ -1,7 +1,6 @@
 package org.skye.filters;
 
 import org.skye.core.ObjectMetadata;
-import org.skye.core.SimpleObject;
 import org.skye.domain.ChannelFilterDefinition;
 
 /**

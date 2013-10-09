@@ -1,7 +1,7 @@
 package org.skye.metadata.impl.jpa;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.eclipse.persistence.annotations.UuidGenerator;
 import org.joda.time.DateTime;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ObjectMetadata;
@@ -21,10 +21,10 @@ import java.util.*;
 @Entity
 @Table(name = "OBJECT_METADATA")
 @Data
+@UuidGenerator(name = "ObjectMetadataGenerator")
 public class JPAObjectMetadata {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "ObjectMetadataGenerator")
     @Column(unique = true)
     private String id;
     private String path = "";
@@ -94,12 +94,10 @@ public class JPAObjectMetadata {
      * Creates an {@link ObjectMetadata} copy of the JPA Entity version.
      *
      * @return An {@link ObjectMetadata} copy of this Entity.
-     *
      * @throws SkyeException See the {@link JPAArchiveContentBlock} method,
      *                       ToArchiveContentBlock() for more information on possible exceptions.
      */
-    public ObjectMetadata toObjectMetadata()
-    {
+    public ObjectMetadata toObjectMetadata() {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         Set<Tag> tags = new HashSet<>();
         List<ArchiveContentBlock> blocks = new ArrayList<>();

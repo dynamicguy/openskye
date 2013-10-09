@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.TaskLog;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.PaginatedResult;
@@ -21,12 +21,16 @@ import javax.ws.rs.core.Response;
 @Path("/api/1/taskLogs")
 @Produces(MediaType.APPLICATION_JSON)
 /**
- * Manage domains
+ * Manage task logs
  */
 public class TaskLogResource extends AbstractUpdatableDomainResource<TaskLog> {
 
+    private TaskLogDAO taskLogDAO;
+
     @Inject
-    protected TaskLogDAO taskLogDAO;
+    public TaskLogResource(TaskLogDAO dao) {
+        this.taskLogDAO = dao;
+    }
 
     @ApiOperation(value = "Create new task log", notes = "Create a new task log and return with its unique id", response = TaskLog.class)
     @POST

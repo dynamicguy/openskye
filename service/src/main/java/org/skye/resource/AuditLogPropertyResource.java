@@ -1,9 +1,9 @@
 package org.skye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.yammer.metrics.annotation.Timed;
 import org.skye.domain.AuditLogProperty;
 import org.skye.domain.dao.AbstractPaginatingDAO;
 import org.skye.domain.dao.AuditLogPropertyDAO;
@@ -25,8 +25,13 @@ import javax.ws.rs.core.Response;
  */
 public class AuditLogPropertyResource extends AbstractUpdatableDomainResource<AuditLogProperty> {
 
-    @Inject
+
     protected AuditLogPropertyDAO auditLogPropertyDAO;
+
+    @Inject
+    public AuditLogPropertyResource(AuditLogPropertyDAO dao) {
+        auditLogPropertyDAO = dao;
+    }
 
     @ApiOperation(value = "Create new audit log property", notes = "Create a new audit log property and return with its unique id", response = AuditLogProperty.class)
     @POST

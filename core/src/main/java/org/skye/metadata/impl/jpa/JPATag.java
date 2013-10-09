@@ -2,9 +2,9 @@ package org.skye.metadata.impl.jpa;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import javax.persistence.Embeddable;
-
 import org.skye.core.Tag;
+
+import javax.persistence.Embeddable;
 
 /**
  * An embeddable version of the {@link Tag} class, complete with methods to
@@ -14,26 +14,22 @@ import org.skye.core.Tag;
 @Embeddable
 @Data
 @EqualsAndHashCode(of = "name")
-public class JPATag
-{
+public class JPATag {
     private String name;
 
-    public JPATag()
-    {
+    public JPATag() {
         this.name = "";
 
         return;
     }
 
-    public JPATag(Tag tag)
-    {
+    public JPATag(Tag tag) {
         this.name = tag.getName();
 
         return;
     }
 
-    public Tag ToTag()
-    {
+    public Tag ToTag() {
         Tag tag = new Tag();
 
         tag.setName(this.name);
