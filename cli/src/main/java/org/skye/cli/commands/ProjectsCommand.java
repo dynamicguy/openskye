@@ -1,9 +1,13 @@
 package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameters;
-import com.google.common.collect.ImmutableList;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.skye.cli.commands.fields.Field;
+import org.skye.cli.commands.fields.FieldBuilder;
+import org.skye.cli.commands.fields.ReferenceField;
+import org.skye.cli.commands.fields.TextField;
 
 import java.util.List;
 
@@ -13,12 +17,13 @@ import java.util.List;
 @Parameters(commandDescription = "Manage projects")
 @Data
 @Slf4j
+@EqualsAndHashCode(callSuper = false)
 public class ProjectsCommand extends AbstractCrudCommand {
 
     private final String commandName = "projects";
 
-    public List<String> getAttributes() {
-        return ImmutableList.of("name");
+    public List<Field> getFields() {
+        return FieldBuilder.start().add(new ReferenceField("domain")).add(new TextField("name")).build();
     }
 
     public String getCollectionName() {

@@ -3,6 +3,7 @@ package org.skye.cli.commands;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.skye.core.SkyePlatform;
 import org.skye.stores.StoreRegistryMetadata;
@@ -13,6 +14,7 @@ import org.skye.stores.StoreRegistryMetadata;
 @Parameters(commandDescription = "Login to the server")
 @Data
 @Slf4j
+@EqualsAndHashCode(callSuper = false)
 public class PlatformCommand extends ExecutableCommand {
 
     private final String commandName = "platform";
