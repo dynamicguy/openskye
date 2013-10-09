@@ -110,6 +110,7 @@
             <artifactId>kundera-hbase</artifactId>
             <version>RELEASE</version>
             <optional>true</optional>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
@@ -145,9 +146,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.nikhaldimann</groupId>
-            <artifactId>android-view-selector</artifactId>
-            <version>1.0-alpha-4</version>
+            <groupId>org.jboss.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.2.9.Final</version>
         </dependency>
     </dependencies>
 </project>

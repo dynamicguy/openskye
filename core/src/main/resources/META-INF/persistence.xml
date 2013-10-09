@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
-    <persistence-unit name="Default">
+    <persistence-unit name="Default" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>org.skye.domain.User</class>
         <class>org.skye.domain.UserRole</class>
@@ -27,10 +27,26 @@
         <class>org.skye.domain.TaskStatistics</class>
         <class>org.skye.domain.ChannelFilterDefinition</class>
         <class>org.skye.metadata.impl.jpa.JPAObjectSet</class>
-        <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="hbase">
+        <provider>com.impetus.kundera.KunderaPersistence</provider>
+        <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
+        <properties>
+            <property name="kundera.nodes" value="localhost.localdomain"/>
+            <property name="kundera.port" value="7182"/>
+            <property name="kundera.dialect" value="hbase"/>
+            <property name="kundera.keyspace" value="skye"/>
+            <property name="kundera.client.lookup.class" value="com.impetus.client.hbase.HBaseClientFactory" />
+            <property name="kundera.cache.provider.class" value="com.impetus.kundera.cache.ehcache.EhCacheProvider"/>
+            <property name="kundera.cache.config.resource" value="/ehcache-test.xml"/>
+            <property name="kundera.ddl.auto.prepare" value="update" />
+            <property name="kundera.client.property" value="/etc/hbase/conf/hbase-site.xml" />
+            <property name="hbase.zookeeper.quorum" value="localhost.localdomain" />
+            <property name="hbase.zookeeper.property.clientPort" value="2181" />
         </properties>
     </persistence-unit>
 </persistence>
