@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.openskye</groupId>
         <artifactId>platform</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.5-SNAPSHOT</version>
     </parent>
     <groupId>org.openskye</groupId>
     <artifactId>skye-core</artifactId>
@@ -72,6 +72,18 @@
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-persist</artifactId>
             <version>3.0</version>
+        </dependency>
+
+        <!-- Shiro for security -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-guice</artifactId>
+            <version>1.2.2</version>
         </dependency>
 
         <!-- Use Reflections for the registry -->
