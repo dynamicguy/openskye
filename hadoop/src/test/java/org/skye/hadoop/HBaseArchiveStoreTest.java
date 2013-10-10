@@ -11,7 +11,7 @@ public class HBaseArchiveStoreTest {
      * TODO these tests aren't really functional?
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testHBaseConfig() {
         HBaseArchiveStore testStore = new HBaseArchiveStore();
         ArchiveStoreDefinition definition = new ArchiveStoreDefinition();

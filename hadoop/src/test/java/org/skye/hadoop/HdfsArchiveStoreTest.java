@@ -11,7 +11,7 @@ public class HdfsArchiveStoreTest {
      * TODO these tests aren't really functional?
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testHdfsConfig() {
         HdfsArchiveStore testStore = new HdfsArchiveStore();
         ArchiveStoreDefinition definition = new ArchiveStoreDefinition();

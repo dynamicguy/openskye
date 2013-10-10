@@ -35,8 +35,6 @@ public class HBaseArchiveStore implements ArchiveStore {
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
         this.omr = new HBaseObjectMetadataRepository();
-        //this.hBaseConfiguration.create(das.getProperties().get(HBASE_SITE));
-        //this.hBaseConfiguration.addResource();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hbase");
         this.hBaseEntityManager = emf.createEntityManager();
 

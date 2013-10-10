@@ -3,15 +3,17 @@ package org.skye.hadoop.stores;
 import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSInputStream;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.skye.core.*;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
+import org.skye.hadoop.objects.HStructuredObject;
+import org.skye.hadoop.objects.HUnstructuredObject;
+import org.skye.stores.information.localfs.LocalFileUnstructuredObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +23,6 @@ import java.util.ArrayList;
 public class HdfsArchiveStore implements ArchiveStore {
 
     public static final String HDFS_CONFIG = "hdfs";
-    public static final String HDFS_FS_SITE = "fs.defaultFS";
     public static final String IMPLEMENTATION = "hdfs";
     private Configuration hdfsConfig;
     private FileSystem hdfsFileSystem;
@@ -32,23 +33,13 @@ public class HdfsArchiveStore implements ArchiveStore {
         this.archiveStoreDefinition = das;
         String path = das.getProperties().get(HDFS_CONFIG);
         hdfsConfig = new Configuration();
-        if (!hdfsConfig.get("fs.defaultFS").equals(das.getProperties().get(HDFS_FS_SITE))) {
-            Path hdfsSite = new Path(path + "/hdfs-site.xml");
-            Path corePath = new Path(path + "/core-site.xml");
-            hdfsConfig = new Configuration();
-            hdfsConfig.addResource(corePath.toString());
-            hdfsConfig.addResource(hdfsSite.toString());
-            if (!hdfsConfig.get("fs.defaultFS").equals(das.getProperties().get(HDFS_FS_SITE))) {
-                hdfsConfig.set("fs.defaultFS", das.getProperties().get(HDFS_FS_SITE));
-                hdfsConfig.set("hadoop.security.group.mapping", "org.apache.hadoop.security.ShellBasedUnixGroupsMapping");
-            }
-            try {
-                hdfsFileSystem = FileSystem.get(URI.create(das.getProperties().get(HDFS_FS_SITE)), hdfsConfig);
-            } catch (IOException e) {
-                log.error("HDFS config file not found");
-                throw new SkyeException("HDFS config file not found", e);
-            }
+        try {
+            hdfsFileSystem = FileSystem.get(hdfsConfig);
+        } catch (IOException e) {
+            log.error("HDFS config file not found");
+            throw new SkyeException("HDFS config file not found", e);
         }
+
     }
 
     @Override
@@ -78,12 +69,43 @@ public class HdfsArchiveStore implements ArchiveStore {
 
     @Override
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+                InputStream is = hdfsFileSystem.open(hdfsFileSystem.getWorkingDirectory());
+                return Optional.of(is);
+            } else return Optional.absent();
+        } catch (IOException e) {
+            throw new SkyeException("ACB references storage, but unable to find archive file?");
+        }
     }
 
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (this.getStream(metadata).isPresent()) {
+            if (metadata.getImplementation().equals(HStructuredObject.class.getCanonicalName())) {
+                if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+
+                } else {
+                    log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                    return Optional.absent();
+                }
+            } else if (metadata.getImplementation().equals(HUnstructuredObject.class.getCanonicalName())) {
+                if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+                    SimpleObject obj = new LocalFileUnstructuredObject();
+                    obj.setObjectMetadata(metadata);
+                    return Optional.of(obj);
+                } else {
+                    log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                    return Optional.absent();
+                }
+            } else {
+                throw new SkyeException("Object type not supported");
+            }
+
+        } else {
+            throw new SkyeException("Input stream not present");
+        }
+       return null;
     }
 
     @Override
