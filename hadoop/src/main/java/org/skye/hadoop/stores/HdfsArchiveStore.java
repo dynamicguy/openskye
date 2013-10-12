@@ -2,25 +2,41 @@ package org.skye.hadoop.stores;
 
 import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSInputStream;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.eobjects.metamodel.DataContextFactory;
+import org.eobjects.metamodel.UpdateCallback;
+import org.eobjects.metamodel.UpdateScript;
+import org.eobjects.metamodel.UpdateableDataContext;
+import org.eobjects.metamodel.create.TableCreationBuilder;
+import org.eobjects.metamodel.insert.RowInsertionBuilder;
+import org.eobjects.metamodel.schema.Column;
+import org.eobjects.metamodel.schema.Table;
+import org.joda.time.DateTime;
 import org.skye.core.*;
+import org.skye.core.structured.Row;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.Task;
 import org.skye.hadoop.objects.HStructuredObject;
 import org.skye.hadoop.objects.HUnstructuredObject;
-import org.skye.stores.information.localfs.LocalFileUnstructuredObject;
+import org.skye.stores.archive.AbstractArchiveStoreWriter;
+import org.skye.stores.information.jdbc.JDBCStructuredObject;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
  */
 @Slf4j
-public class HdfsArchiveStore implements ArchiveStore {
+public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
 
     public static final String HDFS_CONFIG = "hdfs";
     public static final String IMPLEMENTATION = "hdfs";
@@ -31,7 +47,6 @@ public class HdfsArchiveStore implements ArchiveStore {
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
-        String path = das.getProperties().get(HDFS_CONFIG);
         hdfsConfig = new Configuration();
         try {
             hdfsFileSystem = FileSystem.get(hdfsConfig);
@@ -49,12 +64,16 @@ public class HdfsArchiveStore implements ArchiveStore {
 
     @Override
     public String getUrl() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hdfsConfig.get("fs.defaultFS");
     }
 
     @Override
     public boolean isSupported(SimpleObject so) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        boolean supported = false;
+        if (so.getObjectMetadata().getImplementation().equals(HStructuredObject.class.getCanonicalName()) || so.getObjectMetadata().getImplementation().equals(HUnstructuredObject.class.getCanonicalName())) {
+            supported = true;
+        }
+        return supported;
     }
 
     @Override
@@ -64,14 +83,16 @@ public class HdfsArchiveStore implements ArchiveStore {
 
     @Override
     public ArchiveStoreWriter getWriter(Task task) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+        return this;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
             if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-                InputStream is = hdfsFileSystem.open(hdfsFileSystem.getWorkingDirectory());
+                ArchiveContentBlock acb = metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get();
+                InputStream is = hdfsFileSystem.open(new Path(hdfsFileSystem.getWorkingDirectory().toString() + acb.getId() + "/" + metadata.getPath() + ".csv"));
                 return Optional.of(is);
             } else return Optional.absent();
         } catch (IOException e) {
@@ -91,7 +112,7 @@ public class HdfsArchiveStore implements ArchiveStore {
                 }
             } else if (metadata.getImplementation().equals(HUnstructuredObject.class.getCanonicalName())) {
                 if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-                    SimpleObject obj = new LocalFileUnstructuredObject();
+                    SimpleObject obj = new HUnstructuredObject();
                     obj.setObjectMetadata(metadata);
                     return Optional.of(obj);
                 } else {
@@ -105,7 +126,7 @@ public class HdfsArchiveStore implements ArchiveStore {
         } else {
             throw new SkyeException("Input stream not present");
         }
-       return null;
+        return null;
     }
 
     @Override
@@ -124,6 +145,78 @@ public class HdfsArchiveStore implements ArchiveStore {
 
     @Override
     public void destroy(ObjectMetadata om) {
+        try {
+            hdfsFileSystem.delete(new Path(om.getPath()), false);
+        } catch (IOException e) {
+            log.error("File not found, maybe already deleted");
+            throw new SkyeException("File not found", e);
+        }
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public SimpleObject put(SimpleObject simpleObject) {
+        ArchiveContentBlock acb = new ArchiveContentBlock();
+        ObjectMetadata om = simpleObject.getObjectMetadata();
+        acb.setArchiveStoreDefinitionId(this.getArchiveStoreDefinition().get().getId());
+
+        if (simpleObject instanceof JDBCStructuredObject) {
+            final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
+            try {
+                hdfsFileSystem.mkdirs(new Path(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath()));
+                final File f = new File(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath() + ".csv");
+
+                // we need to store the whole table as a CSV
+
+                final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(f);
+                dataContext.executeUpdate(new UpdateScript() {
+                    public void run(UpdateCallback callback) {
+
+                        // Create the table in a file representing the Archive Content Block
+                        TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
+
+                        for (Column column : structuredObject.getTable().getColumns()) {
+                            tableCreator.withColumn(column.getName()).ofType(column.getType()).ofSize(column.getColumnSize());
+                        }
+
+                        Table table = tableCreator.execute();
+                        Iterator<Row> rows = structuredObject.getRows();
+                        while (rows.hasNext()) {
+                            Row row = rows.next();
+                            RowInsertionBuilder insert = callback.insertInto(table);
+                            int pos = 0;
+                            for (String name : structuredObject.getTable().getColumnNames()) {
+                                insert.value(name, row.getValues()[pos]);
+                                pos++;
+                            }
+                            insert.execute();
+                        }
+                    }
+
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        } else if (simpleObject instanceof UnstructuredObject) {
+            try {
+                FSDataOutputStream in = hdfsFileSystem.create(new Path(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath() + ".txt"));
+                in.write(Bytes.toBytes(String.valueOf(((UnstructuredObject) simpleObject).getContent())));
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (MissingObjectException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        } else {
+            log.error("Simple object type not supported");
+        }
+        return simpleObject;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void close() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }
+
+

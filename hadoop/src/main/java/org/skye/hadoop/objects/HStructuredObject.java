@@ -16,10 +16,7 @@ import java.util.UUID;
 public class HStructuredObject extends StructuredObject {
     @Id
     @Column(name = "ID")
-    private UUID id = UUID.randomUUID();
-
-
-
+    private String id=this.getObjectMetadata().getId();
 
     @Override
     public List<ColumnMetadata> getColumns() {

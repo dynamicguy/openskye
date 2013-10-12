@@ -17,5 +17,6 @@ public class HdfsArchiveStoreTest {
         ArchiveStoreDefinition definition = new ArchiveStoreDefinition();
         definition.getProperties().put(HdfsArchiveStore.HDFS_CONFIG, "/home/atcmostafavi/hbase-conf");
         testStore.initialize(definition);
+        testStore.getUrl();
     }
 }

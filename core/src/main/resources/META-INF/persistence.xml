@@ -35,7 +35,6 @@
     </persistence-unit>
     <persistence-unit name="hbase">
         <provider>com.impetus.kundera.KunderaPersistence</provider>
-        <class>org.skye.hadoop.objects.HStructuredObject</class>
         <class>org.skye.hadoop.objects.HUnstructuredObject</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
