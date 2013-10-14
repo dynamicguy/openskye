@@ -7,17 +7,22 @@ import com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON;
 import com.wordnik.swagger.jaxrs.listing.ResourceListingProvider;
 import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
 import com.wordnik.swagger.reader.ClassReaders;
-import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.Bundle;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 /**
  * A little bundle to handle hooking in the swagger stuff
  */
-public class SwaggerBundle extends AssetsBundle {
+public class SwaggerBundle implements Bundle {
+
+    @Override
+    public void initialize(Bootstrap<?> bootstrap) {
+        // Nothing to do
+    }
 
     @Override
     public void run(Environment environment) {
-        super.run(environment);
         environment.jersey().register(new ApiListingResourceJSON());
         // add swagger providers
         environment.jersey().register(new ApiDeclarationProvider());

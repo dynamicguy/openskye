@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class SkyeAuthenticatingFilter extends BasicHttpAuthenticationFilter {
 
     public static final String X_API_KEY = "x-api-key";
-    public static final String QUERY_API_KEY = "apikey";
+    public static final String QUERY_API_KEY = "api_key";
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
