@@ -9,6 +9,7 @@ import org.skye.cli.commands.fields.FieldBuilder;
 import org.skye.cli.commands.fields.ReferenceField;
 import org.skye.cli.commands.fields.TextField;
 import org.skye.domain.Domain;
+import org.skye.domain.Project;
 
 import java.util.List;
 
@@ -37,6 +38,11 @@ public class ProjectsCommand extends AbstractCrudCommand {
 
     public String getCollectionPlural() {
         return "projects";
+    }
+
+    @Override
+    public Class getClazz() {
+        return Project.class;
     }
 
 }

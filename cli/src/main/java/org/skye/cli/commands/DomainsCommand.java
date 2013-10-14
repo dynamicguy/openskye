@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.skye.cli.commands.fields.Field;
 import org.skye.cli.commands.fields.FieldBuilder;
 import org.skye.cli.commands.fields.TextField;
+import org.skye.domain.Domain;
 
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class DomainsCommand extends AbstractCrudCommand {
 
     public String getCollectionPlural() {
         return "domains";
+    }
+
+    @Override
+    public Class getClazz() {
+        return Domain.class;
     }
 
 }

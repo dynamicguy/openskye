@@ -69,8 +69,10 @@ public class SkyeCli {
             consoleLogger.error("Unable to connect to server " + e.getLocalizedMessage());
         } catch (CliException c) {
             consoleLogger.error(c.getLocalizedMessage());
+            c.printStackTrace();
         } catch (SkyeException se) {
             consoleLogger.error(se.getLocalizedMessage());
+            se.printStackTrace();
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus() == 401) {
                 consoleLogger.error("Not authorized, has your API key changed?");

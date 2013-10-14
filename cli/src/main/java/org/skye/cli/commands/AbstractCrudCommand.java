@@ -12,7 +12,7 @@ import org.skye.cli.commands.fields.ReferenceField;
 import org.skye.cli.commands.fields.TextField;
 import org.skye.cli.util.ObjectTableView;
 import org.skye.core.SkyeException;
-import org.skye.domain.Domain;
+import org.skye.domain.Identifiable;
 import org.skye.domain.dao.PaginatedResult;
 
 import java.io.Console;
@@ -48,6 +48,8 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
     public abstract String getCollectionPlural();
 
+    public abstract Class getClazz();
+
     @Override
     public void execute() {
         // Ensure we are logged in
@@ -74,22 +76,27 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
         } else if (create) {
             output.message("Creating a new " + getCollectionSingular() + ":\n");
-            Domain newDomain = new Domain();
+            Object newObject = null;
+            try {
+                newObject = getClazz().newInstance();
+            } catch (Exception e) {
+                throw new SkyeException("Unable to create instance of " + getClazz(), e);
+            }
             Console console = getConsole();
             for (Field field : getFields()) {
                 String attributeName = field.getName();
                 if (field instanceof TextField) {
                     String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
                     try {
-                        BeanUtils.setProperty(newDomain, attributeName, newValue);
+                        BeanUtils.setProperty(newObject, attributeName, newValue);
                     } catch (Exception e) {
-                        throw new SkyeException("Unable to set property " + attributeName + " on " + newDomain + " to " + newValue);
+                        throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
                     }
                 } else if (field instanceof ReferenceField) {
-                    selectReferenceField((ReferenceField) field, newDomain);
+                    selectReferenceField((ReferenceField) field, newObject);
                 }
             }
-            Domain result = getResource(getCollectionName()).post(Domain.class, newDomain);
+            Identifiable result = (Identifiable) getResource(getCollectionName()).post(getClazz(), newObject);
             output.success("Created " + getCollectionSingular() + " with id " + result.getId());
         } else if (delete) {
             if (id == null)
@@ -101,7 +108,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         }
     }
 
-    private void selectReferenceField(ReferenceField field, Object newDomain) {
+    private void selectReferenceField(ReferenceField field, Object newObject) {
 
         // We need to display a list of the available options for the reference field
         // and then let the user choose one
@@ -116,14 +123,15 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             } catch (Exception e) {
                 throw new SkyeException("Unable to build reference field for " + field, e);
             }
+            i++;
         }
         while (true) {
             String option = getConsole().readLine("Enter choice:");
             int position = Integer.parseInt(option);
             try {
                 Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
-                BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position + 1), field.getId()));
-                BeanUtils.setProperty(newDomain, field.getName(), result);
+                BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId()));
+                BeanUtils.setProperty(newObject, field.getName(), result);
                 break;
             } catch (Exception e) {
                 throw new SkyeException("Unable to build reference field for " + field, e);
