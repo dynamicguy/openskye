@@ -10,21 +10,24 @@ public class ReferenceField extends Field {
 
     private final String name;
     private final String resource;
-    private final String description;
+    private final String value;
     private final String id;
+    private final Class clazz;
 
-    public ReferenceField(String name, String resource) {
+    public ReferenceField(String name, String resource, Class clazz) {
         this.name = name;
         this.resource = resource;
         this.id = "id";
-        this.description = "description";
+        this.value = "name";
+        this.clazz = clazz;
     }
 
-    public ReferenceField(String name, String resource, String id, String description) {
+    public ReferenceField(String name, String resource, Class clazz, String id, String value) {
         this.name = name;
         this.resource = resource;
+        this.clazz = clazz;
         this.id = id;
-        this.description = description;
+        this.value = value;
     }
 
     @Override

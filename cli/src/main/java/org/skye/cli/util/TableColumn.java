@@ -49,7 +49,10 @@ public class TableColumn {
     }
 
     public Object getRowValue(int i) {
-        return StringUtils.pad(values.get(i), getMaxLength(), " ", true);
+        if (values.get(i) != null)
+            return StringUtils.pad(values.get(i), getMaxLength(), " ", true);
+        else
+            return StringUtils.pad("null", getMaxLength(), " ", true);
     }
 
     public String getColumnHeader() {

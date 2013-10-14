@@ -8,6 +8,7 @@ import org.skye.cli.commands.fields.Field;
 import org.skye.cli.commands.fields.FieldBuilder;
 import org.skye.cli.commands.fields.ReferenceField;
 import org.skye.cli.commands.fields.TextField;
+import org.skye.domain.Domain;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ProjectsCommand extends AbstractCrudCommand {
     private final String commandName = "projects";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new ReferenceField("domain","domains")).add(new TextField("name")).build();
+        return FieldBuilder.start().add(new ReferenceField("domain", "domains", Domain.class)).add(new TextField("name")).build();
     }
 
     public String getCollectionName() {

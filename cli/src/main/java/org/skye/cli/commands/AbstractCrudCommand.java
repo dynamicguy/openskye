@@ -1,7 +1,6 @@
 package org.skye.cli.commands;
 
 import com.beust.jcommander.Parameter;
-import com.sun.jersey.api.client.GenericType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +54,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         settings.mustHaveApiKey();
 
         if (list) {
-            PaginatedResult<Domain> paginatedResult = getResource(getCollectionName()).get(new GenericType<PaginatedResult<Domain>>() {
-            });
+            PaginatedResult paginatedResult = getResource(getCollectionName()).get(PaginatedResult.class);
             List<String> fieldsWithId = new ArrayList<>();
             fieldsWithId.add("id");
             fieldsWithId.addAll(getFieldNames());
@@ -79,17 +77,16 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             Domain newDomain = new Domain();
             Console console = getConsole();
             for (Field field : getFields()) {
-                String newValue = null;
                 String attributeName = field.getName();
                 if (field instanceof TextField) {
-                    newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
+                    String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
+                    try {
+                        BeanUtils.setProperty(newDomain, attributeName, newValue);
+                    } catch (Exception e) {
+                        throw new SkyeException("Unable to set property " + attributeName + " on " + newDomain + " to " + newValue);
+                    }
                 } else if (field instanceof ReferenceField) {
-                    newValue = selectReferenceField((ReferenceField) field);
-                }
-                try {
-                    BeanUtils.setProperty(newDomain, attributeName, newValue);
-                } catch (Exception e) {
-                    throw new SkyeException("Unable to set property " + attributeName + " on " + newDomain + " to " + newValue);
+                    selectReferenceField((ReferenceField) field, newDomain);
                 }
             }
             Domain result = getResource(getCollectionName()).post(Domain.class, newDomain);
@@ -104,7 +101,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         }
     }
 
-    private String selectReferenceField(ReferenceField field) {
+    private void selectReferenceField(ReferenceField field, Object newDomain) {
 
         // We need to display a list of the available options for the reference field
         // and then let the user choose one
@@ -115,7 +112,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         int i = 1;
         for (Object obj : paginatedResult.getResults()) {
             try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, field.getName()));
+                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, field.getValue()));
             } catch (Exception e) {
                 throw new SkyeException("Unable to build reference field for " + field, e);
             }
@@ -124,7 +121,10 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             String option = getConsole().readLine("Enter choice:");
             int position = Integer.parseInt(option);
             try {
-                return BeanUtils.getProperty(paginatedResult.getResults().get(position + 1), field.getId());
+                Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
+                BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position + 1), field.getId()));
+                BeanUtils.setProperty(newDomain, field.getName(), result);
+                break;
             } catch (Exception e) {
                 throw new SkyeException("Unable to build reference field for " + field, e);
             }
