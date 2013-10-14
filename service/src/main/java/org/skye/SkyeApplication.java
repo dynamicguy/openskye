@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Properties;
 
 /**
- * The Skye Service
+ * The Skye Application
  */
 @Slf4j
 public class SkyeApplication extends Application<SkyeConfiguration> {

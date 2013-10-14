@@ -21,6 +21,8 @@ public class MetadataTemplate implements Identifiable {
     private String id;
     private String name;
     private String description;
+    @ManyToOne
+    private Domain domain;
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Permission> fieldDefinitions = new ArrayList<>();
