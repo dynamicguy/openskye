@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.skye.cli.CliException;
 import org.skye.cli.commands.fields.Field;
+import org.skye.cli.commands.fields.ReferenceField;
 import org.skye.cli.commands.fields.TextField;
 import org.skye.cli.util.ObjectTableView;
 import org.skye.core.SkyeException;
@@ -82,6 +83,8 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                 String attributeName = field.getName();
                 if (field instanceof TextField) {
                     newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
+                } else if (field instanceof ReferenceField) {
+                    newValue = selectReferenceField((ReferenceField) field);
                 }
                 try {
                     BeanUtils.setProperty(newDomain, attributeName, newValue);
@@ -94,10 +97,37 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         } else if (delete) {
             if (id == null)
                 throw new CliException("You must provide an id to delete a " + getCollectionSingular());
-            getResource("domains/" + id).delete();
+            getResource(getCollectionPlural() + "/" + id).delete();
 
             output.success("Deleted " + getCollectionSingular() + " with id " + id);
 
+        }
+    }
+
+    private String selectReferenceField(ReferenceField field) {
+
+        // We need to display a list of the available options for the reference field
+        // and then let the user choose one
+
+        PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
+
+        output.message("Select " + field.getName() + " by number,  the options are below:");
+        int i = 1;
+        for (Object obj : paginatedResult.getResults()) {
+            try {
+                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, field.getName()));
+            } catch (Exception e) {
+                throw new SkyeException("Unable to build reference field for " + field, e);
+            }
+        }
+        while (true) {
+            String option = getConsole().readLine("Enter choice:");
+            int position = Integer.parseInt(option);
+            try {
+                return BeanUtils.getProperty(paginatedResult.getResults().get(position + 1), field.getId());
+            } catch (Exception e) {
+                throw new SkyeException("Unable to build reference field for " + field, e);
+            }
         }
     }
 

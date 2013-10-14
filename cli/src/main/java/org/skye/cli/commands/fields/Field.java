@@ -6,4 +6,5 @@ package org.skye.cli.commands.fields;
 public abstract class Field {
 
     public abstract String getName();
+
 }
