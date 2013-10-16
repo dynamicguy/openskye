@@ -32,6 +32,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
+
 /**
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.skye.core.ArchiveContentBlock}s
  */
@@ -105,7 +107,14 @@ public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
         if (this.getStream(metadata).isPresent()) {
             if (metadata.getImplementation().equals(HStructuredObject.class.getCanonicalName())) {
                 if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-
+                    if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+                        UpdateableDataContext dataContext = createCsvDataContext(new File(hdfsFileSystem.getWorkingDirectory().toString() + "/" + metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId() + "/" + metadata.getPath())));
+                        SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+                        return Optional.of(simpleObject);
+                    } else {
+                        log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                        return Optional.absent();
+                    }
                 } else {
                     log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
                     return Optional.absent();
@@ -126,7 +135,6 @@ public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
         } else {
             throw new SkyeException("Input stream not present");
         }
-        return null;
     }
 
     @Override
@@ -166,8 +174,6 @@ public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
                 hdfsFileSystem.mkdirs(new Path(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath()));
                 final File f = new File(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath() + ".csv");
 
-                // we need to store the whole table as a CSV
-
                 final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(f);
                 dataContext.executeUpdate(new UpdateScript() {
                     public void run(UpdateCallback callback) {
@@ -196,16 +202,19 @@ public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
                 });
 
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("File not found");
+                throw new SkyeException("File not found", e);
             }
         } else if (simpleObject instanceof UnstructuredObject) {
             try {
                 FSDataOutputStream in = hdfsFileSystem.create(new Path(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath() + ".txt"));
                 in.write(Bytes.toBytes(String.valueOf(((UnstructuredObject) simpleObject).getContent())));
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("File not found");
+                throw new SkyeException("File not found", e);
             } catch (MissingObjectException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("Object is missing");
+                throw new SkyeException("Object is missing", e);
             }
         } else {
             log.error("Simple object type not supported");
@@ -215,7 +224,12 @@ public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
 
     @Override
     public void close() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            hdfsFileSystem.close();
+        } catch (IOException e) {
+            log.error("Connection already closed");
+            throw new SkyeException("Connection already closed", e);
+        }
     }
 }
 

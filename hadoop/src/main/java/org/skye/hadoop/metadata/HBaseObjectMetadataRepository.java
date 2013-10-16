@@ -1,22 +1,36 @@
 package org.skye.hadoop.metadata;
 
 import com.google.common.base.Optional;
+import com.google.inject.Provider;
 import org.skye.core.ArchiveContentBlock;
 import org.skye.core.ObjectMetadata;
 import org.skye.core.ObjectSet;
 import org.skye.domain.ArchiveStoreDefinition;
 import org.skye.domain.InformationStoreDefinition;
 import org.skye.domain.Task;
+import org.skye.domain.dao.ArchiveStoreDefinitionDAO;
+import org.skye.domain.dao.InformationStoreDefinitionDAO;
 import org.skye.metadata.ObjectMetadataRepository;
+import org.skye.metadata.impl.jpa.JPAObjectMetadataRepository;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 /**
  * An implementation of the {@link ObjectMetadataRepository} that uses HBase as the
  * storage solution
  */
-public class HBaseObjectMetadataRepository implements ObjectMetadataRepository {
-    @Override
-    public ObjectSet createObjectSet(String name) {
-        return null;
+public class HBaseObjectMetadataRepository extends JPAObjectMetadataRepository {
+
+    @Inject
+    protected ArchiveStoreDefinitionDAO archiveStores;
+    @Inject
+    protected InformationStoreDefinitionDAO informationStores;
+    @Inject
+    private Provider<EntityManager> emf;
+
+    protected EntityManager getEntityManager() {
+        return emf.get();
     }
 
     @Override

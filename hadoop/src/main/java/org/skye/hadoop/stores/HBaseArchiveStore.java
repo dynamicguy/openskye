@@ -4,8 +4,7 @@ import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.skye.core.*;
 import org.skye.core.structured.ColumnMetadata;
@@ -18,6 +17,7 @@ import org.skye.hadoop.objects.HUnstructuredObject;
 import org.skye.metadata.ObjectMetadataRepository;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.apache.hadoop.hbase.util.Bytes.toBytes;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses Apache HBase to store the {@link org.skye.core.ArchiveContentBlock}s
@@ -39,6 +41,8 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
+    @Inject
+    private Provider<EntityManager> emf;
     private HBaseConfiguration hBaseConfiguration = new HBaseConfiguration();
     private EntityManager hBaseEntityManager;
 
@@ -90,9 +94,16 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
-        SimpleObject result;
+        SimpleObject result = null;
         if (metadata.getImplementation().equals(StructuredObject.class.getCanonicalName())) {
-            result = hBaseEntityManager.find(StructuredObject.class, metadata.getId());
+            try {
+                HTable resultTable = new HTable(hBaseConfiguration, metadata.getId().toString());
+                result.setObjectMetadata(metadata);
+                //set rows to rows in table, somehow
+            } catch (IOException e) {
+                log.error("Can't get to structured object table");
+                throw new SkyeException("Can't get to structured object", e);
+            }
         } else if (metadata.getImplementation().equals(UnstructuredObject.class.getCanonicalName())) {
             result = hBaseEntityManager.find(UnstructuredObject.class, metadata.getId());
         } else {
@@ -149,7 +160,9 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
                     p.add(meta.getName(), Bytes.toBytes("Native Type"), c.getNativeType().getBytes());
                     p.add(meta.getName(), Bytes.toBytes("Size"), Bytes.toBytes(c.getSize()));
                     p.add(meta.getName(), Bytes.toBytes("Remarks"), c.getRemarks().getBytes());
+
                 }
+
                 //store rows
                 while (rows.hasNext()) {
                     Row r = rows.next();
@@ -157,17 +170,20 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
                     for (Object v : vals) {
                         for (ColumnMetadata c : columnMetadataList) {
 
-                            p.add(cols.getName(), c.getName().getBytes(), Bytes.toBytes(v.hashCode()));
+                            p.add(cols.getName(), c.getName().getBytes(), (byte[])v);
                         }
                     }
                 }
 
             } catch (MasterNotRunningException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("HBase master is not running");
+                throw new SkyeException("HBase master is not running", e);
             } catch (ZooKeeperConnectionException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("Zookeeper connection not found or not open");
+                throw new SkyeException("Zookeeper connection not found or not open", e);
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("Object not found");
+                throw new SkyeException("Object not found", e);
             }
         } else if (simpleObject.getObjectMetadata().getImplementation().equals(UnstructuredObject.class.getCanonicalName())) {
             HUnstructuredObject unstructuredObject = (HUnstructuredObject) simpleObject;
