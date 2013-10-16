@@ -12,17 +12,12 @@ import org.skye.hadoop.metadata.HBaseObjectMetadataSearch;
 import org.skye.hadoop.task.HadoopTaskManager;
 import org.skye.metadata.ObjectMetadataRepository;
 import org.skye.metadata.ObjectMetadataSearch;
-import org.skye.metadata.impl.jpa.JPAObjectMetadataRepository;
 import org.skye.task.TaskManager;
 
 /**
- * Created with IntelliJ IDEA.
- * User: atcmostafavi
- * Date: 10/14/13
- * Time: 2:44 PM
- * To change this template use File | Settings | File Templates.
+ * This is a Guice module used for Hadoop Testing
  */
-public class HadoopTestModule extends AbstractModule{
+public class HadoopTestModule extends AbstractModule {
 
     @Override
     protected void configure() {
@@ -38,7 +33,5 @@ public class HadoopTestModule extends AbstractModule{
         bind(ArchiveStoreInstanceDAO.class).asEagerSingleton();
 
         install(new GuiceBerryModule());
-
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

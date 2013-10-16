@@ -3,7 +3,7 @@ package org.skye.hadoop;
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.Provider;
-import com.google.common.*;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.skye.core.ArchiveContentBlock;
@@ -25,11 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Created with IntelliJ IDEA.
- * User: atcmostafavi
- * Date: 10/14/13
- * Time: 2:36 PM
- * To change this template use File | Settings | File Templates.
+ * A test case to ensure that the OMR is working on HBase
  */
 public class HBaseOMRTest {
     @Rule
@@ -52,6 +48,7 @@ public class HBaseOMRTest {
     public Provider<EntityManager> emf;
 
     @Test
+    @Ignore
     public void metadataStorageAndRetrieval() {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
@@ -188,7 +185,5 @@ public class HBaseOMRTest {
 
         assertThat("object set has been removed",
                 (!setOutput.isPresent()));
-
-        return;
     }
 }
