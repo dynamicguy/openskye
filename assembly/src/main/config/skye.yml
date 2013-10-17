@@ -9,7 +9,7 @@ database:
   password:
 
   # the JDBC URL
-  url: "jdbc:h2:mem:skye"
+  url: "jdbc:h2:mem:openskye"
 
 server:
 #  softNofileLimit: 1000
@@ -47,7 +47,7 @@ logging:
   loggers:
 
     # Sets the level for 'com.example.app' to DEBUG.
-    org.skye: INFO
+    org.openskye: INFO
 
   appenders:
     - type: console

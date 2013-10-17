@@ -9,7 +9,7 @@ database:
   password: password
 
   # the JDBC URL
-  url: "jdbc:mysql://localhost/skye"
+  url: "jdbc:mysql://localhost/openskye"
 
 server:
 #  softNofileLimit: 1000
@@ -47,7 +47,7 @@ logging:
   loggers:
 
     # Sets the level for 'com.example.app' to DEBUG.
-    org.skye: INFO
+    org.openskye: INFO
 
   appenders:
     - type: console

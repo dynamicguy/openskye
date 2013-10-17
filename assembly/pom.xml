@@ -43,14 +43,14 @@
                 <configuration>
                     <programs>
                         <program>
-                            <mainClass>org.skye.SkyeApplication</mainClass>
+                            <mainClass>org.openskye.SkyeApplication</mainClass>
                             <commandLineArguments>
                                 <commandLineArgument>server</commandLineArgument>
                             </commandLineArguments>
                             <name>skye-server</name>
                         </program>
                         <program>
-                            <mainClass>org.skye.cli.SkyeCli</mainClass>
+                            <mainClass>org.openskye.cli.SkyeCli</mainClass>
                             <name>skye</name>
                         </program>
                     </programs>

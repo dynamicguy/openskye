@@ -2,32 +2,32 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
     <persistence-unit name="Default" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>org.skye.domain.User</class>
-        <class>org.skye.domain.UserRole</class>
-        <class>org.skye.domain.Role</class>
-        <class>org.skye.domain.ArchiveStoreInstance</class>
-        <class>org.skye.domain.AttributeInstance</class>
-        <class>org.skye.domain.AuditEvent</class>
-        <class>org.skye.domain.AttributeDefinition</class>
-        <class>org.skye.domain.AuditLog</class>
-        <class>org.skye.domain.AuditLogProperty</class>
-        <class>org.skye.domain.Channel</class>
-        <class>org.skye.domain.ChannelFilterDefinition</class>
-        <class>org.skye.domain.ChannelArchiveStore</class>
-        <class>org.skye.domain.Domain</class>
-        <class>org.skye.domain.ArchiveStoreDefinition</class>
-        <class>org.skye.domain.InformationStoreDefinition</class>
-        <class>org.skye.domain.MetadataTemplate</class>
-        <class>org.skye.domain.Permission</class>
-        <class>org.skye.domain.Project</class>
-        <class>org.skye.domain.RetentionPolicy</class>
-        <class>org.skye.domain.RolePermission</class>
-        <class>org.skye.domain.Task</class>
-        <class>org.skye.domain.TaskLog</class>
-        <class>org.skye.domain.TaskStatistics</class>
-        <class>org.skye.domain.ChannelFilterDefinition</class>
-        <class>org.skye.metadata.impl.jpa.JPAObjectSet</class>
-        <class>org.skye.metadata.impl.jpa.JPAObjectMetadata</class>
+        <class>org.openskye.domain.User</class>
+        <class>org.openskye.domain.UserRole</class>
+        <class>org.openskye.domain.Role</class>
+        <class>org.openskye.domain.ArchiveStoreInstance</class>
+        <class>org.openskye.domain.AttributeInstance</class>
+        <class>org.openskye.domain.AuditEvent</class>
+        <class>org.openskye.domain.AttributeDefinition</class>
+        <class>org.openskye.domain.AuditLog</class>
+        <class>org.openskye.domain.AuditLogProperty</class>
+        <class>org.openskye.domain.Channel</class>
+        <class>org.openskye.domain.ChannelFilterDefinition</class>
+        <class>org.openskye.domain.ChannelArchiveStore</class>
+        <class>org.openskye.domain.Domain</class>
+        <class>org.openskye.domain.ArchiveStoreDefinition</class>
+        <class>org.openskye.domain.InformationStoreDefinition</class>
+        <class>org.openskye.domain.MetadataTemplate</class>
+        <class>org.openskye.domain.Permission</class>
+        <class>org.openskye.domain.Project</class>
+        <class>org.openskye.domain.RetentionPolicy</class>
+        <class>org.openskye.domain.RolePermission</class>
+        <class>org.openskye.domain.Task</class>
+        <class>org.openskye.domain.TaskLog</class>
+        <class>org.openskye.domain.TaskStatistics</class>
+        <class>org.openskye.domain.ChannelFilterDefinition</class>
+        <class>org.openskye.metadata.impl.jpa.JPAObjectSet</class>
+        <class>org.openskye.metadata.impl.jpa.JPAObjectMetadata</class>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
@@ -35,7 +35,7 @@
     </persistence-unit>
     <persistence-unit name="hbase">
         <provider>com.impetus.kundera.KunderaPersistence</provider>
-        <class>org.skye.hadoop.objects.HUnstructuredObject</class>
+        <class>org.openskye.hadoop.objects.HUnstructuredObject</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="kundera.nodes" value="localhost.localdomain"/>
