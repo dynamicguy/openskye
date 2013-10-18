@@ -8,9 +8,9 @@
     <version>0.0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Skye</name>
-    <description>Open Information Lifecycle Management Framework</description>
-    <url>https://github.com/infobelt/skye</url>
+    <name>Open Skye</name>
+    <description>Information Lifecycle Management Framework</description>
+    <url>https://github.com/openskye/openskye</url>
     <inceptionYear>2013</inceptionYear>
 
     <licenses>
@@ -81,14 +81,14 @@
     </modules>
 
     <issueManagement>
-        <url>https://github.com/infobelt/skye/issues</url>
+        <url>https://github.com/openskye/openskye/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/infobelt/skye</url>
-        <connection>scm:git:git://github.com/infobelt/skye.git</connection>
-        <developerConnection>scm:git:git@github.com:infobelt/skye.git</developerConnection>
+        <url>https://github.com/openskye/openskye</url>
+        <connection>scm:git:git://github.com/openskye/openskye.git</connection>
+        <developerConnection>scm:git:git@github.com:openskye/openskye.git</developerConnection>
     </scm>
 
     <dependencyManagement>
