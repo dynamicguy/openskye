@@ -2,7 +2,6 @@ package org.openskye.metadata.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
@@ -47,8 +46,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
         SearchResponse response = client.prepareSearch(domain.getId())
                                         .setSearchType(SEARCH_TYPE)
                                         .setFrom(from).setSize(size)
+                                        .setQuery(query)
                                         .execute()
                                         .actionGet();
+
         SearchHits searchHits = response.getHits();
 
         for(SearchHit hit : searchHits)
@@ -81,8 +82,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
                                         .setTypes(project.getId())
                                         .setSearchType(SEARCH_TYPE)
                                         .setFrom(from).setSize(size)
+                                        .setQuery(query)
                                         .execute()
                                         .actionGet();
+
         SearchHits searchHits = response.getHits();
 
         for(SearchHit hit : searchHits)
@@ -110,7 +113,6 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
     {
         JsonObjectMetadata metadata = new JsonObjectMetadata(objectMetadata);
         String json;
-        IndexResponse response;
         String domainId = this.session.getDomain().getId();
         String projectId = objectMetadata.getProject().getId();
 
@@ -123,9 +125,9 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
             throw new SkyeException("Failed to marshal ObjectMetadata as JSON.", ex);
         }
 
-        response = client.prepareIndex(domainId, projectId, objectMetadata.getId())
-                         .setSource(json)
-                         .execute()
-                         .actionGet();
+        client.prepareIndex(domainId, projectId, objectMetadata.getId())
+              .setSource(json)
+              .execute()
+              .actionGet();
     }
 }
