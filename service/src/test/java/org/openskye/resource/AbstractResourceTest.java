@@ -8,7 +8,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.openskye.domain.Domain;
 import org.openskye.domain.Identifiable;
+import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 
@@ -40,11 +42,20 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
 
     @Before
     public void setUp() {
+
+        Domain domain = new Domain();
+        domain.setName("Domain");
+
+        User user = new User();
+        user.setDomain(domain);
+
         when(getDAO().list()).thenReturn(getExpectedResult());
         when(getDAO().get("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(Optional.of(getInstance()));
         when(getDAO().delete("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9")).thenReturn(true);
-        when(getDAO().create(getInstance())).thenReturn(getInstance());
+        when(getDAO().create(any(Identifiable.class))).thenReturn(getInstance());
         when(getDAO().update("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9", getInstance())).thenReturn(getInstance());
+        when(subject.getPrincipal()).thenReturn(user);
+
     }
 
     @Test

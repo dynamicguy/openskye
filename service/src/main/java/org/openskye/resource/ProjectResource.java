@@ -4,8 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.openskye.domain.Channel;
 import org.openskye.domain.Project;
+import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.ProjectDAO;
@@ -33,6 +35,7 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
     @Transactional
     @Timed
     public Project create(Project newInstance) {
+        newInstance.setDomain(getCurrentUser().getDomain());
         return super.create(newInstance);
     }
 
