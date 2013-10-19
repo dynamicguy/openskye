@@ -25,7 +25,7 @@ public class ProjectsCommand extends AbstractCrudCommand {
     private final String commandName = "projects";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new ReferenceField("domain", "domains", Domain.class)).add(new TextField("name")).build();
+        return FieldBuilder.start().add(new TextField("name")).build();
     }
 
     public String getCollectionName() {

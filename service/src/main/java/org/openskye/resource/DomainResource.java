@@ -87,22 +87,4 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
     protected String getPermissionDomain() {
         return "domain";
     }
-
-    @Path("/{id}/archiveStores")
-    @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
-    public PaginatedResult<ArchiveStoreDefinition> getArchiveStores(@PathParam("id") String id) {
-        Domain domain = get(id);
-        return new PaginatedResult<ArchiveStoreDefinition>().paginate(domain.getArchiveStores());
-    }
-
-    @Path("/{id}/informationStores")
-    @GET
-    @ApiOperation(value = "Return the information stores owned by this domain")
-    public PaginatedResult<InformationStoreDefinition> getInformationStores(@PathParam("id") String id) {
-
-        Domain domain = get(id);
-        return new PaginatedResult<InformationStoreDefinition>().paginate(domain.getInformationStores());
-    }
-
 }

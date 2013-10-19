@@ -23,7 +23,7 @@ public class InformationStoreDefinition implements Identifiable {
     private String id;
     private String name;
     @ManyToOne
-    private Domain domain;
+    private Project project;
     // The name of the {@link InformationStore} implementation
     private String implementation;
     @Transient

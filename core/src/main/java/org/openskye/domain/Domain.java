@@ -28,9 +28,6 @@ public class Domain implements Identifiable {
     private List<Project> projects = new ArrayList<>();
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
-    private List<ArchiveStoreDefinition> archiveStores = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private List<InformationStoreDefinition> informationStores = new ArrayList<>();
+    private List<MetadataTemplate> metadataTemplates = new ArrayList<>();
 
 }
