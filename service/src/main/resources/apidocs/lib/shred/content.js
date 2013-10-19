@@ -18,7 +18,7 @@ var Content = function(options) {
 };
 
 Content.prototype = {
-  // Treat `toString()` as asking for the `content.body`. That is, the raw content entity.
+  // Treat `toString()` as asking for the `content.body`. That is, the raw content resources.
   //
   //     toString: function() { return this.body; }
   //
@@ -54,7 +54,7 @@ Object.defineProperties(Content.prototype,{
     enumerable: true
   },
 
-// - **data**. Typically accessed as `content.data`, reflects the content entity
+// - **data**. Typically accessed as `content.data`, reflects the content resources
 //   converted into Javascript data. This can be a string, if the `type` is, say,
 //   `text/plain`, but can also be a Javascript object. The conversion applied is
 //   based on the `processor` attribute. The `data` attribute can also be set
@@ -76,7 +76,7 @@ Object.defineProperties(Content.prototype,{
     enumerable: true
   },
 
-// - **body**. Typically accessed as `content.body`, reflects the content entity
+// - **body**. Typically accessed as `content.body`, reflects the content resources
 //   as a UTF-8 string. It is the mirror of the `data` attribute. If you set the
 //   `data` attribute, the `body` attribute will be inferred and vice-versa. If
 //   you attempt to set both, an exception is raised.
@@ -121,7 +121,7 @@ Object.defineProperties(Content.prototype,{
   },
 
 // - **length**. Typically accessed as `content.length`, returns the length in
-//   bytes of the raw content entity.
+//   bytes of the raw content resources.
   length: {
     get: function() {
       if (typeof Buffer !== 'undefined') {
@@ -137,10 +137,10 @@ Content.processors = {};
 // The `registerProcessor` function allows you to add your own processors to
 // convert content entities. Each processor consists of a Javascript object with
 // two properties:
-// - **parser**. The function used to parse a raw content entity and convert it
+// - **parser**. The function used to parse a raw content resources and convert it
 //   into a Javascript data type.
 // - **stringify**. The function used to convert a Javascript data type into a
-//   raw content entity.
+//   raw content resources.
 Content.registerProcessor = function(types,processor) {
   
 // You can pass an array of types that will trigger this processor, or just one.

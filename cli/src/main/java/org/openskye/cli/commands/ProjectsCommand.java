@@ -14,7 +14,7 @@ import org.openskye.domain.Project;
 import java.util.List;
 
 /**
- * The login command
+ * Managing the Projects
  */
 @Parameters(commandDescription = "Manage projects")
 @Data

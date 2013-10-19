@@ -13,7 +13,7 @@ import org.openskye.domain.Domain;
 import java.util.List;
 
 /**
- * The login command
+ * Managing the Metadata Templates
  */
 @Parameters(commandDescription = "Manage metadata templates")
 @Data

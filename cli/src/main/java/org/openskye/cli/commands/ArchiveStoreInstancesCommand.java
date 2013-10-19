@@ -6,13 +6,15 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
+import org.openskye.cli.commands.fields.ReferenceField;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.Domain;
+import org.openskye.domain.Project;
 
 import java.util.List;
 
 /**
- * The login command
+ * Managing the Archive Store Instances
  */
 @Parameters(commandDescription = "Manage archive store instances")
 @Data
@@ -23,7 +25,7 @@ public class ArchiveStoreInstancesCommand extends AbstractCrudCommand {
     private final String commandName = "archiveStoreInstances";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new TextField("implementation")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
     }
 
     public String getCollectionName() {

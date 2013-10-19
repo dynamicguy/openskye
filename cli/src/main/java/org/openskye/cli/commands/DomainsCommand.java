@@ -12,7 +12,7 @@ import org.openskye.domain.Domain;
 import java.util.List;
 
 /**
- * The login command
+ * Managing the Domains
  */
 @Parameters(commandDescription = "Manage domains")
 @Data

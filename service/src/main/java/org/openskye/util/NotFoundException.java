@@ -18,7 +18,7 @@ public class NotFoundException extends WebApplicationException {
     /**
      * Create a HTTP 404 (Not Found) exception.
      *
-     * @param message the String that is the entity of the 404 response.
+     * @param message the String that is the resources of the 404 response.
      */
     public NotFoundException(String message) {
         super(Response.status(Response.Status.NOT_FOUND).entity(message).type("text/plain").build());

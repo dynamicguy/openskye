@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A JPA persistable entity which represents an {@link ObjectSet}, complete
+ * A JPA persistable resources which represents an {@link ObjectSet}, complete
  * with methods to translate between the two types.
  * <p/>
  * This object will tie an Id to a list of ids for

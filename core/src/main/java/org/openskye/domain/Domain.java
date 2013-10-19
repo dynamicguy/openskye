@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A domain represents a top level entity within the organization
+ * A domain represents a top level resources within the organization
  */
 @Entity
 @Table(name = "DOMAIN")

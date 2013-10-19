@@ -9,9 +9,9 @@ import org.openskye.core.SkyePlatform;
 import org.openskye.stores.StoreRegistryMetadata;
 
 /**
- * The login command
+ * Get the platform details
  */
-@Parameters(commandDescription = "Login to the server")
+@Parameters(commandDescription = "Get the platform details for the Skye instance")
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)

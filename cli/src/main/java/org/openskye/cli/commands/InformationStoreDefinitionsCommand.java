@@ -9,12 +9,12 @@ import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.Domain;
+import org.openskye.domain.Project;
 
 import java.util.List;
 
 /**
- * The login command
+ * Managing the Information Store Definitions
  */
 @Parameters(commandDescription = "Manage information store definitions")
 @Data
@@ -25,7 +25,7 @@ public class InformationStoreDefinitionsCommand extends AbstractCrudCommand {
     private final String commandName = "informationStoreDefinitions";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("domain", "domains", Domain.class)).add(new TextField("implementation")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
     }
 
     public String getCollectionName() {

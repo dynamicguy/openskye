@@ -959,7 +959,7 @@ Object.defineProperties(Request.prototype, {
     enumerable: true
   },
 
-// - **content**. (Aliased as `body`.) Set this to add a content entity to the
+// - **content**. (Aliased as `body`.) Set this to add a content resources to the
 //   request. Attempts to use the `content-type` header to determine what to do
 //   with the content value. Get this to get back a [`Content`
 //   object](./content.html).
@@ -1121,7 +1121,7 @@ var processOptions = function(request,options) {
     }
   }
   
-  // The content entity can be set either using the `body` or `content` attributes.
+  // The content resources can be set either using the `body` or `content` attributes.
   if (options.body||options.content) {
     request.content = options.body||options.content;
   }
@@ -1171,7 +1171,7 @@ var createRequest = function(request) {
 
     // Construct a Shred `Response` object from the response. This will stream
     // the response, thus the need for the callback. We can access the response
-    // entity safely once we're in the callback.
+    // resources safely once we're in the callback.
     response = new Response(response, request, function(response) {
 
       // Set up some event magic. The precedence is given first to
@@ -1236,7 +1236,7 @@ var createRequest = function(request) {
   });
 
 
-  // We're almost there. Next, we need to write the request entity to the
+  // We're almost there. Next, we need to write the request resources to the
   // underlying request object.
   if (request.content) {
     request.log.debug("Streaming body: '" +
@@ -1783,7 +1783,7 @@ var Response = function(raw, request, callback) {
   this.client = request.client;
   this.log = this.request.log;
 
-  // Stream the response content entity and fire the callback when we're done.
+  // Stream the response content resources and fire the callback when we're done.
   // Store the incoming data in a array of Buffers which we concatinate into one
   // buffer at the end.  We need to use buffers instead of strings here in order
   // to preserve binary data.
@@ -1868,10 +1868,10 @@ Object.defineProperties(Response.prototype, {
     enumerable: true
   },
 
-// - **content**. The HTTP content entity, if any. Provided as a [content
-//   object](./content.html), which will attempt to convert the entity based upon
+// - **content**. The HTTP content resources, if any. Provided as a [content
+//   object](./content.html), which will attempt to convert the resources based upon
 //   the `content-type` header. The converted value is available as
-//   `content.data`. The original raw content entity is available as
+//   `content.data`. The original raw content resources is available as
 //   `content.body`.
   body: {
     get: function() { return this._body; }
@@ -1940,7 +1940,7 @@ var Content = function(options) {
 };
 
 Content.prototype = {
-  // Treat `toString()` as asking for the `content.body`. That is, the raw content entity.
+  // Treat `toString()` as asking for the `content.body`. That is, the raw content resources.
   //
   //     toString: function() { return this.body; }
   //
@@ -1976,7 +1976,7 @@ Object.defineProperties(Content.prototype,{
     enumerable: true
   },
 
-// - **data**. Typically accessed as `content.data`, reflects the content entity
+// - **data**. Typically accessed as `content.data`, reflects the content resources
 //   converted into Javascript data. This can be a string, if the `type` is, say,
 //   `text/plain`, but can also be a Javascript object. The conversion applied is
 //   based on the `processor` attribute. The `data` attribute can also be set
@@ -1998,7 +1998,7 @@ Object.defineProperties(Content.prototype,{
     enumerable: true
   },
 
-// - **body**. Typically accessed as `content.body`, reflects the content entity
+// - **body**. Typically accessed as `content.body`, reflects the content resources
 //   as a UTF-8 string. It is the mirror of the `data` attribute. If you set the
 //   `data` attribute, the `body` attribute will be inferred and vice-versa. If
 //   you attempt to set both, an exception is raised.
@@ -2043,7 +2043,7 @@ Object.defineProperties(Content.prototype,{
   },
 
 // - **length**. Typically accessed as `content.length`, returns the length in
-//   bytes of the raw content entity.
+//   bytes of the raw content resources.
   length: {
     get: function() {
       if (typeof Buffer !== 'undefined') {
@@ -2059,10 +2059,10 @@ Content.processors = {};
 // The `registerProcessor` function allows you to add your own processors to
 // convert content entities. Each processor consists of a Javascript object with
 // two properties:
-// - **parser**. The function used to parse a raw content entity and convert it
+// - **parser**. The function used to parse a raw content resources and convert it
 //   into a Javascript data type.
 // - **stringify**. The function used to convert a Javascript data type into a
-//   raw content entity.
+//   raw content resources.
 Content.registerProcessor = function(types,processor) {
   
 // You can pass an array of types that will trigger this processor, or just one.
