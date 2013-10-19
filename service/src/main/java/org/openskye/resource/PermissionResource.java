@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
  */
-@Api(value = "/api/1/permissions", description = "Manage permmisions")
+@Api(value = "/api/1/permissions", description = "Manage permissions")
 @Path("/api/1/permissions")
 @Produces(MediaType.APPLICATION_JSON)
 /**
