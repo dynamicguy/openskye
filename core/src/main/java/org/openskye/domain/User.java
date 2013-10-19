@@ -36,6 +36,7 @@ public class User implements Identifiable {
     @ManyToOne
     private Domain domain;
     @OneToMany(cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private List<UserRole> userRoles = new ArrayList<>();
 
     @PrePersist
