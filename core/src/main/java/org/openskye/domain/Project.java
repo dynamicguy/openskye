@@ -27,10 +27,17 @@ public class Project implements Identifiable {
     private Domain domain;
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
+    private List<InformationStoreDefinition> informationStores = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<ArchiveStoreDefinition> archiveStores = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<Channel> channels = new ArrayList<>();
     private String name;
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
+    private boolean active = true;
 
 }

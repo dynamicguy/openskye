@@ -4,10 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
+import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.Channel;
+import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
-import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.ProjectDAO;
@@ -95,5 +95,22 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
         Project project = get(id);
         return new PaginatedResult<Channel>().paginate(project.getChannels());
     }
+
+    @Path("/{id}/archiveStores")
+    @GET
+    @ApiOperation(value = "Return the archive stores owned by this domain")
+    public PaginatedResult<ArchiveStoreDefinition> getArchiveStores(@PathParam("id") String id) {
+        Project project = get(id);
+        return new PaginatedResult<ArchiveStoreDefinition>().paginate(project.getArchiveStores());
+    }
+
+    @Path("/{id}/informationStores")
+    @GET
+    @ApiOperation(value = "Return the information stores owned by this domain")
+    public PaginatedResult<InformationStoreDefinition> getInformationStores(@PathParam("id") String id) {
+        Project project = get(id);
+        return new PaginatedResult<InformationStoreDefinition>().paginate(project.getInformationStores());
+    }
+
 
 }
