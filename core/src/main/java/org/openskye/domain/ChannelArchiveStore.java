@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class ChannelArchiveStore implements Identifiable {
     @Id
     @GeneratedValue(generator = "ChannelArchiveStoreGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
     private Channel channel;

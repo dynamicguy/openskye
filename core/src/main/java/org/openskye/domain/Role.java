@@ -20,9 +20,9 @@ import java.util.List;
 public class Role implements Identifiable {
     @Id
     @GeneratedValue(generator = "RoleGenerator")
-    @Column(unique = true)
+    @Column(unique = true, length = 36)
     private String id;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
     @JsonIgnore
     private List<RolePermission> rolePermissions = new ArrayList<>();
     private String name;

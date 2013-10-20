@@ -12,14 +12,14 @@ import java.util.Map;
  * The representation of an information store owned by a {@link Domain}
  */
 @Entity
-@Table(name = "DOMAIN_INFORMATION_STORE")
+@Table(name = "INFORMATION_STORE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "InformationStoreDefinitionGenerator")
 public class InformationStoreDefinition implements Identifiable {
     @Id
     @GeneratedValue(generator = "InformationStoreDefinitionGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     private String name;
     @ManyToOne

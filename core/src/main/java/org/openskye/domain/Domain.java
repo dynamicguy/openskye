@@ -20,7 +20,7 @@ import java.util.List;
 public class Domain implements Identifiable {
     @Id
     @GeneratedValue(generator = "DomainGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     private String name;
     @OneToMany(cascade = CascadeType.REMOVE)

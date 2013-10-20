@@ -21,7 +21,7 @@ import javax.persistence.*;
 public class RolePermission implements Identifiable {
     @Id
     @GeneratedValue(generator = "RolePermissionGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
     private Role role;

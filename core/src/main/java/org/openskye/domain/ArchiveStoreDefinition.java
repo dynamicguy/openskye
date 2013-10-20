@@ -12,7 +12,7 @@ import java.util.Map;
  * A {@link Domain} owned {@link ArchiveStoreInstance}
  */
 @Entity
-@Table(name = "DOMAIN_ARCHIVE_STORE")
+@Table(name = "ARCHIVE_STORE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "ArchiveStoreDefinitionGenerator")
@@ -20,12 +20,12 @@ public class ArchiveStoreDefinition implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ArchiveStoreDefinitionGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     private String name;
     private String description;
     @ManyToOne
-    private Domain domain;
+    private Project project;
     @ManyToOne
     private ArchiveStoreInstance archiveStoreInstance;
     @Transient

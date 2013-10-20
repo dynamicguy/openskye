@@ -22,7 +22,7 @@ import java.util.UUID;
 public class User implements Identifiable {
     @Id
     @GeneratedValue(generator = "UserGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     private String email;
     private String name;
@@ -35,7 +35,7 @@ public class User implements Identifiable {
     private String password;
     @ManyToOne
     private Domain domain;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore
     private List<UserRole> userRoles = new ArrayList<>();
 

@@ -44,6 +44,9 @@ public class SkyeCli {
         commands.add(new PlatformCommand());
         commands.add(new ProjectsCommand());
         commands.add(new DomainsCommand());
+        commands.add(new UsersCommand());
+        commands.add(new RolesCommand());
+        commands.add(new UserRolesCommand());
         commands.add(new ArchiveStoreDefinitionsCommand());
         commands.add(new ArchiveStoreInstancesCommand());
         commands.add(new InformationStoreDefinitionsCommand());

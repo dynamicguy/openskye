@@ -17,9 +17,9 @@ import org.openskye.resource.UserSelf;
 public class LoginCommand extends ExecutableCommand {
 
     private final String commandName = "login";
-    @Parameter(names = "--username")
+    @Parameter(names = "--username",required = true)
     private String user;
-    @Parameter(names = "--password")
+    @Parameter(names = "--password",required = true)
     private String password;
     @Parameter(names = "--url")
     private String url = "http://localhost:5000/api/1/";

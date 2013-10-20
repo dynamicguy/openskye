@@ -21,7 +21,7 @@ public class Channel implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ChannelGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
     private Project project;

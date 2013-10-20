@@ -7,40 +7,40 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.TextField;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.Domain;
 
 import java.util.List;
 
 /**
- * Managing the Archive Store Definitions
+ * Managing the Users
  */
-@Parameters(commandDescription = "Manage archive store definition")
+@Parameters(commandDescription = "Manage users")
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
-public class ArchiveStoreDefinitionsCommand extends AbstractCrudCommand {
+public class UsersCommand extends AbstractCrudCommand {
 
-    private final String commandName = "archiveStores";
+    private final String commandName = "users";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new TextField("email")).add(new TextField("password")).build();
     }
 
     public String getCollectionName() {
-        return "archiveStoreDefinitions";
+        return "users";
     }
 
     public String getCollectionSingular() {
-        return "archiveStoreDefinition";
+        return "user";
     }
 
     public String getCollectionPlural() {
-        return "archiveStoreDefinitions";
+        return "users";
     }
 
     @Override
     public Class getClazz() {
-        return ArchiveStoreDefinition.class;
+        return Domain.class;
     }
 
 }

@@ -16,7 +16,7 @@ public class AttributeInstance implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "AttributeInstanceGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     private MetadataOwnerType metadataOwnerType;
     private String ownerId;

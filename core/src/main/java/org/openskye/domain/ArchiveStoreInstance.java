@@ -12,7 +12,7 @@ import java.util.Map;
  * An instance of an {@link org.openskye.core.ArchiveStore} definition
  */
 @Entity
-@Table(name = "ARCHIVE_STORE_INSTANCE")
+@Table(name = "ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "ArchiveStoreInstanceGenerator")
@@ -20,7 +20,7 @@ public class ArchiveStoreInstance implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ArchiveStoreInstanceGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     // The name of the {@link ArchiveStore} implementation
     private String implementation;

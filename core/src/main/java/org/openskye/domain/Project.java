@@ -21,7 +21,7 @@ public class Project implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ProjectGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
     private Domain domain;

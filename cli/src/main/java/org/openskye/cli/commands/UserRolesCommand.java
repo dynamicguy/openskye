@@ -7,42 +7,43 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
-import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.Domain;
-import org.openskye.domain.Project;
+import org.openskye.domain.Role;
+import org.openskye.domain.User;
+import org.openskye.domain.UserRole;
 
 import java.util.List;
 
 /**
- * Managing the Archive Store Instances
+ * Managing the User Roles
  */
-@Parameters(commandDescription = "Manage archive store instances")
+@Parameters(commandDescription = "Manage user/roles")
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
-public class ArchiveStoreInstancesCommand extends AbstractCrudCommand {
+public class UserRolesCommand extends AbstractCrudCommand {
 
-    private final String commandName = "archiveStores";
+    private final String commandName = "userRoles";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
+        return FieldBuilder.start().add(new ReferenceField("user", "users", User.class)).add(new ReferenceField("role", "roles", Role.class)).build();
     }
 
     public String getCollectionName() {
-        return "archiveStoreInstances";
+        return "userRoles";
     }
 
     public String getCollectionSingular() {
-        return "archiveStoreInstances";
+        return "userRole";
     }
 
     public String getCollectionPlural() {
-        return "archiveStoreInstances";
+        return "userRoles";
     }
 
     @Override
     public Class getClazz() {
-        return Domain.class;
+        return UserRole.class;
     }
 
 }

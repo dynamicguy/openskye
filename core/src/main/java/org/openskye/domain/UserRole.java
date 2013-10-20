@@ -21,11 +21,13 @@ import javax.persistence.*;
 public class UserRole implements Identifiable {
     @Id
     @GeneratedValue(generator = "UserRoleGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
+    @JoinColumn(name="USER_ID")
     private User user;
     @ManyToOne
+    @JoinColumn(name="ROLE_ID")
     private Role role;
 
 }

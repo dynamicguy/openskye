@@ -22,7 +22,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class InformationStoreDefinitionsCommand extends AbstractCrudCommand {
 
-    private final String commandName = "informationStoreDefinitions";
+    private final String commandName = "informationStores";
 
     public List<Field> getFields() {
         return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();

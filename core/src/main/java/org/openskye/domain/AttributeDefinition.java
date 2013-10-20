@@ -18,7 +18,7 @@ public class AttributeDefinition implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "AttributeDefinitionGenerator")
-    @Column(unique = true)
+    @Column(unique = true,length = 36)
     private String id;
     private String name;
     private String shortLabel;
