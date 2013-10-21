@@ -51,7 +51,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         settings.mustHaveApiKey();
 
         if (list) {
-            PaginatedResult paginatedResult = getResource(getCollectionName()).get(PaginatedResult.class);
+            PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
             List<String> fieldsWithId = new ArrayList<>();
             fieldsWithId.add("id");
             fieldsWithId.addAll(getFieldNames());
