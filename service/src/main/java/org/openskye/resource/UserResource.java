@@ -1,6 +1,7 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -9,6 +10,8 @@ import org.openskye.domain.UserRole;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.UserDAO;
+import org.openskye.util.BadRequestException;
+import org.openskye.util.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -26,6 +29,32 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @Inject
     public UserResource(UserDAO dao) {
         this.userDAO = dao;
+    }
+
+    @Override
+    protected void validateCreate(User newInstance) {
+        if ( newInstance.getEmail() == null ) {
+            throw new BadRequestException("No email provided in user data");
+        } else if ( userDAO.findByEmail(newInstance.getEmail()) == null ) {
+            return;
+        } else if ( userDAO.findByEmail(newInstance.getEmail()).isPresent() ) {
+            throw new BadRequestException("User email already in use");
+        }
+    }
+
+    @Override
+    protected void validateUpdate(String id, User newInstance) {
+        Optional<User> user = userDAO.get(id);
+        if ( user == null || ! user.isPresent() ) {
+            throw new NotFoundException();
+        }
+        String oldEmail = user.get().getEmail();
+        String newEmail = newInstance.getEmail();
+        if ( newEmail == null || newEmail == oldEmail ) {
+            return;
+        } else if ( userDAO.findByEmail(newEmail).isPresent() ) {
+            throw new BadRequestException("User email already in use");
+        }
     }
 
     @ApiOperation(value = "Create new user", notes = "Create a new user and return with its unique id", response = User.class)
