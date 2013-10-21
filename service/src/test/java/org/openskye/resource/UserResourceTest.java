@@ -16,8 +16,14 @@ public class UserResourceTest extends AbstractResourceTest<User> {
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new UserResource(dao))
             .build();
-    private final User user = new User();
+    private User user;
     private PaginatedResult<User> expectedResult = new PaginatedResult<>();
+
+    public UserResourceTest() {
+        user = new User();
+        user.setName("Test");
+        user.setEmail("test@test.org");
+    }
 
     @Override
     public String getSingular() {
