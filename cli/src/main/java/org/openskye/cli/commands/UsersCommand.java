@@ -8,6 +8,7 @@ import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.Domain;
+import org.openskye.domain.User;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class UsersCommand extends AbstractCrudCommand {
 
     @Override
     public Class getClazz() {
-        return Domain.class;
+        return User.class;
     }
 
 }

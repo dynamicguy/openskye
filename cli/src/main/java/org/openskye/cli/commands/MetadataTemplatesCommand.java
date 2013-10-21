@@ -9,6 +9,7 @@ import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.Domain;
+import org.openskye.domain.MetadataTemplate;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class MetadataTemplatesCommand extends AbstractCrudCommand {
 
     @Override
     public Class getClazz() {
-        return Domain.class;
+        return MetadataTemplate.class;
     }
 
 }
