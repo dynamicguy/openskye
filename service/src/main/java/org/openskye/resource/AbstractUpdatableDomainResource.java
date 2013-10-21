@@ -15,29 +15,34 @@ import javax.ws.rs.core.Response;
  */
 @Produces(MediaType.APPLICATION_JSON)
 public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractRealOnlyDomainResource<T> {
-    public T create(T newInstance) {
-        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":create")) {
-            return getDAO().create(newInstance);
-        } else {
+
+    // validate*() should throw BadRequestException if the instance is invalid
+    protected void validateCreate(T newInstance) {}
+    protected void validateUpdate(String id,T newInstance) {}
+    protected void validateDelete(String id) {}
+
+    protected void authorize(String action) {
+        if ( ! SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action) ) {
             throw new UnauthorizedException();
         }
+    }
+
+    public T create(T newInstance) {
+        authorize("create");
+        validateCreate(newInstance);
+        return getDAO().create(newInstance);
     }
 
     public T update(@PathParam("id") String id, T newInstance) {
-        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":update")) {
-            return getDAO().update(id, newInstance);
-        } else {
-            throw new UnauthorizedException();
-        }
+        authorize("update");
+        validateUpdate(id,newInstance);
+        return getDAO().update(id, newInstance);
     }
 
     public Response delete(@PathParam("id") String id) {
-        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":delete")) {
-            getDAO().delete(id);
-            return Response.ok().build();
-        } else {
-            throw new UnauthorizedException();
-        }
-
+        authorize("delete");
+        validateDelete(id);
+        getDAO().delete(id);
+        return Response.ok().build();
     }
 }
