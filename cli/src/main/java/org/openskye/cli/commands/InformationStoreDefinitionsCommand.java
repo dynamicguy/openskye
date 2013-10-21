@@ -9,6 +9,7 @@ import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 
 import java.util.List;
@@ -28,21 +29,9 @@ public class InformationStoreDefinitionsCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
     }
 
-    public String getCollectionName() {
-        return "informationStoreDefinitions";
-    }
-
-    public String getCollectionSingular() {
-        return "informationStoreDefinition";
-    }
-
-    public String getCollectionPlural() {
-        return "informationStoreDefinitions";
-    }
-
     @Override
     public Class getClazz() {
-        return ArchiveStoreDefinition.class;
+        return InformationStoreDefinition.class;
     }
 
 }

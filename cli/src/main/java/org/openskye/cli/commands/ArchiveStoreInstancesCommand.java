@@ -8,6 +8,7 @@ import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
 import org.openskye.cli.commands.fields.TextField;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
 
@@ -28,21 +29,9 @@ public class ArchiveStoreInstancesCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
     }
 
-    public String getCollectionName() {
-        return "archiveStoreInstances";
-    }
-
-    public String getCollectionSingular() {
-        return "archiveStoreInstances";
-    }
-
-    public String getCollectionPlural() {
-        return "archiveStoreInstances";
-    }
-
     @Override
     public Class getClazz() {
-        return Domain.class;
+        return ArchiveStoreInstance.class;
     }
 
 }

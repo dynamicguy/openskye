@@ -28,18 +28,6 @@ public class ProjectsCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).build();
     }
 
-    public String getCollectionName() {
-        return "projects";
-    }
-
-    public String getCollectionSingular() {
-        return "project";
-    }
-
-    public String getCollectionPlural() {
-        return "projects";
-    }
-
     @Override
     public Class getClazz() {
         return Project.class;

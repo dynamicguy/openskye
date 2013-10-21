@@ -26,18 +26,6 @@ public class ArchiveStoreDefinitionsCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).build();
     }
 
-    public String getCollectionName() {
-        return "archiveStoreDefinitions";
-    }
-
-    public String getCollectionSingular() {
-        return "archiveStoreDefinition";
-    }
-
-    public String getCollectionPlural() {
-        return "archiveStoreDefinitions";
-    }
-
     @Override
     public Class getClazz() {
         return ArchiveStoreDefinition.class;

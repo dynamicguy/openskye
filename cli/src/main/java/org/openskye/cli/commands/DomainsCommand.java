@@ -26,18 +26,6 @@ public class DomainsCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).build();
     }
 
-    public String getCollectionName() {
-        return "domains";
-    }
-
-    public String getCollectionSingular() {
-        return "domain";
-    }
-
-    public String getCollectionPlural() {
-        return "domains";
-    }
-
     @Override
     public Class getClazz() {
         return Domain.class;

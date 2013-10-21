@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.openskye.cli.CliException;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.ReferenceField;
@@ -41,12 +42,6 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     private String id;
 
     public abstract List<Field> getFields();
-
-    public abstract String getCollectionName();
-
-    public abstract String getCollectionSingular();
-
-    public abstract String getCollectionPlural();
 
     public abstract Class getClazz();
 
@@ -145,5 +140,23 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             fieldNames.add(field.getName());
         }
         return fieldNames;
+    }
+
+    protected String toCamel(String name) {
+        String capitalize = WordUtils.capitalizeFully(name);
+        return capitalize.substring(0, 1).toLowerCase() + capitalize.substring(1);
+
+    }
+
+    public String getCollectionName() {
+        return toCamel(getClazz().getSimpleName());
+    }
+
+    public String getCollectionSingular() {
+        return toCamel(getClazz().getSimpleName());
+    }
+
+    public String getCollectionPlural() {
+        return toCamel(getClazz().getSimpleName() + "s");
     }
 }

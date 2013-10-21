@@ -9,6 +9,7 @@ import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.domain.Domain;
+import org.openskye.domain.Role;
 
 import java.util.List;
 
@@ -27,21 +28,9 @@ public class RolesCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).build();
     }
 
-    public String getCollectionName() {
-        return "roles";
-    }
-
-    public String getCollectionSingular() {
-        return "role";
-    }
-
-    public String getCollectionPlural() {
-        return "roles";
-    }
-
     @Override
     public Class getClazz() {
-        return Domain.class;
+        return Role.class;
     }
 
 }

@@ -26,18 +26,6 @@ public class UsersCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).add(new TextField("email")).add(new TextField("password")).build();
     }
 
-    public String getCollectionName() {
-        return "users";
-    }
-
-    public String getCollectionSingular() {
-        return "user";
-    }
-
-    public String getCollectionPlural() {
-        return "users";
-    }
-
     @Override
     public Class getClazz() {
         return Domain.class;

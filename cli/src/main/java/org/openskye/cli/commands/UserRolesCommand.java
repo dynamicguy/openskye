@@ -29,18 +29,6 @@ public class UserRolesCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new ReferenceField("user", "users", User.class)).add(new ReferenceField("role", "roles", Role.class)).build();
     }
 
-    public String getCollectionName() {
-        return "userRoles";
-    }
-
-    public String getCollectionSingular() {
-        return "userRole";
-    }
-
-    public String getCollectionPlural() {
-        return "userRoles";
-    }
-
     @Override
     public Class getClazz() {
         return UserRole.class;

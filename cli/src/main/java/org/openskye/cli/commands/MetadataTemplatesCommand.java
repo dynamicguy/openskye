@@ -27,18 +27,6 @@ public class MetadataTemplatesCommand extends AbstractCrudCommand {
         return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).add(new ReferenceField("domain", "domains", Domain.class)).build();
     }
 
-    public String getCollectionName() {
-        return "metadataTemplates";
-    }
-
-    public String getCollectionSingular() {
-        return "metadataTemplate";
-    }
-
-    public String getCollectionPlural() {
-        return "metadataTemplates";
-    }
-
     @Override
     public Class getClazz() {
         return Domain.class;
