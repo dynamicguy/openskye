@@ -20,8 +20,10 @@ public class ChannelArchiveStore implements Identifiable {
     @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
+    @JoinColumn(name="CHANNEL_ID")
     private Channel channel;
     @ManyToOne
+    @JoinColumn(name="ARCHIVE_STORE_DEFINITION_ID")
     private ArchiveStoreDefinition archiveStoreDefinition;
 
 }

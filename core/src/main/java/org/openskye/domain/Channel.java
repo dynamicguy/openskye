@@ -27,7 +27,7 @@ public class Channel implements Identifiable {
     private Project project;
     @ManyToOne
     private InformationStoreDefinition informationStoreDefinition;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "channel")
     @JsonIgnore
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     private String name;
