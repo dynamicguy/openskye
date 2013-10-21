@@ -24,8 +24,10 @@ public class RolePermission implements Identifiable {
     @Column(unique = true,length = 36)
     private String id;
     @ManyToOne
+    @JoinColumn(name="ROLE_ID")
     private Role role;
     @ManyToOne
+    @JoinColumn(name="PERMISSION_ID")
     private Permission permission;
 
 }
