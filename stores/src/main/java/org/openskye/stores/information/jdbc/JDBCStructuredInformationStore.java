@@ -61,7 +61,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
             dbProperties.setProperty("databaseMajorVersion", String.valueOf(connection.getMetaData().getDatabaseMajorVersion()));
             dbProperties.setProperty("databaseMinorVersion", String.valueOf(connection.getMetaData().getDatabaseMinorVersion()));
             dbProperties.setProperty("databaseProductName", String.valueOf(connection.getMetaData().getDatabaseProductName()));
-            dbProperties.setProperty("databaseProductName", String.valueOf(connection.getMetaData().getDatabaseProductVersion()));
+            dbProperties.setProperty("databaseProductVersion", String.valueOf(connection.getMetaData().getDatabaseProductVersion()));
 
             return dbProperties;
         } catch (SQLException e) {
