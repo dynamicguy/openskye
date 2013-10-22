@@ -1,6 +1,7 @@
 package org.openskye.cli.commands;
 
 import com.beust.jcommander.Parameter;
+import com.google.common.base.CaseFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         settings.mustHaveApiKey();
 
         if (list) {
-            PaginatedResult paginatedResult = getResource(getCollectionName()).get(PaginatedResult.class);
+            PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
             List<String> fieldsWithId = new ArrayList<>();
             fieldsWithId.add("id");
             fieldsWithId.addAll(getFieldNames());
@@ -91,7 +92,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     selectReferenceField((ReferenceField) field, newObject);
                 }
             }
-            Identifiable result = (Identifiable) getResource(getCollectionName()).post(getClazz(), newObject);
+            Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
             output.success("Created " + getCollectionSingular() + " with id " + result.getId());
         } else if (delete) {
             if (id == null)
@@ -143,13 +144,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     }
 
     protected String toCamel(String name) {
-        String capitalize = WordUtils.capitalizeFully(name);
-        return capitalize.substring(0, 1).toLowerCase() + capitalize.substring(1);
-
-    }
-
-    public String getCollectionName() {
-        return toCamel(getClazz().getSimpleName());
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     public String getCollectionSingular() {

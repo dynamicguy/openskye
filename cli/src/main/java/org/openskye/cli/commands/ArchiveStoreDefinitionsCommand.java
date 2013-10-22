@@ -20,7 +20,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class ArchiveStoreDefinitionsCommand extends AbstractCrudCommand {
 
-    private final String commandName = "archiveStores";
+    private final String commandName = "archiveStoreDefinitions";
 
     public List<Field> getFields() {
         return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).build();
