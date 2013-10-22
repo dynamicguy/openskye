@@ -1,11 +1,7 @@
 package org.openskye.domain;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Krishna
- * Date: 10/21/13
- * Time: 12:03 PM
- * To change this template use File | Settings | File Templates.
+ Test the serialization and handling of the {@link Domain}
  */
 import org.junit.Test;
 

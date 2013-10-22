@@ -6,12 +6,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Krishna
- * Date: 10/21/13
- * Time: 10:53 AM
- * To change this template use File | Settings | File Templates.
+/*
+Test the serialization and handling of the {@link Domain}
  */
 
 
