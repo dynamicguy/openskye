@@ -1,7 +1,7 @@
 package org.openskye.domain;
 
 /**
- Test the serialization and handling of the {@link Domain}
+ Test the serialization and handling of the {@link Domain}.
  */
 import org.junit.Test;
 
