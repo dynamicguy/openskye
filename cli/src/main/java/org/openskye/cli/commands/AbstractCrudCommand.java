@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openskye.cli.CliException;
 import org.openskye.cli.commands.fields.Field;
+import org.openskye.cli.commands.fields.PropertiesField;
 import org.openskye.cli.commands.fields.ReferenceField;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.cli.util.ObjectTableView;
@@ -17,6 +18,7 @@ import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.io.Console;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,9 +91,12 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     }
                 } else if (field instanceof ReferenceField) {
                     selectReferenceField((ReferenceField) field, newObject);
+                } else if(field instanceof PropertiesField){
+                    setPropertiesField((PropertiesField)field, newObject);
                 }
             }
             Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
+
             output.success("Created " + getCollectionSingular() + " with id " + result.getId());
         } else if (delete) {
             if (id == null)
@@ -111,29 +116,54 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         // and then let the user choose one
 
         PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
+        if(paginatedResult.getResults().size()==0){
+            output.message("You must have at least 1 " + field.getName() + " to create this object");
+            throw new SkyeException("Objects missing that need to be created");
+        }
+        else{
+            output.message("Select " + field.getName() + " by number,  the options are below:");
+            int i = 1;
+            for (Object obj : paginatedResult.getResults()) {
+                try {
+                    output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, field.getValue()));
+                } catch (Exception e) {
+                    throw new SkyeException("Unable to build reference field for " + field, e);
+                }
+                i++;
+            }
+            while (true) {
+                String option = getConsole().readLine("Enter choice:");
+                int position = Integer.parseInt(option);
+                try {
+                    Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
+                    BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId()));
+                    BeanUtils.setProperty(newObject, field.getName(), result);
+                    break;
+                } catch (Exception e) {
+                    throw new SkyeException("Unable to build reference field for " + field, e);
+                }
+            }
+        }
 
-        output.message("Select " + field.getName() + " by number,  the options are below:");
-        int i = 1;
-        for (Object obj : paginatedResult.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, field.getValue()));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to build reference field for " + field, e);
-            }
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
-            try {
-                Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
-                BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId()));
-                BeanUtils.setProperty(newObject, field.getName(), result);
+    }
+
+    public void setPropertiesField(PropertiesField props, Object newObject){
+        output.message("Please enter the properties and values.");
+        while(true){
+            String property = getConsole().readLine("Property: ");
+            String value = getConsole().readLine("Value: ");
+            props.addProperty(property,value);
+            String answer = getConsole().readLine("Do you have any more properties? Y/N");
+            if(answer.equalsIgnoreCase("N")){
                 break;
-            } catch (Exception e) {
-                throw new SkyeException("Unable to build reference field for " + field, e);
             }
         }
+        try {
+            BeanUtils.setProperty(newObject, props.getName(), props);
+        } catch (Exception e) {
+            throw new SkyeException("Unable to add properties to object",e);
+        }
+
     }
 
     public Collection<? extends String> getFieldNames() {

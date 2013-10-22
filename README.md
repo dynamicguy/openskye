@@ -33,7 +33,7 @@ In order to get a basic server running simply build, then
 
 If you have [Foreman](http://ddollar.github.io/foreman/) then you change just start that and it'll take care of the chmod.
 
-Once the server is running you should be able to visit [http://localhost:8080/explore/index.html](http://localhost:8080/explore/index.html) to see the REST endpoints for the running instance.
+Once the server is running you should be able to visit [http://localhost:5000/explore/index.html](http://localhost:8080/explore/index.html) to see the REST endpoints for the running instance.
 
 ![screen](https://raw.github.com/infobelt/skye/master/screenshot.png)
 
@@ -46,7 +46,7 @@ With the server up you can start interacting with it using the skye command line
 
 Then you can login using the default username and password
 
-	 $ assembly/target/appassembler/bin/skye login --username admin@skye.org --password changeme                                          
+	 $ assembly/target/appassembler/bin/skye login --username admin@openskye.org --password changeme
 	 Logging in as admin@skye.org at http://localhost:5000/api/1/
 	 Login successful, storing credentials
 	 $
