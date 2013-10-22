@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.openskye.core.ObjectMetadata;
@@ -19,6 +21,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.queryString;
 
 /**
  * An implementation of
@@ -35,18 +39,19 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
     @Inject
     ObjectMapper objectMapper;
 
-    protected static final SearchType SEARCH_TYPE = SearchType.DFS_QUERY_THEN_FETCH;
+    protected static final SearchType SEARCH_TYPE = SearchType.QUERY_THEN_FETCH;
 
     @Override
     public Iterable<ObjectMetadata> search(Domain domain, String query, Page page)
     {
-        int from = (int) (((page.getPageNumber() - 1) * page.getPageSize()) + 1);
+        int from = (int) (((page.getPageNumber() - 1) * page.getPageSize()));
         int size = (int) page.getPageSize();
         List<ObjectMetadata> listMetadata = new ArrayList<>();
-        SearchResponse response = client.prepareSearch(domain.getId())
+        SearchResponse response = client.prepareSearch()
+                                        .setIndices(domain.getId())
                                         .setSearchType(SEARCH_TYPE)
                                         .setFrom(from).setSize(size)
-                                        .setQuery(query)
+                                        .setQuery(new QueryStringQueryBuilder(query))
                                         .execute()
                                         .actionGet();
 
@@ -75,14 +80,15 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
     @Override
     public Iterable<ObjectMetadata> search(Domain domain, Project project, String query, Page page)
     {
-        int from = (int) (((page.getPageNumber() - 1) * page.getPageSize()) + 1);
+        int from = (int) (((page.getPageNumber() - 1) * page.getPageSize()));
         int size = (int) page.getPageSize();
         List<ObjectMetadata> listMetadata = new ArrayList<>();
-        SearchResponse response = client.prepareSearch(domain.getId())
+        SearchResponse response = client.prepareSearch()
+                                        .setIndices(domain.getId())
                                         .setTypes(project.getId())
                                         .setSearchType(SEARCH_TYPE)
                                         .setFrom(from).setSize(size)
-                                        .setQuery(query)
+                                        .setQuery(new QueryStringQueryBuilder(query))
                                         .execute()
                                         .actionGet();
 
