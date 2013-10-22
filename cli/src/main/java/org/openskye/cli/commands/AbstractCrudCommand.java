@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 import org.openskye.cli.CliException;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.ReferenceField;
@@ -40,7 +39,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     @Parameter(names = "--file")
     private String name;
     @Parameter
-    private String id;
+    private List<String> id;
 
     public abstract List<Field> getFields();
 
@@ -97,10 +96,12 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         } else if (delete) {
             if (id == null)
                 throw new CliException("You must provide an id to delete a " + getCollectionSingular());
-            getResource(getCollectionPlural() + "/" + id).delete();
 
-            output.success("Deleted " + getCollectionSingular() + " with id " + id);
+            for(String idInstance : id) {
+                getResource(getCollectionPlural() + "/" + idInstance).delete();
 
+                output.success("Deleted " + getCollectionSingular() + " with id " + idInstance);
+            }
         }
     }
 
