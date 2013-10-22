@@ -39,4 +39,18 @@ public interface ObjectMetadataSearch {
      */
     void index(ObjectMetadata objectMetadata);
 
+    /**
+     * Clears the indexed items for the OMS.
+     *
+     * This is intended for testing and demo purposes.
+     */
+    void clear();
+
+    /**
+     * Ensures that all indexed entries are added to internal storage.
+     *
+     * This is intended for testing and demo purposes.
+     */
+    void flush();
+
 }
