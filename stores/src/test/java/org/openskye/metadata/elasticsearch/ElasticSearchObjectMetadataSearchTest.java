@@ -77,20 +77,16 @@ public class ElasticSearchObjectMetadataSearchTest
         page.setPageNumber(PAGE_NUMBER);
         page.setPageSize(PAGE_SIZE);
 
+        // First, we should clear all previous indices from the search client.
+        this.search.clear();
+
         // Now, attempt to index the data.  Note that this involves
-        // serializing the JsonObjectMetadata.  Since this is technically
-        // a separate "unit," it will be tested in a separate test against
-        // some hard coded json file.
+        // serializing the JsonObjectMetadata.
         this.search.index(objectMetadata);
 
-        try
-        {
-            Thread.sleep(5000);
-        }
-        catch(Exception ex)
-        {
-
-        }
+        // Now, we should flush the search client in order to ensure that
+        // the indexed document can be searched.
+        this.search.flush();
 
         searchString = METADATA_PATH;
 

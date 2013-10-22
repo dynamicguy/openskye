@@ -2,6 +2,9 @@ package org.openskye.metadata.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.action.admin.indices.flush.FlushRequest;
+import org.elasticsearch.action.admin.indices.status.IndexStatus;
+import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
@@ -21,8 +24,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.elasticsearch.index.query.QueryBuilders.queryString;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An implementation of
@@ -135,5 +138,46 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
               .setSource(json)
               .execute()
               .actionGet();
+    }
+
+    /**
+     * Clears the indexed items for the OMS.
+     *
+     * This is intended for testing and demo purposes.
+     */
+    @Override
+    public void clear()
+    {
+        this.client.prepareDeleteByQuery(this.getIndexNames())
+                   .setQuery(QueryBuilders.matchAllQuery())
+                   .execute()
+                   .actionGet();
+    }
+
+    /**
+     * Ensures that all indexed entries are added to internal storage.
+     *
+     * This is intended for testing and demo purposes.
+     */
+    @Override
+    public void flush()
+    {
+        this.client.admin()
+                   .indices()
+                   .prepareFlush(this.getIndexNames())
+                   .execute()
+                   .actionGet();
+    }
+
+    protected String[] getIndexNames()
+    {
+        IndicesStatusResponse response = this.client.admin()
+                                                    .indices()
+                                                    .prepareStatus()
+                                                    .execute()
+                                                    .actionGet();
+        Set<String> indexSet = response.getIndices().keySet();
+
+        return indexSet.toArray(new String[0]);
     }
 }
