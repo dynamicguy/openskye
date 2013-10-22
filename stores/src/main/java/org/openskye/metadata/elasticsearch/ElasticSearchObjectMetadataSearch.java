@@ -177,15 +177,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
                                                     .execute()
                                                     .actionGet();
         Set<String> indexSet = response.getIndices().keySet();
-        String[] indices = new String[indexSet.size()];
-        int i = 0;
 
-        for(String index : indexSet)
-        {
-            indices[i] = index;
-            i++;
-        }
-
-        return indices;
+        return indexSet.toArray(new String[0]);
     }
 }
