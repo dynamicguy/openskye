@@ -23,6 +23,27 @@ public class HBaseObjectMetadataSearch implements ObjectMetadataSearch {
 
     @Override
     public void index(ObjectMetadata objectMetadata) {
+
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Clears the indexed items for the OMS.
+     * <p/>
+     * This is intended for testing and demo purposes.
+     */
+    @Override
+    public void clear() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Ensures that all indexed entries are added to internal storage.
+     * <p/>
+     * This is intended for testing and demo purposes.
+     */
+    @Override
+    public void flush() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }
