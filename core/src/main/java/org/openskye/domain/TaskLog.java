@@ -19,6 +19,8 @@ public class TaskLog implements Identifiable {
     @GeneratedValue(generator = "TaskLogGenerator")
     @Column(unique = true, length = 36)
     private String id;
+    @ManyToOne
+    @JoinColumn(name = "TASK_ID")
     private Task task;
     private String message;
 

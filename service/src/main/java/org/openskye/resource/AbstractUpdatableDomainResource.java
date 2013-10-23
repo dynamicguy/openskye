@@ -1,8 +1,6 @@
 package org.openskye.resource;
 
-import org.apache.shiro.SecurityUtils;
 import org.openskye.domain.Identifiable;
-import org.openskye.util.UnauthorizedException;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -24,12 +22,6 @@ public abstract class AbstractUpdatableDomainResource<T extends Identifiable> ex
     }
 
     protected void validateDelete(String id) {
-    }
-
-    protected void authorize(String action) {
-        if (!SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action)) {
-            throw new UnauthorizedException();
-        }
     }
 
     public T create(T newInstance) {

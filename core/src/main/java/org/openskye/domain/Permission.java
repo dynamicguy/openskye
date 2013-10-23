@@ -21,7 +21,7 @@ public class Permission implements Identifiable {
     @Column(unique = true, length = 36)
     private String id;
     private String permission;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permission")
     private List<RolePermission> rolePermissions;
 
 
