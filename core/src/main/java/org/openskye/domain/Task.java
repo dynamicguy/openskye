@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class Task implements Identifiable {
     @Id
     @GeneratedValue(generator = "TaskGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private TaskType taskType;
     @ManyToOne

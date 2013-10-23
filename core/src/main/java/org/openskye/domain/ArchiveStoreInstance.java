@@ -20,7 +20,7 @@ public class ArchiveStoreInstance implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ArchiveStoreInstanceGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     // The name of the {@link ArchiveStore} implementation
     private String implementation;

@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import org.openskye.domain.AttributeDefinition;
 import org.openskye.domain.MetadataTemplate;
 import org.openskye.domain.Permission;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
@@ -87,12 +88,12 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
         return "metadataTemplate";
     }
 
-    @Path("/{id}/archiveStores")
+    @Path("/{id}/attributeDefinitions")
     @GET
     @ApiOperation(value = "Return the archive stores owned by this domain")
-    public PaginatedResult<Permission> getFieldDefinitions(@PathParam("id") String id) {
+    public PaginatedResult<AttributeDefinition> getFieldDefinitions(@PathParam("id") String id) {
         MetadataTemplate metadataTemplate = get(id);
-        return new PaginatedResult<Permission>().paginate(metadataTemplate.getFieldDefinitions());
+        return new PaginatedResult<AttributeDefinition>().paginate(metadataTemplate.getAttributeDefinitions());
 
     }
 

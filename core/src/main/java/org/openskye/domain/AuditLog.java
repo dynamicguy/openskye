@@ -21,7 +21,7 @@ public class AuditLog implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "AuditLogGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
     private User user;

@@ -22,17 +22,18 @@ public class Project implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ProjectGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
+    @JoinColumn(name = "DOMAIN_ID")
     private Domain domain;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
     private List<InformationStoreDefinition> informationStores = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
     private List<ArchiveStoreDefinition> archiveStores = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
     private List<Channel> channels = new ArrayList<>();
     @NotNull

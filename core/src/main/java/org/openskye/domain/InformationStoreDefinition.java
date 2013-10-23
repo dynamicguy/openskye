@@ -25,6 +25,7 @@ public class InformationStoreDefinition implements Identifiable {
     @NotNull
     private String name;
     @ManyToOne
+    @JoinColumn(name = "PROJECT_ID")
     private Project project;
     // The name of the {@link InformationStore} implementation
     private String implementation;

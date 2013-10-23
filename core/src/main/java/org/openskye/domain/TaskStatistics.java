@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class TaskStatistics implements Identifiable {
     @Id
     @GeneratedValue(generator = "TaskStatisticsGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private Task task;
     private long simpleObjectsIngested;

@@ -25,10 +25,10 @@ public class Domain implements Identifiable {
     private String id;
     @NotNull
     private String name;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "domain")
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "domain")
     @JsonIgnore
     private List<MetadataTemplate> metadataTemplates = new ArrayList<>();
 

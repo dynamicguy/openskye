@@ -15,7 +15,7 @@ public class AttributeDefinitionTest extends AbstractDomainTest {
     public void serializesToJSON() throws Exception {
         final AttributeDefinition attributeDefinition = new AttributeDefinition();
         attributeDefinition.setId("34ds-5fss-221d-1sdf");
-        attributeDefinition.setEmbedInArchive(false);
+        attributeDefinition.setEmbedInObject(false);
         assertThat("a AttributeDefinition can be serialized to JSON",
                 asJson(attributeDefinition),
                 is(equalTo(jsonFixture("fixtures/AttributeDefinition.json"))));
