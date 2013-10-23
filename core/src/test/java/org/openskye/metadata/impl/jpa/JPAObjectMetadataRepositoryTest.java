@@ -50,7 +50,10 @@ public class JPAObjectMetadataRepositoryTest {
     @Test
     public void metadataStorageAndRetrieval() {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
+        asi.setImplementation("test");
+        asi.setName("test");
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
+        asd.setName("Test");
         ArchiveContentBlock acb = new JPAArchiveContentBlock().toArchiveContentBlock();
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test");

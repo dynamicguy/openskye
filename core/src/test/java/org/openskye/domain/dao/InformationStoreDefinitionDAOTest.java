@@ -1,6 +1,8 @@
 package org.openskye.domain.dao;
 
+import com.google.common.base.Optional;
 import org.junit.Test;
+import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.Domain;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
@@ -8,10 +10,13 @@ import org.openskye.domain.Project;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 /**
  * Testing the {@link org.openskye.domain.dao.InformationStoreDefinitionDAO}
  */
-public class InformationStoreInstanceDAOTest extends AbstractDAOTestBase<InformationStoreDefinition> {
+public class InformationStoreDefinitionDAOTest extends AbstractDAOTestBase<InformationStoreDefinition> {
 
     @Inject
     public InformationStoreDefinitionDAO informationStoreDefinitionDAO;
@@ -44,5 +49,18 @@ public class InformationStoreInstanceDAOTest extends AbstractDAOTestBase<Informa
         InformationStoreDefinition isd = getNew();
         isd.setName(null);
         getDAO().create(isd);
+    }
+
+    @Test
+    public void checkPropertiesPersist() {
+        InformationStoreDefinition isd = new InformationStoreDefinition();
+        isd.setName("Test Def");
+        isd.getProperties().put("Hello", "world");
+        getDAO().create(isd);
+
+        Optional<InformationStoreDefinition> readBack = getDAO().get(isd.getId());
+        assertThat(readBack.isPresent(), is(true));
+
+        assertThat(readBack.get().getProperties().get("Hello"), is("world"));
     }
 }
