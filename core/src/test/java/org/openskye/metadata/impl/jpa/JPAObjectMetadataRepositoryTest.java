@@ -53,6 +53,7 @@ public class JPAObjectMetadataRepositoryTest {
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
         ArchiveContentBlock acb = new JPAArchiveContentBlock().toArchiveContentBlock();
         InformationStoreDefinition isd = new InformationStoreDefinition();
+        isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();
         Optional<ObjectMetadata> metadataOutput = Optional.absent();
         Optional<ArchiveContentBlock> acbOutput = Optional.absent();
