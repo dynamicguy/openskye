@@ -5,6 +5,7 @@ import lombok.Data;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class ArchiveStoreDefinition implements Identifiable {
     @GeneratedValue(generator = "ArchiveStoreDefinitionGenerator")
     @Column(unique = true, length = 36)
     private String id;
+    @NotNull
     private String name;
     private String description;
     @ManyToOne
@@ -30,6 +32,9 @@ public class ArchiveStoreDefinition implements Identifiable {
     @ManyToOne
     @JoinColumn(name = "ARCHIVE_STORE_ID")
     private ArchiveStoreInstance archiveStoreInstance;
-    @Transient
+    @ElementCollection
+    @MapKeyColumn(name = "NAME")
+    @Column(name = "VALUE")
+    @CollectionTable(name = "ARCHIVE_STORE_DEFINITION_PROPERTIES", joinColumns = @JoinColumn(name = "ARCHIVE_STORE_ID"))
     private Map<String, String> properties = new HashMap<>();
 }

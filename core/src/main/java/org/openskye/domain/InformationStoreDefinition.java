@@ -29,7 +29,10 @@ public class InformationStoreDefinition implements Identifiable {
     private Project project;
     // The name of the {@link InformationStore} implementation
     private String implementation;
-    @Transient
+    @ElementCollection
+    @MapKeyColumn(name = "NAME")
+    @Column(name = "VALUE")
+    @CollectionTable(name = "INFORMATION_STORE_DEFINITION_PROPERTIES", joinColumns = @JoinColumn(name = "INFORMATION_STORE_ID"))
     private Map<String, String> properties = new HashMap<>();
 
 }
