@@ -25,7 +25,7 @@ public class MetadataTemplatesCommand extends AbstractCrudCommand {
     private final String commandName = "metadataTemplates";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).add(new ReferenceField("domain", "domains", Domain.class)).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).add(new ReferenceField(Domain.class)).build();
     }
 
     @Override

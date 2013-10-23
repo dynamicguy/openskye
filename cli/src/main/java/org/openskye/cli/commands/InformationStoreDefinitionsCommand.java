@@ -23,7 +23,7 @@ public class InformationStoreDefinitionsCommand extends AbstractCrudCommand {
     private final String commandName = "informationStores";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).add(new PropertiesField("properties")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField(Project.class)).add(new TextField("implementation")).add(new PropertiesField("properties")).build();
     }
 
     @Override

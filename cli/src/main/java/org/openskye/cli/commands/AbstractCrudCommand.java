@@ -8,13 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openskye.cli.CliException;
-import org.openskye.cli.commands.fields.Field;
-import org.openskye.cli.commands.fields.PropertiesField;
-import org.openskye.cli.commands.fields.ReferenceField;
-import org.openskye.cli.commands.fields.TextField;
+import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
+import org.openskye.domain.Task;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.io.Console;
@@ -93,6 +91,8 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     selectReferenceField((ReferenceField) field, newObject);
                 } else if(field instanceof PropertiesField){
                     setPropertiesField((PropertiesField)field, newObject);
+                }  else if(field instanceof EnumerationField){
+                    selectEnum((EnumerationField)field, newObject);
                 }
             }
             Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
@@ -110,13 +110,32 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         }
     }
 
+    private void selectEnum(EnumerationField field, Object newObject) {
+        String[] choices = field.getAllEnumOptions();
+        int i=1;
+        output.message("Please select a " + field.getName() + "from the choices below");
+        for(String option : choices){
+            output.raw(" " + i + "/ " + option);
+        }
+        while (true) {
+            String option = getConsole().readLine("Enter choice:");
+            int position = Integer.parseInt(option);
+            try {
+                BeanUtils.setProperty(newObject, field.getName(), field.getEnum(position));
+            } catch (Exception e) {
+                throw new SkyeException("Unable to assign enum value to this object", e);
+            }
+
+        }
+    }
+
     private void selectReferenceField(ReferenceField field, Object newObject) {
 
         // We need to display a list of the available options for the reference field
         // and then let the user choose one
 
         PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
-        if(paginatedResult.getResults().size()==0){
+        if(paginatedResult.getResults().size()==0 && field.getClazz()!=Task.class){
             output.message("You must have at least 1 " + field.getName() + " to create this object");
             throw new SkyeException("Objects missing that need to be created");
         }
@@ -153,13 +172,13 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             String property = getConsole().readLine("Property: ");
             String value = getConsole().readLine("Value: ");
             props.addProperty(property,value);
-            String answer = getConsole().readLine("Do you have any more properties? Y/N");
+            String answer = getConsole().readLine("Do you have any more properties? Y/N ");
             if(answer.equalsIgnoreCase("N")){
                 break;
             }
         }
         try {
-            BeanUtils.setProperty(newObject, props.getName(), props);
+            BeanUtils.setProperty(newObject, props.getName(), props.getProperties());
         } catch (Exception e) {
             throw new SkyeException("Unable to add properties to object",e);
         }

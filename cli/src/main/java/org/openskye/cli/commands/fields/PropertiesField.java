@@ -18,6 +18,10 @@ public class PropertiesField extends Field {
         properties.put(property, value);
     }
 
+    public Map<String, String> getProperties(){
+        return this.properties;
+    }
+
     @Override
     public String getName() {
         return name;
