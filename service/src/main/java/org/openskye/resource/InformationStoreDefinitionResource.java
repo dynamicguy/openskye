@@ -22,8 +22,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class InformationStoreDefinitionResource extends AbstractUpdatableDomainResource<InformationStoreDefinition> {
 
-    @Inject
     protected InformationStoreDefinitionDAO informationStoreDefinitionDAO;
+
+    @Inject
+    public InformationStoreDefinitionResource(InformationStoreDefinitionDAO dao) {
+        this.informationStoreDefinitionDAO = dao;
+    }
 
     @ApiOperation(value = "Create new information store definition", notes = "Create a new information store definition and return with its unique id", response = InformationStoreDefinition.class)
     @POST

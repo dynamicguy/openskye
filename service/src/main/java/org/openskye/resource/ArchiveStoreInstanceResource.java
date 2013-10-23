@@ -22,8 +22,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class ArchiveStoreInstanceResource extends AbstractUpdatableDomainResource<ArchiveStoreInstance> {
 
-    @Inject
     protected ArchiveStoreInstanceDAO archiveStoreInstanceDAO;
+
+    @Inject
+    public ArchiveStoreInstanceResource(ArchiveStoreInstanceDAO dao){
+        this.archiveStoreInstanceDAO=dao;
+    }
 
     @ApiOperation(value = "Create new archive store instance", notes = "Create a new archive store instance and return with its unique id", response = ArchiveStoreInstance.class)
     @POST

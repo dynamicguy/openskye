@@ -4,10 +4,7 @@ import com.beust.jcommander.Parameters;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.cli.commands.fields.Field;
-import org.openskye.cli.commands.fields.FieldBuilder;
-import org.openskye.cli.commands.fields.ReferenceField;
-import org.openskye.cli.commands.fields.TextField;
+import org.openskye.cli.commands.fields.*;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
@@ -26,7 +23,7 @@ public class InformationStoreDefinitionsCommand extends AbstractCrudCommand {
     private final String commandName = "informationStores";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).add(new PropertiesField("properties")).build();
     }
 
     @Override
