@@ -38,7 +38,7 @@ public class Project implements Identifiable {
     private List<Channel> channels = new ArrayList<>();
     @NotNull
     private String name;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
     private boolean active = true;

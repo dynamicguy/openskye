@@ -30,7 +30,7 @@ public class JPAObjectSet {
     private String name;
     @ManyToMany
     @JoinTable(
-            name = "OBJECT_SET_TO_MEATDATA",
+            name = "OBJECT_SET_TO_METADATA",
             joinColumns = {
                     @JoinColumn(
                             name = "setId",

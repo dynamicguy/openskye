@@ -23,26 +23,24 @@ public abstract class AbstractRealOnlyDomainResource<T extends Identifiable> {
 
     protected abstract String getPermissionDomain();
 
-    public PaginatedResult<T> getAll() {
-        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":list")) {
-            return getDAO().list();
-        } else {
+    protected void authorize(String action) {
+        if (!SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action)) {
             throw new UnauthorizedException();
         }
     }
 
-    public T get(@PathParam("id") String id) {
-        // TODO need to do the merge here?
-        if (SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":get")) {
-            Optional<T> result = getDAO().get(id);
-            if (result.isPresent())
-                return result.get();
-            else
-                throw new NotFoundException();
-        } else {
-            throw new UnauthorizedException();
-        }
+    public PaginatedResult<T> getAll() {
+        authorize("list");
+        return getDAO().list();
+    }
 
+    public T get(@PathParam("id") String id) {
+        authorize("get");
+        Optional<T> result = getDAO().get(id);
+        if (result.isPresent())
+            return result.get();
+        else
+            throw new NotFoundException();
     }
 
     protected User getCurrentUser() {
