@@ -21,13 +21,13 @@ import javax.persistence.*;
 public class RolePermission implements Identifiable {
     @Id
     @GeneratedValue(generator = "RolePermissionGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
-    @JoinColumn(name="ROLE_ID")
+    @JoinColumn(name = "ROLE_ID")
     private Role role;
     @ManyToOne
-    @JoinColumn(name="PERMISSION_ID")
+    @JoinColumn(name = "PERMISSION_ID")
     private Permission permission;
 
 }

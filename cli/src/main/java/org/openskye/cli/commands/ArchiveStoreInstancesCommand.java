@@ -26,7 +26,7 @@ public class ArchiveStoreInstancesCommand extends AbstractCrudCommand {
     private final String commandName = "archiveStoreInstances";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField("project", "projects", Project.class)).add(new TextField("implementation")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new TextField("implementation")).build();
     }
 
     @Override

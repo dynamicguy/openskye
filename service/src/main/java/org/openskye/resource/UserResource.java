@@ -33,11 +33,11 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
 
     @Override
     protected void validateCreate(User newInstance) {
-        if ( newInstance.getEmail() == null ) {
+        if (newInstance.getEmail() == null) {
             throw new BadRequestException("No email provided in user data");
-        } else if ( userDAO.findByEmail(newInstance.getEmail()) == null ) {
+        } else if (userDAO.findByEmail(newInstance.getEmail()) == null) {
             return;
-        } else if ( userDAO.findByEmail(newInstance.getEmail()).isPresent() ) {
+        } else if (userDAO.findByEmail(newInstance.getEmail()).isPresent()) {
             throw new BadRequestException("User email already in use");
         }
     }
@@ -45,16 +45,16 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @Override
     protected void validateUpdate(String id, User newInstance) {
         Optional<User> user = userDAO.get(id);
-        if ( user == null || ! user.isPresent() ) {
+        if (user == null || !user.isPresent()) {
             throw new NotFoundException();
         }
         String oldEmail = user.get().getEmail();
         String newEmail = newInstance.getEmail();
-        if ( newEmail == null ) {
+        if (newEmail == null) {
             throw new BadRequestException("No email provided in user data");
-        } else if ( newEmail == oldEmail ) {
+        } else if (newEmail == oldEmail) {
             return;
-        } else if ( userDAO.findByEmail(newEmail) != null && userDAO.findByEmail(newEmail).isPresent() ) {
+        } else if (userDAO.findByEmail(newEmail) != null && userDAO.findByEmail(newEmail).isPresent()) {
             throw new BadRequestException("User email already in use");
         }
     }

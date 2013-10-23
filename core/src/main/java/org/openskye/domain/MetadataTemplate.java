@@ -17,14 +17,15 @@ import java.util.List;
 public class MetadataTemplate implements Identifiable {
     @Id
     @GeneratedValue(generator = "MetadataTemplateGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private String name;
     private String description;
     @ManyToOne
+    @JoinColumn(name = "DOMAIN_ID")
     private Domain domain;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "metadataTemplate")
     @JsonIgnore
-    private List<Permission> fieldDefinitions = new ArrayList<>();
+    private List<AttributeDefinition> attributeDefinitions = new ArrayList<>();
 
 }

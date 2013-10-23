@@ -17,8 +17,10 @@ import javax.persistence.*;
 public class TaskLog implements Identifiable {
     @Id
     @GeneratedValue(generator = "TaskLogGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
+    @ManyToOne
+    @JoinColumn(name = "TASK_ID")
     private Task task;
     private String message;
 

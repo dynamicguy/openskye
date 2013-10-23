@@ -1,8 +1,6 @@
 package org.openskye.resource;
 
-import org.apache.shiro.SecurityUtils;
 import org.openskye.domain.Identifiable;
-import org.openskye.util.UnauthorizedException;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,14 +15,13 @@ import javax.ws.rs.core.Response;
 public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractRealOnlyDomainResource<T> {
 
     // validate*() should throw BadRequestException if the instance is invalid
-    protected void validateCreate(T newInstance) {}
-    protected void validateUpdate(String id,T newInstance) {}
-    protected void validateDelete(String id) {}
+    protected void validateCreate(T newInstance) {
+    }
 
-    protected void authorize(String action) {
-        if ( ! SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action) ) {
-            throw new UnauthorizedException();
-        }
+    protected void validateUpdate(String id, T newInstance) {
+    }
+
+    protected void validateDelete(String id) {
     }
 
     public T create(T newInstance) {
@@ -35,7 +32,7 @@ public abstract class AbstractUpdatableDomainResource<T extends Identifiable> ex
 
     public T update(@PathParam("id") String id, T newInstance) {
         authorize("update");
-        validateUpdate(id,newInstance);
+        validateUpdate(id, newInstance);
         return getDAO().update(id, newInstance);
     }
 

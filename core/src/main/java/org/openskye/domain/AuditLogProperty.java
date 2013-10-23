@@ -18,7 +18,7 @@ public class AuditLogProperty implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "AuditLogPropertyGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
     private AuditLog auditLog;

@@ -1,10 +1,10 @@
 package org.openskye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.codahale.metrics.annotation.Timed;
 import org.apache.shiro.SecurityUtils;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ArchiveStore;

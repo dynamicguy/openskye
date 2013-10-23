@@ -16,13 +16,15 @@ public class AttributeInstance implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "AttributeInstanceGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private MetadataOwnerType metadataOwnerType;
     private String ownerId;
     @ManyToOne
+    @JoinColumn(name = "CHANNEL_ID")
     private Channel channel;
     @ManyToOne
+    @JoinColumn(name = "ATTRIBUTE_DEFINITION_ID")
     private AttributeDefinition attributeDefinition;
     private String attributeValue;
 }

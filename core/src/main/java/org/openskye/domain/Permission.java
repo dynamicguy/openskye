@@ -18,10 +18,10 @@ import java.util.List;
 public class Permission implements Identifiable {
     @Id
     @GeneratedValue(generator = "PermissionGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private String permission;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permission")
     private List<RolePermission> rolePermissions;
 
 

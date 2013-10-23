@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class RetentionPolicy implements Identifiable {
     @Id
     @GeneratedValue(generator = "RetentionPolicyGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private String name;
     private String description;

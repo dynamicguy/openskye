@@ -5,6 +5,7 @@ import lombok.Data;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Definition of an attribute for a metadata template
@@ -18,12 +19,17 @@ public class AttributeDefinition implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "AttributeDefinitionGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
+    @ManyToOne
+    @JoinColumn(name = "METADATA_TEMPLATE_ID")
+    private MetadataTemplate metadataTemplate;
+    @NotNull
     private String name;
+    @NotNull
     private String shortLabel;
     private String description;
-    // A flag that determines is the metadata is embedded in the archive
-    private boolean embedInArchive;
+    // A flag that determines is the metadata is embedded in the simple object
+    private boolean embedInObject;
 
 }
