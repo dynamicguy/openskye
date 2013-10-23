@@ -5,6 +5,7 @@ import lombok.Data;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +20,9 @@ import java.util.Map;
 public class InformationStoreDefinition implements Identifiable {
     @Id
     @GeneratedValue(generator = "InformationStoreDefinitionGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
+    @NotNull
     private String name;
     @ManyToOne
     private Project project;

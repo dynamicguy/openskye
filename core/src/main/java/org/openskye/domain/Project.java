@@ -6,6 +6,7 @@ import lombok.Data;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class Project implements Identifiable {
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Channel> channels = new ArrayList<>();
+    @NotNull
     private String name;
     @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
