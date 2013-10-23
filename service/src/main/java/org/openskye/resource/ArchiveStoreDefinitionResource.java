@@ -1,9 +1,9 @@
 package org.openskye.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.codahale.metrics.annotation.Timed;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;

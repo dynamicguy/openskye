@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import io.dropwizard.util.Generics;
 import org.eclipse.persistence.exceptions.ValidationException;
+import org.openskye.domain.AuditEvent;
+import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
 
 import javax.inject.Inject;
@@ -24,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @Inject
     private Provider<EntityManager> emf;
+    @Inject
+    private AuditLogDAO auditLogDAO;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
 
     public PaginatedResult<T> list() {
@@ -35,12 +39,35 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return result;
     }
 
+    public boolean isAudited() {
+        return true;
+    }
+
     protected CriteriaQuery<T> createCriteriaQuery() {
         return createCriteriaBuilder().createQuery(entityClass);
     }
 
     protected CriteriaBuilder createCriteriaBuilder() {
         return currentEntityManager().getCriteriaBuilder();
+    }
+
+    /**
+     * Internal method used to ensure that we create an
+     * {@link AuditLog} for changes made through this DAO
+     *
+     * @param newInstance The object to be audited
+     * @param event       the event
+     * @return The object that was audited
+     */
+    private T audit(T newInstance, AuditEvent event) {
+        if (isAudited()) {
+            AuditLog auditLog = new AuditLog();
+            auditLog.setAuditEntity(entityClass.getSimpleName());
+            auditLog.setAuditEvent(event);
+
+            auditLogDAO.create(auditLog);
+        }
+        return newInstance;
     }
 
     /**
@@ -68,6 +95,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
             throw new ValidationException();
 
         this.currentEntityManager().persist(newInstance);
+        audit(newInstance, AuditEvent.INSERT);
 
         return newInstance;
     }
@@ -94,6 +122,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
             throw new ValidationException();
 
         this.currentEntityManager().persist(updatedInstance);
+        audit(updatedInstance, AuditEvent.UPDATE);
 
         return updatedInstance;
     }
@@ -109,10 +138,29 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
 
     @SuppressWarnings("unchecked")
     public boolean delete(String id) {
-        Object entity = currentEntityManager().find(entityClass, checkNotNull(id));
+        T entity = currentEntityManager().find(entityClass, checkNotNull(id));
         if (entity != null) {
             currentEntityManager().remove(entity);
+            audit(entity, AuditEvent.DELETE);
             return true;
         } else return false;
+    }
+
+    /**
+     * Update the given instance of the object
+     *
+     * @param instance the instance to update
+     */
+    public void update(T instance) {
+        update(instance.getId(), instance);
+    }
+
+    /**
+     * Delete the given instance of the object
+     *
+     * @param instance
+     */
+    public void delete(T instance) {
+        delete(instance.getId());
     }
 }

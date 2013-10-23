@@ -17,13 +17,13 @@ import javax.persistence.*;
 public class ChannelArchiveStore implements Identifiable {
     @Id
     @GeneratedValue(generator = "ChannelArchiveStoreGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
-    @JoinColumn(name="CHANNEL_ID")
+    @JoinColumn(name = "CHANNEL_ID")
     private Channel channel;
     @ManyToOne
-    @JoinColumn(name="ARCHIVE_STORE_DEFINITION_ID")
+    @JoinColumn(name = "ARCHIVE_STORE_DEFINITION_ID")
     private ArchiveStoreDefinition archiveStoreDefinition;
 
 }

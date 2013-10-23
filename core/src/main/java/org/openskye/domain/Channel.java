@@ -21,21 +21,22 @@ public class Channel implements Identifiable {
 
     @Id
     @GeneratedValue(generator = "ChannelGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
+    @JoinColumn(name = "PROJECT_ID")
     private Project project;
     @ManyToOne
     private InformationStoreDefinition informationStoreDefinition;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "channel")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     @JsonIgnore
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     private String name;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<AttributeInstance> attributeInstances = new ArrayList<>();
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<ChannelFilterDefinition> channelFilters = new ArrayList<>();
 
 }

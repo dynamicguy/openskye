@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class ChannelFilterDefinition implements Identifiable {
     @Id
     @GeneratedValue(generator = "ChannelFilterDefinitionGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
     private String implementation;
     private String description;

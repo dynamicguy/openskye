@@ -6,6 +6,7 @@ import lombok.Data;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +21,14 @@ import java.util.List;
 public class Domain implements Identifiable {
     @Id
     @GeneratedValue(generator = "DomainGenerator")
-    @Column(unique = true,length = 36)
+    @Column(unique = true, length = 36)
     private String id;
+    @NotNull
     private String name;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "domain")
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "domain")
     @JsonIgnore
     private List<MetadataTemplate> metadataTemplates = new ArrayList<>();
 

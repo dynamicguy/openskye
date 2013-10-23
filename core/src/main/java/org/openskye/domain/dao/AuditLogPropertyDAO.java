@@ -6,5 +6,8 @@ import org.openskye.domain.AuditLogProperty;
  * DAO for the {@link org.openskye.domain.Role}
  */
 public class AuditLogPropertyDAO extends AbstractPaginatingDAO<AuditLogProperty> {
-
+    @Override
+    public boolean isAudited() {
+        return false;
+    }
 }
