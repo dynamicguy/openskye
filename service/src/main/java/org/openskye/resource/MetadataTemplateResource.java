@@ -6,7 +6,6 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.domain.AttributeDefinition;
 import org.openskye.domain.MetadataTemplate;
-import org.openskye.domain.Permission;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.MetadataTemplateDAO;
 import org.openskye.domain.dao.PaginatedResult;
