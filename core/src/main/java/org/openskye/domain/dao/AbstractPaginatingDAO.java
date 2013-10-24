@@ -36,6 +36,8 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         Root<T> selectEntity = criteria.from(entityClass);
         criteria.select(selectEntity);
         result.setResults(currentEntityManager().createQuery(criteria).getResultList());
+        result.setTotalResults(result.getResults().size());
+
         return result;
     }
 
