@@ -26,7 +26,7 @@ public class UserRolesCommand extends AbstractCrudCommand {
     private final String commandName = "userRoles";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new ReferenceField("user", "users", User.class)).add(new ReferenceField("role", "roles", Role.class)).build();
+        return FieldBuilder.start().add(new ReferenceField(User.class)).add(new ReferenceField(Role.class)).build();
     }
 
     @Override

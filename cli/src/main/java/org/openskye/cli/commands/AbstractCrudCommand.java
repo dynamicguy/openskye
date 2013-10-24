@@ -111,17 +111,20 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     }
 
     private void selectEnum(EnumerationField field, Object newObject) {
-        String[] choices = field.getAllEnumOptions();
+        List<?> choices = field.getAllEnumOptions();
+
         int i=1;
         output.message("Please select a " + field.getName() + "from the choices below");
-        for(String option : choices){
-            output.raw(" " + i + "/ " + option);
+        for(Object option : choices){
+            output.raw(" " + i + "/ " + option.toString());
+            i++;
         }
         while (true) {
             String option = getConsole().readLine("Enter choice:");
             int position = Integer.parseInt(option);
             try {
                 BeanUtils.setProperty(newObject, field.getName(), field.getEnum(position));
+                break;
             } catch (Exception e) {
                 throw new SkyeException("Unable to assign enum value to this object", e);
             }
@@ -135,9 +138,20 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         // and then let the user choose one
 
         PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
-        if(paginatedResult.getResults().size()==0 && field.getClazz()!=Task.class){
-            output.message("You must have at least 1 " + field.getName() + " to create this object");
-            throw new SkyeException("Objects missing that need to be created");
+        if(paginatedResult.getResults().size()==0){
+            if(field.getClazz()==Task.class){
+                try {
+                    Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
+                    BeanUtils.setProperty(newObject, field.getName(), result);
+                } catch (Exception e) {
+                    throw new SkyeException("Can't create blank object", e);
+                }
+
+            }
+            else{
+                output.message("You must have at least 1 " + field.getName() + " to create this object");
+                throw new SkyeException("Objects missing that need to be created");
+            }
         }
         else{
             output.message("Select " + field.getName() + " by number,  the options are below:");
