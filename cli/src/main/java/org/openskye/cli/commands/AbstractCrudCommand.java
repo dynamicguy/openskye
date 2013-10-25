@@ -16,7 +16,6 @@ import org.openskye.domain.Task;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.io.Console;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,10 +88,10 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     }
                 } else if (field instanceof ReferenceField) {
                     selectReferenceField((ReferenceField) field, newObject);
-                } else if(field instanceof PropertiesField){
-                    setPropertiesField((PropertiesField)field, newObject);
-                }  else if(field instanceof EnumerationField){
-                    selectEnum((EnumerationField)field, newObject);
+                } else if (field instanceof PropertiesField) {
+                    setPropertiesField((PropertiesField) field, newObject);
+                } else if (field instanceof EnumerationField) {
+                    selectEnum((EnumerationField) field, newObject);
                 }
             }
             Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
@@ -102,7 +101,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             if (id == null)
                 throw new CliException("You must provide an id to delete a " + getCollectionSingular());
 
-            for(String idInstance : id) {
+            for (String idInstance : id) {
                 getResource(getCollectionPlural() + "/" + idInstance).delete();
 
                 output.success("Deleted " + getCollectionSingular() + " with id " + idInstance);
@@ -113,9 +112,9 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     private void selectEnum(EnumerationField field, Object newObject) {
         List<?> choices = field.getAllEnumOptions();
 
-        int i=1;
+        int i = 1;
         output.message("Please select a " + field.getName() + "from the choices below");
-        for(Object option : choices){
+        for (Object option : choices) {
             output.raw(" " + i + "/ " + option.toString());
             i++;
         }
@@ -123,7 +122,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             String option = getConsole().readLine("Enter choice:");
             int position = Integer.parseInt(option);
             try {
-                BeanUtils.setProperty(newObject, field.getName(), field.getEnum(position));
+                BeanUtils.setProperty(newObject, field.getName(), field.getEnum(position - 1));
                 break;
             } catch (Exception e) {
                 throw new SkyeException("Unable to assign enum value to this object", e);
@@ -138,8 +137,8 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         // and then let the user choose one
 
         PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
-        if(paginatedResult.getResults().size()==0){
-            if(field.getClazz()==Task.class){
+        if (paginatedResult.getResults().size() == 0) {
+            if (field.getClazz() == Task.class) {
                 try {
                     Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
                     BeanUtils.setProperty(newObject, field.getName(), result);
@@ -147,13 +146,11 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     throw new SkyeException("Can't create blank object", e);
                 }
 
-            }
-            else{
+            } else {
                 output.message("You must have at least 1 " + field.getName() + " to create this object");
                 throw new SkyeException("Objects missing that need to be created");
             }
-        }
-        else{
+        } else {
             output.message("Select " + field.getName() + " by number,  the options are below:");
             int i = 1;
             for (Object obj : paginatedResult.getResults()) {
@@ -180,21 +177,21 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
     }
 
-    public void setPropertiesField(PropertiesField props, Object newObject){
+    public void setPropertiesField(PropertiesField props, Object newObject) {
         output.message("Please enter the properties and values.");
-        while(true){
+        while (true) {
             String property = getConsole().readLine("Property: ");
             String value = getConsole().readLine("Value: ");
-            props.addProperty(property,value);
+            props.addProperty(property, value);
             String answer = getConsole().readLine("Do you have any more properties? Y/N ");
-            if(answer.equalsIgnoreCase("N")){
+            if (answer.equalsIgnoreCase("N")) {
                 break;
             }
         }
         try {
             BeanUtils.setProperty(newObject, props.getName(), props.getProperties());
         } catch (Exception e) {
-            throw new SkyeException("Unable to add properties to object",e);
+            throw new SkyeException("Unable to add properties to object", e);
         }
 
     }

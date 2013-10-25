@@ -21,9 +21,9 @@ public class EnumerationField extends Field{
         return results;
     }
 
-    public String getEnum(int select){
+    public Object getEnum(int select){
         List<?> enums = getAllEnumOptions();
-        return enums.get(select).toString();
+        return enums.get(select);
     }
 
     @Override

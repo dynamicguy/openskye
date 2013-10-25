@@ -21,7 +21,7 @@ public class TasksCommand extends AbstractCrudCommand {
     private final String commandName = "tasks";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new EnumerationField("task type", TaskType.class)).add(new ReferenceField("parent task", Task.class)).add(new ReferenceField(Project.class)).add(new ReferenceField(TaskStatistics.class)).build();
+        return FieldBuilder.start().add(new EnumerationField("taskType", TaskType.class)).add(new ReferenceField(Channel.class)).build();
     }
 
     @Override

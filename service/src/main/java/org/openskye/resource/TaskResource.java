@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.openskye.domain.Task;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
@@ -21,9 +22,7 @@ import javax.ws.rs.core.Response;
 @Api(value = "/api/1/tasks", description = "Manage tasks")
 @Path("/api/1/tasks")
 @Produces(MediaType.APPLICATION_JSON)
-/**
- * Manage tasks
- */
+@Slf4j
 public class TaskResource extends AbstractUpdatableDomainResource<Task> {
 
     private TaskDAO taskDAO;
@@ -40,9 +39,12 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Transactional
     @Timed
     public Task create(Task newInstance) {
-        Task task = super.create(newInstance);
-        taskManager.submit(task);
-        return task;
+        super.create(newInstance);
+        log.info("New Task created: "+newInstance);
+        Task taskToSubmit = super.get(newInstance.getId());
+        log.info("Task to submit: "+taskToSubmit);
+        taskManager.submit(taskToSubmit);
+        return taskToSubmit;
     }
 
     @ApiOperation(value = "Update task", notes = "Find a task by id and enter updated info. Returns updated task information", response = Task.class)

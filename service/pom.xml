@@ -51,6 +51,7 @@
             </exclusions>
         </dependency>
 
+
         <!-- Dropwizard Assets -->
         <dependency>
             <groupId>io.dropwizard</groupId>
