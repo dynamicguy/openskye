@@ -26,8 +26,6 @@ public class CreateDefaultAccount {
     private RoleDAO roleDAO;
     @Inject
     private PermissionDAO permissionDAO;
-    @Inject
-    private EntityManager entityManager;
 
     @Inject
     CreateDefaultAccount(PersistService service) {
@@ -43,7 +41,7 @@ public class CreateDefaultAccount {
         CreateDefaultAccount.log.info("Checking for default admin account");
 
         if (!userDAO.findByEmail("admin@openskye.org").isPresent()) {
-            entityManager.getTransaction().begin();
+            userDAO.getEntityManagerProvider().get().getTransaction().begin();
             CreateDefaultAccount.log.info("Creating default admin account");
             Domain domain = new Domain();
             domain.setName("Skye");
@@ -71,10 +69,12 @@ public class CreateDefaultAccount {
             UserRole uRole = new UserRole();
             uRole.setRole(role);
             uRole.setUser(adminUser);
-            ;
+
             adminUser.setUserRoles(ImmutableList.of(uRole));
             userDAO.create(adminUser);
-            entityManager.getTransaction().commit();
+
+            userDAO.getEntityManagerProvider().get().getTransaction().commit();
+
         }
     }
 }

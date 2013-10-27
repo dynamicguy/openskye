@@ -30,6 +30,10 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     private AuditLogDAO auditLogDAO;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
 
+    public Provider<EntityManager> getEntityManagerProvider() {
+        return emf;
+    }
+
     public PaginatedResult<T> list() {
         PaginatedResult<T> result = new PaginatedResult<>();
         CriteriaQuery<T> criteria = createCriteriaQuery();
