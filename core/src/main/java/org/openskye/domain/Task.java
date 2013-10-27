@@ -2,6 +2,7 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
@@ -14,12 +15,13 @@ import javax.persistence.*;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "TaskGenerator")
+@EqualsAndHashCode(of = "id")
 public class Task implements Identifiable {
     @Id
     @GeneratedValue(generator = "TaskGenerator")
     @Column(unique = true, length = 36)
     private String id;
-    @Column(name="TASK_TYPE")
+    @Column(name = "TASK_TYPE")
     private TaskType taskType;
     @ManyToOne
     @JoinColumn(name = "PARENT_TASK_ID")
@@ -40,7 +42,7 @@ public class Task implements Identifiable {
     // We need to be able to handle an ObjectSet,
     // if an ObjectSetId is provided we will only add upon
     // those objects,  this doesn't not apply to discover
-    @Column(name="OBJECT_SET_ID")
+    @Column(name = "OBJECT_SET_ID")
     private String objectSetId;
 
 }

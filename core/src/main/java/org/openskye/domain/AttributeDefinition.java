@@ -2,6 +2,7 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "AttributeDefinitionGenerator")
+@EqualsAndHashCode(of = "id")
 public class AttributeDefinition implements Identifiable {
 
     @Id

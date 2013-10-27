@@ -1,6 +1,7 @@
 package org.openskye.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Table(name = "ATTRIBUTE_INSTANCE")
 @Data
 @UuidGenerator(name = "AttributeInstanceGenerator")
+@EqualsAndHashCode(of = "id")
 public class AttributeInstance implements Identifiable {
 
     @Id

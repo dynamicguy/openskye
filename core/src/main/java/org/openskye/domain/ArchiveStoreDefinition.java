@@ -2,6 +2,7 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "ArchiveStoreDefinitionGenerator")
+@EqualsAndHashCode(of = "id")
 public class ArchiveStoreDefinition implements Identifiable {
 
     @Id

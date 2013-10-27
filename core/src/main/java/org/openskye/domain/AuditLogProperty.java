@@ -2,6 +2,7 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "AuditLogPropertyGenerator")
+@EqualsAndHashCode(of = "id")
 public class AuditLogProperty implements Identifiable {
 
     @Id

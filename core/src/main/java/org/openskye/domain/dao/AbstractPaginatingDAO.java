@@ -138,7 +138,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         T result = currentEntityManager().find(entityClass, checkNotNull(id));
         if (result == null)
             return Optional.absent();
-        else{
+        else {
             return Optional.of(result);
         }
     }

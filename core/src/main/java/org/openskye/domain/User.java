@@ -3,6 +3,7 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.persistence.annotations.UuidGenerator;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @UuidGenerator(name = "UserGenerator")
+@EqualsAndHashCode(of = "id")
 public class User implements Identifiable {
     @Id
     @GeneratedValue(generator = "UserGenerator")
