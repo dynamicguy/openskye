@@ -1,15 +1,19 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.openskye.domain.Channel;
 import org.openskye.domain.Task;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
+import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.TaskDAO;
 import org.openskye.task.TaskManager;
+import org.openskye.util.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -25,13 +29,15 @@ import javax.ws.rs.core.Response;
 @Slf4j
 public class TaskResource extends AbstractUpdatableDomainResource<Task> {
 
+    private final ChannelDAO channelDAO;
     private TaskDAO taskDAO;
-    @Inject
     private TaskManager taskManager;
 
     @Inject
-    public TaskResource(TaskDAO dao) {
+    public TaskResource(TaskDAO dao, ChannelDAO channelDAO, TaskManager taskManager) {
         this.taskDAO = dao;
+        this.channelDAO = channelDAO;
+        this.taskManager = taskManager;
     }
 
     @ApiOperation(value = "Create new task", notes = "Create a new task and return with its unique id", response = Task.class)
@@ -39,12 +45,18 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Transactional
     @Timed
     public Task create(Task newInstance) {
-        super.create(newInstance);
-        log.info("New Task created: "+newInstance);
-        Task taskToSubmit = super.get(newInstance.getId());
-        log.info("Task to submit: "+taskToSubmit);
-        taskManager.submit(taskToSubmit);
-        return taskToSubmit;
+
+        authorize("create");
+
+        // We need to make sure we have a channel in place
+        Optional<Channel> optionalChannel = channelDAO.get(newInstance.getChannel().getId());
+        if (optionalChannel.isPresent()) {
+            super.create(newInstance);
+            newInstance.setChannel(optionalChannel.get());
+            taskManager.submit(newInstance);
+            return newInstance;
+        } else
+            throw new NotFoundException();
     }
 
     @ApiOperation(value = "Update task", notes = "Find a task by id and enter updated info. Returns updated task information", response = Task.class)

@@ -21,8 +21,7 @@ public class TaskStatistics implements Identifiable {
     @GeneratedValue(generator = "TaskStatisticsGenerator")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne
-    @JoinColumn(name = "TASK_ID")
+    @OneToOne
     private Task task;
     private long simpleObjectsIngested;
     private long simpleObjectsDiscovered;

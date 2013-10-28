@@ -3,6 +3,7 @@ package org.openskye.resource;
 import com.google.common.base.Optional;
 import org.apache.shiro.SecurityUtils;
 import org.openskye.domain.Identifiable;
+import org.openskye.domain.Task;
 import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
@@ -46,6 +47,4 @@ public abstract class AbstractRealOnlyDomainResource<T extends Identifiable> {
     protected User getCurrentUser() {
         return (User) SecurityUtils.getSubject().getPrincipal();
     }
-
-
 }

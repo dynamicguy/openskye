@@ -14,7 +14,7 @@ import org.openskye.task.simple.InMemoryTaskManager;
 public class SkyeModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
+        bind(TaskManager.class).to(InMemoryTaskManager.class);
         bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class).asEagerSingleton();
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class).asEagerSingleton();
     }

@@ -29,7 +29,7 @@ public class Task implements Identifiable {
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
     // For a discovery/archive we will provide the channel
     @ManyToOne

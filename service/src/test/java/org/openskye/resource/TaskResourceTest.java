@@ -5,17 +5,21 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.openskye.domain.Task;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
+import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.TaskDAO;
+import org.openskye.task.TaskManager;
 
 import static org.mockito.Mockito.mock;
 
 public class TaskResourceTest extends AbstractResourceTest<Task> {
 
     public static final TaskDAO dao = mock(TaskDAO.class);
+    public static final ChannelDAO channelDAO = mock(ChannelDAO.class);
+    public static final TaskManager taskManager = mock(TaskManager.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TaskResource(dao))
+            .addResource(new TaskResource(dao, channelDAO, taskManager))
             .build();
     private final Task task = new Task();
     private PaginatedResult<Task> expectedResult = new PaginatedResult<>();
