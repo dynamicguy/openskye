@@ -26,7 +26,7 @@ public class InformationStoreDefinition implements Identifiable {
     private String id;
     @NotNull
     private String name;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
     // The name of the {@link InformationStore} implementation

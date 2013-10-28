@@ -32,7 +32,7 @@ public class Task implements Identifiable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
     // For a discovery/archive we will provide the channel
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "CHANNEL_ID")
     private Channel channel;
     // When we are extracting we will provide the target information store definition

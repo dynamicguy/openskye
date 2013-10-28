@@ -24,13 +24,12 @@ public class Channel implements Identifiable {
     @GeneratedValue(generator = "ChannelGenerator")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     private InformationStoreDefinition informationStoreDefinition;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
-    @JsonIgnore
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     @NotNull
     private String name;
