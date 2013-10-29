@@ -1,7 +1,6 @@
 package org.openskye.metadata.elasticsearch;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
-import org.elasticsearch.client.Client;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ObjectMetadata;
