@@ -122,6 +122,19 @@ public class ObjectMetadataResource
         return null;
     }
 
+    @ApiOperation(value = "Index ObjectMetadata",
+                  notes = "Provide the ObjectMetadata id.  It is retrieved and the index is either created or updated.")
+    @Path("/index/{id}")
+    @PUT
+    @Transactional
+    @Timed
+    public Response index(@ApiParam(value = "The id of the ObjectMetadata", required = true)
+                          @PathParam("id")
+                          String id)
+    {
+        return null;
+    }
+
     /**
      * Updates the {@link ObjectMetadata}.  Note that the index will also
      * be updated upon updating.
