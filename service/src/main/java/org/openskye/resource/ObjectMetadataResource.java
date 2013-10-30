@@ -34,8 +34,8 @@ import java.util.List;
  * {@link ObjectMetadataSearch} instances, allowing the user to create, index,
  * search, and manage {@link ObjectMetadata}.
  */
-@Api(value = "/api/1/objectMetadata", description = "Access and act upon ObjectMetadata.")
-@Path("/api/1/objectMetadata")
+@Api(value = "/api/1/objects", description = "Access and act upon ObjectMetadata.")
+@Path("/api/1/objects")
 @Produces(MediaType.APPLICATION_JSON)
 public class ObjectMetadataResource
 {

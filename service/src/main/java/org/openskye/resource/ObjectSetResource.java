@@ -17,8 +17,8 @@ import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.domain.dao.PaginatedResult;
 
-@Api(value = "/api/1/objectSet", description = "Act upon ObjectMetadata using ObjectSet instances.")
-@Path("/api/1/objectSet")
+@Api(value = "/api/1/objectSets", description = "Act upon ObjectMetadata using ObjectSet instances.")
+@Path("/api/1/objectSets")
 @Produces(MediaType.APPLICATION_JSON)
 public class ObjectSetResource
 {
