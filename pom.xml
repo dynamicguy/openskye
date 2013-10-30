@@ -229,20 +229,20 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.6.3.201306030806</version>
                 <executions>
-                     <execution>
-    			<id>jacoco-initialize</id>					
-		         <goals>
-				<goal>prepare-agent</goal>
-			</goals>
-		   </execution>
-		   <execution>
-			<id>report</id>
-			<phase>prepare-package</phase>
-			<goals>
-			         <goal>report</goal>	
-			</goals>
-		</execution>
-	       </executions>
+                    <execution>
+                         <id>jacoco-initialize</id>					
+                         <goals>
+                              <goal>prepare-agent</goal>
+                         </goals>
+                    </execution>
+                    <execution>
+                         <id>report</id>
+                         <phase>prepare-package</phase>
+                         <goals>
+                              <goal>report</goal>	
+                         </goals>
+                    </execution>
+                </executions>
             </plugin>              
         </plugins>
     </build>
