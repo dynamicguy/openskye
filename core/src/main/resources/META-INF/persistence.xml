@@ -28,7 +28,7 @@
         <class>org.openskye.metadata.impl.jpa.JPAObjectSet</class>
         <class>org.openskye.metadata.impl.jpa.JPAObjectMetadata</class>
         <properties>
-            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>
