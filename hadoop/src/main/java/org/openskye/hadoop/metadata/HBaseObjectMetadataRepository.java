@@ -84,6 +84,12 @@ public class HBaseObjectMetadataRepository extends JPAObjectMetadataRepository {
     }
 
     @Override
+    public Iterable<ObjectSet> getAllObjectSets()
+    {
+        return null;
+    }
+
+    @Override
     public InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

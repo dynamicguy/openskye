@@ -66,6 +66,7 @@ public class JPAObjectMetadataRepositoryTest {
         TaskStatistics taskStatistics = new TaskStatistics();
         ObjectSet objectSet = null;
         Optional<ObjectSet> setOutput = Optional.absent();
+        Iterable<ObjectSet> setList;
 
         emf.get().getTransaction().begin();
 
@@ -145,6 +146,19 @@ public class JPAObjectMetadataRepositoryTest {
 
         assertThat("object set can be retrieved by id",
                 setOutput.isPresent());
+
+        // Ensure that we can retreive all object sets.
+        isFound = false;
+        setList = this.omr.getAllObjectSets();
+
+        for(ObjectSet set : setList)
+        {
+            if(set.getId().equals(objectSet.getId()))
+                isFound = true;
+        }
+
+        assertThat("object set is found in list of all sets",
+                    isFound);
 
         // Test that an object can be added to the set.
         this.emf.get().getTransaction().begin();
