@@ -179,7 +179,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      *                       repository.
      */
     @Override
-    public void put(ObjectMetadata objectMetadata) {
+    public ObjectMetadata put(ObjectMetadata objectMetadata) {
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
 
         if (this.get(jpaObjectMetadata.getId()).isPresent())
@@ -187,7 +187,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         else
             this.getEntityManager().persist(jpaObjectMetadata);
 
-        return;
+        return jpaObjectMetadata.toObjectMetadata();
     }
 
     /**

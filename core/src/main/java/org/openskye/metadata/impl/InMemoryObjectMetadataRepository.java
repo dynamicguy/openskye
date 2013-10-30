@@ -56,13 +56,15 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public void put(ObjectMetadata objectMetadata) {
+    public ObjectMetadata put(ObjectMetadata objectMetadata) {
         objects.put(objectMetadata.getId(), objectMetadata);
         if (!taskMap.containsKey(objectMetadata.getTaskId())) {
             taskMap.put(objectMetadata.getTaskId(), new ArrayList<ObjectMetadata>());
         }
 
         taskMap.get(objectMetadata.getTaskId()).add(objectMetadata);
+
+        return objectMetadata;
     }
 
     @Override

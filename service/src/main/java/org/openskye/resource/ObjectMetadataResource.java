@@ -291,9 +291,15 @@ public class ObjectMetadataResource
     @Transactional
     @Timed
     public PaginatedResult<ObjectMetadata> search(@PathParam("domainId") String domainId,
-                                                  @ApiParam(value = "The query string", required = true) @QueryParam("query") String query,
-                                                  @ApiParam(value = "The page number for the results", required = true) @QueryParam("pageNumber") String pageNumber,
-                                                  @ApiParam(value = "The page size for the results", required = true) @QueryParam("pageSize") String pageSize)
+                                                  @ApiParam(value = "The query string", required = true)
+                                                  @QueryParam("query")
+                                                  String query,
+                                                  @ApiParam(value = "The page number for the results", required = false)
+                                                  @QueryParam("pageNumber")
+                                                  String pageNumber,
+                                                  @ApiParam(value = "The page size for the results", required = false)
+                                                  @QueryParam("pageSize")
+                                                  String pageSize)
     {
         return null;
     }
@@ -316,7 +322,8 @@ public class ObjectMetadataResource
      * of the search requested.
      */
     @ApiOperation(value = "Searches for ObjectMetadata",
-                  notes = "Supply a Domain id, a Project id, a query string (query), a page number (pageNumber), and a page size(pageSize).  Returns a list of ObjectMetadata in a paginated structure",
+                  notes = "Supply a Domain id, a Project id, a query string (query), and optionally, a page number (pageNumber), and a page size(pageSize).  " +
+                          "Returns a list of ObjectMetadata in a paginated structure",
                   responseContainer = "List",
                   response = ObjectMetadata.class)
     @Path("/search/{domainId}/{projectId}")
@@ -325,9 +332,15 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> search(@PathParam("domainId") String domainId,
                                                   @PathParam("projectId") String projectId,
-                                                  @ApiParam(value = "The query string", required = true) @QueryParam("query") String query,
-                                                  @ApiParam(value = "The page number for the results", required = true) @QueryParam("pageNumber") String pageNumber,
-                                                  @ApiParam(value = "The page size for the results", required = true) @QueryParam("pageSize") String pageSize)
+                                                  @ApiParam(value = "The query string", required = true)
+                                                  @QueryParam("query")
+                                                  String query,
+                                                  @ApiParam(value = "The page number for the results", required = false)
+                                                  @QueryParam("pageNumber")
+                                                  String pageNumber,
+                                                  @ApiParam(value = "The page size for the results", required = false)
+                                                  @QueryParam("pageSize")
+                                                  String pageSize)
     {
         return null;
     }

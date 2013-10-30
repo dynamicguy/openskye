@@ -9,7 +9,20 @@ import org.openskye.util.Page;
  * This is the standard interface to allow the searching of {@link org.openskye.core.SimpleObject} instances
  * that have been discovered
  */
-public interface ObjectMetadataSearch {
+public interface ObjectMetadataSearch
+{
+
+    /**
+     * Perform a search over repository using a query.
+     * Returns all results.
+     *
+     * @param domain The domain in which to search.
+     *
+     * @param query The query.
+     *
+     * @return The resulting {@link ObjectMetadata} instances.
+     */
+    Iterable<ObjectMetadata> search(Domain domain, String query);
 
     /**
      * Perform a search over repository using a query
@@ -20,6 +33,19 @@ public interface ObjectMetadataSearch {
      * @return The resulting {@link org.openskye.core.ObjectMetadata}s
      */
     Iterable<ObjectMetadata> search(Domain domain, String query, Page page);
+
+    /**
+     * Perform a search over repository for a single project using a query.
+     *
+     * @param domain The domain in which to search.
+     *
+     * @param project The project in which to search.
+     *
+     * @param query The query.
+     *
+     * @return The resulting {@link ObjectMetadata} instances.
+     */
+    Iterable<ObjectMetadata> search(Domain domain, Project project, String query);
 
     /**
      * Perform a search over repository for a single project using a query

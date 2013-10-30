@@ -13,8 +13,20 @@ import org.openskye.util.Page;
 public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
 
     @Override
+    public Iterable<ObjectMetadata> search(Domain domain, String query)
+    {
+        return null;
+    }
+
+    @Override
     public Iterable<ObjectMetadata> search(Domain domain, String query, Page page) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> search(Domain domain, Project project, String query)
+    {
+        return null;
     }
 
     @Override

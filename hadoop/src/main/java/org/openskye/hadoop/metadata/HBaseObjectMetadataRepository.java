@@ -59,8 +59,8 @@ public class HBaseObjectMetadataRepository extends JPAObjectMetadataRepository {
     }
 
     @Override
-    public void put(ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public ObjectMetadata put(ObjectMetadata objectMetadata) {
+        return null;
     }
 
     @Override
