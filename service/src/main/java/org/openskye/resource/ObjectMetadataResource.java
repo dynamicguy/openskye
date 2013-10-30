@@ -168,7 +168,7 @@ public class ObjectMetadataResource
      * @return The {@link PaginatedResult} containing all the blocks.
      */
     @ApiOperation(value = "Get content blocks for simple object with id",
-                  notes = "Return content block meta data"
+                  notes = "Return content block meta data",
                   responseContainer = "List",
                   response = ArchiveContentBlock.class)
     @Path("/{id}/blocks")
