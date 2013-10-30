@@ -33,6 +33,10 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Transactional
     @Timed
     public Channel create(Channel newInstance) {
+        super.create(newInstance);
+        for(ChannelArchiveStore cas : newInstance.getChannelArchiveStores()){
+            cas.setChannel(newInstance);
+        }
         return super.create(newInstance);
     }
 

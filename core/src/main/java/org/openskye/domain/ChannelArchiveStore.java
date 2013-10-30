@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,11 +22,13 @@ public class ChannelArchiveStore implements Identifiable {
     @GeneratedValue(generator = "ChannelArchiveStoreGenerator")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "CHANNEL_ID")
+    @JsonIgnore
     private Channel channel;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "ARCHIVE_STORE_DEFINITION_ID")
+    @JsonIgnore
     private ArchiveStoreDefinition archiveStoreDefinition;
 
 }
