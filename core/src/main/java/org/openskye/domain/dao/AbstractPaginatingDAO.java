@@ -3,7 +3,6 @@ package org.openskye.domain.dao;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import io.dropwizard.util.Generics;
-import org.eclipse.persistence.exceptions.ValidationException;
 import org.openskye.domain.AuditEvent;
 import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
@@ -15,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.validation.ValidationException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

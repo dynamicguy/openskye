@@ -3,7 +3,7 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,17 +17,17 @@ import java.util.List;
 @Table(name = "CHANNEL")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "ChannelGenerator")
 public class Channel implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "ChannelGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private InformationStoreDefinition informationStoreDefinition;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();

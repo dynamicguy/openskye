@@ -3,7 +3,7 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -14,11 +14,11 @@ import javax.persistence.*;
 @Table(name = "TASK_STATISTICS")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "TaskStatisticsGenerator")
 @EqualsAndHashCode(of = "id")
 public class TaskStatistics implements Identifiable {
     @Id
-    @GeneratedValue(generator = "TaskStatisticsGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     @OneToOne

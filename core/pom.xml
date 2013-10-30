@@ -40,10 +40,11 @@
 
         <!-- For the domain and also the JPA models for JPA OMR -->
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>2.5.0</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.2.7.SP1</version>
         </dependency>
+
 
         <!-- Setup basic logging -->
         <dependency>

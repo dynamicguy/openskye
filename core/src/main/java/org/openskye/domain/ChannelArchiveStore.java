@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -15,18 +15,18 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "ChannelArchiveStoreGenerator")
 @EqualsAndHashCode(of = "id")
 public class ChannelArchiveStore implements Identifiable {
     @Id
-    @GeneratedValue(generator = "ChannelArchiveStoreGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CHANNEL_ID")
     @JsonIgnore
     private Channel channel;
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ARCHIVE_STORE_DEFINITION_ID")
     @JsonIgnore
     private ArchiveStoreDefinition archiveStoreDefinition;
