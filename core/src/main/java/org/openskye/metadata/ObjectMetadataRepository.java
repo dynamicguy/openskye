@@ -112,6 +112,14 @@ public interface ObjectMetadataRepository {
     Iterable<ObjectSet> getAllObjectSets();
 
     /**
+     * Gets a list of all {@link ObjectMetadata} instances.
+     *
+     * @return An {@link Iterable} collection of {@link ObjectMetadata}
+     * instances.
+     */
+    Iterable<ObjectMetadata> getAllObjects();
+
+    /**
      * Returns an instance of the {@link InformationStoreDefinition} which represents the
      * source {@link InformationStoreDefinition} for this {@link ObjectMetadata}
      *

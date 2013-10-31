@@ -98,6 +98,12 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
+    public Iterable<ObjectMetadata> getAllObjects()
+    {
+        return this.objects.values();
+    }
+
+    @Override
     public InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -26,7 +26,8 @@ import java.util.List;
  * An implementation of the {@link ObjectMetadataRepository} using the Java
  * Persistence API (JPA) to act on database systems.
  */
-public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
+public class JPAObjectMetadataRepository implements ObjectMetadataRepository
+{
     @Inject
     protected ArchiveStoreDefinitionDAO archiveStores;
     @Inject
@@ -311,6 +312,24 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         return listObjectSets;
     }
 
+    public Iterable<ObjectMetadata> getAllObjects()
+    {
+        List<JPAObjectMetadata> listJpaObjectMetadata;
+        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
+        CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
+        Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
+
+        cq.select(root);
+
+        listJpaObjectMetadata = this.getEntityManager().createQuery(cq).getResultList();
+
+        for(JPAObjectMetadata jpa : listJpaObjectMetadata)
+            listObjectMetadata.add(jpa.toObjectMetadata());
+
+        return listObjectMetadata;
+    }
+
     /**
      * Gets the {@link InformationStoreDefinition} related to the
      * {@link ObjectMetadata}.
@@ -364,4 +383,5 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
         return Optional.of(jpaObjectSet);
     }
+
 }

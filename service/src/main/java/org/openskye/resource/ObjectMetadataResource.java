@@ -20,12 +20,14 @@ import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
+import org.openskye.util.BadRequestException;
 import org.openskye.util.NotFoundException;
 import org.openskye.util.UnauthorizedException;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.util.Page;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,7 +50,11 @@ public class ObjectMetadataResource
     @Inject
     private StoreRegistry registry;
 
-    public static final String OPERATION_GET = "objectMetadata:get";
+    public static final String OPERATION_GET = "objects:get";
+    public static final String OPERATION_CREATE = "objects:create";
+    public static final String OPERATION_UPDATE = "objects:update";
+    public static final String OPERATION_INDEX = "objects:index";
+    public static final String OPERATION_LIST = "objects:list";
 
     /**
      * Gets the raw content of the {@link SimpleObject}
@@ -72,7 +78,7 @@ public class ObjectMetadataResource
         String path;
         String header;
 
-        if(!SecurityUtils.getSubject().isPermitted(OPERATION_GET))
+        if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
         objectMetadata = this.repository.get(id);
@@ -119,7 +125,18 @@ public class ObjectMetadataResource
     @Timed
     public ObjectMetadata create(ObjectMetadata newInstance)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_CREATE))
+            throw new UnauthorizedException();
+
+        // If the id field is set on the newInstance, we should set
+        // it to null, so that a random id is generated.
+        newInstance.setId(null);
+
+        this.repository.put(newInstance);
+
+        this.search.index(newInstance);
+
+        return newInstance;
     }
 
     @ApiOperation(value = "Index ObjectMetadata",
@@ -132,7 +149,17 @@ public class ObjectMetadataResource
                           @PathParam("id")
                           String id)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_INDEX))
+            throw new UnauthorizedException();
+
+        Optional<ObjectMetadata> metadata = this.repository.get(id);
+
+        if(!metadata.isPresent())
+            throw new NotFoundException();
+
+        this.search.index(metadata.get());
+
+        return Response.ok().build();
     }
 
     /**
@@ -154,7 +181,20 @@ public class ObjectMetadataResource
     @Timed
     public ObjectMetadata update(@PathParam("id") String id, ObjectMetadata newInstance)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_UPDATE))
+            throw new UnauthorizedException();
+
+        if(!id.equals(newInstance.getId()))
+            throw new BadRequestException();
+
+        Optional<ObjectMetadata> oldInstance = this.repository.get(id);
+
+        if(!oldInstance.isPresent())
+            throw new NotFoundException();
+
+        this.repository.put(newInstance);
+
+        return newInstance;
     }
 
     @ApiOperation(value = "Gets the ObjectMetadata for the id",
@@ -166,7 +206,7 @@ public class ObjectMetadataResource
     @Timed
     public Optional<ObjectMetadata> get(@PathParam("id") String id)
     {
-        if(!SecurityUtils.getSubject().isPermitted(OPERATION_GET))
+        if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
         return this.repository.get(id);
@@ -194,7 +234,7 @@ public class ObjectMetadataResource
         PaginatedResult<ArchiveContentBlock> result = new PaginatedResult<>();
         List<ArchiveContentBlock> blocks;
 
-        if(!SecurityUtils.getSubject().isPermitted(OPERATION_GET))
+        if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
         metadata = this.repository.get(id);
@@ -224,7 +264,22 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getAll()
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result = new PaginatedResult<>();
+        Iterable<ObjectMetadata> metadataIterable;
+        List<ObjectMetadata> metadataList = new ArrayList<>();
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        metadataIterable = this.repository.getAllObjects();
+
+        for(ObjectMetadata metadata : metadataIterable)
+            metadataList.add(metadata);
+
+        result.setResults(metadataList);
+        result.setTotalResults(metadataList.size());
+
+        return result;
     }
 
     /**
@@ -343,5 +398,10 @@ public class ObjectMetadataResource
                                                   String pageSize)
     {
         return null;
+    }
+
+    private boolean isPermitted(String operation)
+    {
+        return SecurityUtils.getSubject().isPermitted(operation);
     }
 }
