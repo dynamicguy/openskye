@@ -69,9 +69,11 @@ public interface ObjectMetadataRepository {
     /**
      * Puts a object metadata
      *
-     * @param objectMetadata
+     * @param objectMetadata The new instance to be created.
+     *
+     * @return The newly created instance with its id set.
      */
-    void put(ObjectMetadata objectMetadata);
+    ObjectMetadata put(ObjectMetadata objectMetadata);
 
     /**
      * Returns an iterator over all the {@link ObjectMetadata} for the given {@link org.openskye.domain.InformationStoreDefinition}
@@ -108,6 +110,14 @@ public interface ObjectMetadataRepository {
      * @return An {@link Iterable} collection of {@link ObjectSet} instances.
      */
     Iterable<ObjectSet> getAllObjectSets();
+
+    /**
+     * Gets a list of all {@link ObjectMetadata} instances.
+     *
+     * @return An {@link Iterable} collection of {@link ObjectMetadata}
+     * instances.
+     */
+    Iterable<ObjectMetadata> getAllObjects();
 
     /**
      * Returns an instance of the {@link InformationStoreDefinition} which represents the

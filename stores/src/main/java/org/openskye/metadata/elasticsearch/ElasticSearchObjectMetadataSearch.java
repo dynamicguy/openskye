@@ -45,6 +45,39 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
     protected static final SearchType SEARCH_TYPE = SearchType.QUERY_THEN_FETCH;
 
     @Override
+    public Iterable<ObjectMetadata> search(Domain domain, String query)
+    {
+        List<ObjectMetadata> listMetadata = new ArrayList<>();
+        SearchResponse response = this.client.prepareSearch()
+                                             .setIndices(domain.getId())
+                                             .setSearchType(SEARCH_TYPE)
+                                             .setQuery(new QueryStringQueryBuilder(query))
+                                             .execute()
+                                             .actionGet();
+        SearchHits searchHits = response.getHits();
+
+        for(SearchHit hit : searchHits)
+        {
+            String json = hit.getSourceAsString();
+            JsonObjectMetadata jsonMetadata;
+
+            try
+            {
+                jsonMetadata = this.objectMapper.readValue(json, JsonObjectMetadata.class);
+            }
+            catch(IOException ex)
+            {
+                throw new SkyeException("Failed to demarshal ObjectMetadata form JSON.", ex);
+            }
+
+            listMetadata.add(jsonMetadata.toObjectMetadata());
+        }
+
+        return listMetadata;
+
+    }
+
+    @Override
     public Iterable<ObjectMetadata> search(Domain domain, String query, Page page)
     {
         int from = (int) (((page.getPageNumber() - 1) * page.getPageSize()));
@@ -54,6 +87,40 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
                                         .setIndices(domain.getId())
                                         .setSearchType(SEARCH_TYPE)
                                         .setFrom(from).setSize(size)
+                                        .setQuery(new QueryStringQueryBuilder(query))
+                                        .execute()
+                                        .actionGet();
+
+        SearchHits searchHits = response.getHits();
+
+        for(SearchHit hit : searchHits)
+        {
+            String json = hit.getSourceAsString();
+            JsonObjectMetadata jsonMetadata;
+
+            try
+            {
+                jsonMetadata = this.objectMapper.readValue(json, JsonObjectMetadata.class);
+            }
+            catch (IOException ex)
+            {
+                throw new SkyeException("Failed to demarshal ObjectMetadata from JSON.", ex);
+            }
+
+            listMetadata.add(jsonMetadata.toObjectMetadata());
+        }
+
+        return listMetadata;
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> search(Domain domain, Project project, String query)
+    {
+        List<ObjectMetadata> listMetadata = new ArrayList<>();
+        SearchResponse response = client.prepareSearch()
+                                        .setIndices(domain.getId())
+                                        .setTypes(project.getId())
+                                        .setSearchType(SEARCH_TYPE)
                                         .setQuery(new QueryStringQueryBuilder(query))
                                         .execute()
                                         .actionGet();

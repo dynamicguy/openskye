@@ -140,5 +140,26 @@ public class ObjectSetResource
     {
         return null;
     }
+
+    @ApiOperation(value = "Add the results of a search to an ObjectSet",
+                  notes = "Supply the ObjectSet id and the Domain id, as well as a query string. " +
+                          "Returns the ObjectSet with which the results can be accessed",
+                  response = ObjectSet.class)
+    @Path("/{setId}/search/{domainId}")
+    @PUT
+    @Transactional
+    @Timed
+    public ObjectSet addFromSearch(@ApiParam(value = "The id of the ObjectSet", required = true)
+                                   @PathParam("setId")
+                                   String setId,
+                                   @ApiParam(value = "The id of the Domain to be searched", required = true)
+                                   @PathParam("domainId")
+                                   String domainId,
+                                   @ApiParam(value = "The query string to perform", required = true)
+                                   @QueryParam("query")
+                                   String query)
+    {
+        return null;
+    }
 }
 

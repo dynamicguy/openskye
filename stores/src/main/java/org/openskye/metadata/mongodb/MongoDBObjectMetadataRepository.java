@@ -44,8 +44,8 @@ public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository
     }
 
     @Override
-    public void put(ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public ObjectMetadata put(ObjectMetadata objectMetadata) {
+        return null;
     }
 
     @Override
@@ -70,6 +70,12 @@ public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository
 
     @Override
     public Iterable<ObjectSet> getAllObjectSets()
+    {
+        return null;
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> getAllObjects()
     {
         return null;
     }
