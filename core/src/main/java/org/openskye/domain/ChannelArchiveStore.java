@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -24,11 +25,10 @@ public class ChannelArchiveStore implements Identifiable {
     private String id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CHANNEL_ID")
-    @JsonIgnore
+    @JsonBackReference("channelArchiveStores")
     private Channel channel;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ARCHIVE_STORE_DEFINITION_ID")
-    @JsonIgnore
     private ArchiveStoreDefinition archiveStoreDefinition;
 
 }

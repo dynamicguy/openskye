@@ -6,6 +6,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
+import org.openskye.domain.ChannelFilterDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
@@ -37,7 +38,12 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
         for(ChannelArchiveStore cas : newInstance.getChannelArchiveStores()){
             cas.setChannel(newInstance);
         }
-        return super.create(newInstance);
+        if(newInstance.getChannelFilters().size()>0){
+            for(ChannelFilterDefinition def : newInstance.getChannelFilters()){
+                def.setChannel(newInstance);
+            }
+        }
+        return newInstance;
     }
 
     @ApiOperation(value = "Update channel", notes = "Enter the id of the channel to update and new information. Returns the updated channel", response = Channel.class)

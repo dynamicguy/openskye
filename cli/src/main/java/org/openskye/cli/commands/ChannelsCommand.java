@@ -10,6 +10,7 @@ import org.openskye.cli.commands.fields.*;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.filters.PathRegExFilter;
 
 import java.io.Console;
 import java.util.ArrayList;
@@ -89,6 +90,18 @@ public class ChannelsCommand extends AbstractCrudCommand {
                     throw new SkyeException("Could not assign archive store", e);
                 }
 
+            }
+        }
+        String yesChannel = getConsole().readLine("Would you like to add filters to this definition? Y/N ");
+
+        if(yesChannel.equalsIgnoreCase("y")){
+            ChannelFilterDefinition filterDefinition = new ChannelFilterDefinition();
+            filterDefinition.setImplementation(PathRegExFilter.IMPLEMENTATION);
+            while(yesChannel.equalsIgnoreCase("y")){
+                String regex = getConsole().readLine("Please enter a regex filter: ");
+                filterDefinition.setDefinition(regex);
+                newObject.getChannelFilters().add(filterDefinition);
+                yesChannel = getConsole().readLine("Would you like to add more filters? Y/N: ");
             }
         }
         Channel result = (Channel) getResource(getCollectionPlural()).post(getClazz(), newObject);

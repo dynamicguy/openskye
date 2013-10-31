@@ -29,6 +29,7 @@
         <class>org.openskye.metadata.impl.jpa.JPAObjectMetadata</class>
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
         </properties>
     </persistence-unit>
 </persistence>

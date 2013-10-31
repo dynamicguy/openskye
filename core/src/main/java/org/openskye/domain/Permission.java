@@ -16,6 +16,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "id")
+
 public class Permission implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")

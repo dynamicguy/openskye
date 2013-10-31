@@ -2,7 +2,9 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,6 +19,7 @@ import java.util.List;
 @Table(name = "CHANNEL")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ToString(exclude = {"channelArchiveStores", "attributeInstances", "channelFilters"})
 public class Channel implements Identifiable {
 
     @Id
@@ -30,13 +33,14 @@ public class Channel implements Identifiable {
     @ManyToOne(fetch = FetchType.EAGER)
     private InformationStoreDefinition informationStoreDefinition;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
+    @JsonManagedReference("channelArchiveStores")
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     @NotNull
     private String name;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<AttributeInstance> attributeInstances = new ArrayList<>();
-    @JsonIgnore
+    @JsonManagedReference("channelFilters")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<ChannelFilterDefinition> channelFilters = new ArrayList<>();
 

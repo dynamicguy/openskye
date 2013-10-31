@@ -10,6 +10,7 @@ import javax.ws.rs.ext.Provider;
 public class AuthorizationExceptionMapper implements
         ExceptionMapper<AuthorizationException> {
     public Response toResponse(AuthorizationException ex) {
+
         return Response.status(401).
                 type("application/json").
                 build();

@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +27,7 @@ public class ChannelFilterDefinition implements Identifiable {
     private String description;
     private String definition;
     @ManyToOne
+    @JsonBackReference("channelFilters")
     private Channel channel;
     // Determines if the filter is to include,  if this is true then we will include
     // based on the filter.  If it is false we will exclude based on the filter.
