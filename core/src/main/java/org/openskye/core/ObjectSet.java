@@ -1,5 +1,6 @@
 package org.openskye.core;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * for a purpose
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObjectSet {
 
     private String id;

@@ -103,6 +103,13 @@ public interface ObjectMetadataRepository {
     Optional<ObjectSet> getObjectSet(String objectSetId);
 
     /**
+     * Gets a list of all {@link ObjectSet} instances.
+     *
+     * @return An {@link Iterable} collection of {@link ObjectSet} instances.
+     */
+    Iterable<ObjectSet> getAllObjectSets();
+
+    /**
      * Returns an instance of the {@link InformationStoreDefinition} which represents the
      * source {@link InformationStoreDefinition} for this {@link ObjectMetadata}
      *

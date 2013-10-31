@@ -203,7 +203,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
         List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
-        List<JPAObjectMetadata> listJpaObjectMetadata = null;
+        List<JPAObjectMetadata> listJpaObjectMetadata;
         CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<JPAObjectMetadata> cq = cb.createQuery(JPAObjectMetadata.class);
         Root<JPAObjectMetadata> root = cq.from(JPAObjectMetadata.class);
@@ -290,6 +290,25 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
             return Optional.absent();
 
         return Optional.of(jpaObjectSet.toObjectSet());
+    }
+
+    @Override
+    public Iterable<ObjectSet> getAllObjectSets()
+    {
+        List<JPAObjectSet> listJpaObjectSets;
+        List<ObjectSet> listObjectSets = new ArrayList<>();
+        CriteriaBuilder cb = this.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<JPAObjectSet> cq = cb.createQuery(JPAObjectSet.class);
+        Root<JPAObjectSet> root = cq.from(JPAObjectSet.class);
+
+        cq.select(root);
+
+        listJpaObjectSets = this.getEntityManager().createQuery(cq).getResultList();
+
+        for(JPAObjectSet jpa : listJpaObjectSets)
+            listObjectSets.add(jpa.toObjectSet());
+
+        return listObjectSets;
     }
 
     /**

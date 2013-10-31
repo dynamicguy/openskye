@@ -1,5 +1,6 @@
 package org.openskye.core;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import java.util.*;
  * A set of the metadata for an instance of an Object within Skye
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Slf4j
 public class ObjectMetadata {
 
