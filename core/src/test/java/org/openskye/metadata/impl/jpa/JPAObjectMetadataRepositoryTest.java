@@ -70,25 +70,24 @@ public class JPAObjectMetadataRepositoryTest {
         Iterable<ObjectSet> setList;
 
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
-        this.archiveStoreInstances.create(asi);
+        archiveStoreInstanceDAO.create(asi);
         asd.setArchiveStoreInstance(asi);
-        this.archiveStores.create(asd);
+        archiveStores.create(asd);
         acb.setArchiveStoreDefinitionId(asd.getId());
         objectMetadata.getArchiveContentBlocks().add(acb);
 
         isd.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
-        this.informationStores.create(isd);
+        informationStores.create(isd);
         objectMetadata.setInformationStoreId(isd.getId());
 
-        this.taskStatisticsDAO.create(taskStatistics);
+        taskStatisticsDAO.create(taskStatistics);
         task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
-        this.tasks.create(task);
+        tasks.create(task);
         objectMetadata.setTaskId(task.getId());
+        omr.put(objectMetadata);
 
-        this.omr.put(objectMetadata);
-
-        metadataOutput = this.omr.get(objectMetadata.getId());
+        metadataOutput = omr.get(objectMetadata.getId());
 
         // Test that the Persisted metadataOutput is present, and that it
         // matches the input.
@@ -109,7 +108,7 @@ public class JPAObjectMetadataRepositoryTest {
 
         // Test that the persisted metadata can be retrieved by information
         // store definition.
-        metadataList = this.omr.getObjects(isd);
+        metadataList = omr.getObjects(isd);
 
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
@@ -122,7 +121,7 @@ public class JPAObjectMetadataRepositoryTest {
         // Test that the persisted metadata can be retrieved by its associated
         // task.
         isFound = false;
-        metadataList = this.omr.getObjects(task);
+        metadataList = omr.getObjects(task);
 
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
@@ -133,15 +132,15 @@ public class JPAObjectMetadataRepositoryTest {
                 isFound);
 
 
-        objectSet = this.omr.createObjectSet("TestObjectSet");
-        setOutput = this.omr.getObjectSet(objectSet.getId());
+        objectSet = omr.createObjectSet("TestObjectSet");
+        setOutput = omr.getObjectSet(objectSet.getId());
 
         assertThat("object set can be retrieved by id",
                 setOutput.isPresent());
 
         // Ensure that we can retreive all object sets.
         isFound = false;
-        setList = this.omr.getAllObjectSets();
+        setList = omr.getAllObjectSets();
 
         for (ObjectSet set : setList) {
             if (set.getId().equals(objectSet.getId()))
@@ -151,13 +150,13 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("object set is found in list of all sets",
                 isFound);
 
-        this.omr.addObjectToSet(objectSet, metadataOutput.get());
+        omr.addObjectToSet(objectSet, metadataOutput.get());
 
         assertThat("object can be added to object set",
-                this.omr.isObjectInSet(objectSet, metadataOutput.get()));
+                omr.isObjectInSet(objectSet, metadataOutput.get()));
 
         isFound = false;
-        metadataList = this.omr.getObjects(objectSet);
+        metadataList = omr.getObjects(objectSet);
 
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
@@ -167,14 +166,14 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("object is found in object set",
                 isFound);
 
-        this.omr.removeObjectToSet(objectSet, metadataOutput.get());
+        omr.removeObjectToSet(objectSet, metadataOutput.get());
 
         assertThat("object has been removed from object set",
-                (!this.omr.isObjectInSet(objectSet, metadataOutput.get())));
+                (!omr.isObjectInSet(objectSet, metadataOutput.get())));
 
-        this.omr.deleteObjectSet(objectSet);
+        omr.deleteObjectSet(objectSet);
 
-        setOutput = this.omr.getObjectSet(objectSet.getId());
+        setOutput = omr.getObjectSet(objectSet.getId());
 
         assertThat("object set has been removed",
                 (!setOutput.isPresent()));

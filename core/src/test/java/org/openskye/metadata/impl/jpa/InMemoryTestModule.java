@@ -19,10 +19,16 @@ public class InMemoryTestModule extends AbstractModule {
         JpaPersistModule jpaModule = new JpaPersistModule("Default");
         Properties props = new Properties();
 
-        props.put("javax.persistence.jdbc.url", "jdbc:h2:mem:openskye");
-        props.put("javax.persistence.jdbc.user", "sa");
-        props.put("javax.persistence.jdbc.password", "");
-        props.put("javax.persistence.jdbc.driver", "org.h2.Driver");
+//        props.put("javax.persistence.jdbc.url", "jdbc:h2:mem:openskye");
+//        props.put("javax.persistence.jdbc.user", "sa");
+//        props.put("javax.persistence.jdbc.password", "");
+//        props.put("javax.persistence.jdbc.driver", "org.h2.Driver");
+
+        props.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost/openskye");
+        props.put("javax.persistence.jdbc.user", "root");
+        props.put("javax.persistence.jdbc.password", "password");
+        props.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
+
 
         jpaModule.properties(props);
 
