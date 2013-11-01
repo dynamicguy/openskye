@@ -3,6 +3,8 @@ package org.openskye.metadata.impl.jpa;
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.Provider;
+import com.google.inject.persist.PersistService;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
@@ -43,22 +45,36 @@ public class JPAObjectMetadataRepositoryTest {
     @Inject
     public TaskStatisticsDAO taskStatisticsDAO;
     @Inject
-    public ArchiveStoreInstanceDAO archiveStoreInstances;
+    public ArchiveStoreInstanceDAO archiveStoreInstanceDAO;
     @Inject
     public Provider<EntityManager> emf;
+    @Inject
+    PersistService persistService;
+
+    @Before
+    public void checkStarted() {
+        try {
+            persistService.start();
+        } catch (IllegalStateException e) {
+            // Ignore it we are started
+        }
+    }
 
     @Test
     public void metadataStorageAndRetrieval() {
+
+        emf.get().getTransaction().begin();
+
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation("test");
         asi.setName("test");
+        archiveStoreInstanceDAO.create(asi);
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
         asd.setName("Test");
         ArchiveContentBlock acb = new JPAArchiveContentBlock().toArchiveContentBlock();
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        Optional<ObjectMetadata> metadataOutput = Optional.absent();
         Optional<ArchiveContentBlock> acbOutput = Optional.absent();
         Iterable<ObjectMetadata> metadataList = null;
         boolean isFound = false;
@@ -68,30 +84,32 @@ public class JPAObjectMetadataRepositoryTest {
         Optional<ObjectSet> setOutput = Optional.absent();
         Iterable<ObjectSet> setList;
 
-        emf.get().getTransaction().begin();
-
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
-        this.archiveStoreInstances.create(asi);
+        archiveStoreInstanceDAO.create(asi);
         asd.setArchiveStoreInstance(asi);
-        this.archiveStores.create(asd);
+        archiveStores.create(asd);
         acb.setArchiveStoreDefinitionId(asd.getId());
         objectMetadata.getArchiveContentBlocks().add(acb);
 
         isd.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
-        this.informationStores.create(isd);
+        informationStores.create(isd);
         objectMetadata.setInformationStoreId(isd.getId());
 
-        this.taskStatisticsDAO.create(taskStatistics);
+        taskStatisticsDAO.create(taskStatistics);
         task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
-        this.tasks.create(task);
+        tasks.create(task);
         objectMetadata.setTaskId(task.getId());
 
-        this.omr.put(objectMetadata);
+        //
+        // Start tests
+        //
 
-        emf.get().getTransaction().commit();
+        omr.put(objectMetadata);
 
-        metadataOutput = this.omr.get(objectMetadata.getId());
+        emf.get().flush();
+
+        Optional<ObjectMetadata> metadataOutput = omr.get(objectMetadata.getId());
 
         // Test that the Persisted metadataOutput is present, and that it
         // matches the input.
@@ -112,7 +130,7 @@ public class JPAObjectMetadataRepositoryTest {
 
         // Test that the persisted metadata can be retrieved by information
         // store definition.
-        metadataList = this.omr.getObjects(isd);
+        metadataList = omr.getObjects(isd);
 
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
@@ -125,7 +143,7 @@ public class JPAObjectMetadataRepositoryTest {
         // Test that the persisted metadata can be retrieved by its associated
         // task.
         isFound = false;
-        metadataList = this.omr.getObjects(task);
+        metadataList = omr.getObjects(task);
 
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
@@ -136,42 +154,31 @@ public class JPAObjectMetadataRepositoryTest {
                 isFound);
 
 
-        // Test that an ObjectSet can be created.
-        this.emf.get().getTransaction().begin();
-
-        objectSet = this.omr.createObjectSet("TestObjectSet");
-        setOutput = this.omr.getObjectSet(objectSet.getId());
-
-        this.emf.get().getTransaction().commit();
+        objectSet = omr.createObjectSet("TestObjectSet");
+        setOutput = omr.getObjectSet(objectSet.getId());
 
         assertThat("object set can be retrieved by id",
                 setOutput.isPresent());
 
         // Ensure that we can retreive all object sets.
         isFound = false;
-        setList = this.omr.getAllObjectSets();
+        setList = omr.getAllObjectSets();
 
-        for(ObjectSet set : setList)
-        {
-            if(set.getId().equals(objectSet.getId()))
+        for (ObjectSet set : setList) {
+            if (set.getId().equals(objectSet.getId()))
                 isFound = true;
         }
 
         assertThat("object set is found in list of all sets",
-                    isFound);
+                isFound);
 
-        // Test that an object can be added to the set.
-        this.emf.get().getTransaction().begin();
-
-        this.omr.addObjectToSet(objectSet, metadataOutput.get());
-
-        this.emf.get().getTransaction().commit();
+        omr.addObjectToSet(objectSet, metadataOutput.get());
 
         assertThat("object can be added to object set",
-                this.omr.isObjectInSet(objectSet, metadataOutput.get()));
+                omr.isObjectInSet(objectSet, metadataOutput.get()));
 
         isFound = false;
-        metadataList = this.omr.getObjects(objectSet);
+        metadataList = omr.getObjects(objectSet);
 
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
@@ -181,24 +188,14 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("object is found in object set",
                 isFound);
 
-        // Test that an object can be removed from the object set.
-        this.emf.get().getTransaction().begin();
-
-        this.omr.removeObjectToSet(objectSet, metadataOutput.get());
-
-        this.emf.get().getTransaction().commit();
+        omr.removeObjectToSet(objectSet, metadataOutput.get());
 
         assertThat("object has been removed from object set",
-                (!this.omr.isObjectInSet(objectSet, metadataOutput.get())));
+                (!omr.isObjectInSet(objectSet, metadataOutput.get())));
 
-        // Test that an object set can be removed.
-        this.emf.get().getTransaction().begin();
+        omr.deleteObjectSet(objectSet);
 
-        this.omr.deleteObjectSet(objectSet);
-
-        this.emf.get().getTransaction().commit();
-
-        setOutput = this.omr.getObjectSet(objectSet.getId());
+        setOutput = omr.getObjectSet(objectSet.getId());
 
         assertThat("object set has been removed",
                 (!setOutput.isPresent()));
