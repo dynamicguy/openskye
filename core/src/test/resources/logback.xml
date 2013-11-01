@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- DONT USE THIS FORMATTER FOR LIVE LOGGING THE %L LINE NUMBER OUTPUTTER IS SLOW -->
+            <pattern>%le %-1r [%c{1}:%L] %m%n</pattern>
+        </encoder>
+    </appender>
+    <root level="DEBUG">
+        <appender-ref ref="stdout" />
+    </root>
+</configuration>

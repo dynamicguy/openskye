@@ -14,7 +14,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.validation.ValidationException;
+import javax.validation.*;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,6 +30,8 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @Inject
     private AuditLogDAO auditLogDAO;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
+    // We wanted to have exceptions before commit in the DAO
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     public Provider<EntityManager> getEntityManagerProvider() {
         return emf;
@@ -100,10 +103,19 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (newInstance == null)
             throw new ValidationException();
 
+        validate(newInstance);
+
         this.currentEntityManager().persist(newInstance);
         audit(newInstance, AuditEvent.INSERT);
 
         return newInstance;
+    }
+
+    private void validate(T newInstance) {
+        Set<ConstraintViolation<T>> violations = validator.validate(newInstance);
+        if (violations.size() > 0) {
+            throw new ConstraintViolationException(violations);
+        }
     }
 
     /**
@@ -126,6 +138,8 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
 
         if (id != updatedInstance.getId())
             throw new ValidationException();
+
+        validate(updatedInstance);
 
         this.currentEntityManager().persist(updatedInstance);
         audit(updatedInstance, AuditEvent.UPDATE);
