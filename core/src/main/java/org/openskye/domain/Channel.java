@@ -2,8 +2,10 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,27 +19,28 @@ import java.util.List;
 @Table(name = "CHANNEL")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "ChannelGenerator")
+@ToString(exclude = {"channelArchiveStores", "attributeInstances", "channelFilters"})
 public class Channel implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "ChannelGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private InformationStoreDefinition informationStoreDefinition;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
-    @JsonIgnore
+    @JsonManagedReference("channelArchiveStores")
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     @NotNull
     private String name;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<AttributeInstance> attributeInstances = new ArrayList<>();
-    @JsonIgnore
+    @JsonManagedReference("channelFilters")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<ChannelFilterDefinition> channelFilters = new ArrayList<>();
 

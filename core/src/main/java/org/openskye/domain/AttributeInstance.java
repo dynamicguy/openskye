@@ -2,7 +2,7 @@ package org.openskye.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -12,12 +12,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ATTRIBUTE_INSTANCE")
 @Data
-@UuidGenerator(name = "AttributeInstanceGenerator")
 @EqualsAndHashCode(of = "id")
 public class AttributeInstance implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "AttributeInstanceGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     private MetadataOwnerType metadataOwnerType;

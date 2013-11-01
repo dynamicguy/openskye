@@ -11,6 +11,11 @@ database:
   # the JDBC URL
   url: "jdbc:mysql://localhost/openskye"
 
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.impl.InMemoryObjectMetadataSearch
+  taskManager: org.openskye.task.simple.InMemoryTaskManager
+
 server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000
@@ -41,13 +46,13 @@ server:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: INFO
+  level: DEBUG
 
   # Logger-specific levels.
   loggers:
 
     # Sets the level for 'com.example.app' to DEBUG.
-    org.openskye: INFO
+    org.openskye: DEBUG
 
   appenders:
     - type: console

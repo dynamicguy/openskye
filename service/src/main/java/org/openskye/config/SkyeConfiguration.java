@@ -23,4 +23,8 @@ public class SkyeConfiguration extends Configuration {
         return database;
     }
 
+    public ServiceConfiguration getServices() {
+        return services;
+    }
+
 }

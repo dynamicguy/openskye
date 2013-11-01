@@ -3,7 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,12 +18,13 @@ import java.util.Map;
 @Table(name = "ARCHIVE_STORE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "ArchiveStoreDefinitionGenerator")
 @EqualsAndHashCode(of = "id")
+@ToString(exclude="properties")
 public class ArchiveStoreDefinition implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "ArchiveStoreDefinitionGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     @NotNull

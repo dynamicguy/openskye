@@ -3,7 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -14,11 +15,11 @@ import javax.persistence.*;
 @Table(name = "TASK")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "TaskGenerator")
 @EqualsAndHashCode(of = "id")
 public class Task implements Identifiable {
     @Id
-    @GeneratedValue(generator = "TaskGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     @Column(name = "TASK_TYPE")
@@ -32,7 +33,7 @@ public class Task implements Identifiable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
     // For a discovery/archive we will provide the channel
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CHANNEL_ID")
     private Channel channel;
     // When we are extracting we will provide the target information store definition

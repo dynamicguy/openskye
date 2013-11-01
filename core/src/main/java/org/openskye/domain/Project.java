@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,12 +19,13 @@ import java.util.List;
 @Table(name = "PROJECT")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "ProjectGenerator")
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = {"informationStores", "archiveStores", "channels", "tasks"})
 public class Project implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "ProjectGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
