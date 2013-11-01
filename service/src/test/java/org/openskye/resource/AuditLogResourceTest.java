@@ -6,6 +6,8 @@ import org.openskye.domain.AuditLog;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AuditLogDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -14,6 +16,8 @@ public class AuditLogResourceTest extends AbstractResourceTest<AuditLog> {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new AuditLogResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final AuditLog auditLog = new AuditLog();
     private PaginatedResult<AuditLog> expectedResult = new PaginatedResult<>();

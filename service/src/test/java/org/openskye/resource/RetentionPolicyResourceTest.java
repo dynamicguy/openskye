@@ -6,6 +6,8 @@ import org.openskye.domain.RetentionPolicy;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.RetentionPolicyDAO;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -14,6 +16,8 @@ public class RetentionPolicyResourceTest extends AbstractResourceTest<RetentionP
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new RetentionPolicyResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final RetentionPolicy retentionPolicy = new RetentionPolicy();
     private PaginatedResult<RetentionPolicy> expectedResult = new PaginatedResult<>();

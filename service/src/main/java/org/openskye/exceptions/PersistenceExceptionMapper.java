@@ -18,15 +18,13 @@ public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceEx
     public Response toResponse(PersistenceException exception) {
         String message;
         Response.Status status;
-        if(exception instanceof EntityExistsException){
+        if (exception instanceof EntityExistsException) {
             message = "This entity already exists";
             status = Response.Status.BAD_REQUEST;
-        }
-        else if(exception instanceof EntityNotFoundException){
+        } else if (exception instanceof EntityNotFoundException) {
             message = "The entity you're looking for is not found";
             status = Response.Status.NOT_FOUND;
-        }
-        else{
+        } else {
             message = "There was a problem persisting this entity to the database";
             status = Response.Status.INTERNAL_SERVER_ERROR;
         }

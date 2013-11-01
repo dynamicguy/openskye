@@ -5,6 +5,7 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.Provider;
 import com.google.inject.persist.PersistService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
@@ -61,6 +62,7 @@ public class JPAObjectMetadataRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void metadataStorageAndRetrieval() {
 
         emf.get().getTransaction().begin();
