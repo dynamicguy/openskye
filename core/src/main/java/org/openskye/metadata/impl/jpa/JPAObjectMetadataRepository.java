@@ -170,8 +170,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public ObjectMetadata put(ObjectMetadata objectMetadata) {
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
-        getEntityManager().merge(jpaObjectMetadata);
-        return jpaObjectMetadata.toObjectMetadata();
+        return getEntityManager().merge(jpaObjectMetadata).toObjectMetadata();
     }
 
     /**

@@ -3,6 +3,8 @@ package org.openskye.metadata.impl.jpa;
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.Provider;
+import com.google.inject.persist.PersistService;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
@@ -46,9 +48,23 @@ public class JPAObjectMetadataRepositoryTest {
     public ArchiveStoreInstanceDAO archiveStoreInstanceDAO;
     @Inject
     public Provider<EntityManager> emf;
+    @Inject
+    PersistService persistService;
+
+    @Before
+    public void checkStarted() {
+        try {
+            persistService.start();
+        } catch (IllegalStateException e) {
+            // Ignore it we are started
+        }
+    }
 
     @Test
     public void metadataStorageAndRetrieval() {
+
+        emf.get().getTransaction().begin();
+
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation("test");
         asi.setName("test");
@@ -59,7 +75,6 @@ public class JPAObjectMetadataRepositoryTest {
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        Optional<ObjectMetadata> metadataOutput = Optional.absent();
         Optional<ArchiveContentBlock> acbOutput = Optional.absent();
         Iterable<ObjectMetadata> metadataList = null;
         boolean isFound = false;
@@ -85,9 +100,16 @@ public class JPAObjectMetadataRepositoryTest {
         task.setStatistics(taskStatistics);
         tasks.create(task);
         objectMetadata.setTaskId(task.getId());
+
+        //
+        // Start tests
+        //
+
         omr.put(objectMetadata);
 
-        metadataOutput = omr.get(objectMetadata.getId());
+        emf.get().flush();
+
+        Optional<ObjectMetadata> metadataOutput = omr.get(objectMetadata.getId());
 
         // Test that the Persisted metadataOutput is present, and that it
         // matches the input.
