@@ -22,7 +22,7 @@ import org.openskye.core.ObjectSet;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.util.NotFoundException;
-import org.openskye.util.UnauthorizedException;
+import org.apache.shiro.authz.UnauthorizedException;
 
 @Api(value = "/api/1/objectSets", description = "Act upon ObjectMetadata using ObjectSet instances.")
 @Path("/api/1/objectSets")
