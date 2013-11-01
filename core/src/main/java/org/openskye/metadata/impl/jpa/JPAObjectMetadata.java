@@ -2,6 +2,7 @@ package org.openskye.metadata.impl.jpa;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
@@ -35,8 +36,11 @@ public class JPAObjectMetadata {
     @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> metadata = new HashMap<>();
     private boolean container = false;
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime created = new DateTime();
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime ingested = new DateTime();
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime lastModified = new DateTime();
     @ManyToOne
     private Project project = null;
