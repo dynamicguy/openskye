@@ -16,7 +16,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.shiro.SecurityUtils;
 import org.openskye.core.*;
 import org.openskye.domain.*;
-import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.domain.dao.*;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
@@ -50,11 +50,24 @@ public class ObjectMetadataResource
     @Inject
     private StoreRegistry registry;
 
+    @Inject
+    private InformationStoreDefinitionDAO informationStores;
+
+    @Inject
+    private DomainDAO domains;
+
+    @Inject
+    private TaskDAO tasks;
+
+    @Inject
+    private ProjectDAO projects;
+
     public static final String OPERATION_GET = "objects:get";
     public static final String OPERATION_CREATE = "objects:create";
     public static final String OPERATION_UPDATE = "objects:update";
     public static final String OPERATION_INDEX = "objects:index";
     public static final String OPERATION_LIST = "objects:list";
+    public static final String OPERATION_SEARCH = "objects:search";
 
     /**
      * Gets the raw content of the {@link SimpleObject}
@@ -231,8 +244,7 @@ public class ObjectMetadataResource
     public PaginatedResult<ArchiveContentBlock> getContentBlocks(@PathParam("id") String id)
     {
         Optional<ObjectMetadata> metadata;
-        PaginatedResult<ArchiveContentBlock> result = new PaginatedResult<>();
-        List<ArchiveContentBlock> blocks;
+        PaginatedResult<ArchiveContentBlock> result;
 
         if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
@@ -242,10 +254,7 @@ public class ObjectMetadataResource
         if(!metadata.isPresent())
             throw new NotFoundException();
 
-        blocks = metadata.get().getArchiveContentBlocks();
-
-        result.setTotalResults(blocks.size());
-        result.setResults(blocks);
+        result = new PaginatedResult<>(metadata.get().getArchiveContentBlocks());
 
         return result;
     }
@@ -264,20 +273,12 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getAll()
     {
-        PaginatedResult<ObjectMetadata> result = new PaginatedResult<>();
-        Iterable<ObjectMetadata> metadataIterable;
-        List<ObjectMetadata> metadataList = new ArrayList<>();
+        PaginatedResult<ObjectMetadata> result;
 
         if(!this.isPermitted(OPERATION_LIST))
             throw new UnauthorizedException();
 
-        metadataIterable = this.repository.getAllObjects();
-
-        for(ObjectMetadata metadata : metadataIterable)
-            metadataList.add(metadata);
-
-        result.setResults(metadataList);
-        result.setTotalResults(metadataList.size());
+        result = new PaginatedResult<>(this.repository.getAllObjects());
 
         return result;
     }
@@ -299,7 +300,20 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getByInformationStore(@PathParam("isdId") String isdId)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<InformationStoreDefinition> isd;
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        isd = this.informationStores.get(isdId);
+
+        if(!isd.isPresent())
+            throw new NotFoundException();
+
+        result = new PaginatedResult<>(this.repository.getObjects(isd.get()));
+
+        return result;
     }
 
     /**
@@ -319,7 +333,20 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getByTask(@PathParam("taskId") String taskId)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<Task> task;
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        task = this.tasks.get(taskId);
+
+        if(!task.isPresent())
+            throw new NotFoundException();
+
+        result = new PaginatedResult<>(this.repository.getObjects(task.get()));
+
+        return result;
     }
 
     /**
@@ -345,7 +372,8 @@ public class ObjectMetadataResource
     @GET
     @Transactional
     @Timed
-    public PaginatedResult<ObjectMetadata> search(@PathParam("domainId") String domainId,
+    public PaginatedResult<ObjectMetadata> search(@PathParam("domainId")
+                                                  String domainId,
                                                   @ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query,
@@ -356,7 +384,53 @@ public class ObjectMetadataResource
                                                   @QueryParam("pageSize")
                                                   String pageSize)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<Domain> domain;
+
+        if(!this.isPermitted(OPERATION_SEARCH))
+            throw new UnauthorizedException();
+
+        domain = this.domains.get(domainId);
+
+        if(!domain.isPresent())
+            throw new NotFoundException();
+
+        if(pageNumber == null || pageNumber.isEmpty())
+        {
+            result = new PaginatedResult<>(this.search.search(domain.get(), query));
+        }
+        else
+        {
+            Page page = new Page();
+
+            if(pageSize == null || pageSize.isEmpty())
+                throw new SkyeException("A pageNumber is provided with no pageSize");
+
+            try
+            {
+                page.setPageNumber(Integer.parseInt(pageNumber));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageNumber is not an integer", ex);
+            }
+
+            try
+            {
+                page.setPageSize(Integer.parseInt(pageSize));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageSize is not an integer");
+            }
+
+            result = new PaginatedResult<>(this.search.search(domain.get(), query, page));
+
+            result.setPage(page.getPageNumber());
+            result.setPageSize(page.getPageSize());
+        }
+
+        return result;
     }
 
     /**
@@ -397,7 +471,59 @@ public class ObjectMetadataResource
                                                   @QueryParam("pageSize")
                                                   String pageSize)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result = new PaginatedResult<>();
+        Optional<Domain> domain;
+        Optional<Project> project;
+
+        if(!this.isPermitted(OPERATION_SEARCH))
+            throw new UnauthorizedException();
+
+        domain = this.domains.get(domainId);
+
+        if(!domain.isPresent())
+            throw new NotFoundException();
+
+        project = this.projects.get(projectId);
+
+        if(!project.isPresent())
+            throw new NotFoundException();
+
+        if(pageNumber == null || pageNumber.isEmpty())
+        {
+            result = new PaginatedResult<>(this.search.search(domain.get(), project.get(), query));
+        }
+        else
+        {
+            Page page = new Page();
+
+            if(pageSize == null || pageSize.isEmpty())
+                throw new SkyeException("A pageNumber is provided with no pageSize");
+
+            try
+            {
+                page.setPageNumber(Integer.parseInt(pageNumber));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageNumber is not an integer", ex);
+            }
+
+            try
+            {
+                page.setPageSize(Integer.parseInt(pageSize));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageSize is not an integer");
+            }
+
+            result = new PaginatedResult<>(this.search.search(domain.get(), project.get(), query, page));
+
+            result.setPage(page.getPageNumber());
+            result.setPageSize(page.getPageSize());
+        }
+
+        return result;
     }
 
     private boolean isPermitted(String operation)
