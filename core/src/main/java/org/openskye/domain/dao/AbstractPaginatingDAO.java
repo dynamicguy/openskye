@@ -171,3 +171,4 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         delete(instance.getId());
     }
 }
+

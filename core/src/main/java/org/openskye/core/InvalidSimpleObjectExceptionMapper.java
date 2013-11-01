@@ -8,6 +8,6 @@ import javax.ws.rs.ext.Provider;
 public class InvalidSimpleObjectExceptionMapper implements ExceptionMapper<InvalidSimpleObjectException> {
     @Override
     public Response toResponse(InvalidSimpleObjectException exception) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).type("application/json").build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()+exception.getSimpleObjectClass()).type("application/json").build();
     }
 }

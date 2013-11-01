@@ -22,7 +22,7 @@ import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.util.BadRequestException;
 import org.openskye.util.NotFoundException;
-import org.openskye.util.UnauthorizedException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.util.Page;
 
