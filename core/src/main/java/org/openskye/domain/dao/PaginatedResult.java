@@ -1,5 +1,6 @@
 package org.openskye.domain.dao;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,9 +17,35 @@ public class PaginatedResult<T> {
     private long totalResults;
     private List<T> results = new ArrayList<>();
 
-    public PaginatedResult<T> paginate(List<T> list) {
-        results = list;
+    public PaginatedResult<T> paginate(List<T> list)
+    {
+        this.results = list;
+        this.totalResults = results.size();
+
         return this;
+    }
+
+    public PaginatedResult()
+    {
+        return;
+    }
+
+    public PaginatedResult(Iterable<T> list)
+    {
+        this.results = Lists.newArrayList(list);
+
+        this.totalResults = results.size();
+
+        return;
+    }
+
+    public PaginatedResult(List<T> list)
+    {
+        this.results = list;
+
+        this.totalResults = results.size();
+
+        return;
     }
 
     @Override
