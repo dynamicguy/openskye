@@ -6,7 +6,7 @@ import org.openskye.domain.Identifiable;
 import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.util.NotFoundException;
+import org.openskye.exceptions.NotFoundException;
 import org.apache.shiro.authz.UnauthorizedException;
 
 import javax.ws.rs.PathParam;

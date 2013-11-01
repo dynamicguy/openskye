@@ -1,4 +1,4 @@
-package org.openskye.util;
+package org.openskye.exceptions;
 
 
 import org.openskye.core.SkyeException;

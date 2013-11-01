@@ -1,4 +1,4 @@
-package org.openskye.util;
+package org.openskye.exceptions;
 
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.HostUnauthorizedException;

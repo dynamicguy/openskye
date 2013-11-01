@@ -1,4 +1,4 @@
-package org.openskye.util;
+package org.openskye.exceptions;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;

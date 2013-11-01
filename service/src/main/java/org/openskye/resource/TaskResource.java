@@ -13,7 +13,7 @@ import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.TaskDAO;
 import org.openskye.task.TaskManager;
-import org.openskye.util.NotFoundException;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

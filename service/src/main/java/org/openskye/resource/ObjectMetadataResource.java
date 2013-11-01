@@ -20,15 +20,13 @@ import org.openskye.domain.dao.*;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
-import org.openskye.util.BadRequestException;
-import org.openskye.util.NotFoundException;
+import org.openskye.exceptions.BadRequestException;
+import org.openskye.exceptions.NotFoundException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.util.Page;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This resource creates an API which deals with {@link ObjectMetadata}. It
