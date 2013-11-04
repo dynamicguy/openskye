@@ -24,8 +24,6 @@ import java.util.*;
 @Data
 public class JPAObjectMetadata {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
     private String path = "";

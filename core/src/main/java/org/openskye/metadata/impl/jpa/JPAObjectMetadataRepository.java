@@ -103,17 +103,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * @param objectMetadata the object metadata to remove
      */
     @Override
-    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+    public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         Optional<JPAObjectSet> jpaObjectSet = getJpaObjectSet(objectSet.getId());
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
 
         if (!jpaObjectSet.isPresent())
             throw new EntityNotFoundException();
 
-        if (!isObjectInSet(objectSet, objectMetadata))
-            throw new SkyeException("The ObjectSet does not contain the given ObjectMetadata.");
+        if (isObjectInSet(objectSet, objectMetadata))
+            jpaObjectSet.get().getObjectMetadataSet().remove(jpaObjectMetadata);
 
-        jpaObjectSet.get().getObjectMetadataSet().remove(jpaObjectMetadata);
         getEntityManager().merge(jpaObjectSet.get());
     }
 
@@ -150,11 +149,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public Optional<ObjectMetadata> get(String id) {
         JPAObjectMetadata jpaObjectMetadata = getEntityManager().find(JPAObjectMetadata.class, id);
-
-        if (jpaObjectMetadata == null)
-            return Optional.absent();
-
-        return Optional.of(jpaObjectMetadata.toObjectMetadata());
+        return (jpaObjectMetadata != null ? Optional.of(jpaObjectMetadata.toObjectMetadata()) : Optional.<ObjectMetadata>absent());
     }
 
     /**
@@ -356,11 +351,8 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     protected Optional<JPAObjectSet> getJpaObjectSet(String objectSetId) {
         JPAObjectSet jpaObjectSet = getEntityManager().find(JPAObjectSet.class, objectSetId);
+        return (jpaObjectSet != null ? Optional.of(jpaObjectSet) : Optional.<JPAObjectSet>absent());
 
-        if (jpaObjectSet == null)
-            return Optional.absent();
-
-        return Optional.of(jpaObjectSet);
     }
 
 }
