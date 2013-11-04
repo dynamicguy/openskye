@@ -1,6 +1,7 @@
 package org.openskye.metadata.impl.jpa;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.stores.StoreRegistry;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
  */
 @Embeddable
 @Data
+@EqualsAndHashCode(of = "id")
 public class JPAArchiveContentBlock {
 
     private String id = UUID.randomUUID().toString();

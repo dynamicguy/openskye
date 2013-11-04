@@ -62,7 +62,6 @@ public class JPAObjectMetadataRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void metadataStorageAndRetrieval() {
 
         emf.get().getTransaction().begin();
@@ -183,7 +182,13 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("object is not found in object set",
                 isFound);
 
+
+        System.out.println("About to DELETE");
+
         omr.removeObjectFromSet(objectSet, metadataOutput.get());
+
+        System.out.println("DELETED");
+
 
         assertThat("object has not been removed from object set",
                 (!omr.isObjectInSet(objectSet, metadataOutput.get())));

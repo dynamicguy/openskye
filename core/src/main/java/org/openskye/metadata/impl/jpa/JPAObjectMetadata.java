@@ -1,6 +1,7 @@
 package org.openskye.metadata.impl.jpa;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -22,6 +23,7 @@ import java.util.*;
 @Entity
 @Table(name = "OBJECT_METADATA")
 @Data
+@EqualsAndHashCode(of = "id")
 public class JPAObjectMetadata {
     @Id
     @Column(unique = true)

@@ -1,6 +1,7 @@
 package org.openskye.metadata.impl.jpa;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.openskye.core.ObjectSet;
 
@@ -21,6 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "OBJECT_SET")
 @Data
+@EqualsAndHashCode(of = "id")
 public class JPAObjectSet {
     @Id
     @GeneratedValue(generator = "uuid")
