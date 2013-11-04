@@ -1,6 +1,7 @@
 package org.openskye.stores.information.cifs;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
@@ -14,10 +15,6 @@ import javax.inject.Inject;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Created with IntelliJ IDEA.
- * User: mftaylor
- * Date: 9/23/13
- * Time: 3:36 PM
  * Test the ability to crawl and read files from a CIFS file system
  */
 public class CifsInformationStoreTest {
@@ -49,6 +46,8 @@ public class CifsInformationStoreTest {
     }
 
     // This won't work on Travis, so don't annotate with @Test
+    @Test
+    @Ignore
     public void ensureWeCanDiscoverObjects() {
         assertThat("Get metadata for the store", registry.build(getCifsDis()).get().getMetadata() != null);
         CifsInformationStore is = (CifsInformationStore) registry.build(getCifsDis()).get();

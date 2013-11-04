@@ -126,8 +126,6 @@ public class LocalFSArchiveStoreTest {
 
     @Test
     public void letsArchiveThenQuery() {
-
-
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/archive-" + UUID.randomUUID().toString());

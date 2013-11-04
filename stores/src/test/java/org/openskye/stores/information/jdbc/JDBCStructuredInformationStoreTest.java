@@ -7,6 +7,7 @@ import org.eobjects.metamodel.UpdateableDataContext;
 import org.eobjects.metamodel.schema.ColumnType;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
@@ -103,6 +104,8 @@ public class JDBCStructuredInformationStoreTest {
     }
 
     // Note this test can't always run on the build server
+    @Test
+    @Ignore
     public void ensureWeCanArchiveToALocalMySQLDB() {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
