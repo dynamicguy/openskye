@@ -15,10 +15,10 @@ public class ValidationExceptionMapper implements ExceptionMapper<ValidationExce
         String throwingClass = exception.getStackTrace()[0].getClassName();
         try {
             Object example = Class.forName(throwingClass).newInstance();
-
-            return Response.status(Response.Status.BAD_REQUEST).entity(example).type("application/json").entity("This is how that object was supposed to look").build();
+            ExceptionMessage em = new ExceptionMessage(7000, "Validation error: ", exception.getMessage()+example);
+            return Response.status(Response.Status.BAD_REQUEST).entity(em).type("application/json").build();
         } catch (Exception e) {
-            throw new SkyeException("...Really?", e);
+            throw new SkyeException("Could not create example for exception", e);
         }
 
     }

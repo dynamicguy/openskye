@@ -7,7 +7,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
+public class    AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
     @Override
     public Response toResponse(AuthenticationException exception) {
         ExceptionMessage em = new ExceptionMessage();
@@ -33,10 +33,10 @@ public class AuthenticationExceptionMapper implements ExceptionMapper<Authentica
             em.setErrorCode(2006);
             em.setMessage("You have entered incorrect login credentials. Please try again");
         } else if (exception instanceof LockedAccountException) {
-            em.setErrorCode(2006);
+            em.setErrorCode(2007);
             em.setMessage("Your account has been locked. Please see your administrator");
         } else if (exception instanceof UnknownAccountException) {
-            em.setErrorCode(2007);
+            em.setErrorCode(2008);
             em.setMessage("This account doesn't exist. Please see your administrator about creating an account for you");
         } else {
             em.setErrorCode(2009);

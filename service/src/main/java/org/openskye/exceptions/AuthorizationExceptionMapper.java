@@ -13,15 +13,19 @@ import javax.ws.rs.ext.Provider;
 public class AuthorizationExceptionMapper implements
         ExceptionMapper<AuthorizationException> {
     public Response toResponse(AuthorizationException ex) {
-        String message;
+        ExceptionMessage message = new ExceptionMessage();
         if (ex instanceof HostUnauthorizedException) {
-            message = "Your host address has not been authorized to access this area";
+            message.setErrorCode(3000);
+            message.setMessage("Your host address has not been authorized to access this area");
         } else if (ex instanceof UnauthenticatedException) {
-            message = "You have not been authenticated and cannot perform this operation. Please login first";
+            message.setErrorCode(3001);
+            message.setMessage("You have not been authenticated and cannot perform this operation. Please login first");
         } else if (ex instanceof UnauthorizedException) {
-            message = "You are not authorized to perform this operation";
+            message.setErrorCode(3002);
+            message.setMessage("You are not authorized to perform this operation");
         } else {
-            message = ex.getMessage();
+            message.setErrorCode(3003);
+            message.setMessage(ex.getMessage());
         }
         return Response.status(401).
                 entity(message).

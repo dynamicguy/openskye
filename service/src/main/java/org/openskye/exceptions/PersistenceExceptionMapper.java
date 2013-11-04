@@ -5,30 +5,29 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-/**
- * Created with IntelliJ IDEA.
- * User: atcmostafavi
- * Date: 11/1/13
- * Time: 2:14 PM
- * To change this template use File | Settings | File Templates.
- */
+
+@Provider
 public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceException> {
     @Override
     public Response toResponse(PersistenceException exception) {
-        String message;
         Response.Status status;
+        ExceptionMessage em = new ExceptionMessage();
         if (exception instanceof EntityExistsException) {
-            message = "This entity already exists";
+            em.setErrorCode(6001);
+            em.setMessage("This entity already exists");
             status = Response.Status.BAD_REQUEST;
         } else if (exception instanceof EntityNotFoundException) {
-            message = "The entity you're looking for is not found";
+            em.setErrorCode(6002);
+            em.setMessage("The entity you're looking for is not found");
             status = Response.Status.NOT_FOUND;
         } else {
-            message = "There was a problem persisting this entity to the database";
+            em.setErrorCode(6003);
+            em.setMessage("There was a problem persisting this entity to the database");
             status = Response.Status.INTERNAL_SERVER_ERROR;
         }
 
-        return Response.status(status).entity(message).type("application/json").build();
+        return Response.status(status).entity(em).type("application/json").build();
     }
 }

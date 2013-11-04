@@ -15,9 +15,10 @@ public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestExce
         String throwingClass = exception.getStackTrace()[0].getClassName();
         try {
             Object example = Class.forName(throwingClass).newInstance();
-            return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).entity(example).type("application/json").build();
+            ExceptionMessage em = new ExceptionMessage(4000, "Bad Request: ", exception.getMessage() + example);
+            return Response.status(Response.Status.BAD_REQUEST).entity(em).type("application/json").build();
         } catch (Exception e) {
-            throw new SkyeException("...Really?", e);
+            throw new SkyeException("Could not create example for exception", e);
         }
 
     }
