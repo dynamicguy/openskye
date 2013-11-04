@@ -34,7 +34,7 @@ public class MongoDBObjectMetadataRepository implements ObjectMetadataRepository
     }
 
     @Override
-    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+    public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

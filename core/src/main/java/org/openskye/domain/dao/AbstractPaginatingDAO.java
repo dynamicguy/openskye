@@ -150,11 +150,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @SuppressWarnings("unchecked")
     public Optional<T> get(String id) {
         T result = currentEntityManager().find(entityClass, checkNotNull(id));
-        if (result == null)
-            return Optional.absent();
-        else {
-            return Optional.of(result);
-        }
+        return (result!=null ? Optional.of(result) : Optional.<T> absent());
     }
 
     @SuppressWarnings("unchecked")
