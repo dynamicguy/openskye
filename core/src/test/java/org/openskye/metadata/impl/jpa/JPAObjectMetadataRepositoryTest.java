@@ -98,7 +98,7 @@ public class JPAObjectMetadataRepositoryTest {
         objectMetadata.setInformationStoreId(isd.getId());
 
         taskStatisticsDAO.create(taskStatistics);
-        task.setTargetInformationStoreDefinition(isd);
+        // this appears to be a dummy task: task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
         tasks.create(task);
         objectMetadata.setTaskId(task.getId());

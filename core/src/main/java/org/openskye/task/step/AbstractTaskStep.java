@@ -1,6 +1,9 @@
 package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
+import lombok.Getter;
+import lombok.Setter;
 import org.openskye.core.ArchiveStore;
 import org.openskye.core.InformationStore;
 import org.openskye.core.SkyeException;
@@ -17,10 +20,23 @@ import javax.inject.Inject;
  */
 public abstract class AbstractTaskStep implements TaskStep {
 
+    @JsonIgnore
+    @Getter
+    @Setter
+    Task task;
+    @JsonIgnore
     @Inject
     protected StoreRegistry storeRegistry;
+    @JsonIgnore
     @Inject
     protected ObjectMetadataRepository omr;
+
+    public Task toTask() {
+        // Create a new Task object from this step
+        task = new Task();
+        task.setStep(this);
+        return task;
+    }
 
     protected InformationStore buildInformationStore(InformationStoreDefinition dis) {
         Optional<InformationStore> is = storeRegistry.build(dis);
@@ -34,21 +50,6 @@ public abstract class AbstractTaskStep implements TaskStep {
         if (!as.isPresent())
             throw new SkyeException("Unable to build archive store");
         return as.get();
-    }
-
-    public static TaskStep fromTask(Task task) {
-        switch (task.getTaskType()) {
-            case ARCHIVE:
-                return new ArchiveTaskStep(task);
-            case DISCOVER:
-                return new DiscoverTaskStep(task);
-            case EXTRACT:
-                return new ExtractTaskStep(task);
-            case DESTROY:
-                return new DestroyTaskStep(task);
-            default:
-                throw new SkyeException("Unsupported task type " + task.getTaskType());
-        }
     }
 
 }

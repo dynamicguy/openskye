@@ -1,9 +1,16 @@
 package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import lombok.Getter;
+import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.AttributeInstance;
+import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelFilterDefinition;
 import org.openskye.domain.Task;
+import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.filters.ChannelFilter;
 import org.openskye.filters.ChannelFilterFactory;
 
@@ -14,26 +21,29 @@ import java.util.List;
  * A simple implementation of the discover task type
  */
 public class DiscoverTaskStep extends AbstractTaskStep {
+    @Getter
+    @Setter
+    private Channel channel;
 
-    private final Task task;
+    @JsonIgnore
     private List<ChannelFilter> filters = new ArrayList<>();
 
-    public DiscoverTaskStep(Task task) {
-        this.task = task;
+    public DiscoverTaskStep( Channel channel ) {
+        this.channel = channel;
     }
 
     @Override
     public void validate() {
-        if (task.getChannel() == null) {
+        if (channel == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a channel and so can not discover");
         }
     }
 
     @Override
     public void start() {
-        InformationStore is = buildInformationStore(task.getChannel().getInformationStoreDefinition());
+        InformationStore is = buildInformationStore(channel.getInformationStoreDefinition());
 
-        for (ChannelFilterDefinition cfd : task.getChannel().getChannelFilters()) {
+        for (ChannelFilterDefinition cfd : channel.getChannelFilters()) {
             filters.add(ChannelFilterFactory.getInstance(cfd));
         }
 
@@ -50,7 +60,7 @@ public class DiscoverTaskStep extends AbstractTaskStep {
                     this.task.getStatistics().incrementSimpleObjectsDiscovered();
 
                     ObjectMetadata om = simpleObject.getObjectMetadata();
-                    for (AttributeInstance attrInstance : task.getChannel().getAttributeInstances()) {
+                    for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {
                         om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
                     }
                     om.setTaskId(task.getId());

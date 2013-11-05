@@ -23,6 +23,8 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.stores.information.jdbc.JDBCStructuredInformationStore;
 import org.openskye.task.TaskManager;
+import org.openskye.task.step.ArchiveTaskStep;
+import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
 import java.util.Iterator;
@@ -109,14 +111,10 @@ public class LocalFSArchiveStoreTest {
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
 
-        Task discovery = new Task();
-        discovery.setChannel(channel);
-        discovery.setTaskType(TaskType.DISCOVER);
+        Task discovery = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discovery);
 
-        Task archive = new Task();
-        archive.setChannel(channel);
-        archive.setTaskType(TaskType.ARCHIVE);
+        Task archive = new ArchiveTaskStep(channel).toTask();
         taskManager.submit(archive);
 
         assertThat("We have 1 discovered simple objects", discovery.getStatistics().getSimpleObjectsDiscovered() == 1);
@@ -141,14 +139,10 @@ public class LocalFSArchiveStoreTest {
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
 
-        Task discovery = new Task();
-        discovery.setChannel(channel);
-        discovery.setTaskType(TaskType.DISCOVER);
+        Task discovery = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discovery);
 
-        Task archive = new Task();
-        archive.setChannel(channel);
-        archive.setTaskType(TaskType.ARCHIVE);
+        Task archive = new ArchiveTaskStep(channel).toTask();
         taskManager.submit(archive);
 
         assertThat("We have 1 discovered simple objects", discovery.getStatistics().getSimpleObjectsDiscovered() == 1);

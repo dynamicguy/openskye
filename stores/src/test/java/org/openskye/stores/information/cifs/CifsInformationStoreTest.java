@@ -8,6 +8,7 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.stores.archive.localfs.LocalFSArchiveStore;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.task.TaskManager;
+import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
 
@@ -65,12 +66,10 @@ public class CifsInformationStoreTest {
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
 
-        Task newTask = new Task();
-        newTask.setChannel(channel);
-        newTask.setTaskType(TaskType.DISCOVER);
-        taskManager.submit(newTask);
+        Task discover = new DiscoverTaskStep(channel).toTask();
+        taskManager.submit(discover);
 
-        long objectCount = newTask.getStatistics().getSimpleObjectsDiscovered();
+        long objectCount = discover.getStatistics().getSimpleObjectsDiscovered();
         assertThat("We have discovered " + objectCount + " simple objects", objectCount > 0);
     }
 

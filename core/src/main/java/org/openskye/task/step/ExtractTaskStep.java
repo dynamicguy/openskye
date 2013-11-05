@@ -1,35 +1,46 @@
 package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
+import lombok.Getter;
+import lombok.Setter;
 import org.openskye.core.*;
+import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Task;
+import org.openskye.domain.dao.InformationStoreDefinitionDAO;
+
+import javax.inject.Inject;
 
 /**
  * A simple implementation of the discover task type
  */
 public class ExtractTaskStep extends AbstractTaskStep {
+    @Getter
+    @Setter
+    private String objectSetId;
+    @Getter
+    @Setter
+    private InformationStoreDefinition targetInformationStoreDefinition;
 
-    private final Task task;
-
-    public ExtractTaskStep(Task task) {
-        this.task = task;
+    public ExtractTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
+        this.objectSetId = objectSetId;
+        this.targetInformationStoreDefinition = targetInformationStoreDefinition;
     }
 
     @Override
     public void validate() {
-        if (task.getObjectSetId() == null) {
+        if (objectSetId == null) {
             throw new SkyeException("Task " + task.getId() + " is missing an object set id");
         }
-        if (task.getTargetInformationStoreDefinition() == null) {
+        if (targetInformationStoreDefinition == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a target information store definition");
         }
     }
 
     @Override
     public void start() {
-        Optional<ObjectSet> objectSet = omr.getObjectSet(task.getObjectSetId());
-
-        Optional<InformationStore> targetInformationStore = storeRegistry.build(task.getTargetInformationStoreDefinition());
+        Optional<ObjectSet> objectSet = omr.getObjectSet(objectSetId);
+        Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
 
         if (targetInformationStore.isPresent()) {
             if (objectSet.isPresent()) {
@@ -55,10 +66,10 @@ public class ExtractTaskStep extends AbstractTaskStep {
 
                 }
             } else {
-                throw new SkyeException("Unable to find object set with id " + task.getObjectSetId());
+                throw new SkyeException("Unable to find object set with id " + objectSetId);
             }
         } else {
-            throw new SkyeException("Unable to build target information store from definition " + task.getTargetInformationStoreDefinition());
+            throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition.getId());
         }
     }
 

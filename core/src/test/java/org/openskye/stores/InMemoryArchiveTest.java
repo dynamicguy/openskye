@@ -7,6 +7,7 @@ import org.openskye.domain.*;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
 import org.openskye.task.TaskManager;
+import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
 
@@ -34,10 +35,8 @@ public class InMemoryArchiveTest {
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
 
-        Task newTask = new Task();
-        newTask.setChannel(channel);
-        newTask.setTaskType(TaskType.DISCOVER);
-        taskManager.submit(newTask);
+        Task discover = new DiscoverTaskStep(channel).toTask();
+        taskManager.submit(discover);
     }
 
 }

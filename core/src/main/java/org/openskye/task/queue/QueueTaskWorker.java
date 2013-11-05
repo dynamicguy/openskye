@@ -93,12 +93,11 @@ public class QueueTaskWorker implements Runnable {
         try {
             update(task,TaskStatus.STARTING);
             taskIdList.add(task.getId());
-            TaskStep step = AbstractTaskStep.fromTask(task);
-            injector.injectMembers(step);
+            injector.injectMembers(task.getStep());
             update(task,TaskStatus.RUNNING);
             TaskStatus finalStatus;
             try {
-                step.start();
+                task.getStep().start();
                 finalStatus = TaskStatus.COMPLETED;
             } catch(Exception se) {
                 finalStatus = TaskStatus.FAILED;

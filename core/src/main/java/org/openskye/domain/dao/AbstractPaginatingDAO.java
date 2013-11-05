@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.*;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,12 +39,25 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return emf;
     }
 
+    /**
+     * Override serialize() and deserialize() when a domain class maps a transient
+     * object to a persistent JSON text field
+     */
+    protected void serialize(T instance) {
+    }
+    protected void deserialize(T instance) {
+    }
+
     public PaginatedResult<T> list() {
         PaginatedResult<T> result = new PaginatedResult<>();
         CriteriaQuery<T> criteria = createCriteriaQuery();
         Root<T> selectEntity = criteria.from(entityClass);
         criteria.select(selectEntity);
-        result.setResults(currentEntityManager().createQuery(criteria).getResultList());
+        List<T> resultList = currentEntityManager().createQuery(criteria).getResultList();
+        for ( T instance : resultList ) {
+            deserialize(instance);
+        }
+        result.setResults(resultList);
         result.setTotalResults(result.getResults().size());
 
         return result;
@@ -104,6 +118,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (newInstance == null)
             throw new ValidationException();
 
+        serialize(newInstance);
         validate(newInstance);
 
         this.currentEntityManager().persist(newInstance);
@@ -140,6 +155,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (id != updatedInstance.getId())
             throw new ValidationException();
 
+        serialize(updatedInstance);
         validate(updatedInstance);
 
         this.currentEntityManager().persist(updatedInstance);
@@ -154,6 +170,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (result == null)
             return Optional.absent();
         else {
+            deserialize(result);
             return Optional.of(result);
         }
     }

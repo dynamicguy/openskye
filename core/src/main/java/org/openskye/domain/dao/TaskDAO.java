@@ -1,20 +1,49 @@
 package org.openskye.domain.dao;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskSchedule;
 import org.openskye.domain.TaskStatus;
+import org.openskye.task.step.AbstractTaskStep;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Predicate;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * DAO for the {@link org.openskye.domain.Task}
  */
 public class TaskDAO extends AbstractPaginatingDAO<Task> {
+
+    private final ObjectMapper MAPPER = new ObjectMapper();
+
+    @Override
+    protected void deserialize(Task task) {
+        try {
+            Class clazz = Class.forName(task.getStepClassName());
+            AbstractTaskStep step = (AbstractTaskStep) MAPPER.readValue(task.getStepJson(),clazz);
+            step.setTask(task);
+            task.setStep(step);
+        } catch( ReflectiveOperationException|IOException e ) {
+            throw new SkyeException("Unable to deserialize task step",e);
+        }
+    }
+
+    @Override
+    protected void serialize(Task task) {
+        try {
+            task.setStepClassName(task.getStep().getClass().getName());
+            task.setStepJson(MAPPER.writeValueAsString(task.getStep()));
+        } catch( IOException e ) {
+            throw new SkyeException("Unable to serialize task step",e);
+        }
+    }
 
     public Optional<Task> findOldestQueued() {
         CriteriaBuilder builder = createCriteriaBuilder();
@@ -27,6 +56,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
         if (nextTask == null) {
             return Optional.absent();
         } else {
+            deserialize(nextTask);
             return Optional.of(nextTask);
         }
     }
@@ -41,7 +71,11 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
                 builder.equal(taskRoot.get("status"), TaskStatus.STARTING),
                 builder.equal(taskRoot.get("status"), TaskStatus.RUNNING))
         );
-        result.setResults(currentEntityManager().createQuery(criteria).getResultList());
+        List<Task> resultList = currentEntityManager().createQuery(criteria).getResultList();
+        for ( Task task : resultList ) {
+            deserialize(task);
+        }
+        result.setResults(resultList);
         return result;
     }
 
@@ -49,10 +83,8 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
     public Task create(TaskSchedule taskSchedule) {
         Task task = new Task();
         task.setProject(taskSchedule.getProject());
-        task.setTaskType(taskSchedule.getTaskType());
-        task.setObjectSetId(taskSchedule.getObjectSetId());
-        task.setChannel(taskSchedule.getChannel());
-        task.setTargetInformationStoreDefinition(taskSchedule.getTargetInformationStoreDefinition());
+        task.setStepClassName(taskSchedule.getStepClassName());
+        task.setStepJson(taskSchedule.getStepJson());
         return super.create(task);
     }
 
