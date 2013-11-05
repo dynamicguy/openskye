@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Task;
 import org.openskye.task.TaskManager;
+import org.openskye.task.quartz.AbstractQuartzTaskManager;
+import org.openskye.task.step.AbstractTaskStep;
+import org.openskye.task.step.TaskStep;
 
 import javax.inject.Inject;
 
@@ -15,7 +18,7 @@ import javax.inject.Inject;
  * core components without a job running infrastructure in placeø
  */
 @Slf4j
-public class InMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager extends AbstractQuartzTaskManager {
 
     @Inject
     Injector injector;
@@ -23,25 +26,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void submit(Task task) {
         log.info("Submitted task " + task);
-        TaskStep newTask = getTaskStep(task);
+        TaskStep newTask = AbstractTaskStep.fromTask(task);
         log.info("Creating task step for " + task);
         injector.injectMembers(newTask);
         log.info("Start task step for " + task);
         newTask.start();
     }
 
-    public TaskStep getTaskStep(Task task) {
-        switch (task.getTaskType()) {
-            case ARCHIVE:
-                return new ArchiveTaskStep(task);
-            case DISCOVER:
-                return new DiscoverTaskStep(task);
-            case EXTRACT:
-                return new ExtractTaskStep(task);
-            case DESTROY:
-                return new DestroyTaskStep(task);
-            default:
-                throw new SkyeException("Unsupported task type " + task.getTaskType());
-        }
-    }
+
 }

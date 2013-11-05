@@ -7,18 +7,17 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
- * A Task
+ * A schedule to enqueue a task at a future time or periodically
  */
 @Entity
-@Table(name = "TASK")
+@Table(name = "TASK_SCHEDULE")
 @Data
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Task implements Identifiable {
+public class TaskSchedule implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -27,26 +26,8 @@ public class Task implements Identifiable {
     @Column(name = "TASK_TYPE")
     private TaskType taskType;
     @ManyToOne
-    @JoinColumn(name = "PARENT_TASK_ID")
-    private Task parentTask;
-    @ManyToOne
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    @Column(name = "WORKER_NAME")
-    private String workerName;
-    @Column(name = "STATUS")
-    private TaskStatus status;
-    @Temporal(TemporalType.DATE)
-    @Column(name = "QUEUED")
-    private Date queued;
-    @Temporal(TemporalType.DATE)
-    @Column(name = "STARTED")
-    private Date started;
-    @Temporal(TemporalType.DATE)
-    @Column(name = "ENDED")
-    private Date ended;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
-    private TaskStatistics statistics = new TaskStatistics();
     // For a discovery/archive we will provide the channel
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CHANNEL_ID")
@@ -60,8 +41,12 @@ public class Task implements Identifiable {
     // those objects,  this doesn't not apply to discover
     @Column(name = "OBJECT_SET_ID")
     private String objectSetId;
-    // Additional task parameters, currently used only for testing
+    // Other task parameters, currently only used for TEST tasks
     @Column(name = "TASK_PARAMETERS")
     private String taskParameters;
 
+    // See Quartz cron field documentation for formatting of this string
+    @Column(name = "CRON_EXPRESSION")
+    private String cronExpression;
 }
+

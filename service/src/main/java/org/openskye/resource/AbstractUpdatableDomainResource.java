@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
  * domain objects persisted in hibernate
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractRealOnlyDomainResource<T> {
+public abstract class AbstractUpdatableDomainResource<T extends Identifiable> extends AbstractReadOnlyDomainResource<T> {
 
     // validate*() should throw BadRequestException if the instance is invalid
     protected void validateCreate(T newInstance) {

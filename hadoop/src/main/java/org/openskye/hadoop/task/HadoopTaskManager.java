@@ -1,6 +1,7 @@
 package org.openskye.hadoop.task;
 
 import org.openskye.domain.Task;
+import org.openskye.domain.TaskSchedule;
 import org.openskye.task.TaskManager;
 
 /**
@@ -12,7 +13,22 @@ import org.openskye.task.TaskManager;
  */
 public class HadoopTaskManager implements TaskManager {
     @Override
+    public void init() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public void submit(Task task) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void schedule(TaskSchedule taskSchedule) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void unschedule(String taskScheduleId) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

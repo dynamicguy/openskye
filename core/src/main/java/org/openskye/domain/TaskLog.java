@@ -21,9 +21,11 @@ public class TaskLog implements Identifiable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne
-    @JoinColumn(name = "TASK_ID")
-    private Task task;
+    @Column(name = "TASK_ID")
+    private String taskId;
+    @Column(name = "STATUS")
+    private TaskStatus status;
+    @Column(name = "MESSAGE")
     private String message;
 
 }

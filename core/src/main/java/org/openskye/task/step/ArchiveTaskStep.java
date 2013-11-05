@@ -1,4 +1,4 @@
-package org.openskye.task.simple;
+package org.openskye.task.step;
 
 import org.openskye.core.*;
 import org.openskye.domain.ChannelArchiveStore;

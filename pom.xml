@@ -110,6 +110,11 @@
             </dependency>
             <dependency>
                 <groupId>org.openskye</groupId>
+                <artifactId>skye-worker</artifactId>
+                <version>0.0.5-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openskye</groupId>
                 <artifactId>skye-hadoop</artifactId>
                 <version>0.0.5-SNAPSHOT</version>
             </dependency>

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -183,6 +184,17 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      */
     public void delete(T instance) {
         delete(instance.getId());
+    }
+
+
+    /**
+     * Attempt to place a lock on a row
+     *
+     * @param instance the object representing the row to lock
+     * @param mode the mode of the requested lock
+     */
+    public void lock(T instance, LockModeType mode) {
+        currentEntityManager().lock(instance, mode);
     }
 }
 
