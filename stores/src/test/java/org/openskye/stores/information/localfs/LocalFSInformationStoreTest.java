@@ -87,7 +87,7 @@ public class LocalFSInformationStoreTest {
         Task archiveTask = new Task();
         archiveTask.setChannel(channel);
         archiveTask.setTaskType(TaskType.ARCHIVE);
-        taskManager.submit(newTask);
+        taskManager.submit(archiveTask);
 
     }
 
