@@ -28,6 +28,11 @@ public class ExtractTaskStep extends AbstractTaskStep {
     }
 
     @Override
+    public String getLabel() {
+        return "EXTRACT";
+    }
+
+    @Override
     public void validate() {
         if (objectSetId == null) {
             throw new SkyeException("Task " + task.getId() + " is missing an object set id");

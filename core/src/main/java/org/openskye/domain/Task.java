@@ -52,6 +52,7 @@ public class Task implements Identifiable {
     // each type of step has its own set of fields, store it as a JSON blob and
     // reconstruct the step object in the DAO when accessed
     @Column(name = "STEP_CLASS_NAME")
+    @JsonIgnore
     private String stepClassName;
     @Lob @Basic(fetch=FetchType.EAGER)
     @Column(name = "STEP_JSON")
@@ -59,5 +60,7 @@ public class Task implements Identifiable {
     private String stepJson;
     @Transient
     private AbstractTaskStep step;
+    @Transient
+    private String stepLabel;
 
 }

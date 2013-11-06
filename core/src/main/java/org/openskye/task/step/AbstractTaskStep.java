@@ -9,6 +9,7 @@ import org.openskye.core.InformationStore;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.stores.StoreRegistry;
@@ -19,6 +20,9 @@ import javax.inject.Inject;
  * An abstract base for the {@link TaskStep}
  */
 public abstract class AbstractTaskStep implements TaskStep {
+    @Getter
+    @Setter
+    protected String projectId;
 
     @JsonIgnore
     @Getter
@@ -34,7 +38,12 @@ public abstract class AbstractTaskStep implements TaskStep {
     public Task toTask() {
         // Create a new Task object from this step
         task = new Task();
+        Project project = new Project();
+        project.setId(projectId);
+        task.setProject(project);
         task.setStep(this);
+        task.setStepClassName(this.getClass().getName());
+        task.setStepLabel(this.getLabel());
         return task;
     }
 
@@ -51,5 +60,7 @@ public abstract class AbstractTaskStep implements TaskStep {
             throw new SkyeException("Unable to build archive store");
         return as.get();
     }
+
+    public abstract String getLabel();  // example: "ARCHIVE"
 
 }

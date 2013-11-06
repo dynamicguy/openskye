@@ -58,9 +58,40 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
         return expectedResult;
     }
 
-    @Test
+    @Override
     public void testAuthorizedPost() throws Exception {
         // We override this since it can't work
         // in the test harness
     }
+
+    @Override
+    public void testAuthorizedPut() throws Exception {
+        // We override this since it can't work
+        // in the test harness
+    }
+
+    @Override
+    public void testAuthorizedDelete() throws Exception {
+        // We override this since it can't work
+        // in the test harness
+    }
+
+    @Override
+    public void testUnAuthorizedPost() throws Exception {
+        // We override this since it can't work
+        // in the test harness
+    }
+
+    @Override
+    public void testUnAuthorizedPut() throws Exception {
+        // We override this since it can't work
+        // in the test harness
+    }
+
+    @Override
+    public void testUnAuthorisedDelete() throws Exception {
+        // We override this since it can't work
+        // in the test harness
+    }
+
 }

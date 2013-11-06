@@ -30,6 +30,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
             AbstractTaskStep step = (AbstractTaskStep) MAPPER.readValue(task.getStepJson(),clazz);
             step.setTask(task);
             task.setStep(step);
+            task.setStepLabel(step.getLabel());
         } catch( ReflectiveOperationException|IOException e ) {
             throw new SkyeException("Unable to deserialize task step",e);
         }

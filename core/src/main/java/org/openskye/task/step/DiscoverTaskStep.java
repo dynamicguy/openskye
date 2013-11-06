@@ -33,6 +33,11 @@ public class DiscoverTaskStep extends AbstractTaskStep {
     }
 
     @Override
+    public String getLabel() {
+        return "DISCOVER";
+    }
+
+    @Override
     public void validate() {
         if (channel == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a channel and so can not discover");

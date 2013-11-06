@@ -33,6 +33,11 @@ public class TestTaskStep extends AbstractTaskStep  {
     }
 
     @Override
+    public String getLabel() {
+        return "TEST";
+    }
+
+    @Override
     public void validate() {
         // TEST tasks require no validation
     }

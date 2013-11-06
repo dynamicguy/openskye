@@ -33,6 +33,11 @@ public class DestroyTaskStep extends AbstractTaskStep {
     }
 
     @Override
+    public String getLabel() {
+        return "DESTROY";
+    }
+
+    @Override
     public void validate() {
         if (objectSetId == null) {
             throw new SkyeException("Task " + task.getId() + " is missing an object set id");

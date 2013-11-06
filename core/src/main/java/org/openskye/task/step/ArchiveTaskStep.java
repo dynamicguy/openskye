@@ -27,6 +27,11 @@ public class ArchiveTaskStep extends AbstractTaskStep {
     }
 
     @Override
+    public String getLabel() {
+        return "ARCHIVE";
+    }
+
+    @Override
     public void validate() {
         if (getChannel() == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a channel and so can not archive");
