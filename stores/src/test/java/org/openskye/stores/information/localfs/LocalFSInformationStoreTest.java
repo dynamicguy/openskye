@@ -12,6 +12,8 @@ import org.openskye.task.TaskManager;
 
 import javax.inject.Inject;
 
+import java.util.UUID;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -28,6 +30,7 @@ public class LocalFSInformationStoreTest {
 
     public InformationStoreDefinition getLocalFsDis() {
         InformationStoreDefinition dis = new InformationStoreDefinition();
+        dis.setId(UUID.randomUUID().toString());
         dis.setImplementation(LocalFSInformationStore.IMPLEMENTATION);
         dis.getProperties().put(LocalFSInformationStore.FILE_PATH, "/opt");
         dis.getProperties().put(LocalFSInformationStore.NAME, "Linux /opt Directory");

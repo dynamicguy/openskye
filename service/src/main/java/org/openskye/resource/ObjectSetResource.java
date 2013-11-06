@@ -29,13 +29,10 @@ import org.apache.shiro.authz.UnauthorizedException;
 @Produces(MediaType.APPLICATION_JSON)
 public class ObjectSetResource
 {
-    @Inject
     private ObjectMetadataRepository repository;
 
-    @Inject
     private ObjectMetadataSearch search;
 
-    @Inject
     private DomainDAO domains;
 
     public static final String OPERATION_CREATE = "objectSets:create";
@@ -45,6 +42,21 @@ public class ObjectSetResource
     public static final String OPERATION_REMOVE = "objectSets:remove";
     public static final String OPERATION_DELETE = "objectSets:delete";
     public static final String OPERATION_SEARCH = "objectSets:search";
+
+    @Inject
+    public ObjectSetResource(ObjectMetadataRepository injectedRepository, ObjectMetadataSearch injectedSearch)
+    {
+        repository = injectedRepository;
+        search = injectedSearch;
+    }
+
+    @Inject
+    public ObjectSetResource setDomainDAO(DomainDAO injectedDao)
+    {
+        domains = injectedDao;
+
+        return this;
+    }
 
     @ApiOperation(value = "Creates an ObjectSet",
                   notes = "Supply the name of the ObjectSet to be created.  " +

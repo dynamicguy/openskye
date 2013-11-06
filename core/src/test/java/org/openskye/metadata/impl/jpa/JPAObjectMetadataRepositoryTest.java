@@ -103,13 +103,18 @@ public class JPAObjectMetadataRepositoryTest {
 
         ObjectMetadata result = omr.put(objectMetadata);
         Optional<ObjectMetadata> metadataOutput = omr.get(result.getId());
+        String outputIsdId = metadataOutput.get().getInformationStoreId();
 
         // Test that the Persisted metadataOutput is present, and that it
         // matches the input.
         assertThat("object should be found", metadataOutput.isPresent());
         assertThat("object should have the correct information store definition",
-                metadataOutput.get().getInformationStoreId(),
+                outputIsdId,
                 is(equalTo(isd.getId())));
+
+        Optional<InformationStoreDefinition> outputIsd = informationStores.get(outputIsdId);
+
+        assertThat("information store associated with object is found", outputIsd.isPresent());
 
         Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asd.getId());
 
