@@ -61,6 +61,7 @@ public abstract class AbstractTaskStep implements TaskStep {
         return as.get();
     }
 
+    @JsonIgnore
     public abstract String getLabel();  // example: "ARCHIVE"
 
 }

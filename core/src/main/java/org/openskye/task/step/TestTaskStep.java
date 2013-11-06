@@ -1,6 +1,7 @@
 package org.openskye.task.step;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ArchiveStore;
@@ -15,6 +16,7 @@ import org.openskye.domain.Task;
  * task manager.  TEST tasks just sleep and generate simulated log output.
  */
 @Slf4j
+@NoArgsConstructor
 public class TestTaskStep extends AbstractTaskStep  {
     @Getter
     @Setter
@@ -26,10 +28,11 @@ public class TestTaskStep extends AbstractTaskStep  {
     @Setter
     private Boolean pass;
 
-    public TestTaskStep(Integer sleepSeconds, Integer iterations, Boolean pass) {
+    public TestTaskStep(String projectId, Integer sleepSeconds, Integer iterations, Boolean pass) {
         this.sleepSeconds = sleepSeconds;
         this.iterations = iterations;
         this.pass = pass;
+        this.projectId = projectId;
     }
 
     @Override

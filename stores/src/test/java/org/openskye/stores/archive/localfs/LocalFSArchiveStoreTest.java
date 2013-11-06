@@ -110,6 +110,9 @@ public class LocalFSArchiveStoreTest {
         channel.setId(UUID.randomUUID().toString());
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
+        Project project = new Project();
+        project.setId(UUID.randomUUID().toString());
+        channel.setProject(project);
 
         Task discovery = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discovery);
@@ -138,6 +141,9 @@ public class LocalFSArchiveStoreTest {
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
+        Project project = new Project();
+        project.setId(UUID.randomUUID().toString());
+        channel.setProject(project);
 
         Task discovery = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discovery);

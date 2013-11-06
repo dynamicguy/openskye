@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.Channel;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * A {@link TaskStep} that handles a task type of Archive
  */
+@NoArgsConstructor
 public class ArchiveTaskStep extends AbstractTaskStep {
     @Getter
     @Setter
@@ -24,6 +26,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
 
     public ArchiveTaskStep(Channel channel) {
         this.channel = channel;
+        this.projectId = channel.getProject().getId();
     }
 
     @Override

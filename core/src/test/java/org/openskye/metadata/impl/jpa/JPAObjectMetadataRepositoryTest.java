@@ -17,6 +17,7 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
 import org.openskye.task.TaskManager;
+import org.openskye.task.step.TestTaskStep;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -44,6 +45,8 @@ public class JPAObjectMetadataRepositoryTest {
     @Inject
     public TaskDAO tasks;
     @Inject
+    public ProjectDAO projects;
+    @Inject
     public TaskStatisticsDAO taskStatisticsDAO;
     @Inject
     public ArchiveStoreInstanceDAO archiveStoreInstanceDAO;
@@ -61,6 +64,7 @@ public class JPAObjectMetadataRepositoryTest {
         }
     }
 
+    //TODO test updated for task manager changes but fails for apparently unrelated reasons
     @Test
     @Ignore
     public void metadataStorageAndRetrieval() {
@@ -80,7 +84,11 @@ public class JPAObjectMetadataRepositoryTest {
         Optional<ArchiveContentBlock> acbOutput = Optional.absent();
         Iterable<ObjectMetadata> metadataList = null;
         boolean isFound = false;
-        Task task = new Task();
+        Project project = new Project();
+        project.setName("Test Project");
+        Project newProject = projects.create(project);
+        TestTaskStep step = new TestTaskStep(newProject.getId(),2,1,true);
+        Task task = step.toTask();
         TaskStatistics taskStatistics = new TaskStatistics();
         ObjectSet objectSet = null;
         Optional<ObjectSet> setOutput = Optional.absent();
@@ -190,7 +198,7 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("object is found in object set",
                 isFound);
 
-        omr.removeObjectToSet(objectSet, metadataOutput.get());
+        omr.removeObjectFromSet(objectSet, metadataOutput.get());
 
         assertThat("object has been removed from object set",
                 (!omr.isObjectInSet(objectSet, metadataOutput.get())));

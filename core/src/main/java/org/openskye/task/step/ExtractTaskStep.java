@@ -3,6 +3,7 @@ package org.openskye.task.step;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.InformationStoreDefinition;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 /**
  * A simple implementation of the discover task type
  */
+@NoArgsConstructor
 public class ExtractTaskStep extends AbstractTaskStep {
     @Getter
     @Setter
@@ -25,6 +27,7 @@ public class ExtractTaskStep extends AbstractTaskStep {
     public ExtractTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.projectId = targetInformationStoreDefinition.getProject().getId();
     }
 
     @Override

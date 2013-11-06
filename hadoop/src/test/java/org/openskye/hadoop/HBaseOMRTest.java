@@ -166,7 +166,7 @@ public class HBaseOMRTest {
         // Test that an object can be removed from the object set.
         this.emf.get().getTransaction().begin();
 
-        this.omr.removeObjectToSet(objectSet, metadataOutput.get());
+        this.omr.removeObjectFromSet(objectSet, metadataOutput.get());
 
         this.emf.get().getTransaction().commit();
 

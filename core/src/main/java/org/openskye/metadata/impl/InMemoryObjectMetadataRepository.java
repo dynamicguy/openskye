@@ -1,6 +1,7 @@
 package org.openskye.metadata.impl;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
@@ -38,7 +39,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+    public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -69,7 +70,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
-        return objects.values();
+        return Lists.newArrayList(objects.values());
     }
 
     @Override
@@ -77,7 +78,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
         if (taskMap.containsKey(task.getId())) {
             return new ArrayList<>();
         } else {
-            return taskMap.get(task.getId());
+            return Lists.newArrayList(taskMap.get(task.getId()));
         }
     }
 

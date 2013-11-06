@@ -254,7 +254,7 @@ public class ObjectSetResource
         if(!objectMetadata.isPresent())
             throw new NotFoundException();
 
-        this.repository.removeObjectToSet(objectSet.get(), objectMetadata.get());
+        this.repository.removeObjectFromSet(objectSet.get(), objectMetadata.get());
 
         return Response.ok().build();
     }

@@ -19,6 +19,8 @@ import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
 
+import java.util.UUID;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -95,6 +97,9 @@ public class JDBCStructuredInformationStoreTest {
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
+        Project project = new Project();
+        project.setId(UUID.randomUUID().toString());
+        channel.setProject(project);
 
         Task discover = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discover);

@@ -103,7 +103,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * @param objectMetadata the object metadata to remove
      */
     @Override
-    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+    public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         Optional<JPAObjectSet> jpaObjectSet = getJpaObjectSet(objectSet.getId());
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
 

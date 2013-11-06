@@ -44,7 +44,7 @@ public interface ObjectMetadataRepository {
      * @param objectSet      the object set
      * @param objectMetadata the object metadata to remove
      */
-    void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
+    void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
 
     /**
      * Determines if the {@link ObjectMetadata} is already included in the

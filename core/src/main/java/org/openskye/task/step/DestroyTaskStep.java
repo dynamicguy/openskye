@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreDefinition;
@@ -15,6 +16,7 @@ import org.openskye.stores.StoreRegistry;
 /**
  * A simple implementation of the destroy task type
  */
+@NoArgsConstructor
 public class DestroyTaskStep extends AbstractTaskStep {
     @Getter
     @Setter
@@ -30,6 +32,7 @@ public class DestroyTaskStep extends AbstractTaskStep {
     public DestroyTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.projectId = targetInformationStoreDefinition.getProject().getId();
     }
 
     @Override

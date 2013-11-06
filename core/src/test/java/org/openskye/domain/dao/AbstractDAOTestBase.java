@@ -3,12 +3,17 @@ package org.openskye.domain.dao;
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.persist.PersistService;
+import io.dropwizard.jackson.Jackson;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.Identifiable;
 
 import javax.inject.Inject;
+
+import java.io.IOException;
+import java.io.StringWriter;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +33,16 @@ public abstract class AbstractDAOTestBase<T extends Identifiable> {
     public abstract T getNew();
 
     public abstract void update(T instance);
+
+    protected String jsonFixture(String name) throws IOException {
+        return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(name), "UTF-8");
+    }
+
+    protected String asJson(Object obj) throws IOException {
+        StringWriter sb = new StringWriter();
+        Jackson.newObjectMapper().writeValue(sb, obj);
+        return sb.toString();
+    }
 
     @Before
     public void checkStarted() {
