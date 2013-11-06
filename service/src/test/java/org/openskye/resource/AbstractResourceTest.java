@@ -25,8 +25,8 @@ import static org.mockito.Mockito.*;
  */
 public abstract class AbstractResourceTest<T extends Identifiable> {
 
-    private final Subject subject = mock(Subject.class);
-    private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
+    protected final Subject subject = mock(Subject.class);
+    protected Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
 
     public abstract String getSingular();
 
