@@ -68,7 +68,7 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getRoot() {
-        return buildObjectsForPath("");
+        return buildObjectsForPath(getName());
     }
 
     private Iterable<SimpleObject> buildObjectsForPath(String path) {
