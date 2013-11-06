@@ -39,25 +39,18 @@ import java.io.InputStream;
 @Produces(MediaType.APPLICATION_JSON)
 public class ObjectMetadataResource
 {
-    @Inject
     private ObjectMetadataRepository repository;
 
-    @Inject
     private ObjectMetadataSearch search;
 
-    @Inject
     private StoreRegistry registry;
 
-    @Inject
     private InformationStoreDefinitionDAO informationStores;
 
-    @Inject
     private DomainDAO domains;
 
-    @Inject
     private TaskDAO tasks;
 
-    @Inject
     private ProjectDAO projects;
 
     public static final String OPERATION_GET = "objects:get";
@@ -66,6 +59,53 @@ public class ObjectMetadataResource
     public static final String OPERATION_INDEX = "objects:index";
     public static final String OPERATION_LIST = "objects:list";
     public static final String OPERATION_SEARCH = "objects:search";
+
+    @Inject
+    public ObjectMetadataResource(ObjectMetadataRepository injectedRepository, ObjectMetadataSearch injectedSearch)
+    {
+        repository = injectedRepository;
+        search = injectedSearch;
+    }
+
+    @Inject
+    public ObjectMetadataResource setStoreRegistry(StoreRegistry injectedRegistry)
+    {
+        registry = injectedRegistry;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setInformationStoreDefinitionDAO(InformationStoreDefinitionDAO injectedDao)
+    {
+        informationStores = injectedDao;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setDomainDAO(DomainDAO injectedDao)
+    {
+        domains = injectedDao;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setTaskDAO(TaskDAO injectedDao)
+    {
+        tasks = injectedDao;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setProjectDAO(ProjectDAO injectedDao)
+    {
+        projects = injectedDao;
+
+        return this;
+    }
 
     /**
      * Gets the raw content of the {@link SimpleObject}

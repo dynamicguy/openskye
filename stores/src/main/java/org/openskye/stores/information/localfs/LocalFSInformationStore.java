@@ -91,6 +91,7 @@ public class LocalFSInformationStore implements InformationStore {
                     metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
                     metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+                    unstructObj.setObjectMetadata(metadata);
                     all.add(unstructObj);
                 }
             }
