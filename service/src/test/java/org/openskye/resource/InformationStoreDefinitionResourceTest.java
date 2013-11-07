@@ -1,0 +1,56 @@
+package org.openskye.resource;
+
+
+import io.dropwizard.testing.junit.ResourceTestRule;
+import org.junit.ClassRule;
+import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.dao.AbstractPaginatingDAO;
+import org.openskye.domain.dao.InformationStoreDefinitionDAO;
+import org.openskye.domain.dao.PaginatedResult;
+import static org.mockito.Mockito.mock;
+
+public class InformationStoreDefinitionResourceTest extends AbstractResourceTest<InformationStoreDefinition> {
+
+
+    public static final InformationStoreDefinitionDAO dao=mock(InformationStoreDefinitionDAO.class);
+    @ClassRule
+    public static final ResourceTestRule resources= ResourceTestRule.builder()
+            .addResource(new InformationStoreDefinitionResource(dao))
+            .build();
+
+    private final InformationStoreDefinition informationStoreDefinition=new InformationStoreDefinition();
+    private PaginatedResult<InformationStoreDefinition> expectedResult=new PaginatedResult<>();
+
+    @Override
+    public String getSingular() {
+        return "informationStoreDefinition";
+    }
+
+    @Override
+    public String getPlural() {
+        return "informationStoreDefinitions";
+    }
+
+    @Override
+    public ResourceTestRule getResources() {
+        return resources;
+    }
+
+    @Override
+    public InformationStoreDefinition getInstance() {
+        return informationStoreDefinition;
+    }
+
+    @Override
+    public AbstractPaginatingDAO getDAO() {
+        return dao;
+    }
+
+    @Override
+    public PaginatedResult getExpectedResult() {
+        return expectedResult;
+
+    }
+
+
+}

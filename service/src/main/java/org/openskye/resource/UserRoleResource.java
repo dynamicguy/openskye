@@ -61,7 +61,7 @@ public class UserRoleResource extends AbstractUpdatableDomainResource<UserRole> 
     }
 
     @Override
-    protected String getPermissionDomain() {
+    public String getPermissionDomain() {
         return "userRole";
     }
 
