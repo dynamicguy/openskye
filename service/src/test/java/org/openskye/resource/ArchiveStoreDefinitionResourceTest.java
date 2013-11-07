@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 
 public class ArchiveStoreDefinitionResourceTest extends AbstractResourceTest<ArchiveStoreDefinition> {
 
-    public static final ArchiveStoreDefinitionDAO dao = mock(ArchiveStoreDefinitionDAO.class);
+    public static ArchiveStoreDefinitionDAO dao = mock(ArchiveStoreDefinitionDAO.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new ArchiveStoreDefinitionResource(dao))
