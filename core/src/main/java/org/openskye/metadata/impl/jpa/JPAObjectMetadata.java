@@ -67,6 +67,7 @@ public class JPAObjectMetadata {
      */
     public JPAObjectMetadata(ObjectMetadata objectMetadata) {
         this.id = objectMetadata.getId();
+        this.path = objectMetadata.getPath();
         this.implementation = objectMetadata.getImplementation();
         this.taskId = objectMetadata.getTaskId();
         this.metadata = objectMetadata.getMetadata();
@@ -107,6 +108,7 @@ public class JPAObjectMetadata {
         List<ArchiveContentBlock> blocks = new ArrayList<>();
 
         objectMetadata.setId(this.id);
+        objectMetadata.setPath(this.path);
         objectMetadata.setImplementation(this.implementation);
         objectMetadata.setTaskId(this.taskId);
         objectMetadata.setMetadata(this.metadata);
