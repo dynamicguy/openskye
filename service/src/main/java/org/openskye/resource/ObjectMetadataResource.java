@@ -16,17 +16,17 @@ import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.shiro.SecurityUtils;
 import org.openskye.core.*;
 import org.openskye.domain.*;
-import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.domain.dao.*;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
-import org.openskye.util.NotFoundException;
-import org.openskye.util.UnauthorizedException;
+import org.openskye.exceptions.BadRequestException;
+import org.openskye.exceptions.NotFoundException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.util.Page;
 
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * This resource creates an API which deals with {@link ObjectMetadata}. It
@@ -39,16 +39,73 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ObjectMetadataResource
 {
-    @Inject
     private ObjectMetadataRepository repository;
 
-    @Inject
     private ObjectMetadataSearch search;
 
-    @Inject
     private StoreRegistry registry;
 
-    public static final String OPERATION_GET = "objectMetadata:get";
+    private InformationStoreDefinitionDAO informationStores;
+
+    private DomainDAO domains;
+
+    private TaskDAO tasks;
+
+    private ProjectDAO projects;
+
+    public static final String OPERATION_GET = "objects:get";
+    public static final String OPERATION_CREATE = "objects:create";
+    public static final String OPERATION_UPDATE = "objects:update";
+    public static final String OPERATION_INDEX = "objects:index";
+    public static final String OPERATION_LIST = "objects:list";
+    public static final String OPERATION_SEARCH = "objects:search";
+
+    @Inject
+    public ObjectMetadataResource(ObjectMetadataRepository injectedRepository, ObjectMetadataSearch injectedSearch)
+    {
+        repository = injectedRepository;
+        search = injectedSearch;
+    }
+
+    @Inject
+    public ObjectMetadataResource setStoreRegistry(StoreRegistry injectedRegistry)
+    {
+        registry = injectedRegistry;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setInformationStoreDefinitionDAO(InformationStoreDefinitionDAO injectedDao)
+    {
+        informationStores = injectedDao;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setDomainDAO(DomainDAO injectedDao)
+    {
+        domains = injectedDao;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setTaskDAO(TaskDAO injectedDao)
+    {
+        tasks = injectedDao;
+
+        return this;
+    }
+
+    @Inject
+    public ObjectMetadataResource setProjectDAO(ProjectDAO injectedDao)
+    {
+        projects = injectedDao;
+
+        return this;
+    }
 
     /**
      * Gets the raw content of the {@link SimpleObject}
@@ -72,7 +129,7 @@ public class ObjectMetadataResource
         String path;
         String header;
 
-        if(!SecurityUtils.getSubject().isPermitted(OPERATION_GET))
+        if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
         objectMetadata = this.repository.get(id);
@@ -119,7 +176,18 @@ public class ObjectMetadataResource
     @Timed
     public ObjectMetadata create(ObjectMetadata newInstance)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_CREATE))
+            throw new UnauthorizedException();
+
+        // If the id field is set on the newInstance, we should set
+        // it to null, so that a random id is generated.
+        newInstance.setId(null);
+
+        this.repository.put(newInstance);
+
+        this.search.index(newInstance);
+
+        return newInstance;
     }
 
     @ApiOperation(value = "Index ObjectMetadata",
@@ -132,7 +200,17 @@ public class ObjectMetadataResource
                           @PathParam("id")
                           String id)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_INDEX))
+            throw new UnauthorizedException();
+
+        Optional<ObjectMetadata> metadata = this.repository.get(id);
+
+        if(!metadata.isPresent())
+            throw new NotFoundException();
+
+        this.search.index(metadata.get());
+
+        return Response.ok().build();
     }
 
     /**
@@ -154,7 +232,20 @@ public class ObjectMetadataResource
     @Timed
     public ObjectMetadata update(@PathParam("id") String id, ObjectMetadata newInstance)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_UPDATE))
+            throw new UnauthorizedException();
+
+        if(!id.equals(newInstance.getId()))
+            throw new BadRequestException();
+
+        Optional<ObjectMetadata> oldInstance = this.repository.get(id);
+
+        if(!oldInstance.isPresent())
+            throw new NotFoundException();
+
+        this.repository.put(newInstance);
+
+        return newInstance;
     }
 
     @ApiOperation(value = "Gets the ObjectMetadata for the id",
@@ -166,7 +257,7 @@ public class ObjectMetadataResource
     @Timed
     public Optional<ObjectMetadata> get(@PathParam("id") String id)
     {
-        if(!SecurityUtils.getSubject().isPermitted(OPERATION_GET))
+        if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
         return this.repository.get(id);
@@ -191,10 +282,9 @@ public class ObjectMetadataResource
     public PaginatedResult<ArchiveContentBlock> getContentBlocks(@PathParam("id") String id)
     {
         Optional<ObjectMetadata> metadata;
-        PaginatedResult<ArchiveContentBlock> result = new PaginatedResult<>();
-        List<ArchiveContentBlock> blocks;
+        PaginatedResult<ArchiveContentBlock> result;
 
-        if(!SecurityUtils.getSubject().isPermitted(OPERATION_GET))
+        if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
         metadata = this.repository.get(id);
@@ -202,10 +292,7 @@ public class ObjectMetadataResource
         if(!metadata.isPresent())
             throw new NotFoundException();
 
-        blocks = metadata.get().getArchiveContentBlocks();
-
-        result.setTotalResults(blocks.size());
-        result.setResults(blocks);
+        result = new PaginatedResult<>(metadata.get().getArchiveContentBlocks());
 
         return result;
     }
@@ -224,7 +311,14 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getAll()
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        result = new PaginatedResult<>(this.repository.getAllObjects());
+
+        return result;
     }
 
     /**
@@ -244,7 +338,20 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getByInformationStore(@PathParam("isdId") String isdId)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<InformationStoreDefinition> isd;
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        isd = this.informationStores.get(isdId);
+
+        if(!isd.isPresent())
+            throw new NotFoundException();
+
+        result = new PaginatedResult<>(this.repository.getObjects(isd.get()));
+
+        return result;
     }
 
     /**
@@ -264,7 +371,20 @@ public class ObjectMetadataResource
     @Timed
     public PaginatedResult<ObjectMetadata> getByTask(@PathParam("taskId") String taskId)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<Task> task;
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        task = this.tasks.get(taskId);
+
+        if(!task.isPresent())
+            throw new NotFoundException();
+
+        result = new PaginatedResult<>(this.repository.getObjects(task.get()));
+
+        return result;
     }
 
     /**
@@ -290,7 +410,8 @@ public class ObjectMetadataResource
     @GET
     @Transactional
     @Timed
-    public PaginatedResult<ObjectMetadata> search(@PathParam("domainId") String domainId,
+    public PaginatedResult<ObjectMetadata> search(@PathParam("domainId")
+                                                  String domainId,
                                                   @ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query,
@@ -301,7 +422,53 @@ public class ObjectMetadataResource
                                                   @QueryParam("pageSize")
                                                   String pageSize)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<Domain> domain;
+
+        if(!this.isPermitted(OPERATION_SEARCH))
+            throw new UnauthorizedException();
+
+        domain = this.domains.get(domainId);
+
+        if(!domain.isPresent())
+            throw new NotFoundException();
+
+        if(pageNumber == null || pageNumber.isEmpty())
+        {
+            result = new PaginatedResult<>(this.search.search(domain.get(), query));
+        }
+        else
+        {
+            Page page = new Page();
+
+            if(pageSize == null || pageSize.isEmpty())
+                throw new SkyeException("A pageNumber is provided with no pageSize");
+
+            try
+            {
+                page.setPageNumber(Integer.parseInt(pageNumber));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageNumber is not an integer", ex);
+            }
+
+            try
+            {
+                page.setPageSize(Integer.parseInt(pageSize));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageSize is not an integer");
+            }
+
+            result = new PaginatedResult<>(this.search.search(domain.get(), query, page));
+
+            result.setPage(page.getPageNumber());
+            result.setPageSize(page.getPageSize());
+        }
+
+        return result;
     }
 
     /**
@@ -342,6 +509,63 @@ public class ObjectMetadataResource
                                                   @QueryParam("pageSize")
                                                   String pageSize)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result = new PaginatedResult<>();
+        Optional<Domain> domain;
+        Optional<Project> project;
+
+        if(!this.isPermitted(OPERATION_SEARCH))
+            throw new UnauthorizedException();
+
+        domain = this.domains.get(domainId);
+
+        if(!domain.isPresent())
+            throw new NotFoundException();
+
+        project = this.projects.get(projectId);
+
+        if(!project.isPresent())
+            throw new NotFoundException();
+
+        if(pageNumber == null || pageNumber.isEmpty())
+        {
+            result = new PaginatedResult<>(this.search.search(domain.get(), project.get(), query));
+        }
+        else
+        {
+            Page page = new Page();
+
+            if(pageSize == null || pageSize.isEmpty())
+                throw new SkyeException("A pageNumber is provided with no pageSize");
+
+            try
+            {
+                page.setPageNumber(Integer.parseInt(pageNumber));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageNumber is not an integer", ex);
+            }
+
+            try
+            {
+                page.setPageSize(Integer.parseInt(pageSize));
+            }
+            catch(NumberFormatException ex)
+            {
+                throw new SkyeException("The pageSize is not an integer");
+            }
+
+            result = new PaginatedResult<>(this.search.search(domain.get(), project.get(), query, page));
+
+            result.setPage(page.getPageNumber());
+            result.setPageSize(page.getPageSize());
+        }
+
+        return result;
+    }
+
+    private boolean isPermitted(String operation)
+    {
+        return SecurityUtils.getSubject().isPermitted(operation);
     }
 }

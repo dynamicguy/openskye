@@ -6,6 +6,8 @@ import org.openskye.domain.Project;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.ProjectDAO;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -15,6 +17,8 @@ public class ProjectResourceTest extends AbstractResourceTest<Project> {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new ProjectResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final Project project = new Project();
     private PaginatedResult<Project> expectedResult = new PaginatedResult<>();

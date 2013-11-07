@@ -44,7 +44,7 @@ public interface ObjectMetadataRepository {
      * @param objectSet      the object set
      * @param objectMetadata the object metadata to remove
      */
-    void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
+    void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
 
     /**
      * Determines if the {@link ObjectMetadata} is already included in the
@@ -110,6 +110,14 @@ public interface ObjectMetadataRepository {
      * @return An {@link Iterable} collection of {@link ObjectSet} instances.
      */
     Iterable<ObjectSet> getAllObjectSets();
+
+    /**
+     * Gets a list of all {@link ObjectMetadata} instances.
+     *
+     * @return An {@link Iterable} collection of {@link ObjectMetadata}
+     * instances.
+     */
+    Iterable<ObjectMetadata> getAllObjects();
 
     /**
      * Returns an instance of the {@link InformationStoreDefinition} which represents the

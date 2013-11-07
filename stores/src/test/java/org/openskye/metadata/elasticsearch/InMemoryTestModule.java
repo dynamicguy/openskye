@@ -7,7 +7,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import org.elasticsearch.client.Client;
-import static org.elasticsearch.node.NodeBuilder.*;
 import org.openskye.core.SkyeSession;
 import org.openskye.domain.Domain;
 import org.openskye.domain.User;
@@ -18,25 +17,21 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.simple.InMemoryTaskManager;
 
-import static org.mockito.Mockito.*;
+import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
- * Created with IntelliJ IDEA.
- * User: joshua
- * Date: 10/16/13
- * Time: 9:49 AM
- * To change this template use File | Settings | File Templates.
+ * A guice module configured for the {@link ElasticSearchObjectMetadataSearch}
  */
-public class InMemoryTestModule extends AbstractModule
-{
+public class InMemoryTestModule extends AbstractModule {
     protected static final String DOMAIN_ID = "domain1";
     protected static final String USER_ID = "user1";
     protected static final String USER_NAME = "user";
     protected static Client client;
 
     @Override
-    protected void configure()
-    {
+    protected void configure() {
         bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
         bind(StoreRegistry.class).asEagerSingleton();
         bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class).asEagerSingleton();
@@ -47,8 +42,7 @@ public class InMemoryTestModule extends AbstractModule
 
     @Provides
     @Singleton
-    protected ObjectMapper provideObjectMapper()
-    {
+    protected ObjectMapper provideObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 
         mapper.registerModule(new JodaModule());
@@ -58,9 +52,8 @@ public class InMemoryTestModule extends AbstractModule
 
     @Provides
     @Singleton
-    protected Client provideClient()
-    {
-        if(this.client == null)
+    protected Client provideClient() {
+        if (this.client == null)
             this.client = nodeBuilder().local(true).node().client();
 
         return this.client;
@@ -68,8 +61,7 @@ public class InMemoryTestModule extends AbstractModule
 
     @Provides
     @Singleton
-    protected SkyeSession provideSession()
-    {
+    protected SkyeSession provideSession() {
         SkyeSession session = mock(SkyeSession.class);
         Domain domain = new Domain();
         User user = new User();

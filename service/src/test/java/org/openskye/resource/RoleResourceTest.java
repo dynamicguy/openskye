@@ -6,6 +6,8 @@ import org.openskye.domain.Role;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.RoleDAO;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -15,6 +17,8 @@ public class RoleResourceTest extends AbstractResourceTest<Role> {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new RoleResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final Role role = new Role();
     private PaginatedResult<Role> expectedResult = new PaginatedResult<>();

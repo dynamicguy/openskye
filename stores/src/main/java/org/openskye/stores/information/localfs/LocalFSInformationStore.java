@@ -16,6 +16,7 @@ import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
+import org.openskye.stores.util.MimeTypeUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public Iterable<SimpleObject> getRoot() {
-        return buildObjectsForPath("");
+        return buildObjectsForPath(informationStoreDefinition.getProperties().get(FILE_PATH));
     }
 
     private Iterable<SimpleObject> buildObjectsForPath(String path) {
@@ -90,7 +91,10 @@ public class LocalFSInformationStore implements InformationStore {
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
+                    metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
+                    metadata.setMimeType(MimeTypeUtil.getContentType(p));
                     metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+                    unstructObj.setObjectMetadata(metadata);
                     all.add(unstructObj);
                 }
             }
@@ -118,8 +122,7 @@ public class LocalFSInformationStore implements InformationStore {
     @Override
     public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
         UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
-        ObjectMetadata metadata = new ObjectMetadata();
-        unstructObj.setObjectMetadata(metadata);
+        unstructObj.setObjectMetadata(objectMetadata);
         return unstructObj;
     }
 

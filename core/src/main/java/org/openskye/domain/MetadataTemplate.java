@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,11 +15,12 @@ import java.util.List;
 @Table(name = "METADATA_TEMPLATE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "MetadataTemplateGenerator")
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = "attributeDefinitions")
 public class MetadataTemplate implements Identifiable {
     @Id
-    @GeneratedValue(generator = "MetadataTemplateGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     private String name;

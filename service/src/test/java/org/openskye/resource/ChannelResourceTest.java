@@ -6,6 +6,8 @@ import org.openskye.domain.Channel;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -15,6 +17,8 @@ public class ChannelResourceTest extends AbstractResourceTest<Channel> {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new ChannelResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final Channel channel = new Channel();
     private PaginatedResult<Channel> expectedResult = new PaginatedResult<>();

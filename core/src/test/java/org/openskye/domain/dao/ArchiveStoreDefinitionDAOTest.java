@@ -2,9 +2,8 @@ package org.openskye.domain.dao;
 
 import com.google.common.base.Optional;
 import org.junit.Test;
-import org.openskye.domain.ArchiveStoreInstance;
-import org.openskye.domain.Domain;
 import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
 
 import javax.inject.Inject;

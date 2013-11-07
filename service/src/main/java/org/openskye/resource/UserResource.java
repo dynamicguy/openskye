@@ -10,8 +10,8 @@ import org.openskye.domain.UserRole;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.UserDAO;
-import org.openskye.util.BadRequestException;
-import org.openskye.util.NotFoundException;
+import org.openskye.exceptions.BadRequestException;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

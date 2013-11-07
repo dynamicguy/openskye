@@ -1,7 +1,8 @@
 package org.openskye.metadata.impl.jpa;
 
 import lombok.Data;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 import org.openskye.core.ObjectSet;
 
 import javax.persistence.*;
@@ -21,10 +22,11 @@ import java.util.Set;
 @Entity
 @Table(name = "OBJECT_SET")
 @Data
-@UuidGenerator(name = "ObjectSetGenerator")
+@EqualsAndHashCode(of = "id")
 public class JPAObjectSet {
     @Id
-    @GeneratedValue(generator = "ObjectSetGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
     private String name;

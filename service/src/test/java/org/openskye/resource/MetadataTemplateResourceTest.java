@@ -6,6 +6,8 @@ import org.openskye.domain.MetadataTemplate;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.MetadataTemplateDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -14,6 +16,8 @@ public class MetadataTemplateResourceTest extends AbstractResourceTest<MetadataT
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new MetadataTemplateResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final MetadataTemplate metadataTemplate = new MetadataTemplate();
     private PaginatedResult<MetadataTemplate> expectedResult = new PaginatedResult<>();

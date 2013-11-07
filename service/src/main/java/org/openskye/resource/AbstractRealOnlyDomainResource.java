@@ -3,12 +3,11 @@ package org.openskye.resource;
 import com.google.common.base.Optional;
 import org.apache.shiro.SecurityUtils;
 import org.openskye.domain.Identifiable;
-import org.openskye.domain.Task;
 import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.util.NotFoundException;
-import org.openskye.util.UnauthorizedException;
+import org.openskye.exceptions.NotFoundException;
+import org.apache.shiro.authz.UnauthorizedException;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;

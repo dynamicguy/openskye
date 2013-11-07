@@ -1,6 +1,7 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 
@@ -12,18 +13,50 @@ import javax.ws.rs.core.Response;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 import com.wordnik.swagger.annotations.ApiParam;
+import org.apache.shiro.SecurityUtils;
+import org.openskye.domain.Domain;
+import org.openskye.domain.dao.DomainDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.metadata.ObjectMetadataSearch;
+import org.openskye.exceptions.NotFoundException;
+import org.apache.shiro.authz.UnauthorizedException;
 
 @Api(value = "/api/1/objectSets", description = "Act upon ObjectMetadata using ObjectSet instances.")
 @Path("/api/1/objectSets")
 @Produces(MediaType.APPLICATION_JSON)
 public class ObjectSetResource
 {
-    @Inject
     private ObjectMetadataRepository repository;
+
+    private ObjectMetadataSearch search;
+
+    private DomainDAO domains;
+
+    public static final String OPERATION_CREATE = "objectSets:create";
+    public static final String OPERATION_GET = "objectSets:get";
+    public static final String OPERATION_LIST = "objectSets:list";
+    public static final String OPERATION_ADD = "objectSets:add";
+    public static final String OPERATION_REMOVE = "objectSets:remove";
+    public static final String OPERATION_DELETE = "objectSets:delete";
+    public static final String OPERATION_SEARCH = "objectSets:search";
+
+    @Inject
+    public ObjectSetResource(ObjectMetadataRepository injectedRepository, ObjectMetadataSearch injectedSearch)
+    {
+        repository = injectedRepository;
+        search = injectedSearch;
+    }
+
+    @Inject
+    public ObjectSetResource setDomainDAO(DomainDAO injectedDao)
+    {
+        domains = injectedDao;
+
+        return this;
+    }
 
     @ApiOperation(value = "Creates an ObjectSet",
                   notes = "Supply the name of the ObjectSet to be created.  " +
@@ -36,7 +69,10 @@ public class ObjectSetResource
                             @QueryParam("name")
                             String objectSetName)
     {
-        return null;
+        if(!this.isPermitted(OPERATION_CREATE))
+            throw new UnauthorizedException();
+
+        return this.repository.createObjectSet(objectSetName);
     }
 
     @ApiOperation(value = "Gets an ObjectSet",
@@ -48,7 +84,17 @@ public class ObjectSetResource
     @Timed
     public ObjectSet get(@PathParam("id") String id)
     {
-        return null;
+        Optional<ObjectSet> objectSet;
+
+        if(!this.isPermitted(OPERATION_GET))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(id);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        return objectSet.get();
     }
 
     @ApiOperation(value = "Gets all ObjectSet instances",
@@ -60,7 +106,14 @@ public class ObjectSetResource
     @Timed
     public PaginatedResult<ObjectSet> getAll()
     {
-        return null;
+        PaginatedResult<ObjectSet> result = new PaginatedResult<>();
+
+        if(!this.isPermitted(OPERATION_LIST))
+            throw new UnauthorizedException();
+
+        result = new PaginatedResult<>(this.repository.getAllObjectSets());
+
+        return result;
     }
 
     @ApiOperation(value = "Deletes an ObjectSet",
@@ -71,7 +124,19 @@ public class ObjectSetResource
     @Timed
     public Response delete(@PathParam("id") String id)
     {
-        return null;
+        Optional<ObjectSet> objectSet;
+
+        if(!this.isPermitted(OPERATION_DELETE))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(id);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        this.repository.deleteObjectSet(objectSet.get());
+
+        return Response.ok().build();
     }
 
     @ApiOperation(value = "Determines if the ObjectMetadata is found in the ObjectSet",
@@ -89,7 +154,23 @@ public class ObjectSetResource
                            @PathParam("metadataId")
                            String metadataId)
     {
-        return false;
+        Optional<ObjectSet> objectSet;
+        Optional<ObjectMetadata> objectMetadata;
+
+        if(!this.isPermitted(OPERATION_GET))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(setId);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        objectMetadata = this.repository.get(metadataId);
+
+        if(!objectMetadata.isPresent())
+            throw new NotFoundException();
+
+        return this.repository.isObjectInSet(objectSet.get(), objectMetadata.get());
     }
 
     @ApiOperation(value = "Gets all ObjectMetadata in a given ObjectSet",
@@ -102,7 +183,20 @@ public class ObjectSetResource
     @Timed
     public PaginatedResult<ObjectMetadata> getObjects(@PathParam("id") String id)
     {
-        return null;
+        PaginatedResult<ObjectMetadata> result;
+        Optional<ObjectSet> objectSet;
+
+        if(!this.isPermitted(OPERATION_GET))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(id);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        result = new PaginatedResult<>(this.repository.getObjects(objectSet.get()));
+
+        return result;
     }
 
     @ApiOperation(value = "Adds a reference for an ObjectMetadata to the ObjectSet",
@@ -119,10 +213,28 @@ public class ObjectSetResource
                               @PathParam("metadataId")
                               String metadataId)
     {
-        return null;
+        Optional<ObjectSet> objectSet;
+        Optional<ObjectMetadata> objectMetadata;
+
+        if(!this.isPermitted(OPERATION_ADD))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(setId);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        objectMetadata = this.repository.get(metadataId);
+
+        if(!objectMetadata.isPresent())
+            throw new NotFoundException();
+
+        this.repository.addObjectToSet(objectSet.get(), objectMetadata.get());
+
+        return Response.ok().build();
     }
 
-    @ApiOperation(value = "Deletes a referece for an ObjectMetadata from the ObjectSet",
+    @ApiOperation(value = "Deletes a reference for an ObjectMetadata from the ObjectSet",
                   notes = "Supply the ObjectSet id and the ObjectMetadata id.  " +
                           "The ObjectMetadata and ObjectSet must have been previously created.  " +
                           "This does not delete either record from the repository; " + "" +
@@ -138,7 +250,25 @@ public class ObjectSetResource
                                  @PathParam("metadataId")
                                  String metadataId)
     {
-        return null;
+        Optional<ObjectSet> objectSet;
+        Optional<ObjectMetadata> objectMetadata;
+
+        if(!this.isPermitted(OPERATION_REMOVE))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(setId);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        objectMetadata = this.repository.get(metadataId);
+
+        if(!objectMetadata.isPresent())
+            throw new NotFoundException();
+
+        this.repository.removeObjectFromSet(objectSet.get(), objectMetadata.get());
+
+        return Response.ok().build();
     }
 
     @ApiOperation(value = "Add the results of a search to an ObjectSet",
@@ -159,7 +289,34 @@ public class ObjectSetResource
                                    @QueryParam("query")
                                    String query)
     {
-        return null;
+        Optional<ObjectSet> objectSet;
+        Optional<Domain> domain;
+        Iterable<ObjectMetadata> metadataList;
+
+        if(!this.isPermitted(OPERATION_SEARCH))
+            throw new UnauthorizedException();
+
+        objectSet = this.repository.getObjectSet(setId);
+
+        if(!objectSet.isPresent())
+            throw new NotFoundException();
+
+        domain = this.domains.get(domainId);
+
+        if(!domain.isPresent())
+            throw new NotFoundException();
+
+        metadataList = this.search.search(domain.get(), query);
+
+        for(ObjectMetadata metadata : metadataList)
+            this.repository.addObjectToSet(objectSet.get(), metadata);
+
+        return objectSet.get();
+    }
+
+    private boolean isPermitted(String operation)
+    {
+        return SecurityUtils.getSubject().isPermitted(operation);
     }
 }
 

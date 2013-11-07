@@ -1,9 +1,10 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -15,17 +16,18 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_FILTER_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "ChannelFilterDefinitionGenerator")
 @EqualsAndHashCode(of = "id")
 public class ChannelFilterDefinition implements Identifiable {
     @Id
-    @GeneratedValue(generator = "ChannelFilterDefinitionGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     private String implementation;
     private String description;
     private String definition;
     @ManyToOne
+    @JsonBackReference("channelFilters")
     private Channel channel;
     // Determines if the filter is to include,  if this is true then we will include
     // based on the filter.  If it is false we will exclude based on the filter.

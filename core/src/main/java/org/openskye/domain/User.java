@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -19,11 +19,11 @@ import java.util.UUID;
 @Table(name = "USER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "UserGenerator")
 @EqualsAndHashCode(of = "id")
 public class User implements Identifiable {
     @Id
-    @GeneratedValue(generator = "UserGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     private String email;

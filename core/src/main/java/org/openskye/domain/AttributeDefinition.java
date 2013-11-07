@@ -3,7 +3,7 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,12 +15,12 @@ import javax.validation.constraints.NotNull;
 @Table(name = "ATTRIBUTE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "AttributeDefinitionGenerator")
 @EqualsAndHashCode(of = "id")
 public class AttributeDefinition implements Identifiable {
 
     @Id
-    @GeneratedValue(generator = "AttributeDefinitionGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     @ManyToOne

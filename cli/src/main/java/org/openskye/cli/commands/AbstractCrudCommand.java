@@ -50,66 +50,16 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         settings.mustHaveApiKey();
 
         if (list) {
-            PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
-            List<String> fieldsWithId = new ArrayList<>();
-            fieldsWithId.add("id");
-            fieldsWithId.addAll(getFieldNames());
-
-            if (paginatedResult.getResults().size() > 0) {
-                output.message("Listing " + getCollectionPlural());
-
-                ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
-                output.insertLines(1);
-                tableView.draw(output);
-                output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
-
-            } else {
-                output.success("\nNo " + getCollectionPlural() + " found");
-
-            }
+            list();
 
         } else if (create) {
-            output.message("Creating a new " + getCollectionSingular() + ":\n");
-            Object newObject = null;
-            try {
-                newObject = getClazz().newInstance();
-            } catch (Exception e) {
-                throw new SkyeException("Unable to create instance of " + getClazz(), e);
-            }
-            Console console = getConsole();
-            for (Field field : getFields()) {
-                String attributeName = field.getName();
-                if (field instanceof TextField) {
-                    String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
-                    try {
-                        BeanUtils.setProperty(newObject, attributeName, newValue);
-                    } catch (Exception e) {
-                        throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
-                    }
-                } else if (field instanceof ReferenceField) {
-                    selectReferenceField((ReferenceField) field, newObject);
-                } else if (field instanceof PropertiesField) {
-                    setPropertiesField((PropertiesField) field, newObject);
-                } else if (field instanceof EnumerationField) {
-                    selectEnum((EnumerationField) field, newObject);
-                }
-            }
-            Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
-
-            output.success("Created " + getCollectionSingular() + " with id " + result.getId());
+            create();
         } else if (delete) {
-            if (id == null)
-                throw new CliException("You must provide an id to delete a " + getCollectionSingular());
-
-            for (String idInstance : id) {
-                getResource(getCollectionPlural() + "/" + idInstance).delete();
-
-                output.success("Deleted " + getCollectionSingular() + " with id " + idInstance);
-            }
+            delete();
         }
     }
 
-    private void selectEnum(EnumerationField field, Object newObject) {
+    protected void selectEnum(EnumerationField field, Object newObject) {
         List<?> choices = field.getAllEnumOptions();
 
         int i = 1;
@@ -131,7 +81,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         }
     }
 
-    private void selectReferenceField(ReferenceField field, Object newObject) {
+    protected void selectReferenceField(ReferenceField field, Object newObject) {
 
         // We need to display a list of the available options for the reference field
         // and then let the user choose one
@@ -177,7 +127,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
     }
 
-    public void setPropertiesField(PropertiesField props, Object newObject) {
+    protected void setPropertiesField(PropertiesField props, Object newObject) {
         output.message("Please enter the properties and values.");
         while (true) {
             String property = getConsole().readLine("Property: ");
@@ -214,5 +164,67 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
     public String getCollectionPlural() {
         return toCamel(getClazz().getSimpleName() + "s");
+    }
+
+    public void list(){
+        PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
+        List<String> fieldsWithId = new ArrayList<>();
+        fieldsWithId.add("id");
+        fieldsWithId.addAll(getFieldNames());
+
+        if (paginatedResult.getResults().size() > 0) {
+            output.message("Listing " + getCollectionPlural());
+
+            ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
+            output.insertLines(1);
+            tableView.draw(output);
+            output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
+
+        } else {
+            output.success("\nNo " + getCollectionPlural() + " found");
+
+        }
+    }
+
+    public void create(){
+        output.message("Creating a new " + getCollectionSingular() + ":\n");
+        Object newObject = null;
+        try {
+            newObject = getClazz().newInstance();
+        } catch (Exception e) {
+            throw new SkyeException("Unable to create instance of " + getClazz(), e);
+        }
+        Console console = getConsole();
+        for (Field field : getFields()) {
+            String attributeName = field.getName();
+            if (field instanceof TextField) {
+                String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
+                try {
+                    BeanUtils.setProperty(newObject, attributeName, newValue);
+                } catch (Exception e) {
+                    throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
+                }
+            } else if (field instanceof ReferenceField) {
+                selectReferenceField((ReferenceField) field, newObject);
+            } else if (field instanceof PropertiesField) {
+                setPropertiesField((PropertiesField) field, newObject);
+            } else if (field instanceof EnumerationField) {
+                selectEnum((EnumerationField) field, newObject);
+            }
+        }
+        Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
+
+        output.success("Created " + getCollectionSingular() + " with id " + result.getId());
+    }
+
+    public void delete(){
+        if (id == null)
+            throw new CliException("You must provide an id to delete a " + getCollectionSingular());
+
+        for (String idInstance : id) {
+            getResource(getCollectionPlural() + "/" + idInstance).delete();
+
+            output.success("Deleted " + getCollectionSingular() + " with id " + idInstance);
+        }
     }
 }

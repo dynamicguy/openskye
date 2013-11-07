@@ -12,4 +12,5 @@ public class SkyeException extends RuntimeException {
     public SkyeException(String s) {
         super(s);
     }
+
 }

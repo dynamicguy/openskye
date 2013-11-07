@@ -124,6 +124,20 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
     }
 
     @Test
+    public void testUnAuthorisedGetMissing() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted(getSingular() + ":get")).thenReturn(false);
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/60ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(ClientResponse.class).getStatus(), equalTo(401));
+    }
+
+    @Test
+    public void testAuthorisedGetMissing() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted(getSingular() + ":get")).thenReturn(true);
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "60ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(ClientResponse.class).getStatus(), equalTo(404));
+    }
+
+    @Test
     public void testUnAuthorisedGet() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":get")).thenReturn(false);

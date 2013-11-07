@@ -3,7 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,16 +18,17 @@ import java.util.Map;
 @Table(name = "INFORMATION_STORE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@UuidGenerator(name = "InformationStoreDefinitionGenerator")
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = "properties")
 public class InformationStoreDefinition implements Identifiable {
     @Id
-    @GeneratedValue(generator = "InformationStoreDefinitionGenerator")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
     @NotNull
     private String name;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
     // The name of the {@link InformationStore} implementation

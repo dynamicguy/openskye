@@ -122,38 +122,6 @@ public class LocalFSArchiveStoreTest {
         assertThat("We have 1 discovered simple objects", discovery.getStatistics().getSimpleObjectsDiscovered() == 1);
         assertThat("We have 1 ingested simple objects", archive.getStatistics().getSimpleObjectsIngested() == 1);
 
-    }
-
-    @Test
-    public void letsArchiveThenQuery() {
-
-
-        ArchiveStoreInstance asi = new ArchiveStoreInstance();
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/archive-" + UUID.randomUUID().toString());
-        InformationStoreDefinition dis = getDis("test2");
-        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
-        das.setId(UUID.randomUUID().toString());
-        das.setArchiveStoreInstance(asi);
-        ChannelArchiveStore cas = new ChannelArchiveStore();
-        cas.setArchiveStoreDefinition(das);
-        Channel channel = new Channel();
-        channel.getChannelArchiveStores().add(cas);
-        channel.setInformationStoreDefinition(dis);
-
-        Task discovery = new Task();
-        discovery.setChannel(channel);
-        discovery.setTaskType(TaskType.DISCOVER);
-        taskManager.submit(discovery);
-
-        Task archive = new Task();
-        archive.setChannel(channel);
-        archive.setTaskType(TaskType.ARCHIVE);
-        taskManager.submit(archive);
-
-        assertThat("We have 1 discovered simple objects", discovery.getStatistics().getSimpleObjectsDiscovered() == 1);
-        assertThat("We have 2 ingested simple objects", archive.getStatistics().getSimpleObjectsIngested() == 2);
-
         Optional<ArchiveStore> archiveStore = registry.build(das);
 
         assertThat("We got the archive store", archiveStore.isPresent());

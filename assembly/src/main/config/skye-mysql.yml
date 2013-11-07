@@ -11,12 +11,17 @@ database:
   # the JDBC URL
   url: "jdbc:mysql://localhost/openskye"
 
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.impl.InMemoryObjectMetadataSearch
+  taskManager: org.openskye.task.simple.InMemoryTaskManager
+
 server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000
   applicationConnectors:
     - type: http
-      port: 5000
+      port: 8080
 #    - type: https
 #      port: 8443
 #      keyStorePath: example.keystore

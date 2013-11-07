@@ -1,7 +1,9 @@
 package org.openskye.metadata.impl.jpa;
 
 import lombok.Data;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
@@ -21,10 +23,9 @@ import java.util.*;
 @Entity
 @Table(name = "OBJECT_METADATA")
 @Data
-@UuidGenerator(name = "ObjectMetadataGenerator")
+@EqualsAndHashCode(of = "id")
 public class JPAObjectMetadata {
     @Id
-    @GeneratedValue(generator = "ObjectMetadataGenerator")
     @Column(unique = true)
     private String id;
     private String path = "";
@@ -35,8 +36,11 @@ public class JPAObjectMetadata {
     @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> metadata = new HashMap<>();
     private boolean container = false;
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime created = new DateTime();
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime ingested = new DateTime();
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime lastModified = new DateTime();
     @ManyToOne
     private Project project = null;
@@ -63,6 +67,7 @@ public class JPAObjectMetadata {
      */
     public JPAObjectMetadata(ObjectMetadata objectMetadata) {
         this.id = objectMetadata.getId();
+        this.path = objectMetadata.getPath();
         this.implementation = objectMetadata.getImplementation();
         this.taskId = objectMetadata.getTaskId();
         this.metadata = objectMetadata.getMetadata();
@@ -103,6 +108,7 @@ public class JPAObjectMetadata {
         List<ArchiveContentBlock> blocks = new ArrayList<>();
 
         objectMetadata.setId(this.id);
+        objectMetadata.setPath(this.path);
         objectMetadata.setImplementation(this.implementation);
         objectMetadata.setTaskId(this.taskId);
         objectMetadata.setMetadata(this.metadata);

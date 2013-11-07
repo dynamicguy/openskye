@@ -6,6 +6,8 @@ import org.openskye.domain.AttributeDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -15,6 +17,8 @@ public class AttributeDefinitionResourceTest extends AbstractResourceTest<Attrib
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new AttributeDefinitionResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
     private final AttributeDefinition attributeDefinition = new AttributeDefinition();
     private PaginatedResult<AttributeDefinition> expectedResult = new PaginatedResult<>();

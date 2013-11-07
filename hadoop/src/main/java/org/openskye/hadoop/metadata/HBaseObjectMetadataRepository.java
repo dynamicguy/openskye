@@ -49,7 +49,7 @@ public class HBaseObjectMetadataRepository extends JPAObjectMetadataRepository {
     }
 
     @Override
-    public void removeObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+    public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -85,6 +85,12 @@ public class HBaseObjectMetadataRepository extends JPAObjectMetadataRepository {
 
     @Override
     public Iterable<ObjectSet> getAllObjectSets()
+    {
+        return null;
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> getAllObjects()
     {
         return null;
     }
