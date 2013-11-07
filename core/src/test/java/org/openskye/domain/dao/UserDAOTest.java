@@ -1,9 +1,13 @@
 package org.openskye.domain.dao;
 
+import com.google.common.base.Optional;
+import org.junit.Test;
 import org.openskye.domain.Domain;
 import org.openskye.domain.User;
 
 import javax.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Testing the {@link org.openskye.domain.dao.UserDAO}
@@ -11,11 +15,11 @@ import javax.inject.Inject;
 public class UserDAOTest extends AbstractDAOTestBase<User> {
 
     @Inject
-    public UserDAO domainDAO;
+    public UserDAO userDAO;
 
     @Override
     public AbstractPaginatingDAO getDAO() {
-        return domainDAO;
+        return userDAO;
     }
 
     @Override
@@ -32,5 +36,14 @@ public class UserDAOTest extends AbstractDAOTestBase<User> {
     @Override
     public void update(User instance) {
         instance.setName("Philly D");
+    }
+
+    @Test
+    public void doFindByEmail() throws Exception {
+        User instance = getNew();
+        userDAO.create(instance);
+        String email = instance.getEmail();
+        Optional<User> foundUser = userDAO.findByEmail(email);
+        assertThat("Got Created User By Email", foundUser != null && foundUser.isPresent());
     }
 }
