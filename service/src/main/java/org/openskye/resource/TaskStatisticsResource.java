@@ -25,8 +25,11 @@ import javax.ws.rs.core.Response;
  */
 public class TaskStatisticsResource extends AbstractUpdatableDomainResource<TaskStatistics> {
 
-    @Inject
     protected TaskStatisticsDAO taskStatisticsDAO;
+    @Inject
+    public TaskStatisticsResource(TaskStatisticsDAO dao){
+        this.taskStatisticsDAO=dao;
+    }
 
     @ApiOperation(value = "Create new task statistics", notes = "Create a new task statistics and return with its unique id", response = TaskStatistics.class)
     @POST
