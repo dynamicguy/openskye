@@ -55,7 +55,6 @@ public class DiscoverTaskStep extends AbstractTaskStep {
                     }
                     om.setTaskId(task.getId());
                     om.setProject(task.getProject());
-                    om.s
                     omr.put(om);
                 }
             }

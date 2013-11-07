@@ -9,6 +9,7 @@ import org.openskye.core.*;
 import org.openskye.domain.InformationStoreDefinition;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -83,7 +84,7 @@ public class CifsInformationStore implements InformationStore {
             root.smbFile = new SmbFile(String.format("smb://%s:%s/%s/", host, port, share), credential);
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setImplementation(CifsContainerObject.class.getCanonicalName());
-            metadata.setPath(root.smbFile.getCanonicalPath());
+            metadata.setPath(root.smbFile.getPath());
             metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
             root.setObjectMetadata(metadata);
             return getChildren(root);
@@ -116,6 +117,7 @@ public class CifsInformationStore implements InformationStore {
                         metadata.setImplementation(CifsUnstructuredObject.class.getCanonicalName());
                         metadata.setPath(child.getCanonicalPath());
                         metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+                        unstructObj.setObjectMetadata(metadata);
                         all.add(unstructObj);
                     }
                 }
@@ -140,9 +142,13 @@ public class CifsInformationStore implements InformationStore {
 
     @Override
     public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
-        UnstructuredObject unstructObj = new CifsUnstructuredObject();
-        ObjectMetadata metadata = new ObjectMetadata();
-        unstructObj.setObjectMetadata(metadata);
+        CifsUnstructuredObject unstructObj = new CifsUnstructuredObject();
+        try {
+            unstructObj.smbFile = new SmbFile(objectMetadata.getPath(), credential);
+        } catch (MalformedURLException e) {
+            throw new InvalidSimpleObjectException();
+        }
+        unstructObj.setObjectMetadata(objectMetadata);
         return unstructObj;
     }
 

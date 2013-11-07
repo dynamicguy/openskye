@@ -1,6 +1,7 @@
 package org.openskye.stores.information.cifs;
 
 import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
 import org.openskye.core.MissingObjectException;
 import org.openskye.core.UnstructuredObject;
 
@@ -18,11 +19,14 @@ public class CifsUnstructuredObject extends UnstructuredObject {
 
     @Override
     public InputStream getContent() throws MissingObjectException {
+
         try {
-            InputStream is = new FileInputStream(getObjectMetadata().getPath());
+            InputStream is = new SmbFileInputStream(smbFile);
             return is;
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new MissingObjectException();
         }
     }
+
+
 }
