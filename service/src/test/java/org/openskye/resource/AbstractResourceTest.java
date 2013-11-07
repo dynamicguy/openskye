@@ -66,7 +66,7 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
     }
 
     @Test
-    public void testUnAuthorizedPut() throws Exception {
+     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":update")).thenReturn(false);
         assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, getInstance()).getStatus(), equalTo(401));
@@ -87,7 +87,7 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
     }
 
     @Test
-    public void testAuthorizedGetAll() throws Exception {
+     public void testAuthorizedGetAll() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":list")).thenReturn(true);
         assertThat(getResources().client().resource("/api/1/" + getPlural()).get(PaginatedResult.class), equalTo(getExpectedResult()));
