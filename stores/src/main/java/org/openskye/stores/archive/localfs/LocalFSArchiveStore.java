@@ -67,7 +67,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public String getName() {
-        return  "Local filesystem";
+        return "Local filesystem";
     }
 
     @Override
@@ -109,24 +109,33 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
         try {
-            if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
-                if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
+            Class<?> impl = Class.forName(metadata.getImplementation());
 
-                    UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
-                    SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) { //is there an ACB?
+                if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
+                    if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
+                        UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
+                        SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+                        simpleObject.setObjectMetadata(metadata);
+                        return Optional.of(simpleObject);
+                    }
+                } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
+
+                    SimpleObject simpleObject = (UnstructuredObject) Class.forName(metadata.getImplementation()).newInstance();
+                    simpleObject.setObjectMetadata(metadata);
                     return Optional.of(simpleObject);
                 } else {
-                    log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                    log.debug("Simple object type not supported!");
                     return Optional.absent();
                 }
             } else {
-                log.debug("Simple object type not supported! " + metadata);
+                log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
                 return Optional.absent();
             }
         } catch (Exception e) {
             throw new SkyeException("Unable to create object for metadata " + metadata, e);
         }
-
+        return Optional.absent();
     }
 
     @Override

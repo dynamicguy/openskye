@@ -151,7 +151,7 @@ public class LocalFSInformationStore implements InformationStore {
                 throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store");
             }
         }
-        if (simpleObject instanceof JDBCStructuredObject) {
+        else if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
             final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
             if (log.isDebugEnabled())

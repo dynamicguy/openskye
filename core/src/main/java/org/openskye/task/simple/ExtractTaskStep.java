@@ -27,36 +27,46 @@ public class ExtractTaskStep extends AbstractTaskStep {
 
     @Override
     public void start() {
-        Optional<ObjectSet> objectSet = omr.getObjectSet(task.getObjectSetId());
+        Optional<ObjectSet> objectSet;
+        if (task.getObjectSetId() != null) {
+            objectSet = omr.getObjectSet(task.getObjectSetId());
+        }
+        else{
+            objectSet = Optional.absent();
+        }
 
         Optional<InformationStore> targetInformationStore = storeRegistry.build(task.getTargetInformationStoreDefinition());
 
         if (targetInformationStore.isPresent()) {
-            if (objectSet.isPresent()) {
-                for (ObjectMetadata om : omr.getObjects(objectSet.get())) {
-                    if (om.getArchiveContentBlocks().size() > 0) {
-                        // Lets just get the first ACB
-                        ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                        Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreDefinition(acb));
-                        if (archiveStore.isPresent()) {
-                            Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
-                            if (simpleObject.isPresent()) {
-                                targetInformationStore.get().put(simpleObject.get());
-                            } else {
-                                throw new SkyeException("Unable to get simple object from archive content block " + acb);
-                            }
+            Iterable<ObjectMetadata> objectMetadataIterable;
+            if (objectSet.isPresent()) {  //is there an objectSet
+                objectMetadataIterable = omr.getObjects(objectSet.get());
+            } else {
+                //TODO: Add in a way to create an objectSet, either here or in DiscoverTaskStep
+                objectMetadataIterable = omr.getObjects(task.getChannel().getInformationStoreDefinition());
+            }
+            for (ObjectMetadata om : objectMetadataIterable) {
+                if (om.getArchiveContentBlocks().size() > 0) {
+                    // Lets just get the first ACB
+                    ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreDefinition(acb));
+                    if (archiveStore.isPresent()) {
+                        Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
+                        if (simpleObject.isPresent()) {
+                            targetInformationStore.get().put(simpleObject.get());
                         } else {
-                            throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
+                            throw new SkyeException("Unable to get simple object from archive content block " + acb);
                         }
-
                     } else {
-                        throw new SkyeException("Missing an archive content block for " + om);
+                        throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
                     }
 
+                } else {
+                    throw new SkyeException("Missing an archive content block for " + om);
                 }
-            } else {
-                throw new SkyeException("Unable to find object set with id " + task.getObjectSetId());
+
             }
+
         } else {
             throw new SkyeException("Unable to build target information store from definition " + task.getTargetInformationStoreDefinition());
         }
