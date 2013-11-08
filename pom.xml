@@ -78,6 +78,7 @@
         <module>service</module>
         <module>hadoop</module>
         <module>assembly</module>
+        <module>worker</module>
     </modules>
 
     <issueManagement>
