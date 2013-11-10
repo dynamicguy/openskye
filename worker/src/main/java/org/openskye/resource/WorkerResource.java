@@ -1,7 +1,6 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
@@ -9,7 +8,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 import org.openskye.guice.SkyeWorkerModule;
 import org.openskye.task.TaskManager;
-import org.openskye.task.queue.QueueTaskWorker;
+import org.openskye.task.queue.QueueWorkerManager;
 import org.openskye.util.WorkerInfo;
 
 import javax.ws.rs.*;
@@ -36,7 +35,8 @@ public class WorkerResource {
     public WorkerInfo getWorkerInfo() {
         WorkerInfo info = new WorkerInfo();
         info.setConfiguration(skyeWorkerModule.getWorkerConfiguration());
-        info.setTaskIds(QueueTaskWorker.getTaskIdList());
+        QueueWorkerManager queueWorkerManager = (QueueWorkerManager) taskManager;
+        info.setTaskIds(queueWorkerManager.getActiveTaskIds());
         return info;
     }
 

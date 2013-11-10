@@ -9,6 +9,7 @@ import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.TaskScheduleDAO;
 import org.openskye.task.TaskManager;
+import org.openskye.task.TaskScheduler;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -24,6 +25,8 @@ public class TaskScheduleResource extends AbstractUpdatableDomainResource<TaskSc
     private TaskScheduleDAO taskScheduleDAO;
     @Inject
     private TaskManager taskManager;
+    @Inject
+    private TaskScheduler taskScheduler;
 
     @Inject
     public TaskScheduleResource(TaskScheduleDAO dao) {
@@ -47,7 +50,7 @@ public class TaskScheduleResource extends AbstractUpdatableDomainResource<TaskSc
     @Override
     public TaskSchedule create(TaskSchedule newInstance) {
         TaskSchedule taskSchedule = super.create(newInstance);
-        taskManager.schedule(taskSchedule);
+        taskScheduler.schedule(taskSchedule);
         return taskSchedule;
     }
 
@@ -59,8 +62,8 @@ public class TaskScheduleResource extends AbstractUpdatableDomainResource<TaskSc
     @Override
     public TaskSchedule update(@PathParam("id") String id, TaskSchedule newInstance) {
         TaskSchedule taskSchedule =  super.update(id, newInstance);
-        taskManager.unschedule(taskSchedule.getId());
-        taskManager.schedule(taskSchedule);
+        taskScheduler.unschedule(taskSchedule.getId());
+        taskScheduler.schedule(taskSchedule);
         return taskSchedule;
     }
 
@@ -90,7 +93,7 @@ public class TaskScheduleResource extends AbstractUpdatableDomainResource<TaskSc
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        taskManager.unschedule(id);
+        taskScheduler.unschedule(id);
         return super.delete(id);
     }
 }

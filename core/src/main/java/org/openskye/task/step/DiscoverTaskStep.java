@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.AttributeInstance;
-import org.openskye.domain.Channel;
-import org.openskye.domain.ChannelFilterDefinition;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.filters.ChannelFilter;
 import org.openskye.filters.ChannelFilterFactory;
@@ -48,7 +45,7 @@ public class DiscoverTaskStep extends AbstractTaskStep {
     }
 
     @Override
-    public void start() {
+    public TaskStatus call() throws Exception {
         InformationStore is = buildInformationStore(channel.getInformationStoreDefinition());
 
         for (ChannelFilterDefinition cfd : channel.getChannelFilters()) {
@@ -56,6 +53,8 @@ public class DiscoverTaskStep extends AbstractTaskStep {
         }
 
         discover(is, is.getRoot(), task);
+
+        return TaskStatus.COMPLETED;
     }
 
     private void discover(InformationStore is, Iterable<SimpleObject> simpleObjects, Task task) {

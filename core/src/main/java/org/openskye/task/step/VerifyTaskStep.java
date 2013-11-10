@@ -1,5 +1,8 @@
 package org.openskye.task.step;
 
+import org.openskye.core.SkyeException;
+import org.openskye.domain.TaskStatus;
+
 /**
  * Implementation of a verification of a set of {@link org.openskye.core.SimpleObject}
  */
@@ -16,7 +19,7 @@ public class VerifyTaskStep extends AbstractTaskStep {
     }
 
     @Override
-    public void start() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public TaskStatus call() throws Exception {
+        throw new SkyeException("Verify tasks are not yet implemented");
     }
 }

@@ -17,6 +17,8 @@ import org.eclipse.jetty.util.Attributes;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.config.SkyeWorkerConfiguration;
 import org.openskye.guice.*;
+import org.openskye.task.TaskManager;
+import org.openskye.task.queue.QueueWorkerManager;
 import org.openskye.util.SwaggerBundle;
 
 import javax.annotation.Nullable;
@@ -28,7 +30,7 @@ import java.util.Properties;
  * The Skye Application
  */
 @Slf4j
-public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
+public class SkyeWorker extends SkyeApplication {
 
     private Bootstrap<SkyeWorkerConfiguration> bootstrap;
 
@@ -37,14 +39,10 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
     }
 
     @Override
-    public void initialize(Bootstrap<SkyeWorkerConfiguration> bootstrap) {
-
-        this.bootstrap = bootstrap;
-    }
-
-    @Override
-    public void run(SkyeWorkerConfiguration configuration,
+    public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {
+
+        SkyeWorkerConfiguration skyeWorkerConfiguration = (SkyeWorkerConfiguration) configuration;
 
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
@@ -58,11 +56,11 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         props.put("javax.persistence.jdbc.driver", configuration.getDatabaseConfiguration().getDriverClass());
         jpaPersistModule.properties(props);
 
-        DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
+        DropwizardEnvironmentModule<SkyeWorkerConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeWorkerConfiguration.class);
 
-        SkyeWorkerModule skyeWorkerModule = new SkyeWorkerModule();
-        skyeWorkerModule.setServiceConfiguration(configuration.getServiceConfiguration());
-        skyeWorkerModule.setWorkerConfiguration(configuration.getWorkerConfiguration());
+        SkyeWorkerModule skyeWorkerModule = new SkyeWorkerModule(skyeWorkerConfiguration);
+        skyeWorkerModule.setServiceConfiguration(skyeWorkerConfiguration.getServices());
+        skyeWorkerModule.setWorkerConfiguration(skyeWorkerConfiguration.getWorkerConfiguration());
 
         Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule, skyeWorkerModule);
 
@@ -82,6 +80,11 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
 
         // Complete the autoconfig
         autoConfig.run(environment, injector);
+
+        // Configure and run the worker manager
+        QueueWorkerManager queueWorkerManager = (QueueWorkerManager) injector.getInstance(TaskManager.class);
+        queueWorkerManager.setWorkerConfiguration(skyeWorkerConfiguration.getWorkerConfiguration());
+        queueWorkerManager.start();
 
         environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
                 .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");

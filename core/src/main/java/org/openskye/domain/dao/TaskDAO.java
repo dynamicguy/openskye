@@ -12,7 +12,6 @@ import org.openskye.task.step.AbstractTaskStep;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.util.List;
 
@@ -68,10 +67,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
         CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
         Root<Task> taskRoot = criteria.from(Task.class);
         criteria.select(taskRoot);
-        criteria.where(builder.or(
-                builder.equal(taskRoot.get("status"), TaskStatus.STARTING),
-                builder.equal(taskRoot.get("status"), TaskStatus.RUNNING))
-        );
+        criteria.where(builder.equal(taskRoot.get("status"), TaskStatus.STARTED));
         List<Task> resultList = currentEntityManager().createQuery(criteria).getResultList();
         for ( Task task : resultList ) {
             deserialize(task);

@@ -35,7 +35,7 @@ public class Task implements Identifiable {
     @Column(name = "WORKER_NAME")
     private String workerName;
     @Column(name = "STATUS")
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.CREATED;
     @Temporal(TemporalType.DATE)
     @Column(name = "QUEUED")
     private Date queued;

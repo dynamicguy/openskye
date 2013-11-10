@@ -10,6 +10,7 @@ import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Task;
+import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.stores.StoreRegistry;
 
@@ -51,7 +52,7 @@ public class DestroyTaskStep extends AbstractTaskStep {
     }
 
     @Override
-    public void start() {
+    public TaskStatus call() throws Exception {
         Optional<ObjectSet> objectSet = omr.getObjectSet(objectSetId);
         Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
 
@@ -76,6 +77,8 @@ public class DestroyTaskStep extends AbstractTaskStep {
         } else {
             throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition.getId());
         }
+
+        return TaskStatus.COMPLETED;
     }
 
 }

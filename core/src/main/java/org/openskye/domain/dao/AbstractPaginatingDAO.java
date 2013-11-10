@@ -8,10 +8,7 @@ import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
 
 import javax.inject.Inject;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.LockModeType;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -203,7 +200,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         delete(instance.getId());
     }
 
-
     /**
      * Attempt to place a lock on a row
      *
@@ -212,6 +208,15 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      */
     public void lock(T instance, LockModeType mode) {
         currentEntityManager().lock(instance, mode);
+    }
+
+    /**
+     * Create and begin a transaction
+     */
+    public EntityTransaction beginTransaction() {
+        EntityTransaction xt = currentEntityManager().getTransaction();
+        xt.begin();
+        return xt;
     }
 }
 

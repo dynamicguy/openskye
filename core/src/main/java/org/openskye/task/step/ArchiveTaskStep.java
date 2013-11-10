@@ -10,6 +10,7 @@ import org.openskye.core.*;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
 import org.openskye.domain.Task;
+import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.ChannelDAO;
 
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class ArchiveTaskStep extends AbstractTaskStep {
     }
 
     @Override
-    public void start() {
+    public TaskStatus call() throws Exception {
 
         // Build up the information and archive stores
         InformationStore is = buildInformationStore(channel.getInformationStoreDefinition());
@@ -70,6 +71,8 @@ public class ArchiveTaskStep extends AbstractTaskStep {
             }
 
         }
+
+        return TaskStatus.COMPLETED;
     }
 
     private Iterable<ObjectMetadata> getObjectMetadataIterator() {

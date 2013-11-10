@@ -8,7 +8,9 @@ import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.metadata.impl.InMemoryObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
+import org.openskye.task.TaskScheduler;
 import org.openskye.task.simple.InMemoryTaskManager;
+import org.openskye.task.simple.InMemoryTaskScheduler;
 
 import java.util.Properties;
 
@@ -25,6 +27,7 @@ public class InMemoryTestModule extends AbstractModule {
         install(jpaPersistModule);
 
         bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
+        bind(TaskScheduler.class).to(InMemoryTaskScheduler.class).asEagerSingleton();
         bind(StoreRegistry.class).asEagerSingleton();
         bind(ObjectMetadataRepository.class).to(JPAObjectMetadataRepository.class);
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class);

@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,5 +28,10 @@ public class TaskLog implements Identifiable {
     private TaskStatus status;
     @Column(name = "MESSAGE")
     private String message;
-
+    @Lob @Basic(fetch=FetchType.EAGER)
+    @Column(name = "EXCEPTION_JSON")
+    @JsonIgnore
+    private String exceptionJson;
+    @Transient
+    private Exception exception;
 }

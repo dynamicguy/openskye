@@ -10,6 +10,7 @@ import org.openskye.core.SkyeException;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Task;
+import org.openskye.domain.TaskStatus;
 
 /**
  * A {@link TaskStep} that handles a task type of TEST, which is mainly used to test the
@@ -46,7 +47,7 @@ public class TestTaskStep extends AbstractTaskStep  {
     }
 
     @Override
-    public void start() {
+    public TaskStatus call() throws Exception {
         try {
             log.info("Test Task: sleepSeconds="+sleepSeconds+" iterations="+iterations+" pass="+pass);
             for ( int i=0; i<iterations; i++ ) {
@@ -58,7 +59,10 @@ public class TestTaskStep extends AbstractTaskStep  {
             }
         } catch (InterruptedException ie) {
             log.info("Test Task Interrupted");
+            return TaskStatus.ABORTED;
         }
+
+        return TaskStatus.COMPLETED;
     }
 
 }
