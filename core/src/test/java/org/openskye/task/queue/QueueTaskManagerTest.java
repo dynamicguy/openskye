@@ -49,11 +49,12 @@ public class QueueTaskManagerTest {
         String mockProjectId = UUID.randomUUID().toString();
         boolean pass = true;
         Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        testTask.setWorkerName("Orion Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Test Worker");
+        queueTaskManager.accept(testTask.getId(),"Orion Worker");
         checkStatus(testTask,TaskStatus.STARTED);
         TaskStatus finalStatus = testTask.getStep().call();
         queueTaskManager.end(testTask.getId(),finalStatus,null);
@@ -66,11 +67,12 @@ public class QueueTaskManagerTest {
         String mockProjectId = UUID.randomUUID().toString();
         boolean pass = false;
         Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        testTask.setWorkerName("Orion Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask,TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Test Worker");
+        queueTaskManager.accept(testTask.getId(),"Orion Worker");
         checkStatus(testTask,TaskStatus.STARTED);
         TaskStatus finalStatus;
         Exception exception = null;
@@ -82,6 +84,20 @@ public class QueueTaskManagerTest {
         }
         queueTaskManager.end(testTask.getId(),finalStatus,exception);
         checkStatus(testTask,TaskStatus.FAILED);
+    }
+
+    @Test(expected = SkyeException.class)
+    public void doWrongWorker() throws Exception {
+        QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
+        String mockProjectId = UUID.randomUUID().toString();
+        boolean pass = true;
+        Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        testTask.setWorkerName("Some Other Worker");
+        tasks.create(testTask);
+        checkStatus(testTask,TaskStatus.CREATED);
+        queueTaskManager.submit(testTask);
+        checkStatus(testTask, TaskStatus.QUEUED);
+        queueTaskManager.accept(testTask.getId(),"Orion Worker");
     }
 }
 

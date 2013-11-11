@@ -111,7 +111,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         boolean queuedTasks = true;
         while ( tries < maxThreads && futures.size() < maxThreads && queuedTasks ) {
             try {
-                Optional<Task> task = taskDAO.findOldestQueued();
+                Optional<Task> task = taskDAO.findOldestQueued(workerConfiguration.getName());
                 if ( task == null || ! task.isPresent() ) {
                     queuedTasks = false;
                 } else {

@@ -65,6 +65,9 @@ public class QueueTaskManager implements TaskManager {
      */
     protected void enqueue(String taskId) {
         Task task = getTask(taskId);
+        if ( task.getWorkerName() == null ) {
+            throw new SkyeException("Must set worker name before submitting task "+taskId);
+        }
         switch( task.getStatus() ) {
             case CREATED:
             case FAILED:
@@ -87,6 +90,9 @@ public class QueueTaskManager implements TaskManager {
      */
     protected void accept(String taskId,String workerName) {
         Task task = getTask(taskId);
+        if ( ! task.getWorkerName().equals(workerName) ) {
+            throw new SkyeException("Worker "+workerName+" cannot accept task meant for "+task.getWorkerName());
+        }
         switch( task.getStatus() ) {
             case QUEUED:
                 task.setStatus(TaskStatus.STARTED);
