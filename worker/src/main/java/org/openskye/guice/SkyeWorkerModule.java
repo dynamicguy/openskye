@@ -1,7 +1,6 @@
 package org.openskye.guice;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.google.inject.Inject;
 import org.openskye.config.ServiceConfiguration;
 import org.openskye.config.SkyeWorkerConfiguration;
 import org.openskye.config.WorkerConfiguration;
@@ -11,14 +10,10 @@ import org.openskye.config.WorkerConfiguration;
  */
 public class SkyeWorkerModule extends SkyeModule {
 
-    @Getter
-    @Setter
-    WorkerConfiguration workerConfiguration = null;
-    @Getter
-    @Setter
-    ServiceConfiguration serviceConfiguration = null;
-
+    @Inject
     public SkyeWorkerModule(SkyeWorkerConfiguration skyeWorkerConfiguration) {
         super(skyeWorkerConfiguration);
+        bind(WorkerConfiguration.class).toInstance(skyeWorkerConfiguration.getWorkerConfiguration());
+        bind(ServiceConfiguration.class).toInstance(skyeWorkerConfiguration.getServices());
     }
 }

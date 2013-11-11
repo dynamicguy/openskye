@@ -2,8 +2,6 @@ package org.openskye.task.queue;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.WorkerConfiguration;
 import org.openskye.domain.Task;
@@ -23,10 +21,9 @@ import java.util.concurrent.*;
  */
 @Slf4j
 public class QueueWorkerManager extends QueueTaskManager implements Runnable {
-    // Worker configuration controls operation of the worker threads
-    @Getter
-    @Setter
-    WorkerConfiguration workerConfiguration = null;
+
+    @Inject
+    WorkerConfiguration workerConfig;
 
     // monitor schedules the QueueWorkerManager's own thread to manage tasks
     // workers is a pool of worker threads that runs tasks
@@ -38,11 +35,6 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     private Map<String,Future<TaskStatus>> futures;
 
     public QueueWorkerManager() {
-        // Default settings for the worker configuration
-        workerConfiguration = new WorkerConfiguration();
-        workerConfiguration.setName("Orion Worker");
-        workerConfiguration.setThreadCount(3);
-        workerConfiguration.setPollPeriodSec(20);
         // Concurrent map so that REST status requests are in sync with monitor
         futures = new ConcurrentHashMap<String,Future<TaskStatus>>();
     }
@@ -54,8 +46,8 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     @Override
     public void start() {
         monitor = Executors.newSingleThreadScheduledExecutor();
-        workers = Executors.newFixedThreadPool(workerConfiguration.getThreadCount());
-        monitor.scheduleAtFixedRate(this, 0, workerConfiguration.getPollPeriodSec(), TimeUnit.SECONDS);
+        workers = Executors.newFixedThreadPool(workerConfig.getThreadCount());
+        monitor.scheduleAtFixedRate(this, 0, workerConfig.getPollPeriodSec(), TimeUnit.SECONDS);
     }
 
     @Inject
@@ -107,18 +99,18 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         // Submit tasks to the worker thread pool, oldest first,
         // until the max worker thread count is met
         int tries = 0;
-        int maxThreads = workerConfiguration.getThreadCount();
+        int maxThreads = workerConfig.getThreadCount();
         boolean queuedTasks = true;
         while ( tries < maxThreads && futures.size() < maxThreads && queuedTasks ) {
             try {
-                Optional<Task> task = taskDAO.findOldestQueued(workerConfiguration.getName());
+                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getName());
                 if ( task == null || ! task.isPresent() ) {
                     queuedTasks = false;
                 } else {
                     String taskId = task.get().getId();
                     TaskStep step = task.get().getStep();
                     EntityTransaction tx = taskDAO.beginTransaction();
-                    accept(taskId,workerConfiguration.getName());
+                    accept(taskId,workerConfig.getName());
                     tx.commit();
                     futures.put(taskId, workers.submit(step));
                 }

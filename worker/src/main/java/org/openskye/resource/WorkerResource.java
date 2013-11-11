@@ -6,6 +6,7 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
+import org.openskye.config.WorkerConfiguration;
 import org.openskye.guice.SkyeWorkerModule;
 import org.openskye.task.TaskManager;
 import org.openskye.task.queue.QueueWorkerManager;
@@ -24,9 +25,8 @@ public class WorkerResource {
 
     @Inject
     private TaskManager taskManager;
-
     @Inject
-    private SkyeWorkerModule skyeWorkerModule;
+    private WorkerConfiguration workerConfig;
 
     @ApiOperation(value = "Return the current status of the worker", notes = "Task and domain info is omitted by default for brevity", response = WorkerInfo.class)
     @GET
@@ -34,7 +34,7 @@ public class WorkerResource {
     @Timed
     public WorkerInfo getWorkerInfo() {
         WorkerInfo info = new WorkerInfo();
-        info.setConfiguration(skyeWorkerModule.getWorkerConfiguration());
+        info.setConfiguration(workerConfig);
         QueueWorkerManager queueWorkerManager = (QueueWorkerManager) taskManager;
         info.setTaskIds(queueWorkerManager.getActiveTaskIds());
         return info;
