@@ -40,6 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
             status = TaskStatus.FAILED;
             log.error("Task step exception",e);
         }
+        task.setStatus(status);
         log.info("Final status "+status+" for "+task);
     }
 

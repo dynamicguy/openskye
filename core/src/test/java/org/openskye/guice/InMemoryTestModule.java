@@ -1,4 +1,4 @@
-package org.openskye.metadata.impl.jpa;
+package org.openskye.guice;
 
 import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
@@ -6,6 +6,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.metadata.impl.InMemoryObjectMetadataSearch;
+import org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.TaskScheduler;

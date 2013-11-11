@@ -13,6 +13,7 @@ import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.*;
+import org.openskye.guice.InMemoryTestModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
