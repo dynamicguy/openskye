@@ -38,12 +38,4 @@ public class UserDAOTest extends AbstractDAOTestBase<User> {
         instance.setName("Philly D");
     }
 
-    @Test
-    public void doFindByEmail() throws Exception {
-        User instance = getNew();
-        userDAO.create(instance);
-        String email = instance.getEmail();
-        Optional<User> foundUser = userDAO.findByEmail(email);
-        assertThat("Got Created User By Email", foundUser != null && foundUser.isPresent());
-    }
 }
