@@ -11,9 +11,9 @@ services:
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
 worker:
+  name: "Orion Worker"
   threadCount: 5
-  monitorPeriod: 30
-  monitorUnit: SECONDS
+  pollPeriodSec: 30
 
 server:
   applicationConnectors:

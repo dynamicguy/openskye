@@ -23,6 +23,10 @@
             <groupId>org.openskye</groupId>
             <artifactId>skye-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.openskye</groupId>
+            <artifactId>skye-worker</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -48,6 +52,13 @@
                                 <commandLineArgument>server</commandLineArgument>
                             </commandLineArguments>
                             <name>skye-server</name>
+                        </program>
+                        <program>
+                            <mainClass>org.openskye.SkyeWorker</mainClass>
+                            <commandLineArguments>
+                                <commandLineArgument>server</commandLineArgument>
+                            </commandLineArguments>
+                            <name>skye-worker</name>
                         </program>
                         <program>
                             <mainClass>org.openskye.cli.SkyeCli</mainClass>

@@ -8,10 +8,10 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
+import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.config.SkyeConfiguration;
 import org.openskye.config.SkyeWorkerConfiguration;
 import org.openskye.guice.*;
 import org.openskye.task.TaskManager;
@@ -24,7 +24,7 @@ import java.util.Properties;
  * The Skye Application
  */
 @Slf4j
-public class SkyeWorker extends SkyeApplication {
+public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
 
     private Bootstrap<SkyeWorkerConfiguration> bootstrap;
 
@@ -33,10 +33,12 @@ public class SkyeWorker extends SkyeApplication {
     }
 
     @Override
-    public void run(SkyeConfiguration configuration,
-                    Environment environment) throws Exception {
+    public void initialize(Bootstrap<SkyeWorkerConfiguration> bootstrap) {
+        this.bootstrap = bootstrap;
+    }
 
-        SkyeWorkerConfiguration skyeWorkerConfiguration = (SkyeWorkerConfiguration) configuration;
+    public void run(SkyeWorkerConfiguration configuration,
+                    Environment environment) throws Exception {
 
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
@@ -52,7 +54,7 @@ public class SkyeWorker extends SkyeApplication {
 
         DropwizardEnvironmentModule<SkyeWorkerConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeWorkerConfiguration.class);
 
-        SkyeWorkerModule skyeWorkerModule = new SkyeWorkerModule(skyeWorkerConfiguration);
+        SkyeWorkerModule skyeWorkerModule = new SkyeWorkerModule(configuration);
 
         Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule, skyeWorkerModule);
 
