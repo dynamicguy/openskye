@@ -21,7 +21,7 @@ public class TaskStatistics implements Identifiable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @OneToOne
+    @OneToOne (fetch = FetchType.EAGER)
     private Task task;
     private long simpleObjectsIngested;
     private long simpleObjectsDiscovered;

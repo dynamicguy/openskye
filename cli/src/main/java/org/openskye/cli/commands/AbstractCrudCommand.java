@@ -192,6 +192,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                 String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
                 try {
                     BeanUtils.setProperty(newObject, attributeName, newValue);
+                    output.raw(newObject.toString());
                 } catch (Exception e) {
                     throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
                 }

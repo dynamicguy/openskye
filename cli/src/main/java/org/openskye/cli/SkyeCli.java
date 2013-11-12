@@ -53,6 +53,8 @@ public class SkyeCli {
         commands.add(new MetadataTemplatesCommand());
         commands.add(new TasksCommand());
         commands.add(new ChannelsCommand());
+        commands.add(new ObjectSetsCommand());
+        commands.add(new ObjectsCommand());
 
         SkyeCliSettings skyeCliSettings = SkyeCliSettings.load();
 

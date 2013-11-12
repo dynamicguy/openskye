@@ -32,28 +32,36 @@ public class DestroyTaskStep extends AbstractTaskStep {
 
     @Override
     public void start() {
-        Optional<ObjectSet> objectSet = omr.getObjectSet(task.getObjectSetId());
+        Optional<ObjectSet> objectSet;
+        if (task.getObjectSetId() != null) {
+            objectSet = omr.getObjectSet(task.getObjectSetId());
+        } else {
+            objectSet = Optional.absent();
+        }
 
         Optional<InformationStore> targetInformationStore = storeRegistry.build(task.getTargetInformationStoreDefinition());
 
         if (targetInformationStore.isPresent()) {
+            Iterable<ObjectMetadata> omIterator;
             if (objectSet.isPresent()) {
-                for (ObjectMetadata om : omr.getObjects(objectSet.get())) {
-                    for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
-                        // TODO do we need to check if this ACB is in use by another
-                        // object metadata
-                        ArchiveStoreDefinition asd = omr.getArchiveStoreDefinition(acb);
-                        Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
-                        if (archiveStore.isPresent()) {
-                            archiveStore.get().destroy(om);
-                        } else {
-                            throw new SkyeException("Unable to build archive store " + archiveStore);
-                        }
+                omIterator = omr.getObjects(objectSet.get());
+            } else {
+                omIterator = omr.getObjects(task.getTargetInformationStoreDefinition());
+            }
+            for (ObjectMetadata om : omIterator) {
+                for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
+                    // TODO do we need to check if this ACB is in use by another
+                    // object metadata
+                    ArchiveStoreDefinition asd = omr.getArchiveStoreDefinition(acb);
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
+                    if (archiveStore.isPresent()) {
+                        archiveStore.get().destroy(om);
+                    } else {
+                        throw new SkyeException("Unable to build archive store " + archiveStore);
                     }
                 }
-            } else {
-                throw new SkyeException("Unable to find object set with id " + task.getObjectSetId());
             }
+
         } else {
             throw new SkyeException("Unable to build target information store from definition " + task.getTargetInformationStoreDefinition());
         }

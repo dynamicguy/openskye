@@ -13,7 +13,6 @@ import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.filters.PathRegExFilter;
 
 import java.io.Console;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
