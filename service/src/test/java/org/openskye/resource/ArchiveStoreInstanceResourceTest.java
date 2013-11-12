@@ -7,6 +7,8 @@ import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
@@ -17,6 +19,8 @@ public class ArchiveStoreInstanceResourceTest extends AbstractResourceTest<Archi
     @ClassRule
     public static final ResourceTestRule resources=ResourceTestRule.builder()
             .addResource(new ArchiveStoreInstanceResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
 
     private final ArchiveStoreInstance archiveStoreInstance=new ArchiveStoreInstance();

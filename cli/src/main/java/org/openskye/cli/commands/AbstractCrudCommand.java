@@ -12,7 +12,6 @@ import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
-import org.openskye.domain.Task;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.io.Console;
@@ -57,13 +56,14 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         } else if (delete) {
             delete();
         }
+
     }
 
     protected void selectEnum(EnumerationField field, Object newObject) {
         List<?> choices = field.getAllEnumOptions();
 
         int i = 1;
-        output.message("Please select a " + field.getName() + "from the choices below");
+        output.message("Please select a " + field.getName() + " from the choices below");
         for (Object option : choices) {
             output.raw(" " + i + "/ " + option.toString());
             i++;
@@ -88,18 +88,9 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
         PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
         if (paginatedResult.getResults().size() == 0) {
-            if (field.getClazz() == Task.class) {
-                try {
-                    Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
-                    BeanUtils.setProperty(newObject, field.getName(), result);
-                } catch (Exception e) {
-                    throw new SkyeException("Can't create blank object", e);
-                }
+            output.message("You must have at least 1 " + field.getName() + " to create this object");
+            throw new SkyeException("Objects missing that need to be created");
 
-            } else {
-                output.message("You must have at least 1 " + field.getName() + " to create this object");
-                throw new SkyeException("Objects missing that need to be created");
-            }
         } else {
             output.message("Select " + field.getName() + " by number,  the options are below:");
             int i = 1;
@@ -166,7 +157,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         return toCamel(getClazz().getSimpleName() + "s");
     }
 
-    public void list(){
+    public void list() {
         PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
@@ -186,9 +177,9 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         }
     }
 
-    public void create(){
+    public void create() {
         output.message("Creating a new " + getCollectionSingular() + ":\n");
-        Object newObject = null;
+        Object newObject;
         try {
             newObject = getClazz().newInstance();
         } catch (Exception e) {
@@ -217,7 +208,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         output.success("Created " + getCollectionSingular() + " with id " + result.getId());
     }
 
-    public void delete(){
+    public void delete() {
         if (id == null)
             throw new CliException("You must provide an id to delete a " + getCollectionSingular());
 

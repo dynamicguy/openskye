@@ -8,6 +8,8 @@ import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.TaskStatisticsDAO;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
 import org.openskye.task.TaskManager;
 
 import static org.mockito.Mockito.mock;
@@ -18,6 +20,8 @@ public class TaskStatisticsResourceTest extends AbstractResourceTest<TaskStatist
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new TaskStatisticsResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
 
     private  TaskStatistics taskStatistics = new TaskStatistics();

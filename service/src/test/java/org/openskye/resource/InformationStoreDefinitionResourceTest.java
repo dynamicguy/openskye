@@ -7,6 +7,9 @@ import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.AuthenticationExceptionMapper;
+import org.openskye.exceptions.AuthorizationExceptionMapper;
+
 import static org.mockito.Mockito.mock;
 
 public class InformationStoreDefinitionResourceTest extends AbstractResourceTest<InformationStoreDefinition> {
@@ -16,6 +19,8 @@ public class InformationStoreDefinitionResourceTest extends AbstractResourceTest
     @ClassRule
     public static final ResourceTestRule resources= ResourceTestRule.builder()
             .addResource(new InformationStoreDefinitionResource(dao))
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
             .build();
 
     private final InformationStoreDefinition informationStoreDefinition=new InformationStoreDefinition();

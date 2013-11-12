@@ -255,12 +255,19 @@ public class ObjectMetadataResource
     @GET
     @Transactional
     @Timed
-    public Optional<ObjectMetadata> get(@PathParam("id") String id)
+    public ObjectMetadata get(@PathParam("id") String id)
     {
+        Optional<ObjectMetadata> metadata;
+
         if(!this.isPermitted(OPERATION_GET))
             throw new UnauthorizedException();
 
-        return this.repository.get(id);
+        metadata = this.repository.get(id);
+
+        if(!metadata.isPresent())
+            throw new NotFoundException();
+
+        return metadata.get();
     }
 
     /**

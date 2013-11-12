@@ -28,9 +28,9 @@ public class JPAObjectMetadata {
     @Id
     @Column(unique = true)
     private String id;
-    private String path = "";
-    private String implementation = "";
-    private String taskId = "";
+    private String path;
+    private String implementation;
+    private String taskId;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<JPATag> tags = new HashSet<>();
     @ElementCollection(fetch = FetchType.EAGER)
@@ -44,11 +44,11 @@ public class JPAObjectMetadata {
     private DateTime lastModified = new DateTime();
     @ManyToOne
     private Project project = null;
-    private long originalSize = 0;
-    private long archiveSize = 0;
-    private String mimeType = "";
-    private String checksum = "";
-    private String informationStoreId = "";
+    private long originalSize;
+    private long archiveSize;
+    private String mimeType;
+    private String checksum;
+    private String informationStoreId;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<JPAArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 

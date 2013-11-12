@@ -37,7 +37,7 @@ public class Task implements Identifiable {
     @JoinColumn(name = "CHANNEL_ID")
     private Channel channel;
     // When we are extracting we will provide the target information store definition
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "TARGET_INFORMATION_STORE_DEFINITION_ID")
     private InformationStoreDefinition targetInformationStoreDefinition;
     // We need to be able to handle an ObjectSet,
