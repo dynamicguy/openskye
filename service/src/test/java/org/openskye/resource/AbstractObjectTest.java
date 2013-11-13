@@ -152,7 +152,6 @@ public class AbstractObjectTest
         task = new Task();
         task.setId(UUID.randomUUID().toString());
         task.setProject(projectList.get(0));
-        task.setTargetInformationStoreDefinition(isdList.get(0));
 
         when(tasks.get(task.getId())).thenReturn(Optional.of(task));
         taskList.add(task);
@@ -160,7 +159,6 @@ public class AbstractObjectTest
         task = new Task();
         task.setId(UUID.randomUUID().toString());
         task.setProject(projectList.get(1));
-        task.setTargetInformationStoreDefinition(isdList.get(1));
 
         when(tasks.get(task.getId())).thenReturn(Optional.of(task));
         taskList.add(task);
@@ -168,7 +166,6 @@ public class AbstractObjectTest
         task = new Task();
         task.setId(UUID.randomUUID().toString());
         task.setProject(projectList.get(0));
-        task.setTargetInformationStoreDefinition(isdList.get(0));
 
         when(tasks.get(task.getId())).thenReturn(Optional.of(task));
         taskList.add(task);
@@ -176,7 +173,6 @@ public class AbstractObjectTest
         task = new Task();
         task.setId(UUID.randomUUID().toString());
         task.setProject(projectList.get(1));
-        task.setTargetInformationStoreDefinition(isdList.get(1));
 
         when(tasks.get(task.getId())).thenReturn(Optional.of(task));
         taskList.add(task);
