@@ -2,6 +2,7 @@ package org.openskye.task.step;
 
 import com.google.common.base.Optional;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.Channel;
@@ -11,6 +12,7 @@ import org.openskye.domain.TaskStatus;
 /**
  * A simple implementation of the discover task type
  */
+@NoArgsConstructor
 public class ExtractTaskStep extends AbstractTaskStep {
     // An extract can either be aimed at an object set, or all the objects ever ingested from
     // a selected channel
