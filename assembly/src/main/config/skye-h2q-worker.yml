@@ -1,0 +1,31 @@
+database:
+  driverClass: org.h2.Driver
+  user: sa
+  password:
+  url: "jdbc:h2:mem:openskye"
+
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.impl.InMemoryObjectMetadataSearch
+  taskManager: org.openskye.task.queue.QueueWorkerManager
+  taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
+
+worker:
+  name: "Orion Worker"
+  threadCount: 5
+  pollPeriodSec: 30
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 5001
+  adminConnectors:
+    - type: http
+      port: 8082
+
+logging:
+  level: INFO
+  loggers:
+    org.openskye: INFO
+  appenders:
+    - type: console

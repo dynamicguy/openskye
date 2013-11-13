@@ -1,4 +1,4 @@
-package org.openskye.task.simple;
+package org.openskye.task.step;
 
 import com.google.common.base.Optional;
 import org.openskye.core.*;

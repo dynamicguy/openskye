@@ -9,9 +9,15 @@ import org.openskye.domain.Task;
 public interface TaskManager {
 
     /**
-     * Allows you to submit a {@link Task}
+     * Start up the task manager
+     */
+    void start();
+
+    /**
+     * Request execution of a {@link Task} when resources are available
      *
      * @param task task to submit
      */
     void submit(Task task);
+
 }

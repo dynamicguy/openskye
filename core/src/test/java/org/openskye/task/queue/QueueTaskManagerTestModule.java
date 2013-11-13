@@ -1,4 +1,4 @@
-package org.openskye.metadata.impl.jpa;
+package org.openskye.task.queue;
 
 import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
@@ -6,13 +6,15 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.metadata.impl.InMemoryObjectMetadataSearch;
+import org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
-import org.openskye.task.simple.InMemoryTaskManager;
+import org.openskye.task.TaskScheduler;
+import org.openskye.task.quartz.QuartzTaskScheduler;
 
 import java.util.Properties;
 
-public class InMemoryTestModule extends AbstractModule {
+public class QueueTaskManagerTestModule extends AbstractModule {
     @Override
     protected void configure() {
         JpaPersistModule jpaPersistModule = new JpaPersistModule("Default");
@@ -24,7 +26,8 @@ public class InMemoryTestModule extends AbstractModule {
         jpaPersistModule.properties(props);
         install(jpaPersistModule);
 
-        bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
+        bind(TaskManager.class).to(QueueTaskManager.class).asEagerSingleton();
+        bind(TaskScheduler.class).to(QuartzTaskScheduler.class).asEagerSingleton();
         bind(StoreRegistry.class).asEagerSingleton();
         bind(ObjectMetadataRepository.class).to(JPAObjectMetadataRepository.class);
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class);
