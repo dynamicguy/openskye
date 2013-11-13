@@ -53,18 +53,16 @@ public class ArchiveTaskStep extends AbstractTaskStep {
             objectMetadata.setTaskId(task.getId());
             try {
                 SimpleObject simpleObject = is.materialize(objectMetadata);
+                task.getStatistics().incrementSimpleObjectsIngested();
                 for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
-                    task.getStatistics().incrementSimpleObjectsIngested();
                     channelStoreWriters.get(cas).put(simpleObject);
-
-                    // After we have ingested we need to update the
-                    // object metadata again
-                    omr.put(simpleObject.getObjectMetadata());
                 }
+                // After we have ingested we need to update the
+                // object metadata again
+                omr.put(simpleObject.getObjectMetadata());
             } catch (InvalidSimpleObjectException e) {
                 throw new SkyeException("Unable to materialize object " + objectMetadata, e);
             }
-
         }
 
         return TaskStatus.COMPLETED;
