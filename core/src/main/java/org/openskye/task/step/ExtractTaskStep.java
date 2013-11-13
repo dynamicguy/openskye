@@ -26,8 +26,17 @@ public class ExtractTaskStep extends AbstractTaskStep {
 
     public ExtractTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = objectSetId;
+        this.channel = null;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
         this.projectId = targetInformationStoreDefinition.getProject().getId();
+
+    }
+
+    public ExtractTaskStep(Channel channel,InformationStoreDefinition targetInformationStoreDefinition) {
+        this.objectSetId = null;
+        this.channel = channel;
+        this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.projectId = channel.getProject().getId();
     }
 
     @Override
