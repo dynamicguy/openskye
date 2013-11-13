@@ -83,6 +83,7 @@ public class LocalFSArchiveStoreTest {
 
     public InformationStoreDefinition getDis(String dbName) {
         InformationStoreDefinition dis = new InformationStoreDefinition();
+        dis.setId(UUID.randomUUID().toString());
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
         dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:" + dbName);
@@ -160,7 +161,7 @@ public class LocalFSArchiveStoreTest {
         long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
         assertThat("We should have 1 discovered simple objects, not "+discovered, discovered == 1);
         long ingested = archive.getStatistics().getSimpleObjectsIngested();
-        assertThat("We should have 2 ingested simple objects, not "+ingested, ingested == 2);
+        assertThat("We should have 1 ingested simple objects, not "+ingested, ingested == 1);
 
         Optional<ArchiveStore> archiveStore = registry.build(das);
 
