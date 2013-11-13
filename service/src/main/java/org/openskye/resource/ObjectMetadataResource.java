@@ -27,6 +27,8 @@ import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.util.Page;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * This resource creates an API which deals with {@link ObjectMetadata}. It
@@ -440,6 +442,15 @@ public class ObjectMetadataResource
         if(!domain.isPresent())
             throw new NotFoundException();
 
+        try
+        {
+            query = URLDecoder.decode(query, "UTF-8");
+        }
+        catch(UnsupportedEncodingException ex)
+        {
+            throw new SkyeException("Failed to URL decode the query", ex);
+        }
+
         if(pageNumber == null || pageNumber.isEmpty())
         {
             result = new PaginatedResult<>(this.search.search(domain.get(), query));
@@ -532,6 +543,15 @@ public class ObjectMetadataResource
 
         if(!project.isPresent())
             throw new NotFoundException();
+
+        try
+        {
+            query = URLDecoder.decode(query, "UTF-8");
+        }
+        catch(UnsupportedEncodingException ex)
+        {
+            throw new SkyeException("Failed to URL decode the query", ex);
+        }
 
         if(pageNumber == null || pageNumber.isEmpty())
         {
