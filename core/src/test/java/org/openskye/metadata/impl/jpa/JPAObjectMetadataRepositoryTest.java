@@ -5,7 +5,6 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.Provider;
 import com.google.inject.persist.PersistService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
@@ -13,10 +12,12 @@ import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.*;
+import org.openskye.guice.InMemoryTestModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
 import org.openskye.task.TaskManager;
+import org.openskye.task.step.TestTaskStep;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -43,6 +44,8 @@ public class JPAObjectMetadataRepositoryTest {
     public ArchiveStoreDefinitionDAO archiveStores;
     @Inject
     public TaskDAO tasks;
+    @Inject
+    public ProjectDAO projects;
     @Inject
     public TaskStatisticsDAO taskStatisticsDAO;
     @Inject
@@ -77,7 +80,6 @@ public class JPAObjectMetadataRepositoryTest {
         isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
-        Task task = new Task();
         TaskStatistics taskStatistics = new TaskStatistics();
 
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
@@ -92,7 +94,11 @@ public class JPAObjectMetadataRepositoryTest {
         objectMetadata.setInformationStoreId(isd.getId());
 
         taskStatisticsDAO.create(taskStatistics);
-        task.setTargetInformationStoreDefinition(isd);
+        Project project = new Project();
+        project.setName("Test Project");
+        Project newProject = projects.create(project);
+        TestTaskStep step = new TestTaskStep(newProject.getId(),2,1,true);
+        Task task = step.toTask();
         task.setStatistics(taskStatistics);
         tasks.create(task);
         objectMetadata.setTaskId(task.getId());

@@ -1,52 +1,71 @@
-package org.openskye.task.simple;
+package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.Task;
+import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.TaskStatus;
 import org.openskye.stores.StoreRegistry;
 
 /**
  * A simple implementation of the destroy task type
  */
+@NoArgsConstructor
 public class DestroyTaskStep extends AbstractTaskStep {
+    @Getter
+    @Setter
+    private String objectSetId;
+    @Getter
+    @Setter
+    private InformationStoreDefinition targetInformationStoreDefinition;
 
-    private final Task task;
+    @JsonIgnore
     @Inject
     private StoreRegistry storeRegistry;
 
-    public DestroyTaskStep(Task task) {
-        this.task = task;
+    public DestroyTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
+        this.objectSetId = objectSetId;
+        this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.projectId = targetInformationStoreDefinition.getProject().getId();
+    }
+
+    @Override
+    public String getLabel() {
+        return "DESTROY";
     }
 
     @Override
     public void validate() {
-        if (task.getObjectSetId() == null) {
+        if (objectSetId == null) {
             throw new SkyeException("Task " + task.getId() + " is missing an object set id");
         }
-        if (task.getTargetInformationStoreDefinition() == null) {
+        if (targetInformationStoreDefinition == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a target information store definition");
         }
     }
 
     @Override
-    public void start() {
+    public TaskStatus call() throws Exception {
         Optional<ObjectSet> objectSet;
-        if (task.getObjectSetId() != null) {
-            objectSet = omr.getObjectSet(task.getObjectSetId());
+        if (objectSetId != null) {
+            objectSet = omr.getObjectSet(objectSetId);
         } else {
             objectSet = Optional.absent();
         }
 
-        Optional<InformationStore> targetInformationStore = storeRegistry.build(task.getTargetInformationStoreDefinition());
+        Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
 
         if (targetInformationStore.isPresent()) {
             Iterable<ObjectMetadata> omIterator;
             if (objectSet.isPresent()) {
                 omIterator = omr.getObjects(objectSet.get());
             } else {
-                omIterator = omr.getObjects(task.getTargetInformationStoreDefinition());
+                omIterator = omr.getObjects(targetInformationStoreDefinition);
             }
             for (ObjectMetadata om : omIterator) {
                 for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
@@ -63,8 +82,10 @@ public class DestroyTaskStep extends AbstractTaskStep {
             }
 
         } else {
-            throw new SkyeException("Unable to build target information store from definition " + task.getTargetInformationStoreDefinition());
+            throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
         }
+
+        return TaskStatus.COMPLETED;
     }
 
 }

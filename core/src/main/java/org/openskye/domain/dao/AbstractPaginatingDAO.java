@@ -8,13 +8,12 @@ import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
 
 import javax.inject.Inject;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.*;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,12 +36,25 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return emf;
     }
 
+    /**
+     * Override serialize() and deserialize() when a domain class maps a transient
+     * object to a persistent JSON text field
+     */
+    protected void serialize(T instance) {
+    }
+    protected void deserialize(T instance) {
+    }
+
     public PaginatedResult<T> list() {
         PaginatedResult<T> result = new PaginatedResult<>();
         CriteriaQuery<T> criteria = createCriteriaQuery();
         Root<T> selectEntity = criteria.from(entityClass);
         criteria.select(selectEntity);
-        result.setResults(currentEntityManager().createQuery(criteria).getResultList());
+        List<T> resultList = currentEntityManager().createQuery(criteria).getResultList();
+        for ( T instance : resultList ) {
+            deserialize(instance);
+        }
+        result.setResults(resultList);
         result.setTotalResults(result.getResults().size());
 
         return result;
@@ -103,6 +115,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (newInstance == null)
             throw new ValidationException();
 
+        serialize(newInstance);
         validate(newInstance);
 
         this.currentEntityManager().persist(newInstance);
@@ -139,6 +152,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (id != updatedInstance.getId())
             throw new ValidationException();
 
+        serialize(updatedInstance);
         validate(updatedInstance);
 
         this.currentEntityManager().persist(updatedInstance);
@@ -150,7 +164,13 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @SuppressWarnings("unchecked")
     public Optional<T> get(String id) {
         T result = currentEntityManager().find(entityClass, checkNotNull(id));
-        return (result!=null ? Optional.of(result) : Optional.<T> absent());
+
+        if (result == null)
+            return Optional.absent();
+        else {
+            deserialize(result);
+            return Optional.of(result);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -179,6 +199,25 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      */
     public void delete(T instance) {
         delete(instance.getId());
+    }
+
+    /**
+     * Attempt to place a lock on a row
+     *
+     * @param instance the object representing the row to lock
+     * @param mode the mode of the requested lock
+     */
+    public void lock(T instance, LockModeType mode) {
+        currentEntityManager().lock(instance, mode);
+    }
+
+    /**
+     * Create and begin a transaction
+     */
+    public EntityTransaction beginTransaction() {
+        EntityTransaction xt = currentEntityManager().getTransaction();
+        xt.begin();
+        return xt;
     }
 }
 
