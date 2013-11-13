@@ -110,59 +110,6 @@ public class ObjectMetadataResource
     }
 
     /**
-     * Gets the raw content of the {@link SimpleObject}
-     *
-     * @param id The id of the {@link ObjectMetadata} for the object.
-     *
-     * @return A Response containing the raw content of the {@link SimpleObject}.
-     */
-    @ApiOperation(value = "Get the raw content of the simple object", notes = "Return raw content of the simple object")
-    @Path("/{id}/content")
-    @GET
-    @Transactional
-    @Timed
-    public Response getContent(@PathParam("id") String id)
-    {
-        Optional<ObjectMetadata> objectMetadata;
-        ArchiveStoreDefinition asd;
-        Optional<ArchiveStore> archiveStore;
-        ArchiveContentBlock block;
-        Optional<InputStream> stream;
-        String path;
-        String header;
-
-        if(!this.isPermitted(OPERATION_GET))
-            throw new UnauthorizedException();
-
-        objectMetadata = this.repository.get(id);
-
-        if(!objectMetadata.isPresent())
-            throw new NotFoundException();
-
-        if(objectMetadata.get().getArchiveContentBlocks().size() == 0)
-            throw new NotFoundException();
-
-        block = objectMetadata.get().getArchiveContentBlocks().get(0);
-        asd = this.repository.getArchiveStoreDefinition(block);
-        archiveStore = this.registry.build(asd);
-
-        if(!archiveStore.isPresent())
-            throw new NotFoundException();
-
-        stream = archiveStore.get().getStream(objectMetadata.get());
-
-        if(!stream.isPresent())
-            throw new NotFoundException();
-
-        path = objectMetadata.get().getPath();
-        header = "attachment; filename=" + path;
-
-        return Response.ok(stream.get())
-                       .header("Content-Disposition", header)
-                       .build();
-    }
-
-    /**
      * Creates a new {@link ObjectMetadata}.  Note that the object will be
      * indexed upon creation for searching.
      *

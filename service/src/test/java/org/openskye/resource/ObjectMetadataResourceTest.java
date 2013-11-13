@@ -171,40 +171,6 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest
         assertThat("list operation was not permitted", response.getStatus(), equalTo(401));
     }
 
-    /**
-    @Test
-    public void testAuthorizedGetContent()
-    {
-        ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_GET)).thenReturn(true);
-
-        String api = API_ADDRESS + "/" + metadataInstance.getId() + "/content";
-
-        ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
-
-        assertThat("get content was successful", response.getStatus(), equalTo(expectedResponse.getStatus()));
-    }
-    **/
-
-    @Test
-    public void testUnauthorizedGetContent()
-    {
-        ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_GET)).thenReturn(false);
-
-        String api = API_ADDRESS + "/" + metadataInstance.getId() + "/content";
-
-        ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
-
-        assertThat("get content was not permitted", response.getStatus(), equalTo(401));
-    }
-
     @Test
     public void testAuthorizedGetContentBlocks()
     {
