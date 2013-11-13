@@ -1,6 +1,5 @@
 package org.openskye.resource;
 
-import com.sun.jersey.api.client.WebResource;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
@@ -17,9 +16,7 @@ import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
 import org.openskye.task.TaskManager;
 import org.openskye.task.step.ArchiveTaskStep;
-import org.openskye.task.step.DestroyTaskStep;
 import org.openskye.task.step.DiscoverTaskStep;
-import org.openskye.task.step.ExtractTaskStep;
 
 import javax.ws.rs.core.MediaType;
 

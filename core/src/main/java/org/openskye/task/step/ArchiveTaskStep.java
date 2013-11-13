@@ -1,17 +1,12 @@
 package org.openskye.task.step;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
-import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
-import org.openskye.domain.dao.ChannelDAO;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,49 +1,68 @@
 package org.openskye.task.step;
 
 import com.google.common.base.Optional;
+import lombok.Getter;
+import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.Task;
+import org.openskye.domain.Channel;
+import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.TaskStatus;
 
 /**
  * A simple implementation of the discover task type
  */
 public class ExtractTaskStep extends AbstractTaskStep {
+    // An extract can either be aimed at an object set, or all the objects ever ingested from
+    // a selected channel
+    @Getter
+    @Setter
+    private String objectSetId;
+    @Getter
+    @Setter
+    private Channel channel;
+    @Getter
+    @Setter
+    private InformationStoreDefinition targetInformationStoreDefinition;
 
-    private final Task task;
+    public ExtractTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
+        this.objectSetId = objectSetId;
+        this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.projectId = targetInformationStoreDefinition.getProject().getId();
+    }
 
-    public ExtractTaskStep(Task task) {
-        this.task = task;
+    @Override
+    public String getLabel() {
+        return "EXTRACT";
     }
 
     @Override
     public void validate() {
-        if (task.getObjectSetId() == null) {
-            throw new SkyeException("Task " + task.getId() + " is missing an object set id");
+        if (objectSetId == null && channel == null) {
+            throw new SkyeException("Task " + task.getId() + " is missing both a channel and an object set id");
         }
-        if (task.getTargetInformationStoreDefinition() == null) {
+        if (targetInformationStoreDefinition == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a target information store definition");
         }
     }
 
     @Override
-    public void start() {
+    public TaskStatus call() throws Exception {
         Optional<ObjectSet> objectSet;
-        if (task.getObjectSetId() != null) {
-            objectSet = omr.getObjectSet(task.getObjectSetId());
+        if (objectSetId != null) {
+            objectSet = omr.getObjectSet(objectSetId);
         }
         else{
             objectSet = Optional.absent();
         }
 
-        Optional<InformationStore> targetInformationStore = storeRegistry.build(task.getTargetInformationStoreDefinition());
+        Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
 
         if (targetInformationStore.isPresent()) {
             Iterable<ObjectMetadata> objectMetadataIterable;
-            if (objectSet.isPresent()) {  //is there an objectSet
+            if (objectSet.isPresent()) {
                 objectMetadataIterable = omr.getObjects(objectSet.get());
             } else {
-                //TODO: Add in a way to create an objectSet, either here or in DiscoverTaskStep
-                objectMetadataIterable = omr.getObjects(task.getChannel().getInformationStoreDefinition());
+                objectMetadataIterable = omr.getObjects(channel.getInformationStoreDefinition());
             }
             for (ObjectMetadata om : objectMetadataIterable) {
                 if (om.getArchiveContentBlocks().size() > 0) {
@@ -68,8 +87,10 @@ public class ExtractTaskStep extends AbstractTaskStep {
             }
 
         } else {
-            throw new SkyeException("Unable to build target information store from definition " + task.getTargetInformationStoreDefinition());
+            throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
         }
+
+        return TaskStatus.COMPLETED;
     }
 
 }
