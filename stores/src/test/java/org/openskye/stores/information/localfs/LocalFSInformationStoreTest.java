@@ -1,7 +1,6 @@
 package org.openskye.stores.information.localfs;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
@@ -14,7 +13,8 @@ import org.openskye.task.step.ArchiveTaskStep;
 import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,8 +34,9 @@ public class LocalFSInformationStoreTest {
     public InformationStoreDefinition getLocalFsDis() {
         InformationStoreDefinition dis = new InformationStoreDefinition();
         dis.setImplementation(LocalFSInformationStore.IMPLEMENTATION);
-        dis.getProperties().put(LocalFSInformationStore.FILE_PATH, "/opt");
-        dis.getProperties().put(LocalFSInformationStore.NAME, "Linux /opt Directory");
+        String workingDir = System.getProperty("user.dir");
+        dis.getProperties().put(LocalFSInformationStore.FILE_PATH, workingDir);
+        dis.getProperties().put(LocalFSInformationStore.NAME, "Current Working Directory");
         return dis;
     }
 
@@ -45,13 +46,14 @@ public class LocalFSInformationStoreTest {
     }
 
     @Test
-    public void ensureWeCanDiscoverObjects() {
+    public void ensureWeCanDiscoverObjects() throws Exception {
         assertThat("Get metadata for the store", registry.build(getLocalFsDis()).get().getMetadata() != null);
         LocalFSInformationStore is = (LocalFSInformationStore) registry.build(getLocalFsDis()).get();
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj2");
+        Path temp = Files.createTempDirectory("pj2");
+        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getLocalFsDis();
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);
