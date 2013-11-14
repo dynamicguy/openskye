@@ -25,6 +25,7 @@
         <class>org.openskye.domain.RolePermission</class>
         <class>org.openskye.domain.Task</class>
         <class>org.openskye.domain.TaskLog</class>
+        <class>org.openskye.domain.TaskSchedule</class>
         <class>org.openskye.domain.TaskStatistics</class>
         <class>org.openskye.domain.ChannelFilterDefinition</class>
         <class>org.openskye.metadata.impl.jpa.JPAObjectSet</class>

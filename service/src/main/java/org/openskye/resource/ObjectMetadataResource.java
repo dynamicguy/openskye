@@ -27,6 +27,8 @@ import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.util.Page;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * This resource creates an API which deals with {@link ObjectMetadata}. It
@@ -105,59 +107,6 @@ public class ObjectMetadataResource
         projects = injectedDao;
 
         return this;
-    }
-
-    /**
-     * Gets the raw content of the {@link SimpleObject}
-     *
-     * @param id The id of the {@link ObjectMetadata} for the object.
-     *
-     * @return A Response containing the raw content of the {@link SimpleObject}.
-     */
-    @ApiOperation(value = "Get the raw content of the simple object", notes = "Return raw content of the simple object")
-    @Path("/{id}/content")
-    @GET
-    @Transactional
-    @Timed
-    public Response getContent(@PathParam("id") String id)
-    {
-        Optional<ObjectMetadata> objectMetadata;
-        ArchiveStoreDefinition asd;
-        Optional<ArchiveStore> archiveStore;
-        ArchiveContentBlock block;
-        Optional<InputStream> stream;
-        String path;
-        String header;
-
-        if(!this.isPermitted(OPERATION_GET))
-            throw new UnauthorizedException();
-
-        objectMetadata = this.repository.get(id);
-
-        if(!objectMetadata.isPresent())
-            throw new NotFoundException();
-
-        if(objectMetadata.get().getArchiveContentBlocks().size() == 0)
-            throw new NotFoundException();
-
-        block = objectMetadata.get().getArchiveContentBlocks().get(0);
-        asd = this.repository.getArchiveStoreDefinition(block);
-        archiveStore = this.registry.build(asd);
-
-        if(!archiveStore.isPresent())
-            throw new NotFoundException();
-
-        stream = archiveStore.get().getStream(objectMetadata.get());
-
-        if(!stream.isPresent())
-            throw new NotFoundException();
-
-        path = objectMetadata.get().getPath();
-        header = "attachment; filename=" + path;
-
-        return Response.ok(stream.get())
-                       .header("Content-Disposition", header)
-                       .build();
     }
 
     /**
@@ -440,6 +389,15 @@ public class ObjectMetadataResource
         if(!domain.isPresent())
             throw new NotFoundException();
 
+        try
+        {
+            query = URLDecoder.decode(query, "UTF-8");
+        }
+        catch(UnsupportedEncodingException ex)
+        {
+            throw new SkyeException("Failed to URL decode the query", ex);
+        }
+
         if(pageNumber == null || pageNumber.isEmpty())
         {
             result = new PaginatedResult<>(this.search.search(domain.get(), query));
@@ -532,6 +490,15 @@ public class ObjectMetadataResource
 
         if(!project.isPresent())
             throw new NotFoundException();
+
+        try
+        {
+            query = URLDecoder.decode(query, "UTF-8");
+        }
+        catch(UnsupportedEncodingException ex)
+        {
+            throw new SkyeException("Failed to URL decode the query", ex);
+        }
 
         if(pageNumber == null || pageNumber.isEmpty())
         {

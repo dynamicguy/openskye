@@ -78,7 +78,6 @@ public class HBaseOMRTest {
         objectMetadata.setInformationStoreId(isd.getId());
 
         this.taskStatisticsDAO.create(taskStatistics);
-        task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
         this.tasks.create(task);
         objectMetadata.setTaskId(task.getId());

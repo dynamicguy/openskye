@@ -165,7 +165,7 @@ public class LocalFSInformationStore implements InformationStore {
                     TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
 
                     for (Column column : structuredObject.getTable().getColumns()) {
-                        tableCreator.withColumn(column.getName()).ofType(column.getType()).ofSize(column.getColumnSize());
+                        tableCreator.withColumn(column.getName()).ofType(column.getType());
                     }
 
                     Table table = tableCreator.execute();

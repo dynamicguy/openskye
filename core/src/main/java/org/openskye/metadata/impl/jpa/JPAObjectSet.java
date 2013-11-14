@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.openskye.core.ObjectSet;
+import org.openskye.domain.Identifiable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,7 +24,7 @@ import java.util.Set;
 @Table(name = "OBJECT_SET")
 @Data
 @EqualsAndHashCode(of = "id")
-public class JPAObjectSet {
+public class JPAObjectSet implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

@@ -57,11 +57,10 @@ public class TasksCommand extends AbstractCrudCommand {
                 selectEnum((EnumerationField) field, newObject);
             }
         }
-        if (newObject.getTaskType() == TaskType.EXTRACT) {
+        if (newObject.getTaskType() == TaskType.EXTRACT|| newObject.getTaskType()==TaskType.DESTROY) {
             if (newObject.getTargetInformationStoreDefinition() == null) {
-                output.message("You have chosen to extract. Please select an information store to extract your data to: ");
+                output.message("You have chosen a task that requires a target information store. Please select an information store to extract your data to: ");
 
-                output.message("Please select archive stores to add to this channel: ");
                 ReferenceField informationStores = new ReferenceField(InformationStoreDefinition.class);
                 PaginatedResult paginatedResult = getResource(informationStores.getResource()).get(PaginatedResult.class);
                 int i = 1;

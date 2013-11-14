@@ -42,7 +42,7 @@ public class JPAObjectMetadata {
     private DateTime ingested = new DateTime();
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime lastModified = new DateTime();
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     private Project project = null;
     private long originalSize;
     private long archiveSize;

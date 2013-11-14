@@ -6,6 +6,7 @@ import org.openskye.core.SkyeException;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.task.TaskManager;
+import org.openskye.task.TaskScheduler;
 
 /**
  * The Guice module for Skye
@@ -23,6 +24,8 @@ public class SkyeModule extends AbstractModule {
         try {
             Class taskManagerClazz = Class.forName(skyeConfiguration.getServices().getTaskManager());
             bind(TaskManager.class).to(taskManagerClazz);
+            Class taskSchedulerClazz = Class.forName(skyeConfiguration.getServices().getTaskScheduler());
+            bind(TaskScheduler.class).to(taskSchedulerClazz);
             Class omrClazz = Class.forName(skyeConfiguration.getServices().getOmr());
             bind(ObjectMetadataRepository.class).to(omrClazz).asEagerSingleton();
             Class omsClazz = Class.forName(skyeConfiguration.getServices().getOms());

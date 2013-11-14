@@ -70,7 +70,13 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
-        return Lists.newArrayList(objects.values());
+        List<ObjectMetadata> matchingObjects = new ArrayList<ObjectMetadata>();
+        for ( ObjectMetadata objectMetadata : objects.values() ) {
+            if ( objectMetadata.getInformationStoreId().equals(informationStoreDefinition.getId()) ) {
+                matchingObjects.add(objectMetadata);
+            }
+        }
+        return matchingObjects;
     }
 
     @Override

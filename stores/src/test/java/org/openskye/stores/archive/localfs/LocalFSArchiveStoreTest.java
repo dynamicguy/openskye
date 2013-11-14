@@ -23,8 +23,12 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.stores.information.jdbc.JDBCStructuredInformationStore;
 import org.openskye.task.TaskManager;
+import org.openskye.task.step.ArchiveTaskStep;
+import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -79,6 +83,7 @@ public class LocalFSArchiveStoreTest {
 
     public InformationStoreDefinition getDis(String dbName) {
         InformationStoreDefinition dis = new InformationStoreDefinition();
+        dis.setId(UUID.randomUUID().toString());
         dis.setImplementation(JDBCStructuredInformationStore.IMPLEMENTATION);
         dis.getProperties().put(JDBCStructuredInformationStore.DRIVER_CLASS, "org.h2.Driver");
         dis.getProperties().put(JDBCStructuredInformationStore.DB_URL, "jdbc:h2:mem:" + dbName);
@@ -88,12 +93,13 @@ public class LocalFSArchiveStoreTest {
     }
 
     @Test
-    public void ensureWeCanDiscoverObjects() {
+    public void ensureWeCanDiscoverObjects() throws Exception {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setId(UUID.randomUUID().toString());
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/archive-" + UUID.randomUUID().toString());
+        Path temp = Files.createTempDirectory("archive-"+UUID.randomUUID().toString());
+        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test1");
         dis.setId(UUID.randomUUID().toString());
 
@@ -108,19 +114,54 @@ public class LocalFSArchiveStoreTest {
         channel.setId(UUID.randomUUID().toString());
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
+        Project project = new Project();
+        project.setId(UUID.randomUUID().toString());
+        channel.setProject(project);
 
-        Task discovery = new Task();
-        discovery.setChannel(channel);
-        discovery.setTaskType(TaskType.DISCOVER);
+        Task discovery = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discovery);
 
-        Task archive = new Task();
-        archive.setChannel(channel);
-        archive.setTaskType(TaskType.ARCHIVE);
+        Task archive = new ArchiveTaskStep(channel).toTask();
         taskManager.submit(archive);
 
-        assertThat("We have 1 discovered simple objects", discovery.getStatistics().getSimpleObjectsDiscovered() == 1);
-        assertThat("We have 1 ingested simple objects", archive.getStatistics().getSimpleObjectsIngested() == 1);
+        long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
+        assertThat("We should have 1 discovered simple objects, not "+discovered, discovered == 1);
+        long ingested = archive.getStatistics().getSimpleObjectsIngested();
+        assertThat("We should have 1 ingested simple objects, not "+ingested, ingested == 1);
+
+    }
+
+    @Test
+    public void letsArchiveThenQuery() throws Exception {
+
+
+        ArchiveStoreInstance asi = new ArchiveStoreInstance();
+        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        Path temp = Files.createTempDirectory("archive-"+UUID.randomUUID().toString());
+        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        InformationStoreDefinition dis = getDis("test2");
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
+        das.setId(UUID.randomUUID().toString());
+        das.setArchiveStoreInstance(asi);
+        ChannelArchiveStore cas = new ChannelArchiveStore();
+        cas.setArchiveStoreDefinition(das);
+        Channel channel = new Channel();
+        channel.getChannelArchiveStores().add(cas);
+        channel.setInformationStoreDefinition(dis);
+        Project project = new Project();
+        project.setId(UUID.randomUUID().toString());
+        channel.setProject(project);
+
+        Task discovery = new DiscoverTaskStep(channel).toTask();
+        taskManager.submit(discovery);
+
+        Task archive = new ArchiveTaskStep(channel).toTask();
+        taskManager.submit(archive);
+
+        long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
+        assertThat("We should have 1 discovered simple objects, not "+discovered, discovered == 1);
+        long ingested = archive.getStatistics().getSimpleObjectsIngested();
+        assertThat("We should have 1 ingested simple objects, not "+ingested, ingested == 1);
 
         Optional<ArchiveStore> archiveStore = registry.build(das);
 

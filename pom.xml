@@ -78,6 +78,7 @@
         <module>service</module>
         <module>hadoop</module>
         <module>assembly</module>
+        <module>worker</module>
     </modules>
 
     <issueManagement>
@@ -106,6 +107,11 @@
             <dependency>
                 <groupId>org.openskye</groupId>
                 <artifactId>skye-service</artifactId>
+                <version>0.0.5-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openskye</groupId>
+                <artifactId>skye-worker</artifactId>
                 <version>0.0.5-SNAPSHOT</version>
             </dependency>
             <dependency>

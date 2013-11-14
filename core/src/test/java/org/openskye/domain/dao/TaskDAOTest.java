@@ -1,66 +1,46 @@
 package org.openskye.domain.dao;
 
-import com.google.inject.Inject;
-import org.openskye.domain.*;
+import org.junit.Test;
+import org.openskye.domain.Task;
+import org.openskye.task.step.TestTaskStep;
+import javax.inject.Inject;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
-Test the TaskDAO
+ * Testing the {@link org.openskye.domain.dao.TaskDAO}
  */
 public class TaskDAOTest extends AbstractDAOTestBase<Task> {
 
     @Inject
     public TaskDAO taskDAO;
 
-
     @Override
-    public AbstractPaginatingDAO<Task> getDAO() {
+    public AbstractPaginatingDAO getDAO() {
         return taskDAO;
     }
 
     @Override
     public Task getNew() {
-         Domain domain=new Domain();
-        domain.setName("Fishstick");
-       InformationStoreDefinition isd = new InformationStoreDefinition();
-        isd.setName("Test Def");
-        Project project = new Project();
-        project.setName("Starship 1");
-        project.setDomain(domain);
-        Channel channel=new Channel();
-        channel.setName("Demo Channel");
-        channel.setInformationStoreDefinition(isd);
-        channel.setProject(project);
-        TaskStatistics taskStatistics=new TaskStatistics();
-        Task task=new Task();
-        taskStatistics.setTask(task);
-        task.setChannel(channel);
-        task.setProject(project);
-        task.setTargetInformationStoreDefinition(isd);
-        task.setStatistics(taskStatistics);
-        return task;
+        TestTaskStep step = new TestTaskStep("2093e8ab-6aab-4421-970d-1c79bc3be427",2,1,true);
+        return step.toTask();
     }
 
     @Override
     public void update(Task instance) {
-        Domain domain=new Domain();
-        TaskStatistics taskStatistics=new TaskStatistics();
-        Task task=new Task();
-        taskStatistics.setTask(task);
-        instance.setStatistics(taskStatistics);
-        InformationStoreDefinition isd = new InformationStoreDefinition();
-        isd.setName("Test Def");
-        instance.setTargetInformationStoreDefinition(isd);
-        Project project = new Project();
-        project.setName("Starship 1");
-        project.setDomain(domain);
-        instance.setProject(project);
-        Channel channel=new Channel();
-        channel.setName("Demo Channel");
-        channel.setInformationStoreDefinition(isd);
-        channel.setProject(project);
-        instance.setChannel(channel);
-
+        instance.setWorkerName("Wilma Worksalot");
     }
 
-
+    @Test
+    public void doSerialize() throws Exception {
+        Task instance = getNew();
+        getDAO().serialize(instance);
+        instance.setStep(null);
+        instance.setStepLabel(null);
+        getDAO().deserialize(instance);
+        assertThat("a Task can be serialized and deserialized",
+                asJson(instance),
+                is(equalTo(jsonFixture("fixtures/taskSerialize.json"))));
+    }
 }
