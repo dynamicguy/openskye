@@ -30,6 +30,7 @@ public class UserDAOTest extends AbstractDAOTestBase<User> {
         user.setName("Philip Dodds");
         user.setEmail("philip@fiveclouds.com");
         user.setDomain(domain);
+
         return user;
     }
 

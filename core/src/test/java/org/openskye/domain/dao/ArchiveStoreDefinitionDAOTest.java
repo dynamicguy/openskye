@@ -41,6 +41,7 @@ public class ArchiveStoreDefinitionDAOTest extends AbstractDAOTestBase<ArchiveSt
     @Override
     public void update(ArchiveStoreDefinition instance) {
         instance.setName("Test Def 2");
+
     }
 
     @Test(expected = ConstraintViolationException.class)

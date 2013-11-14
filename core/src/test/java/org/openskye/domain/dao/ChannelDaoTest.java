@@ -41,6 +41,7 @@ public class ChannelDaoTest extends AbstractDAOTestBase<Channel> {
     @Override
     public void update(Channel instance) {
         instance.setName("Test Def 2");
+
     }
 
     @Test(expected = ConstraintViolationException.class)
