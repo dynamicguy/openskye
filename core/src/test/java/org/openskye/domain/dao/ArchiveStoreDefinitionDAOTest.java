@@ -14,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Testing the {@link ArchiveStoreDefinitionDAO}
+ * //Test the  ArchiveStoreDefinitionDAO
  */
 public class ArchiveStoreDefinitionDAOTest extends AbstractDAOTestBase<ArchiveStoreDefinition> {
 
