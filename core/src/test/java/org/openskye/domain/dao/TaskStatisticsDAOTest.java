@@ -2,6 +2,7 @@ package org.openskye.domain.dao;
 
 import com.google.inject.Inject;
 import org.openskye.domain.*;
+import org.openskye.task.step.ArchiveTaskStep;
 
 /**
  Test the TaskStatisticsDAO
@@ -29,11 +30,8 @@ public class TaskStatisticsDAOTest  extends AbstractDAOTestBase<TaskStatistics>{
         channel.setName("Demo Channel");
         channel.setInformationStoreDefinition(isd);
         channel.setProject(project);
-        Task task=new Task();
+        Task task=new ArchiveTaskStep(channel).toTask();
         taskStatistics.setTask(task);
-        task.setChannel(channel);
-        task.setProject(project);
-        task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
         taskStatistics.setTask(task);
         taskStatistics.setSimpleObjectsIngested(3453324);
@@ -55,11 +53,8 @@ public class TaskStatisticsDAOTest  extends AbstractDAOTestBase<TaskStatistics>{
         channel.setName("Demo Channel");
         channel.setInformationStoreDefinition(isd);
         channel.setProject(project);
-        Task task=new Task();
+        Task task=new ArchiveTaskStep(channel).toTask();
         taskStatistics.setTask(task);
-        task.setChannel(channel);
-        task.setProject(project);
-        task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
         instance.setTask(task);
         instance.setSimpleObjectsDiscovered(243324);
