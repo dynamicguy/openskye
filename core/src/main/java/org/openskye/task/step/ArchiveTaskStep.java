@@ -15,7 +15,7 @@ import java.util.Map;
  * A {@link TaskStep} that handles a task type of Archive
  */
 @NoArgsConstructor
-public class ArchiveTaskStep extends AbstractTaskStep {
+public class ArchiveTaskStep extends TaskStep {
     @Getter
     @Setter
     private Channel channel;

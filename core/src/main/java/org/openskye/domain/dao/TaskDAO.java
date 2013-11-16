@@ -7,7 +7,7 @@ import org.openskye.core.SkyeException;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskSchedule;
 import org.openskye.domain.TaskStatus;
-import org.openskye.task.step.AbstractTaskStep;
+import org.openskye.task.step.TaskStep;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -26,7 +26,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
     protected void deserialize(Task task) {
         try {
             Class clazz = Class.forName(task.getStepClassName());
-            AbstractTaskStep step = (AbstractTaskStep) MAPPER.readValue(task.getStepJson(),clazz);
+            TaskStep step = (TaskStep) MAPPER.readValue(task.getStepJson(),clazz);
             step.setTask(task);
             task.setStep(step);
             task.setStepLabel(step.getLabel());

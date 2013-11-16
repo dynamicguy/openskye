@@ -6,7 +6,7 @@ import org.openskye.domain.TaskStatus;
 /**
  * Implementation of a verification of a set of {@link org.openskye.core.SimpleObject}
  */
-public class VerifyTaskStep extends AbstractTaskStep {
+public class VerifyTaskStep extends TaskStep {
 
     @Override
     public String getLabel() {

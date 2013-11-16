@@ -16,7 +16,7 @@ import org.openskye.stores.StoreRegistry;
  * A simple implementation of the destroy task type
  */
 @NoArgsConstructor
-public class DestroyTaskStep extends AbstractTaskStep {
+public class DestroyTaskStep extends TaskStep {
     @Getter
     @Setter
     private String objectSetId;

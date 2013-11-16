@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-import org.openskye.task.step.AbstractTaskStep;
+import org.openskye.task.step.TaskStep;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -48,7 +48,7 @@ public class Task implements Identifiable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
 
-    // The details of the Task are contained in a subclass of AbstractTaskStep.  Since
+    // The details of the Task are contained in a subclass of TaskStep.  Since
     // each type of step has its own set of fields, store it as a JSON blob and
     // reconstruct the step object in the DAO when accessed
     @Column(name = "STEP_CLASS_NAME")
@@ -59,7 +59,7 @@ public class Task implements Identifiable {
     @JsonIgnore
     private String stepJson;
     @Transient
-    private AbstractTaskStep step;
+    private TaskStep step;
     @Transient
     private String stepLabel;
 

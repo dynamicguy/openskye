@@ -4,12 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.core.ArchiveStore;
-import org.openskye.core.InformationStore;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
 
 /**
@@ -18,7 +13,7 @@ import org.openskye.domain.TaskStatus;
  */
 @Slf4j
 @NoArgsConstructor
-public class TestTaskStep extends AbstractTaskStep  {
+public class TestTaskStep extends TaskStep {
     @Getter
     @Setter
     private Integer sleepSeconds;

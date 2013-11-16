@@ -13,7 +13,7 @@ import org.openskye.domain.TaskStatus;
  * A simple implementation of the discover task type
  */
 @NoArgsConstructor
-public class ExtractTaskStep extends AbstractTaskStep {
+public class ExtractTaskStep extends TaskStep {
     // An extract can either be aimed at an object set, or all the objects ever ingested from
     // a selected channel
     @Getter
