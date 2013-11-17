@@ -8,19 +8,18 @@ import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.domain.Identifiable;
 import org.openskye.domain.Task;
-import org.openskye.task.step.TestTaskStep;
+import org.openskye.task.step.TaskStep;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Managing the Archive Store Instances
+ * Managing the Tasks
  */
 @Parameters(commandDescription = "Manage tasks")
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
-public class TasksCommand extends AbstractCrudCommand {
+public class TasksCommand extends AbstractTaskStepCommand {
 
     private final String commandName = "tasks";
 
@@ -34,12 +33,10 @@ public class TasksCommand extends AbstractCrudCommand {
     }
 
     @Override
-    // TODO: for now this only creates a test task.  Commands to submit other task types
-    // are under construction.
-    public void create() {
-        output.message("Creating a new test " + getCollectionSingular() + ":\n");
-        Task newObject = new TestTaskStep(UUID.randomUUID().toString(),0,0,true).toTask();
-        Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
-        output.success("Created " + getCollectionSingular() + " with id " + result.getId());
+    public void create(TaskStep step) {
+        output.message("Creating a new " + step.getLabel() + " task:\n");
+        Task task = step.toTask();
+        Identifiable result = (Identifiable) getResource("tasks").post(Task.class, task);
+        output.success("Created task with id " + result.getId());
     }
 }

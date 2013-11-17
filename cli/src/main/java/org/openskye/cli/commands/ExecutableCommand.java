@@ -6,10 +6,7 @@ import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.beanutils.BeanUtils;
 import org.openskye.cli.ConsoleLogger;
 import org.openskye.cli.SkyeCliSettings;
-import org.openskye.cli.commands.fields.EnumerationField;
-import org.openskye.cli.commands.fields.Field;
-import org.openskye.cli.commands.fields.PropertiesField;
-import org.openskye.cli.commands.fields.ReferenceField;
+import org.openskye.cli.commands.fields.*;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.dao.PaginatedResult;
 
@@ -57,6 +54,44 @@ public abstract class ExecutableCommand {
 
     public Console getConsole() {
         return System.console();
+    }
+
+    protected void enterNumber(NumberField field, Object newObject) {
+        while (true) {
+            try {
+                String input = getConsole().readLine("Enter "+field.getName()+":");
+                Long value = Long.parseLong(input);
+                BeanUtils.setProperty(newObject, field.getName(), value);
+                break;
+            } catch(Exception e) {
+                throw new SkyeException("Unable to assign number value to this object", e);
+            }
+        }
+    }
+
+    protected void enterText(TextField field, Object newObject) {
+        while (true) {
+            try {
+                String input = getConsole().readLine("Enter "+field.getName()+":");
+                BeanUtils.setProperty(newObject, field.getName(), input);
+                break;
+            } catch(Exception e) {
+                throw new SkyeException("Unable to assign text value to this object", e);
+            }
+        }
+    }
+
+    protected void enterBoolean(BooleanField field, Object newObject) {
+        while (true) {
+            try {
+                String input = getConsole().readLine("Enter "+field.getName()+" (true/false):");
+                Boolean value = Boolean.parseBoolean(input);
+                BeanUtils.setProperty(newObject, field.getName(), value);
+                break;
+            } catch(Exception e) {
+                throw new SkyeException("Unable to assign boolean value to this object", e);
+            }
+        }
     }
 
     protected void selectEnum(EnumerationField field, Object newObject) {
