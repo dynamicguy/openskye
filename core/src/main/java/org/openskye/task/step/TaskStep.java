@@ -47,6 +47,17 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         return task;
     }
 
+    public TaskSchedule toTaskSchedule(String cronExpression) {
+        // Create a new TaskSchedule object from this step
+        TaskSchedule taskSchedule = new TaskSchedule();
+        Project project = new Project();
+        project.setId(projectId);
+        taskSchedule.setProject(project);
+        taskSchedule.setStepClassName(this.getClass().getName());
+        taskSchedule.setStep(this);
+        return taskSchedule;
+    }
+
     protected InformationStore buildInformationStore(InformationStoreDefinition dis) {
         Optional<InformationStore> is = storeRegistry.build(dis);
         if (!is.isPresent())
