@@ -22,12 +22,15 @@ import java.util.List;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class TaskSchedulesCommand extends AbstractTaskStepCommand {
-    @Parameter(names = "--delete")
-    protected boolean delete;
-    @Parameter
-    protected String cronExpression;
 
     private final String commandName = "taskSchedules";
+
+    @Parameter(names = "--delete")
+    protected boolean delete;
+    @Parameter(names = "--cron")
+    protected String cronExpression;
+    @Parameter(names = "--id")
+    protected List<String> id;
 
     public List<Field> getFields() {
         return FieldBuilder.start().build();

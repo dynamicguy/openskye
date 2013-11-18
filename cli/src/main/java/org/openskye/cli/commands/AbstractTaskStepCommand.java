@@ -38,8 +38,6 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     protected boolean destroy;
     @Parameter(names = "--test")
     protected boolean test;
-    @Parameter
-    protected List<String> id;
 
     public abstract Class getClazz();
 
