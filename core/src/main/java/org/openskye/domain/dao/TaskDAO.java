@@ -9,6 +9,7 @@ import org.openskye.domain.TaskSchedule;
 import org.openskye.domain.TaskStatus;
 import org.openskye.task.step.TaskStep;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -46,15 +47,21 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
     }
 
     public Optional<Task> findOldestQueued(String workerName) {
-        CriteriaBuilder builder = createCriteriaBuilder();
-        CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
-        Root<Task> taskRoot = criteria.from(Task.class);
-        criteria.select(taskRoot);
-        criteria.where(builder.and(
-                builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
-                builder.equal(taskRoot.get("workerName"), workerName)
-            ).orderBy(builder.asc(taskRoot.get("queued")));
-        Task nextTask = currentEntityManager().createQuery(criteria).getSingleResult();
+        Task nextTask = null;
+        try {
+            CriteriaBuilder builder = createCriteriaBuilder();
+            CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
+            Root<Task> taskRoot = criteria.from(Task.class);
+            criteria.select(taskRoot);
+            criteria.where(builder.equal(taskRoot.get("status"), TaskStatus.QUEUED));
+            criteria.where(builder.and(
+                    builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
+                    builder.equal(taskRoot.get("workerName"), workerName)
+                ).orderBy(builder.asc(taskRoot.get("queued")));
+            nextTask = currentEntityManager().createQuery(criteria).getSingleResult();
+        } catch( NoResultException nre ) {
+            // There are no tasks in the database
+        }
         if (nextTask == null) {
             return Optional.absent();
         } else {
