@@ -75,13 +75,14 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         // Complete the autoconfig
         autoConfig.run(environment, injector);
 
-        // Configure and run the worker manager
-        QueueWorkerManager queueWorkerManager = (QueueWorkerManager) injector.getInstance(TaskManager.class);
-        queueWorkerManager.start();
-
         environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
                 .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
+        // Add a listener for us to be able to wire in Shiro
+        environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule));
+
+        // Add a listener to start the task manager
+        environment.lifecycle().addServerLifecycleListener(new SkyeServerLifecycleListener(injector));
     }
 
 }

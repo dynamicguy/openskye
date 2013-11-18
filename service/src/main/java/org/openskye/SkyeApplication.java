@@ -85,6 +85,8 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         // Add a listener for us to be able to wire in Shiro
         environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule));
 
+        // Add a listener to start the task manager
+        environment.lifecycle().addServerLifecycleListener(new SkyeServerLifecycleListener(injector));
     }
 
 }
