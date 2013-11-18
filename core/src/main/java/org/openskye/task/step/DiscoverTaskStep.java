@@ -70,6 +70,7 @@ public class DiscoverTaskStep extends TaskStep {
                     om.setTaskId(task.getId());
                     om.setProject(task.getProject());
                     omr.put(om);
+                    //oms.index(om);
                 }
             }
 

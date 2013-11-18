@@ -143,6 +143,7 @@ public abstract class ExecutableCommand {
                 try {
                     Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
                     BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId()));
+                    result = getResource(field.getResource() + "/" + BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId())).get(field.getClazz());
                     BeanUtils.setProperty(newObject, field.getName(), result);
                     break;
                 } catch (Exception e) {

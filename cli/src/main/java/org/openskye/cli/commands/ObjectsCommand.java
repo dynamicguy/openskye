@@ -1,13 +1,13 @@
 package org.openskye.cli.commands;
 
 import com.beust.jcommander.Parameters;
+import com.google.inject.Inject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.cli.commands.fields.Field;
-import org.openskye.cli.commands.fields.FieldBuilder;
-import org.openskye.cli.commands.fields.PropertiesField;
-import org.openskye.cli.commands.fields.TextField;
+import org.openskye.cli.commands.fields.*;
+import org.openskye.core.ObjectMetadata;
+import org.openskye.domain.Project;
 
 import java.util.List;
 
@@ -23,18 +23,18 @@ import java.util.List;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class ObjectsCommand extends AbstractCrudCommand {
+
+    @Inject
+    private final String commandName = "objects";
+
     @Override
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("path")).add(new TextField("implementation")).add(new PropertiesField("metadata")).build();
+        return FieldBuilder.start().add(new TextField("path")).add(new TextField("implementation")).add(new ReferenceField(Project.class)).add(new PropertiesField("metadata")).build();
     }
 
     @Override
     public Class getClazz() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return ObjectMetadata.class;
     }
 
-    @Override
-    public String getCommandName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }
