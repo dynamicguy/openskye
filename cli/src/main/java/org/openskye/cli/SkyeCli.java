@@ -69,9 +69,16 @@ public class SkyeCli {
         try {
             jc.parse(args);
 
+            // If no command, then do nothing
+            if (jc.getParsedCommand() == null) {
+                return;
+            }
+
             // Resolve which command we have
             for (ExecutableCommand command : commands) {
-                if (command.getCommandName().equals(jc.getParsedCommand())) {
+                if (command.getCommandName() == null) {
+                    consoleLogger.error("Missing command name for "+command.getClass().getSimpleName());
+                } else if (command.getCommandName().equals(jc.getParsedCommand())) {
                     command.execute();
                 }
             }
