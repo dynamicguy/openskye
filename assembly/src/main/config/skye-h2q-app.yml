@@ -7,7 +7,7 @@ database:
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
   oms: org.openskye.metadata.impl.InMemoryObjectMetadataSearch
-  taskManager: org.openskye.task.queue.TaskWorkerManager
+  taskManager: org.openskye.task.queue.QueueTaskManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
 server:
