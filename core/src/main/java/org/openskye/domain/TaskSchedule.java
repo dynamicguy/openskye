@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-import org.openskye.task.step.AbstractTaskStep;
+import org.openskye.task.step.TaskStep;
 
 import javax.persistence.*;
 
@@ -29,7 +29,7 @@ public class TaskSchedule implements Identifiable {
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
 
-    // The details of the Task are contained in a subclass of AbstractTaskStep.  Since
+    // The details of the Task are contained in a subclass of TaskStep.  Since
     // each type of step has its own set of fields, store it as a JSON blob and
     // reconstruct the step object in the DAO when accessed
     @Column(name = "STEP_CLASS_NAME")
@@ -39,7 +39,7 @@ public class TaskSchedule implements Identifiable {
     @JsonIgnore
     private String stepJson;
     @Transient
-    private AbstractTaskStep step;
+    private TaskStep step;
 
     // See Quartz cron field documentation for formatting of this string
     @Column(name = "CRON_EXPRESSION")

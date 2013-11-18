@@ -2,6 +2,7 @@ package org.openskye.domain.dao;
 
 import com.google.inject.Inject;
 import org.openskye.domain.*;
+import org.openskye.task.step.ArchiveTaskStep;
 
 /**
  Test the TaskLogDAO
@@ -33,13 +34,10 @@ public class TaskLogDAOTest extends AbstractDAOTestBase<TaskLog>{
         channel.setInformationStoreDefinition(isd);
         channel.setProject(project);
         TaskStatistics taskStatistics=new TaskStatistics();
-        Task task=new Task();
+        Task task=new ArchiveTaskStep(channel).toTask();
         taskStatistics.setTask(task);
-        task.setChannel(channel);
-        task.setProject(project);
-        task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
-        taskLog.setTask(task);
+        taskLog.setTaskId(task.getId());
         return taskLog;
     }
 
@@ -57,14 +55,11 @@ public class TaskLogDAOTest extends AbstractDAOTestBase<TaskLog>{
         channel.setInformationStoreDefinition(isd);
         channel.setProject(project);
         TaskStatistics taskStatistics=new TaskStatistics();
-        Task task=new Task();
+        Task task=new ArchiveTaskStep(channel).toTask();
         taskStatistics.setTask(task);
-        task.setChannel(channel);
-        task.setProject(project);
-        task.setTargetInformationStoreDefinition(isd);
         task.setStatistics(taskStatistics);
 
-        instance.setTask(task);
+        instance.setTaskId(task.getId());
         instance.setMessage("task set");
     }
 }

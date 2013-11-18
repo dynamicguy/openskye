@@ -33,6 +33,7 @@ public class LocalFSInformationStoreTest {
 
     public InformationStoreDefinition getLocalFsDis() {
         InformationStoreDefinition dis = new InformationStoreDefinition();
+        dis.setId(UUID.randomUUID().toString());
         dis.setImplementation(LocalFSInformationStore.IMPLEMENTATION);
         String workingDir = System.getProperty("user.dir");
         dis.getProperties().put(LocalFSInformationStore.FILE_PATH, workingDir);
@@ -97,6 +98,5 @@ public class LocalFSInformationStoreTest {
         taskManager.submit(archive);
 
     }
-
 
 }

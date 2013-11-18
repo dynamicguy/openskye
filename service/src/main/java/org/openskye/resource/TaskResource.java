@@ -37,7 +37,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         this.taskManager = taskManager;
     }
 
-    private Task createFromStep(AbstractTaskStep newStep) {
+    private Task createFromStep(TaskStep newStep) {
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);

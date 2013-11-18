@@ -2,9 +2,8 @@ package org.openskye.domain.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.Task;
 import org.openskye.domain.TaskSchedule;
-import org.openskye.task.step.AbstractTaskStep;
+import org.openskye.task.step.TaskStep;
 
 import java.io.IOException;
 
@@ -19,7 +18,7 @@ public class TaskScheduleDAO extends AbstractPaginatingDAO<TaskSchedule> {
     protected void deserialize(TaskSchedule taskSchedule) {
         try {
             Class clazz = Class.forName(taskSchedule.getStepClassName());
-            AbstractTaskStep step = (AbstractTaskStep) MAPPER.readValue(taskSchedule.getStepJson(),clazz);
+            TaskStep step = (TaskStep) MAPPER.readValue(taskSchedule.getStepJson(),clazz);
             taskSchedule.setStep(step);
         } catch( ReflectiveOperationException|IOException e ) {
             throw new SkyeException("Unable to deserialize task schedule step",e);

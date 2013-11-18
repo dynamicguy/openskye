@@ -1,14 +1,11 @@
 package org.openskye.task.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.*;
-import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.filters.ChannelFilter;
 import org.openskye.filters.ChannelFilterFactory;
 
@@ -19,7 +16,7 @@ import java.util.List;
  * A simple implementation of the discover task type
  */
 @NoArgsConstructor
-public class DiscoverTaskStep extends AbstractTaskStep {
+public class DiscoverTaskStep extends TaskStep {
     @Getter
     @Setter
     private Channel channel;
