@@ -44,7 +44,7 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         return newInstance;
     }
 
-    @ApiOperation(value = "Create new archive task", notes = "Create a new archive task and return with its unique id", response = Task.class)
+    @ApiOperation(value = "Create new discovery task", notes = "Create a new discovery task and return with its unique id", response = Task.class)
     @POST
     @Path("/discover")
     @Transactional

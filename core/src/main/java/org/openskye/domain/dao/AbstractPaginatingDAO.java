@@ -149,13 +149,13 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (this.get(id) == null)
             throw new EntityNotFoundException();
 
-        if (id != updatedInstance.getId())
+        if (!id.equals(updatedInstance.getId()))
             throw new ValidationException();
 
         serialize(updatedInstance);
         validate(updatedInstance);
 
-        this.currentEntityManager().persist(updatedInstance);
+        this.currentEntityManager().merge(updatedInstance);
         audit(updatedInstance, AuditEvent.UPDATE);
 
         return updatedInstance;

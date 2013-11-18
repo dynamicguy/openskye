@@ -13,6 +13,7 @@ import org.openskye.domain.Task;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
+import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 
 import javax.inject.Inject;
 import java.io.*;
@@ -121,7 +122,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
                     }
                 } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
 
-                    SimpleObject simpleObject = (UnstructuredObject) Class.forName(metadata.getImplementation()).newInstance();
+                    SimpleObject simpleObject = new LocalFileUnstructuredObject();
                     simpleObject.setObjectMetadata(metadata);
                     return Optional.of(simpleObject);
                 } else {

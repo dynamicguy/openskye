@@ -27,14 +27,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
+
 /**
  * An implementation of
  */
 public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch
 {
 
-    @Inject
-    Client client;
+
+    Client client=nodeBuilder().local(true).node().client();
 
     @Inject
     SkyeSession session;
