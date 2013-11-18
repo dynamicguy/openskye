@@ -25,7 +25,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
     @Override
     protected void deserialize(Task task) {
         try {
-            Class clazz = Class.forName(task.getStep().getClass().getCanonicalName());
+            Class clazz = Class.forName(task.getStepClassName());
             TaskStep step = (TaskStep) MAPPER.readValue(task.getStepJson(),clazz);
             step.setTask(task);
             task.setStep(step);
