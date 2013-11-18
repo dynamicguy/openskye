@@ -18,9 +18,6 @@ import java.util.concurrent.Callable;
  * An abstract base for the {@link TaskStep}
  */
 public abstract class TaskStep implements Callable<TaskStatus> {
-    @Getter
-    @Setter
-    protected String projectId;
 
     @JsonIgnore
     @Getter
@@ -35,12 +32,12 @@ public abstract class TaskStep implements Callable<TaskStatus> {
 
     public abstract void validate();
 
+    public abstract Project getProject();
+
     public Task toTask() {
         // Create a new Task object from this step
         task = new Task();
-        Project project = new Project();
-        project.setId(projectId);
-        task.setProject(project);
+        task.setProject(getProject());
         task.setStep(this);
         task.setStepClassName(this.getClass().getName());
         task.setStepLabel(this.getLabel());
@@ -50,9 +47,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     public TaskSchedule toTaskSchedule(String cronExpression) {
         // Create a new TaskSchedule object from this step
         TaskSchedule taskSchedule = new TaskSchedule();
-        Project project = new Project();
-        project.setId(projectId);
-        taskSchedule.setProject(project);
+        taskSchedule.setProject(getProject());
         taskSchedule.setStepClassName(this.getClass().getName());
         taskSchedule.setStep(this);
         return taskSchedule;

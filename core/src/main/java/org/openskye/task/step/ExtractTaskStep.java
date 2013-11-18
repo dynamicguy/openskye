@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.Channel;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 
 /**
@@ -30,15 +31,17 @@ public class ExtractTaskStep extends TaskStep {
         this.objectSetId = objectSetId;
         this.channel = null;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
-        this.projectId = targetInformationStoreDefinition.getProject().getId();
-
     }
 
     public ExtractTaskStep(Channel channel,InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = null;
         this.channel = channel;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
-        this.projectId = channel.getProject().getId();
+    }
+
+    @Override
+    public Project getProject() {
+        return targetInformationStoreDefinition.getProject();
     }
 
     @Override

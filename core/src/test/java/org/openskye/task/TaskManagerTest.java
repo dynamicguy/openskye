@@ -30,9 +30,11 @@ public class TaskManagerTest {
 
     @Test
     public void doTestTaskPass() throws Exception {
+        Project mockProject = new Project();
+        mockProject.setId(UUID.randomUUID().toString());
         String mockProjectId = UUID.randomUUID().toString();
         boolean pass = true;
-        Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
         assertThat("Task status should be CREATED, was "+testTask.getStatus(),
                 testTask.getStatus() == TaskStatus.CREATED);
         taskManager.submit(testTask);
@@ -42,9 +44,10 @@ public class TaskManagerTest {
 
     @Test
     public void doTestTaskFail() throws Exception {
-        String mockProjectId = UUID.randomUUID().toString();
+        Project mockProject = new Project();
+        mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
-        Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
         assertThat("Task status should be CREATED, was "+testTask.getStatus(),
                 testTask.getStatus() == TaskStatus.CREATED);
         taskManager.submit(testTask);

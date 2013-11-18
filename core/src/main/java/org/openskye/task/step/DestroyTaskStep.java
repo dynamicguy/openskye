@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 import org.openskye.stores.StoreRegistry;
 
@@ -31,7 +32,10 @@ public class DestroyTaskStep extends TaskStep {
     public DestroyTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
-        this.projectId = targetInformationStoreDefinition.getProject().getId();
+    }
+
+    public Project getProject() {
+        return targetInformationStoreDefinition.getProject();
     }
 
     @Override

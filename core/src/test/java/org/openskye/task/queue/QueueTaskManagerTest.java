@@ -4,6 +4,7 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.persist.PersistService;
 import org.junit.*;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.TaskDAO;
@@ -46,9 +47,10 @@ public class QueueTaskManagerTest {
     @Test
     public void doTestTaskPass() throws Exception {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
-        String mockProjectId = UUID.randomUUID().toString();
+        Project mockProject = new Project();
+        mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
-        Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
         testTask.setWorkerName("Orion Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
@@ -64,9 +66,10 @@ public class QueueTaskManagerTest {
     @Test
     public void doTestTaskFail() throws Exception {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
-        String mockProjectId = UUID.randomUUID().toString();
+        Project mockProject = new Project();
+        mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
-        Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
         testTask.setWorkerName("Orion Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
@@ -89,9 +92,10 @@ public class QueueTaskManagerTest {
     @Test(expected = SkyeException.class)
     public void doWrongWorker() throws Exception {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
-        String mockProjectId = UUID.randomUUID().toString();
+        Project mockProject = new Project();
+        mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
-        Task testTask = new TestTaskStep(mockProjectId,0,0,pass).toTask();
+        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
         testTask.setWorkerName("Some Other Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);

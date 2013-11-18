@@ -26,7 +26,10 @@ public class DiscoverTaskStep extends TaskStep {
 
     public DiscoverTaskStep( Channel channel ) {
         this.channel = channel;
-        this.projectId = channel.getProject().getId();
+    }
+
+    public Project getProject() {
+        return channel.getProject();
     }
 
     @Override

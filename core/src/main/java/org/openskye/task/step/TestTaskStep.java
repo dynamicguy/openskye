@@ -1,10 +1,12 @@
 package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 
 /**
@@ -16,6 +18,9 @@ import org.openskye.domain.TaskStatus;
 public class TestTaskStep extends TaskStep {
     @Getter
     @Setter
+    private Project project;
+    @Getter
+    @Setter
     private Integer sleepSeconds;
     @Getter
     @Setter
@@ -24,11 +29,11 @@ public class TestTaskStep extends TaskStep {
     @Setter
     private Boolean pass;
 
-    public TestTaskStep(String projectId, Integer sleepSeconds, Integer iterations, Boolean pass) {
+    public TestTaskStep(Project project, Integer sleepSeconds, Integer iterations, Boolean pass) {
         this.sleepSeconds = sleepSeconds;
         this.iterations = iterations;
         this.pass = pass;
-        this.projectId = projectId;
+        this.project = project;
     }
 
     @Override

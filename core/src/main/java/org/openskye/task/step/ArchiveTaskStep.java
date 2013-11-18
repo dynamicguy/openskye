@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
+import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 
 import java.util.HashMap;
@@ -22,7 +23,10 @@ public class ArchiveTaskStep extends TaskStep {
 
     public ArchiveTaskStep(Channel channel) {
         this.channel = channel;
-        this.projectId = channel.getProject().getId();
+    }
+
+    public Project getProject() {
+        return channel.getProject();
     }
 
     @Override

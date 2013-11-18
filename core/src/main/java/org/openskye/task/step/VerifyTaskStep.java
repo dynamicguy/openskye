@@ -1,6 +1,7 @@
 package org.openskye.task.step;
 
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 
 /**
@@ -11,6 +12,11 @@ public class VerifyTaskStep extends TaskStep {
     @Override
     public String getLabel() {
         return "VERIFY";
+    }
+
+    @Override
+    public Project getProject() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
