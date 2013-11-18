@@ -4,10 +4,11 @@ import com.beust.jcommander.Parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.cli.commands.fields.BooleanField;
-import org.openskye.cli.commands.fields.NumberField;
-import org.openskye.cli.commands.fields.ReferenceField;
+import org.apache.commons.beanutils.BeanUtils;
+import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
+import org.openskye.core.ObjectSet;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.Channel;
 import org.openskye.domain.Project;
 import org.openskye.domain.dao.PaginatedResult;
@@ -24,6 +25,9 @@ import java.util.List;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractTaskStepCommand extends ExecutableCommand {
+
+    private final String commandName = "tasks";
+
     @Parameter(names = "--list")
     protected boolean list;
     @Parameter(names = "--discover")
@@ -47,6 +51,10 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
 
     public String getCollectionPlural() {
         return toCamel(getClazz().getSimpleName() + "s");
+    }
+
+    public List<Field> getFields() {
+        return FieldBuilder.start().add(new TextField("workerName")).add(new TextField("projectId")).build();
     }
 
     protected abstract void create(TaskStep step);
@@ -115,7 +123,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
 
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
-        //TODO need a way to collect ObjectSet id fields
+        selectReferenceField(new ReferenceField(ObjectSet.class),step);
         create(step);
     }
 

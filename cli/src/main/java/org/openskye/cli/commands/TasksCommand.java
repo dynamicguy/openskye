@@ -4,16 +4,21 @@ import com.beust.jcommander.Parameters;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.cli.commands.fields.Field;
-import org.openskye.cli.commands.fields.FieldBuilder;
-import org.openskye.domain.Identifiable;
-import org.openskye.domain.Task;
-import org.openskye.task.step.TaskStep;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.openskye.cli.commands.fields.*;
+import org.openskye.core.ObjectSet;
+import org.openskye.core.SkyeException;
+import org.openskye.domain.*;
+import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.task.step.*;
 
+import java.io.Console;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * Managing the Tasks
+ * Managing the Archive Store Instances
  */
 @Parameters(commandDescription = "Manage tasks")
 @Data
@@ -24,7 +29,7 @@ public class TasksCommand extends AbstractTaskStepCommand {
     private final String commandName = "tasks";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().build();
+        return FieldBuilder.start().add(new TextField("workerName")).add(new TextField("projectId")).build();
     }
 
     @Override
@@ -36,7 +41,10 @@ public class TasksCommand extends AbstractTaskStepCommand {
     public void create(TaskStep step) {
         output.message("Creating a new " + step.getLabel() + " task:\n");
         Task task = step.toTask();
-        Identifiable result = (Identifiable) getResource("tasks").post(Task.class, task);
+        String apiDirect = "/"+step.getLabel().toLowerCase();
+        Identifiable result = (Identifiable) getResource(getCollectionPlural()+apiDirect).post(getClazz(), task);
         output.success("Created task with id " + result.getId());
     }
+
+
 }
