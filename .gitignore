@@ -6,4 +6,5 @@ target/
 .idea
 /bin
 stores/data/
+service/data
 /data/

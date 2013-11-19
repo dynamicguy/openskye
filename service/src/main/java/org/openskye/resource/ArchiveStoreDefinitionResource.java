@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * The REST endpoint for {@link org.openskye.domain.Domain}
+ * The REST endpoint for {@link ArchiveStoreDefinition}
  */
 @Api(value = "/api/1/archiveStoreDefinitions", description = "Manage archive store definitions")
 @Path("/api/1/archiveStoreDefinitions")
@@ -25,8 +25,8 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     protected ArchiveStoreDefinitionDAO archiveStoreDefinitionDAO;
 
     @Inject
-    public ArchiveStoreDefinitionResource(ArchiveStoreDefinitionDAO dao){
-        this.archiveStoreDefinitionDAO=dao;
+    public ArchiveStoreDefinitionResource(ArchiveStoreDefinitionDAO dao) {
+        this.archiveStoreDefinitionDAO = dao;
     }
 
     @ApiOperation(value = "Create new archive store definition", notes = "Create a new archive store definition and return with its unique id", response = ArchiveStoreDefinition.class)
