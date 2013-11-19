@@ -32,6 +32,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
 
     public abstract void validate();
 
+    @JsonIgnore
     public abstract Project getProject();
 
     public Task toTask() {
