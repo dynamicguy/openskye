@@ -55,6 +55,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Override
     public void run() {
+        log.debug(workerConfig.getName()+": monitor wakes up ..");
 
         // Look for tasks that have ended
         Set<String> taskIds = futures.keySet();
@@ -90,6 +91,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     EntityTransaction tx = taskDAO.beginTransaction();
                     end(taskId,status,exception);
                     tx.commit();
+                    log.debug(workerConfig.getName()+": end task "+taskId);
                 } catch( Exception e ) {
                     log.error("Error while recording end of task "+taskId,e);
                 }
@@ -113,6 +115,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     accept(taskId,workerConfig.getName());
                     tx.commit();
                     futures.put(taskId, workers.submit(step));
+                    log.debug(workerConfig.getName()+": begin task "+taskId);
                 }
             } catch (Exception e) {
                 log.error("Exception while accepting task",e);
