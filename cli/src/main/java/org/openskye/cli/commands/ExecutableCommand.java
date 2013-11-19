@@ -56,7 +56,7 @@ public abstract class ExecutableCommand {
         return System.console();
     }
 
-    protected void enterNumber(NumberField field, Object newObject) {
+    protected Object enterNumber(NumberField field, Object newObject) {
         while (true) {
             try {
                 String input = getConsole().readLine("Enter "+field.getName()+":");
@@ -67,9 +67,10 @@ public abstract class ExecutableCommand {
                 throw new SkyeException("Unable to assign number value to this object", e);
             }
         }
+        return newObject;
     }
 
-    protected void enterText(TextField field, Object newObject) {
+    protected Object enterText(TextField field, Object newObject) {
         while (true) {
             try {
                 String input = getConsole().readLine("Enter "+field.getName()+":");
@@ -79,9 +80,10 @@ public abstract class ExecutableCommand {
                 throw new SkyeException("Unable to assign text value to this object", e);
             }
         }
+        return newObject;
     }
 
-    protected void enterBoolean(BooleanField field, Object newObject) {
+    protected Object enterBoolean(BooleanField field, Object newObject) {
         while (true) {
             try {
                 String input = getConsole().readLine("Enter "+field.getName()+" (true/false):");
@@ -92,9 +94,10 @@ public abstract class ExecutableCommand {
                 throw new SkyeException("Unable to assign boolean value to this object", e);
             }
         }
+        return newObject;
     }
 
-    protected void selectEnum(EnumerationField field, Object newObject) {
+    protected Object selectEnum(EnumerationField field, Object newObject) {
         List<?> choices = field.getAllEnumOptions();
 
         int i = 1;
@@ -114,9 +117,10 @@ public abstract class ExecutableCommand {
             }
 
         }
+        return newObject;
     }
 
-    protected void selectReferenceField(ReferenceField field, Object newObject) {
+    protected Object selectReferenceField(ReferenceField field, Object newObject) {
 
         // We need to display a list of the available options for the reference field
         // and then let the user choose one
@@ -151,10 +155,10 @@ public abstract class ExecutableCommand {
                 }
             }
         }
-
+        return newObject;
     }
 
-    protected void setPropertiesField(PropertiesField props, Object newObject) {
+    protected Object setPropertiesField(PropertiesField props, Object newObject) {
         output.message("Please enter the properties and values.");
         while (true) {
             String property = getConsole().readLine("Property: ");
@@ -170,7 +174,7 @@ public abstract class ExecutableCommand {
         } catch (Exception e) {
             throw new SkyeException("Unable to add properties to object", e);
         }
-
+        return newObject;
     }
 
     public Collection<? extends String> getFieldNames() {

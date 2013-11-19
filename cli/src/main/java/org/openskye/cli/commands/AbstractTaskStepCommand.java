@@ -10,6 +10,7 @@ import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Channel;
+import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.task.step.*;
@@ -98,13 +99,13 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
 
     public void discover() {
         TaskStep step = new DiscoverTaskStep();
-        selectReferenceField(new ReferenceField(Channel.class),step);
+        step = (DiscoverTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
         create(step);
     }
 
     public void archive() {
         TaskStep step = new ArchiveTaskStep();
-        selectReferenceField(new ReferenceField(Channel.class),step);
+        step = (ArchiveTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
         create(step);
     }
 
@@ -117,13 +118,15 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void extract() {
         TaskStep step = new ExtractTaskStep();
         //TODO extract should optionally take a set ID parameter instead of a channel
-        selectReferenceField(new ReferenceField(Channel.class),step);
+        step = (ExtractTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
+        step = setTargetInformationStore(step);
         create(step);
     }
 
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
-        selectReferenceField(new ReferenceField(ObjectSet.class),step);
+        step = setObjectSetID(step);
+        step = setTargetInformationStore(step);
         create(step);
     }
 
@@ -133,5 +136,69 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         enterNumber(new NumberField("sleepSeconds"),step);
         enterNumber(new NumberField("iterations"),step);
         enterBoolean(new BooleanField("pass"),step);
+    }
+
+    public TaskStep setTargetInformationStore(TaskStep step){
+
+        ReferenceField informationStores = new ReferenceField(InformationStoreDefinition.class);
+        PaginatedResult paginatedResult = getResource(informationStores.getResource()).get(PaginatedResult.class);
+        int i = 1;
+
+
+        for (Object obj : paginatedResult.getResults()) {
+            try {
+                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, informationStores.getValue()));
+            } catch (Exception e) {
+                throw new SkyeException("Unable to find information stores ", e);
+            }
+            i++;
+        }
+
+        String option = getConsole().readLine("Enter choice:");
+        int position = Integer.parseInt(option);
+
+        try {
+            InformationStoreDefinition chosenDef = getResource(informationStores.getResource() + "/" + BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), informationStores.getId())).get(InformationStoreDefinition.class);
+            if(step instanceof ExtractTaskStep){
+                ((ExtractTaskStep)step).setTargetInformationStoreDefinition(chosenDef);
+            }
+            else{
+                ((DestroyTaskStep)step).setTargetInformationStoreDefinition(chosenDef);
+            }
+
+        } catch (Exception e) {
+            throw new SkyeException("Could not assign information store", e);
+        }
+        return step;
+    }
+
+    public TaskStep setObjectSetID(TaskStep step){
+        ReferenceField objectSets = new ReferenceField(ObjectSet.class);
+        PaginatedResult paginatedResult = getResource(objectSets.getResource()).get(PaginatedResult.class);
+        if(paginatedResult.getResults().size()==0){
+            output.error("You must have at least one object set to run a destruction task. Please create an object set first");
+            return null;
+        }
+        int i=0;
+        for (Object obj : paginatedResult.getResults()) {
+            try {
+                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, objectSets.getValue()));
+            } catch (Exception e) {
+                throw new SkyeException("Unable to find information stores ", e);
+            }
+            i++;
+        }
+
+        String option = getConsole().readLine("Enter choice:");
+        int position = Integer.parseInt(option);
+
+        try {
+            ObjectSet chosenSet = getResource(objectSets.getResource() + "/" + BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), objectSets.getId())).get(ObjectSet.class);
+            ((DestroyTaskStep) step).setObjectSetId(chosenSet.getId());
+
+        } catch (Exception e) {
+            throw new SkyeException("Could not assign object set", e);
+        }
+        return step;
     }
 }

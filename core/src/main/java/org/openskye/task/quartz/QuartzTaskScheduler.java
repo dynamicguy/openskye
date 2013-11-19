@@ -18,7 +18,7 @@ import static org.quartz.TriggerKey.triggerKey;
 public class QuartzTaskScheduler implements TaskScheduler {
 
     private Scheduler quartzScheduler;
-    private String quartzJobGroup = "Orion";
+    private String quartzJobGroup = "SkyeQuartzGroup";
 
     @Inject
     TaskScheduleDAO taskScheduleDAO;
