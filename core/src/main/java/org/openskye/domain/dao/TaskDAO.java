@@ -58,7 +58,10 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
                     builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
                     builder.equal(taskRoot.get("workerName"), workerName)
                 ).orderBy(builder.asc(taskRoot.get("queued")));
-            nextTask = currentEntityManager().createQuery(criteria).getSingleResult();
+            List<Task> taskList = currentEntityManager().createQuery(criteria).getResultList();
+            if ( taskList.size() > 0 ) {
+                nextTask = taskList.get(0);
+            }
         } catch( NoResultException nre ) {
             // There are no tasks in the database
         }
