@@ -51,12 +51,12 @@ public class QueueTaskManagerTest {
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
         Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Orion Worker");
+        testTask.setWorkerName("Skye Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Orion Worker");
+        queueTaskManager.accept(testTask.getId(),"Skye Worker");
         checkStatus(testTask,TaskStatus.STARTED);
         TaskStatus finalStatus = testTask.getStep().call();
         queueTaskManager.end(testTask.getId(),finalStatus,null);
@@ -70,12 +70,12 @@ public class QueueTaskManagerTest {
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
         Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Orion Worker");
+        testTask.setWorkerName("Skye Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask,TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Orion Worker");
+        queueTaskManager.accept(testTask.getId(),"Skye Worker");
         checkStatus(testTask,TaskStatus.STARTED);
         TaskStatus finalStatus;
         Exception exception = null;
@@ -101,7 +101,7 @@ public class QueueTaskManagerTest {
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Orion Worker");
+        queueTaskManager.accept(testTask.getId(),"Skye Worker");
     }
 }
 
