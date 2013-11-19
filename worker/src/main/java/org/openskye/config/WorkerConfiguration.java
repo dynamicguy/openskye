@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class WorkerConfiguration extends Configuration {
-    private int threadCount;
-    private int pollPeriodSec;     // seconds that the worker sleeps between polls for waiting tasks
-    private String name;     // a name by which this worker instance should be known
+    private int threadCount = 3;
+    private int pollPeriodSec = 30;       // seconds that the worker sleeps between polls for waiting tasks
+    private String name = "Skye Worker";  // a name by which this worker instance should be known
 }
