@@ -46,5 +46,6 @@ public class Project implements Identifiable {
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
     private boolean active = true;
+    private String description;
 
 }

@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * The REST endpoint for {@link org.openskye.domain.Domain}
+ * The REST endpoint for {@link ArchiveStoreInstance}
  */
 @Api(value = "/api/1/archiveStoreInstances", description = "Manage archive store instances")
 @Path("/api/1/archiveStoreInstances")
@@ -25,8 +25,8 @@ public class ArchiveStoreInstanceResource extends AbstractUpdatableDomainResourc
     protected ArchiveStoreInstanceDAO archiveStoreInstanceDAO;
 
     @Inject
-    public ArchiveStoreInstanceResource(ArchiveStoreInstanceDAO dao){
-        this.archiveStoreInstanceDAO=dao;
+    public ArchiveStoreInstanceResource(ArchiveStoreInstanceDAO dao) {
+        this.archiveStoreInstanceDAO = dao;
     }
 
     @ApiOperation(value = "Create new archive store instance", notes = "Create a new archive store instance and return with its unique id", response = ArchiveStoreInstance.class)
