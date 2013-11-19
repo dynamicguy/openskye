@@ -42,6 +42,8 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         task.setStep(this);
         task.setStepClassName(this.getClass().getName());
         task.setStepLabel(this.getLabel());
+        task.setStatus(TaskStatus.CREATED);
+        task.setStatistics(new TaskStatistics());
         return task;
     }
 

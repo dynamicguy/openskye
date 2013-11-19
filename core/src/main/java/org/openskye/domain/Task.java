@@ -1,7 +1,9 @@
 package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,6 +22,7 @@ import java.util.Date;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Task implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
