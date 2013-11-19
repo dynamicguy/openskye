@@ -6,10 +6,8 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.domain.Task;
-import org.openskye.domain.dao.AbstractPaginatingDAO;
-import org.openskye.domain.dao.ChannelDAO;
-import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.domain.dao.TaskDAO;
+import org.openskye.domain.TaskLog;
+import org.openskye.domain.dao.*;
 import org.openskye.task.TaskManager;
 import org.openskye.task.step.*;
 
@@ -27,13 +25,15 @@ import javax.ws.rs.core.MediaType;
 public class TaskResource extends AbstractUpdatableDomainResource<Task> {
 
     private final ChannelDAO channelDAO;
+    private TaskLogDAO taskLogDAO;
     private TaskDAO taskDAO;
     private TaskManager taskManager;
 
     @Inject
-    public TaskResource(TaskDAO dao, ChannelDAO channelDAO, TaskManager taskManager) {
+    public TaskResource(TaskDAO dao, ChannelDAO channelDAO, TaskManager taskManager, TaskLogDAO taskLogDAO) {
         this.taskDAO = dao;
         this.channelDAO = channelDAO;
+        this.taskLogDAO = taskLogDAO;
         this.taskManager = taskManager;
     }
 
@@ -97,6 +97,15 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Override
     public Task get(@PathParam("id") String id) {
         return super.get(id);
+    }
+
+    @ApiOperation(value = "Find task logs for task by id", notes = "Return task logs for task by id", responseContainer = "List", response = TaskLog.class)
+    @Path("/{id}/taskLogs")
+    @GET
+    @Transactional
+    @Timed
+    public PaginatedResult<TaskLog> getTaskLogs(@PathParam("id") String id) {
+        return taskLogDAO.getLogsForTask(super.get(id));
     }
 
     @ApiOperation(value = "List all tasks", notes = "Returns all tasks in a paginated structure", responseContainer = "List", response = Task.class)
