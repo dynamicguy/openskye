@@ -6,6 +6,7 @@ import io.dropwizard.util.Generics;
 import org.openskye.domain.AuditEvent;
 import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
+import org.openskye.domain.Task;
 
 import javax.inject.Inject;
 import javax.persistence.*;
@@ -46,7 +47,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     }
 
     public PaginatedResult<T> list() {
-        PaginatedResult<T> result = new PaginatedResult<>();
         CriteriaQuery<T> criteria = createCriteriaQuery();
         Root<T> selectEntity = criteria.from(entityClass);
         criteria.select(selectEntity);
@@ -54,10 +54,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         for ( T instance : resultList ) {
             deserialize(instance);
         }
-        result.setResults(resultList);
-        result.setTotalResults(result.getResults().size());
-
-        return result;
+        return new PaginatedResult<>(resultList);
     }
 
     public boolean isAudited() {
@@ -219,5 +216,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         xt.begin();
         return xt;
     }
+
 }
 
