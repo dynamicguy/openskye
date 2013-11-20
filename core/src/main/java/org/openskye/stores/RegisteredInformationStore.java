@@ -14,7 +14,7 @@ public class RegisteredInformationStore {
 
     public RegisteredInformationStore(InformationStore informationStore) {
         this.name = informationStore.getName();
-        this.implementation = informationStore.getClass().getCanonicalName();
+        this.implementation = informationStore.getImplementation();
 
     }
 }

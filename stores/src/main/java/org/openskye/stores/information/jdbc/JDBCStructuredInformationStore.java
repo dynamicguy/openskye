@@ -75,6 +75,11 @@ public class JDBCStructuredInformationStore implements InformationStore {
     }
 
     @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
+    }
+
+    @Override
     public String getUrl() {
         return informationStoreDefinition.getProperties().get(DB_URL);
     }

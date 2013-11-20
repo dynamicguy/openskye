@@ -4,7 +4,9 @@ import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.openskye.core.*;
 import org.openskye.core.structured.ColumnMetadata;
@@ -26,8 +28,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.apache.hadoop.hbase.util.Bytes.toBytes;
 
 /**
  * An implementation of an {@link ArchiveStore} that uses Apache HBase to store the {@link org.openskye.core.ArchiveContentBlock}s
@@ -60,6 +60,11 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     @Override
     public String getName() {
         return archiveStoreDefinition.getName() + " (HBase)";
+    }
+
+    @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
     }
 
     @Override
@@ -170,7 +175,7 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
                     for (Object v : vals) {
                         for (ColumnMetadata c : columnMetadataList) {
 
-                            p.add(cols.getName(), c.getName().getBytes(), (byte[])v);
+                            p.add(cols.getName(), c.getName().getBytes(), (byte[]) v);
                         }
                     }
                 }

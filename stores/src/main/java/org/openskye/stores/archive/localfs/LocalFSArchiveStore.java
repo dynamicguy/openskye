@@ -72,6 +72,11 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
+    }
+
+    @Override
     public String getUrl() {
         return "localFS://" + archiveStoreDefinition.getId();
     }

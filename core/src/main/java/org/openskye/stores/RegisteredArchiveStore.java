@@ -14,6 +14,6 @@ public class RegisteredArchiveStore {
 
     public RegisteredArchiveStore(ArchiveStore archiveStore) {
         this.name = archiveStore.getName();
-        this.implementation = archiveStore.getClass().getCanonicalName();
+        this.implementation = archiveStore.getImplementation();
     }
 }

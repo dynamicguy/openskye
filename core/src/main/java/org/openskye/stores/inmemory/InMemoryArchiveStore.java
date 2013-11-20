@@ -22,13 +22,16 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     @Override
     public void initialize(ArchiveStoreDefinition das) {
         this.archiveStoreDefinition = das;
-
-        return;
     }
 
     @Override
     public String getName() {
         return "In-memory (for testing only)";
+    }
+
+    @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
     }
 
     @Override

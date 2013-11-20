@@ -40,6 +40,11 @@ public class InMemoryInformationStore implements InformationStore {
     }
 
     @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
+    }
+
+    @Override
     public String getUrl() {
         return "mem://.";
     }
