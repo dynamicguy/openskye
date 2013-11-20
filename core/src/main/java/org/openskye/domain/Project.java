@@ -48,8 +48,4 @@ public class Project implements Identifiable {
     private boolean active = true;
     private String description;
 
-    @JsonIgnore
-    @Transient
-    private String workerName = "Skye Worker"; // Assume default value for now
-
 }
