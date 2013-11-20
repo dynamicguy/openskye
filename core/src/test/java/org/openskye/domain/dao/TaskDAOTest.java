@@ -38,10 +38,10 @@ public class TaskDAOTest extends AbstractDAOTestBase<Task> {
     @Test
     public void doSerialize() throws Exception {
         Task instance = getNew();
-        getDAO().serialize(instance);
+        instance.serialize();
         instance.setStep(null);
         instance.setStepLabel(null);
-        getDAO().deserialize(instance);
+        instance.deserialize();
         assertThat("a Task can be serialized and deserialized",
                 asJson(instance),
                 is(equalTo(jsonFixture("fixtures/taskSerialize.json"))));
