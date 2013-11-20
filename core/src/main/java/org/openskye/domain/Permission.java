@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,6 +26,7 @@ public class Permission implements Identifiable {
     private String id;
     private String permission;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "permission")
+    @JsonIgnore
     private List<RolePermission> rolePermissions;
 
 
