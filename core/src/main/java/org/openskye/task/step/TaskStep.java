@@ -1,7 +1,6 @@
 package org.openskye.task.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,21 +20,20 @@ import java.util.concurrent.Callable;
 public abstract class TaskStep implements Callable<TaskStatus> {
 
     @JsonIgnore
-    @Getter
-    @Setter
-    Task task;
-    @JsonIgnore
     @Inject
     protected StoreRegistry storeRegistry;
     @JsonIgnore
     @Inject
     protected ObjectMetadataRepository omr;
+    @JsonIgnore
+    @Getter
+    @Setter
+    Task task;
 
     public abstract void validate();
 
     @JsonIgnore
     public abstract Project getProject();
-
 
     public Task toTask() {
         // Create a new Task object from this step
@@ -77,4 +75,9 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @JsonIgnore
     public abstract String getLabel();  // example: "ARCHIVE"
 
+    /**
+     * When a task step is pulled back from JSON it loses the JPA relationships
+     * so we need to make sure we can pull them back in place
+     */
+    public abstract void rehydrate();
 }

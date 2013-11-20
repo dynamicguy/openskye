@@ -9,12 +9,17 @@ import org.openskye.domain.Channel;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
+import org.openskye.domain.dao.ChannelDAO;
+import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 
 /**
  * A simple implementation of the discover task type
  */
 @NoArgsConstructor
 public class ExtractTaskStep extends TaskStep {
+
+    private InformationStoreDefinitionDAO informationStoreDefinitionDAO;
+    private ChannelDAO channelDAO;
     // An extract can either be aimed at an object set, or all the objects ever ingested from
     // a selected channel
     @Getter
@@ -27,13 +32,13 @@ public class ExtractTaskStep extends TaskStep {
     @Setter
     private InformationStoreDefinition targetInformationStoreDefinition;
 
-    public ExtractTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
+    public ExtractTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = objectSetId;
         this.channel = null;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
     }
 
-    public ExtractTaskStep(Channel channel,InformationStoreDefinition targetInformationStoreDefinition) {
+    public ExtractTaskStep(Channel channel, InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = null;
         this.channel = channel;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
@@ -47,6 +52,12 @@ public class ExtractTaskStep extends TaskStep {
     @Override
     public String getLabel() {
         return "EXTRACT";
+    }
+
+    @Override
+    public void rehydrate() {
+        channel = channelDAO.get(channel.getId()).get();
+        targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
     }
 
     @Override
@@ -64,8 +75,7 @@ public class ExtractTaskStep extends TaskStep {
         Optional<ObjectSet> objectSet;
         if (objectSetId != null) {
             objectSet = omr.getObjectSet(objectSetId);
-        }
-        else{
+        } else {
             objectSet = Optional.absent();
         }
 

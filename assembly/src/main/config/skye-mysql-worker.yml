@@ -33,6 +33,6 @@ server:
 logging:
   level: INFO
   loggers:
-    org.openskye: INFO
+    org.openskye: DEBUG
   appenders:
     - type: console

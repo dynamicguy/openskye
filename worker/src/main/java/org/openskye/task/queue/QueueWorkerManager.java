@@ -112,6 +112,10 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     String taskId = task.get().getId();
                     TaskStep step = task.get().getStep();
                     injector.injectMembers(step);
+                    step.rehydrate();
+
+
+
                     EntityTransaction tx = taskDAO.beginTransaction();
                     accept(taskId, workerConfig.getName());
                     tx.commit();
