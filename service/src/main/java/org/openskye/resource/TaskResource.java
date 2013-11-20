@@ -89,6 +89,15 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         return createFromStep(newStep);
     }
 
+    @ApiOperation(value = "Create new test task", notes = "Create a new test task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/test")
+    @Transactional
+    @Timed
+    public Task create(TestTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
     @ApiOperation(value = "Find task by id", notes = "Return a task by id", response = Task.class)
     @Path("/{id}")
     @GET

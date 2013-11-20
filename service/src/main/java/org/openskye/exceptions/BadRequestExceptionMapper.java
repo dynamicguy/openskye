@@ -9,7 +9,7 @@ import javax.ws.rs.ext.Provider;
 public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
     @Override
     public Response toResponse(BadRequestException exception) {
-        ExceptionMessage em = new ExceptionMessage(4000, "Bad request", exception.getMessage());
+        ExceptionMessage em = new ExceptionMessage(4000, "Bad request", exception.getEntityMessage());
         return Response.status(Response.Status.BAD_REQUEST).entity(em).type("application/json").build();
     }
 }
