@@ -2,6 +2,7 @@ package org.openskye.metadata.impl.jpa;
 
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
+import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
@@ -27,6 +28,7 @@ import java.util.List;
  * An implementation of the {@link ObjectMetadataRepository} using the Java
  * Persistence API (JPA) to act on database systems.
  */
+@Slf4j
 public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Inject
     protected ArchiveStoreDefinitionDAO archiveStores;
@@ -53,10 +55,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public ObjectSet createObjectSet(String name) {
+        log.debug("Creating object set with name " + name);
         JPAObjectSet jpaObjectSet = new JPAObjectSet();
         jpaObjectSet.setName(name);
         getEntityManager().persist(jpaObjectSet);
-
+        log.debug("Created object set " + jpaObjectSet);
         return jpaObjectSet.toObjectSet();
     }
 
@@ -68,6 +71,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public void deleteObjectSet(ObjectSet objectSet) {
+        log.debug("Deleting object set " + objectSet);
         Optional<JPAObjectSet> jpaObjectSet = getJpaObjectSet(objectSet.getId());
 
         if (!jpaObjectSet.isPresent())
@@ -84,6 +88,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+        log.debug("Adding object " + objectMetadata + " to object set " + objectSet);
         Optional<JPAObjectSet> jpaObjectSet = getJpaObjectSet(objectSet.getId());
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
 
@@ -104,6 +109,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
+        log.debug("Removing object " + objectMetadata + " to object set " + objectSet);
         Optional<JPAObjectSet> jpaObjectSet = getJpaObjectSet(objectSet.getId());
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
 
@@ -148,7 +154,9 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Optional<ObjectMetadata> get(String id) {
+
         JPAObjectMetadata jpaObjectMetadata = getEntityManager().find(JPAObjectMetadata.class, id);
+        log.debug("Looking up object metadata for " + id + " has " + jpaObjectMetadata);
         return (jpaObjectMetadata != null ? Optional.of(jpaObjectMetadata.toObjectMetadata()) : Optional.<ObjectMetadata>absent());
     }
 
@@ -164,6 +172,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public ObjectMetadata put(ObjectMetadata objectMetadata) {
+        log.debug("Putting object metadata " + objectMetadata);
         JPAObjectMetadata jpaObjectMetadata = new JPAObjectMetadata(objectMetadata);
         return getEntityManager().merge(jpaObjectMetadata).toObjectMetadata();
     }
