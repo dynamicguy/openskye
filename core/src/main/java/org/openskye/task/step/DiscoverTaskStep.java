@@ -67,13 +67,17 @@ public class DiscoverTaskStep extends TaskStep {
     }
 
     private void discover(InformationStore is, Iterable<SimpleObject> simpleObjects, Task task) {
+
+        if (task.getStatistics() == null)
+            task.setStatistics(new TaskStatistics());
+
         for (SimpleObject simpleObject : simpleObjects) {
 
             if (simpleObject instanceof ContainerObject)
                 discover(is, is.getChildren(simpleObject), task);
             else {
                 if (isIncludedByFilter(simpleObject)) {
-                    this.task.getStatistics().incrementSimpleObjectsDiscovered();
+                    task.getStatistics().incrementSimpleObjectsDiscovered();
 
                     ObjectMetadata om = simpleObject.getObjectMetadata();
                     for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {
