@@ -50,18 +50,6 @@ public class RolePermissionResource extends AbstractUpdatableDomainResource<Role
         return super.create(newInstance);
     }
 
-    @ApiOperation(value = "Update role permission",
-                  notes = "Enter the id of the role permission to update, return the updated role permission",
-                  response = RolePermission.class)
-    @Path("/{id}")
-    @PUT
-    @Transactional
-    @Timed
-    @Override
-    public RolePermission update(@PathParam("id") String id, RolePermission newInstance) {
-        return super.update(id, newInstance);
-    }
-
     @ApiOperation(value = "Find role permission by id",
                   notes = "Return a role permission by its unique id",
                   response = RolePermission.class)
