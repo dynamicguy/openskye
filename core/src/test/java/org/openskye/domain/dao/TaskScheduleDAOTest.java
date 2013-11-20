@@ -41,9 +41,9 @@ public class TaskScheduleDAOTest extends AbstractDAOTestBase<TaskSchedule> {
     @Test
     public void doSerialize() throws Exception {
         TaskSchedule instance = getNew();
-        getDAO().serialize(instance);
+        instance.serialize();
         instance.setStep(null);
-        getDAO().deserialize(instance);
+        instance.deserialize();
         assertThat("a TaskSchedule can be serialized and deserialized",
                 asJson(instance),
                 is(equalTo(jsonFixture("fixtures/taskScheduleSerialize.json"))));
