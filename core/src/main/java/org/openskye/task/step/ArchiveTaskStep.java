@@ -1,13 +1,16 @@
 package org.openskye.task.step;
 
+import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
+import org.openskye.domain.dao.ChannelDAO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +19,11 @@ import java.util.Map;
  * A {@link TaskStep} that handles a task type of Archive
  */
 @NoArgsConstructor
+@Slf4j
 public class ArchiveTaskStep extends TaskStep {
+
+    @Inject
+    private ChannelDAO channelDAO;
     @Getter
     @Setter
     private Channel channel;
@@ -35,6 +42,13 @@ public class ArchiveTaskStep extends TaskStep {
     }
 
     @Override
+    public void rehydrate() {
+        // When we come back form JSON we have the id
+        // but we need the entity
+        setChannel(channelDAO.get(channel.getId()).get());
+    }
+
+    @Override
     public void validate() {
         if (getChannel() == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a channel and so can not archive");
@@ -44,10 +58,13 @@ public class ArchiveTaskStep extends TaskStep {
     @Override
     public TaskStatus call() throws Exception {
 
+
         // Build up the information and archive stores
+        log.debug("Starting archive task step on " + channel);
         InformationStore is = buildInformationStore(channel.getInformationStoreDefinition());
         Map<ChannelArchiveStore, ArchiveStoreWriter> channelStoreWriters = new HashMap<>();
         for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
+            log.debug("Adding archive store writer for " + cas);
             channelStoreWriters.put(cas, buildArchiveStore(cas.getArchiveStoreDefinition()).getWriter(task));
         }
 

@@ -2,11 +2,16 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
+import org.openskye.core.SkyeException;
 
 import javax.persistence.*;
+import java.io.IOException;
 
 /**
  * A log entry for a {@link Task}
@@ -17,6 +22,8 @@ import javax.persistence.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "id")
 public class TaskLog implements Identifiable {
+    @Transient
+    private final static ObjectMapper MAPPER = new ObjectMapper();
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -24,14 +31,46 @@ public class TaskLog implements Identifiable {
     private String id;
     @Column(name = "TASK_ID")
     private String taskId;
+    @Column(name = "LOG_TIME")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    private LocalDateTime logTime = LocalDateTime.now();
     @Column(name = "STATUS")
     private TaskStatus status;
     @Column(name = "MESSAGE")
     private String message;
-    @Lob @Basic(fetch=FetchType.EAGER)
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     @Column(name = "EXCEPTION_JSON")
     @JsonIgnore
     private String exceptionJson;
     @Transient
     private Exception exception;
+
+    @PostLoad
+    protected void deserialize() {
+        if (getExceptionJson() == null) {
+            setException(null);
+        } else {
+            try {
+                Exception exception = MAPPER.readValue(getExceptionJson(), Exception.class);
+                setException(exception);
+            } catch (ClassCastException | IOException e) {
+                throw new SkyeException("Unable to deserialize exception in task log", e);
+            }
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    protected void serialize() {
+        if (getException() == null) {
+            setExceptionJson(null);
+        } else {
+            try {
+                setExceptionJson(MAPPER.writeValueAsString(getException()));
+            } catch (IOException e) {
+                throw new SkyeException("Unable to serialize exception in task log", e);
+            }
+        }
+    }
 }

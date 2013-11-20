@@ -2,6 +2,7 @@ package org.openskye.task.queue;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.WorkerConfiguration;
 import org.openskye.domain.Task;
@@ -31,6 +32,8 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     ExecutorService workers;
     @Inject
     TaskDAO taskDAO;
+    @Inject
+    Injector injector;
     // keep a map from task id's to futures for submitted task steps
     private Map<String, Future<TaskStatus>> futures;
 
@@ -108,6 +111,11 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                 } else {
                     String taskId = task.get().getId();
                     TaskStep step = task.get().getStep();
+                    injector.injectMembers(step);
+                    step.rehydrate();
+
+
+
                     EntityTransaction tx = taskDAO.beginTransaction();
                     accept(taskId, workerConfig.getName());
                     tx.commit();
