@@ -24,23 +24,23 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Inject
     WorkerConfiguration workerConfig;
-
     // monitor schedules the QueueWorkerManager's own thread to manage tasks
     // workers is a pool of worker threads that runs tasks
     // activeTasks is a thread safe map from task id to worker
     ScheduledExecutorService monitor;
     ExecutorService workers;
-
+    @Inject
+    TaskDAO taskDAO;
     // keep a map from task id's to futures for submitted task steps
-    private Map<String,Future<TaskStatus>> futures;
+    private Map<String, Future<TaskStatus>> futures;
 
     public QueueWorkerManager() {
         // Concurrent map so that REST status requests are in sync with monitor
-        futures = new ConcurrentHashMap<String,Future<TaskStatus>>();
+        futures = new ConcurrentHashMap<>();
     }
 
     public String[] getActiveTaskIds() {
-        return (String[])(futures.keySet().toArray());
+        return (String[]) (futures.keySet().toArray());
     }
 
     @Override
@@ -50,34 +50,31 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         monitor.scheduleAtFixedRate(this, 0, workerConfig.getPollPeriodSec(), TimeUnit.SECONDS);
     }
 
-    @Inject
-    TaskDAO taskDAO;
-
     @Override
     public void run() {
-        log.debug(workerConfig.getName()+": monitor wakes up ..");
+        log.debug(workerConfig.getName() + ": monitor wakes up ..");
 
         // Look for tasks that have ended
         Set<String> taskIds = futures.keySet();
-        for( String taskId : taskIds ) {
+        for (String taskId : taskIds) {
             Future<TaskStatus> future = futures.get(taskId);
             TaskStatus status;
             Exception exception = null;
-            if ( future == null ) {
-                log.error("Unable to track worker thread for task "+taskId);
+            if (future == null) {
+                log.error("Unable to track worker thread for task " + taskId);
                 status = TaskStatus.ABORTED;
-            } else if ( future.isCancelled() ) {
-                log.info("Task has been canceled "+taskId);
+            } else if (future.isCancelled()) {
+                log.info("Task has been canceled " + taskId);
                 status = TaskStatus.ABORTED;
                 futures.remove(taskId);
-            } else if ( future.isDone() ) {
+            } else if (future.isDone()) {
                 try {
                     status = future.get();
-                    log.info("Task completed "+taskId);
-                } catch(Exception e) {
+                    log.info("Task completed " + taskId);
+                } catch (Exception e) {
                     status = TaskStatus.FAILED;
                     exception = e;
-                    log.error("Task failed "+taskId,e);
+                    log.error("Task failed " + taskId, e);
                 }
                 futures.remove(taskId);
             } else {
@@ -85,15 +82,15 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                 status = TaskStatus.STARTED;
             }
 
-            if ( status != TaskStatus.STARTED ) {
+            if (status != TaskStatus.STARTED) {
                 // The task has ended, so update its status
                 try {
                     EntityTransaction tx = taskDAO.beginTransaction();
-                    end(taskId,status,exception);
+                    end(taskId, status, exception);
                     tx.commit();
-                    log.debug(workerConfig.getName()+": end task "+taskId);
-                } catch( Exception e ) {
-                    log.error("Error while recording end of task "+taskId,e);
+                } catch (Exception e) {
+                    log.error("Error while recording end of task " + taskId, e);
+                    log.debug(workerConfig.getName() + ": end task " + taskId);
                 }
             }
         }
@@ -103,22 +100,22 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         int tries = 0;
         int maxThreads = workerConfig.getThreadCount();
         boolean queuedTasks = true;
-        while ( tries < maxThreads && futures.size() < maxThreads && queuedTasks ) {
+        while (tries < maxThreads && futures.size() < maxThreads && queuedTasks) {
             try {
                 Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getName());
-                if ( task == null || ! task.isPresent() ) {
+                if (task == null || !task.isPresent()) {
                     queuedTasks = false;
                 } else {
                     String taskId = task.get().getId();
                     TaskStep step = task.get().getStep();
                     EntityTransaction tx = taskDAO.beginTransaction();
-                    accept(taskId,workerConfig.getName());
+                    accept(taskId, workerConfig.getName());
                     tx.commit();
                     futures.put(taskId, workers.submit(step));
-                    log.debug(workerConfig.getName()+": begin task "+taskId);
+                    log.debug(workerConfig.getName() + ": begin task " + taskId);
                 }
             } catch (Exception e) {
-                log.error("Exception while accepting task",e);
+                log.error("Exception while accepting task", e);
             }
             tries++;
         }

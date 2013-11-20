@@ -19,7 +19,6 @@ public class SkyeServerLifecycleListener implements ServerLifecycleListener {
     @Override
     public void serverStarted(Server server) {
         TaskManager taskManager = injector.getInstance(TaskManager.class);
-        injector.injectMembers(taskManager);
         taskManager.start();
     }
 }
