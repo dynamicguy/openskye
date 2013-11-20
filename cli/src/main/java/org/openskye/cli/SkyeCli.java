@@ -9,6 +9,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.*;
 import org.openskye.core.SkyeException;
+import org.openskye.exceptions.ExceptionMessage;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -97,6 +98,16 @@ public class SkyeCli {
                 consoleLogger.error("Not authorized, has your API key changed?");
             } else {
                 consoleLogger.error(e.getLocalizedMessage());
+                try {
+                    ExceptionMessage message = e.getResponse().getEntity(ExceptionMessage.class);
+                    if ( message.getErrorCode() > 0 ) {
+                        consoleLogger.error("  error code: "+message.getErrorCode());
+                        consoleLogger.error("  message: "+message.getMessage());
+                        consoleLogger.error("  detail: "+message.getDetail());
+                    }
+                } catch(Exception ee) {
+                    // Don't even try to handle exceptions within catch block .. ignore
+                }
             }
         }
 
