@@ -52,7 +52,7 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         String newEmail = newInstance.getEmail();
         if (newEmail == null) {
             throw new BadRequestException("No email provided in user data");
-        } else if (newEmail == oldEmail) {
+        } else if (newEmail.equals(oldEmail)) {
             return;
         } else if (userDAO.findByEmail(newEmail) != null && userDAO.findByEmail(newEmail).isPresent()) {
             throw new BadRequestException("User email already in use");
