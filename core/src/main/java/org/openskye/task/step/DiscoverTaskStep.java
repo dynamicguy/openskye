@@ -2,6 +2,7 @@ package org.openskye.task.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.filters.ChannelFilter;
 import org.openskye.filters.ChannelFilterFactory;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ import java.util.List;
 @NoArgsConstructor
 public class DiscoverTaskStep extends TaskStep {
 
+    @Inject
+    private Provider<EntityManager> emf;
     @Inject
     private ChannelDAO channelDAO;
     @Getter
@@ -55,6 +59,9 @@ public class DiscoverTaskStep extends TaskStep {
 
     @Override
     public TaskStatus call() throws Exception {
+
+        emf.get().getTransaction().begin();
+
         InformationStore is = buildInformationStore(channel.getInformationStoreDefinition());
 
         for (ChannelFilterDefinition cfd : channel.getChannelFilters()) {
@@ -62,6 +69,8 @@ public class DiscoverTaskStep extends TaskStep {
         }
 
         discover(is, is.getRoot(), task);
+
+        emf.get().getTransaction().commit();
 
         return TaskStatus.COMPLETED;
     }

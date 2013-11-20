@@ -3,6 +3,7 @@ package org.openskye.task.queue;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.WorkerConfiguration;
 import org.openskye.domain.Task;
@@ -10,7 +11,7 @@ import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.TaskDAO;
 import org.openskye.task.step.TaskStep;
 
-import javax.persistence.EntityTransaction;
+import javax.persistence.EntityManager;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -22,7 +23,6 @@ import java.util.concurrent.*;
  */
 @Slf4j
 public class QueueWorkerManager extends QueueTaskManager implements Runnable {
-
     @Inject
     WorkerConfiguration workerConfig;
     // monitor schedules the QueueWorkerManager's own thread to manage tasks
@@ -34,6 +34,8 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     TaskDAO taskDAO;
     @Inject
     Injector injector;
+    @Inject
+    private Provider<EntityManager> emf;
     // keep a map from task id's to futures for submitted task steps
     private Map<String, Future<TaskStatus>> futures;
 
@@ -88,9 +90,9 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
             if (status != TaskStatus.STARTED) {
                 // The task has ended, so update its status
                 try {
-                    EntityTransaction tx = taskDAO.beginTransaction();
+                    emf.get().getTransaction().begin();
                     end(taskId, status, exception);
-                    tx.commit();
+                    emf.get().getTransaction().commit();
                 } catch (Exception e) {
                     log.error("Error while recording end of task " + taskId, e);
                     log.debug(workerConfig.getName() + ": end task " + taskId);
@@ -111,14 +113,14 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                 } else {
                     String taskId = task.get().getId();
                     TaskStep step = task.get().getStep();
+
+                    // Inject and rehydrate everything
                     injector.injectMembers(step);
                     step.rehydrate();
 
 
-
-                    EntityTransaction tx = taskDAO.beginTransaction();
                     accept(taskId, workerConfig.getName());
-                    tx.commit();
+
                     futures.put(taskId, workers.submit(step));
                     log.debug(workerConfig.getName() + ": begin task " + taskId);
                 }
