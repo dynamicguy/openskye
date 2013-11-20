@@ -1,6 +1,7 @@
 package org.openskye.task.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
 
     @JsonIgnore
     public abstract Project getProject();
+
 
     public Task toTask() {
         // Create a new Task object from this step

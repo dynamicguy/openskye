@@ -37,4 +37,9 @@ public class ObjectsCommand extends AbstractCrudCommand {
         return ObjectMetadata.class;
     }
 
+    @Override
+    public String getCollectionPlural() {
+        return "objects";
+    }
+
 }

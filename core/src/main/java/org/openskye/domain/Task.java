@@ -22,7 +22,6 @@ import java.util.Date;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class Task implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")

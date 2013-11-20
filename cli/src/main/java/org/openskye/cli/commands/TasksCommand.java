@@ -42,7 +42,7 @@ public class TasksCommand extends AbstractTaskStepCommand {
         output.message("Creating a new " + step.getLabel() + " task:\n");
         Task task = step.toTask();
         String apiDirect = "/"+step.getLabel().toLowerCase();
-        Identifiable result = (Identifiable) getResource(getCollectionPlural()+apiDirect).post(getClazz(), task);
+        Identifiable result = (Identifiable) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
         output.success("Created task with id " + result.getId());
     }
 
