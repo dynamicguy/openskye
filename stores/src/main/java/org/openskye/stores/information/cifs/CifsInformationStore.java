@@ -51,11 +51,7 @@ public class CifsInformationStore implements InformationStore {
 
     @Override
     public String getName() {
-        String host = informationStoreDefinition.getProperties().get(HOST);
-        String port = informationStoreDefinition.getProperties().get(PORT);
-        String share = informationStoreDefinition.getProperties().get(SHARE);
-        String filePath = informationStoreDefinition.getProperties().get(FILE_PATH);
-        return String.format("//%s:%s/%s/%s", host, port, share, filePath);
+        return "CIFS mountable filesystem";
     }
 
     @Override

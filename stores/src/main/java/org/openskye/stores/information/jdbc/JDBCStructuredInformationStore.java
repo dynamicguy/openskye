@@ -71,7 +71,7 @@ public class JDBCStructuredInformationStore implements InformationStore {
 
     @Override
     public String getName() {
-        return informationStoreDefinition.getName();
+        return "JDBC accessible database";
     }
 
     @Override
