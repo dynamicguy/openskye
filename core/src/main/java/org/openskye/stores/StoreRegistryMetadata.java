@@ -1,5 +1,6 @@
 package org.openskye.stores;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -10,7 +11,8 @@ import java.util.Set;
  */
 @Data
 public class StoreRegistryMetadata {
-
+    @JsonInclude
     private Set<RegisteredArchiveStore> archiveStores = new HashSet<>();
+    @JsonInclude
     private Set<RegisteredInformationStore> informationStores = new HashSet<>();
 }

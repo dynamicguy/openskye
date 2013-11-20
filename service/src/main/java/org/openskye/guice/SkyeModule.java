@@ -5,6 +5,7 @@ import org.openskye.config.SkyeConfiguration;
 import org.openskye.core.SkyeException;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
+import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.TaskScheduler;
 
@@ -22,6 +23,7 @@ public class SkyeModule extends AbstractModule {
     @Override
     protected void configure() {
         try {
+            bind(StoreRegistry.class).asEagerSingleton();
             Class taskManagerClazz = Class.forName(skyeConfiguration.getServices().getTaskManager());
             bind(TaskManager.class).to(taskManagerClazz);
             Class taskSchedulerClazz = Class.forName(skyeConfiguration.getServices().getTaskScheduler());
