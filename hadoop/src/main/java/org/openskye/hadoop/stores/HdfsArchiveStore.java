@@ -23,7 +23,9 @@ import org.openskye.hadoop.objects.HStructuredObject;
 import org.openskye.hadoop.objects.HUnstructuredObject;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -33,7 +35,7 @@ import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
  * An implementation of an {@link ArchiveStore} that uses HDFS to store the {@link org.openskye.core.ArchiveContentBlock}s
  */
 @Slf4j
-public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
+public class HdfsArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     public static final String HDFS_CONFIG = "hdfs";
     public static final String IMPLEMENTATION = "hdfs";
@@ -57,6 +59,11 @@ public class HdfsArchiveStore implements ArchiveStore,ArchiveStoreWriter {
     @Override
     public String getName() {
         return archiveStoreDefinition.getName() + " (HDFS)";
+    }
+
+    @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
     }
 
     @Override

@@ -33,11 +33,19 @@ public interface InformationStore {
     Properties getMetadata();
 
     /**
-     * Returns the name of this instance of the information store
+     * Returns the name of this instance of the information store, this is a universal name
+     * and shouldn't pick up things from the information store definition (it might not be initialized)
      *
      * @return name
      */
     String getName();
+
+    /**
+     * Returns the name of the implementation
+     *
+     * @return implementation
+     */
+    String getImplementation();
 
     /**
      * Returns the URL identifying this instance of the information store

@@ -58,6 +58,11 @@ public class LocalFSInformationStore implements InformationStore {
     }
 
     @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
+    }
+
+    @Override
     public String getUrl() {
         return "file://" + informationStoreDefinition.getProperties().get(FILE_PATH);
     }

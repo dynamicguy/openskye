@@ -55,6 +55,11 @@ public class CifsInformationStore implements InformationStore {
     }
 
     @Override
+    public String getImplementation() {
+        return IMPLEMENTATION;
+    }
+
+    @Override
     public String getUrl() {
         String domain = informationStoreDefinition.getProperties().get(DOMAIN);
         String user = informationStoreDefinition.getProperties().get(USER);

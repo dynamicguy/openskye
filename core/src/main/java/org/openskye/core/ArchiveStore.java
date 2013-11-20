@@ -24,6 +24,13 @@ public interface ArchiveStore {
     String getName();
 
     /**
+     * Returns the implementation
+     *
+     * @return the implementation
+     */
+    String getImplementation();
+
+    /**
      * Returns the URL of the store
      *
      * @return the url
