@@ -1,0 +1,38 @@
+database:
+  # the name of your JDBC driver
+  driverClass: com.mysql.jdbc.Driver
+
+  # the username
+  user: root
+
+  # the password
+  password: password
+
+  # the JDBC URL
+  url: "jdbc:mysql://localhost/openskye"
+
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.impl.InMemoryObjectMetadataSearch
+  taskManager: org.openskye.task.queue.QueueWorkerManager
+  taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
+
+worker:
+  name: "Skye Worker"
+  threadCount: 5
+  pollPeriodSec: 30
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 5001
+  adminConnectors:
+    - type: http
+      port: 8082
+
+logging:
+  level: INFO
+  loggers:
+    org.openskye: INFO
+  appenders:
+    - type: console

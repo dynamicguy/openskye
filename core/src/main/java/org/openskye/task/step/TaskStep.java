@@ -39,7 +39,8 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         // Create a new Task object from this step
         task = new Task();
         task.setProject(getProject());
-        task.setWorkerName(getProject().getWorkerName());
+        //TODO: use default worker name for now
+        task.setWorkerName("Skye Worker");
         task.setStep(this);
         task.setStepClassName(this.getClass().getName());
         task.setStepLabel(this.getLabel());

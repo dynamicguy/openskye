@@ -14,8 +14,6 @@ import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.SkyeWorkerConfiguration;
 import org.openskye.guice.*;
-import org.openskye.task.TaskManager;
-import org.openskye.task.queue.QueueWorkerManager;
 
 import javax.annotation.Nullable;
 import java.util.Properties;

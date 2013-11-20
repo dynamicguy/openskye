@@ -5,14 +5,14 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-
 import org.openskye.config.WorkerConfiguration;
-import org.openskye.guice.SkyeWorkerModule;
 import org.openskye.task.TaskManager;
 import org.openskye.task.queue.QueueWorkerManager;
 import org.openskye.util.WorkerInfo;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**

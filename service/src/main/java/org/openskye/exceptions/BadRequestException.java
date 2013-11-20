@@ -1,5 +1,9 @@
 package org.openskye.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
@@ -7,6 +11,8 @@ import javax.ws.rs.core.Response;
  * Web exception for missing resources
  */
 public class BadRequestException extends WebApplicationException {
+    @Getter
+    private String entityMessage = null;
 
     /**
      * Create a HTTP 404 (Unauthorized) exception.
@@ -21,7 +27,8 @@ public class BadRequestException extends WebApplicationException {
      * @param message the String that is the resources of the 404 response.
      */
     public BadRequestException(String message) {
-        super(Response.status(Response.Status.BAD_REQUEST).entity(message).type("text/plain").build());
+        super(Response.status(Response.Status.BAD_REQUEST).type("text/plain").build());
+        this.entityMessage = message;
     }
 
 }

@@ -8,10 +8,7 @@ import org.openskye.domain.Channel;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 import org.openskye.domain.Task;
-import org.openskye.domain.dao.AbstractPaginatingDAO;
-import org.openskye.domain.dao.ChannelDAO;
-import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.domain.dao.TaskDAO;
+import org.openskye.domain.dao.*;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
 import org.openskye.task.TaskManager;
@@ -32,10 +29,11 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
 
     public static final TaskDAO dao = mock(TaskDAO.class);
     public static final ChannelDAO channelDAO = mock(ChannelDAO.class);
+    public static final TaskLogDAO taskLogDAO = mock(TaskLogDAO.class);
     public static final TaskManager taskManager = mock(TaskManager.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TaskResource(dao, channelDAO, taskManager))
+            .addResource(new TaskResource(dao, channelDAO, taskManager, taskLogDAO))
             .addProvider(new AuthorizationExceptionMapper())
             .addProvider(new AuthenticationExceptionMapper())
             .build();
@@ -101,7 +99,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     public void testPostDestroy() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
-        DestroyTaskStep step = new DestroyTaskStep(UUID.randomUUID().toString(),mockStore());
+        DestroyTaskStep step = new DestroyTaskStep(UUID.randomUUID().toString(), mockStore());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/destroy").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
@@ -119,7 +117,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     public void testPostExtract() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
-        ExtractTaskStep step = new ExtractTaskStep(UUID.randomUUID().toString(),mockStore());
+        ExtractTaskStep step = new ExtractTaskStep(UUID.randomUUID().toString(), mockStore());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/extract").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
