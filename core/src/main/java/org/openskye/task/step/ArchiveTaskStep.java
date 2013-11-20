@@ -1,6 +1,7 @@
 package org.openskye.task.step;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.ChannelDAO;
 
+import javax.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ import java.util.Map;
 @Slf4j
 public class ArchiveTaskStep extends TaskStep {
 
+    @Inject
+    private Provider<EntityManager> emf;
     @Inject
     private ChannelDAO channelDAO;
     @Getter
@@ -58,6 +62,7 @@ public class ArchiveTaskStep extends TaskStep {
     @Override
     public TaskStatus call() throws Exception {
 
+        emf.get().getTransaction().begin();
 
         // Build up the information and archive stores
         log.debug("Starting archive task step on " + channel);
@@ -86,6 +91,7 @@ public class ArchiveTaskStep extends TaskStep {
             }
         }
 
+        emf.get().getTransaction().commit();
         return TaskStatus.COMPLETED;
     }
 

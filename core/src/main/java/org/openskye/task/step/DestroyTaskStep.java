@@ -3,6 +3,7 @@ package org.openskye.task.step;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,12 +15,16 @@ import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.stores.StoreRegistry;
 
+import javax.persistence.EntityManager;
+
 /**
  * A simple implementation of the destroy task type
  */
 @NoArgsConstructor
 public class DestroyTaskStep extends TaskStep {
 
+    @Inject
+    private Provider<EntityManager> emf;
     @Inject
     private InformationStoreDefinitionDAO informationStoreDefinitionDAO;
     @Getter
@@ -63,6 +68,8 @@ public class DestroyTaskStep extends TaskStep {
 
     @Override
     public TaskStatus call() throws Exception {
+        emf.get().getTransaction().begin();
+
         Optional<ObjectSet> objectSet;
         if (objectSetId != null) {
             objectSet = omr.getObjectSet(objectSetId);
@@ -97,6 +104,7 @@ public class DestroyTaskStep extends TaskStep {
             throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
         }
 
+        emf.get().getTransaction().commit();
         return TaskStatus.COMPLETED;
     }
 
