@@ -9,9 +9,7 @@ import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.Channel;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.task.step.*;
 
@@ -99,35 +97,50 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
 
     public void discover() {
         TaskStep step = new DiscoverTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
         step = (DiscoverTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
-        create(step);
+        String apiDirect = "/"+step.getLabel().toLowerCase();
+        Task result = (Task) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
+        output.success("Created task with id " + result.getId());
     }
 
     public void archive() {
         TaskStep step = new ArchiveTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
         step = (ArchiveTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
-        create(step);
+        String apiDirect = "/"+step.getLabel().toLowerCase();
+        Task result = (Task) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
+        output.success("Created task with id " + result.getId());
     }
 
     public void verify() {
         TaskStep step = new VerifyTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
         //TODO verify task step still under construction
-        create(step);
+        String apiDirect = "/"+step.getLabel().toLowerCase();
+        Task result = (Task) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
+        output.success("Created task with id " + result.getId());
     }
 
     public void extract() {
         TaskStep step = new ExtractTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
         //TODO extract should optionally take a set ID parameter instead of a channel
         step = (ExtractTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
         step = setTargetInformationStore(step);
-        create(step);
+        String apiDirect = "/"+step.getLabel().toLowerCase();
+        Task result = (Task) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
+        output.success("Created task with id " + result.getId());
     }
 
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
         step = setObjectSetID(step);
         step = setTargetInformationStore(step);
-        create(step);
+        String apiDirect = "/"+step.getLabel().toLowerCase();
+        Task result = (Task) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
+        output.success("Created task with id " + result.getId());
     }
 
     public void test() {

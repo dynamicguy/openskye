@@ -1,6 +1,5 @@
 package org.openskye.task.step;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,6 +41,11 @@ public class TestTaskStep extends TaskStep {
     }
 
     @Override
+    public void rehydrate() {
+        // Nothing to do
+    }
+
+    @Override
     public void validate() {
         // TEST tasks require no validation
     }
@@ -49,12 +53,12 @@ public class TestTaskStep extends TaskStep {
     @Override
     public TaskStatus call() throws Exception {
         try {
-            log.info("Test Task: sleepSeconds="+sleepSeconds+" iterations="+iterations+" pass="+pass);
-            for ( int i=0; i<iterations; i++ ) {
-                Thread.sleep(sleepSeconds*1000L);
-                log.info("Test Task Sleeping ... i="+i);
+            log.info("Test Task: sleepSeconds=" + sleepSeconds + " iterations=" + iterations + " pass=" + pass);
+            for (int i = 0; i < iterations; i++) {
+                Thread.sleep(sleepSeconds * 1000L);
+                log.info("Test Task Sleeping ... i=" + i);
             }
-            if ( !pass ) {
+            if (!pass) {
                 throw new SkyeException("Test Task Set to Fail");
             }
         } catch (InterruptedException ie) {

@@ -1,11 +1,9 @@
 package org.openskye.domain.dao;
 
 import com.google.common.base.Optional;
-import org.openskye.domain.User;
+import org.openskye.domain.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 /**
@@ -39,5 +37,22 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
         } else {
             return Optional.of(users.get(0));
         }
+    }
+
+    public boolean isPermitted(String userId, String permission)
+    {
+        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Permission> permissionRoot = criteria.from(Permission.class);
+        ListJoin<Permission, RolePermission> rolePermissionJoin = permissionRoot.joinList("rolePermissions");
+        Join<RolePermission, Role> roleJoin = rolePermissionJoin.join("role");
+        Join<Role, UserRole> userRoleJoin = roleJoin.join("id");
+        Join<UserRole, User> userJoin = userRoleJoin.join("user");
+
+        criteria.select(builder.count(permissionRoot));
+        criteria.where(builder.equal(userJoin.get("id"), userId))
+                .where(builder.equal(permissionRoot.get("permission"), permission));
+
+        return (getEntityManagerProvider().get().createQuery(criteria).getSingleResult() > 0);
     }
 }

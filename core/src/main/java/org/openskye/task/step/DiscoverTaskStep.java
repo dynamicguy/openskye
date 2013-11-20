@@ -1,11 +1,13 @@
 package org.openskye.task.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
 import org.openskye.domain.*;
+import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.filters.ChannelFilter;
 import org.openskye.filters.ChannelFilterFactory;
 
@@ -17,14 +19,16 @@ import java.util.List;
  */
 @NoArgsConstructor
 public class DiscoverTaskStep extends TaskStep {
+
+    @Inject
+    private ChannelDAO channelDAO;
     @Getter
     @Setter
     private Channel channel;
-
     @JsonIgnore
     private List<ChannelFilter> filters = new ArrayList<>();
 
-    public DiscoverTaskStep( Channel channel ) {
+    public DiscoverTaskStep(Channel channel) {
         this.channel = channel;
     }
 
@@ -35,6 +39,11 @@ public class DiscoverTaskStep extends TaskStep {
     @Override
     public String getLabel() {
         return "DISCOVER";
+    }
+
+    @Override
+    public void rehydrate() {
+        channel = channelDAO.get(channel.getId()).get();
     }
 
     @Override

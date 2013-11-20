@@ -1,50 +1,21 @@
 package org.openskye.domain.dao;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
-import org.openskye.core.SkyeException;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskSchedule;
 import org.openskye.domain.TaskStatus;
-import org.openskye.task.step.TaskStep;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.io.IOException;
 import java.util.List;
 
 /**
  * DAO for the {@link org.openskye.domain.Task}
  */
 public class TaskDAO extends AbstractPaginatingDAO<Task> {
-
-    private final ObjectMapper MAPPER = new ObjectMapper();
-
-    @Override
-    protected void deserialize(Task task) {
-        try {
-            Class clazz = Class.forName(task.getStepClassName());
-            TaskStep step = (TaskStep) MAPPER.readValue(task.getStepJson(),clazz);
-            step.setTask(task);
-            task.setStep(step);
-            task.setStepLabel(step.getLabel());
-        } catch( ReflectiveOperationException|IOException e ) {
-            throw new SkyeException("Unable to deserialize task step",e);
-        }
-    }
-
-    @Override
-    protected void serialize(Task task) {
-        try {
-            task.setStepClassName(task.getStep().getClass().getName());
-            task.setStepJson(MAPPER.writeValueAsString(task.getStep()));
-        } catch( IOException e ) {
-            throw new SkyeException("Unable to serialize task step",e);
-        }
-    }
 
     public Optional<Task> findOldestQueued(String workerName) {
         Task nextTask = null;
@@ -57,34 +28,29 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
             criteria.where(builder.and(
                     builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
                     builder.equal(taskRoot.get("workerName"), workerName)
-                ).orderBy(builder.asc(taskRoot.get("queued")));
+            ).orderBy(builder.asc(taskRoot.get("queued")));
             List<Task> taskList = currentEntityManager().createQuery(criteria).getResultList();
-            if ( taskList.size() > 0 ) {
+            if (taskList.size() > 0) {
                 nextTask = taskList.get(0);
             }
-        } catch( NoResultException nre ) {
+        } catch (NoResultException nre) {
             // There are no tasks in the database
         }
         if (nextTask == null) {
             return Optional.absent();
         } else {
-            deserialize(nextTask);
             return Optional.of(nextTask);
         }
     }
 
     public PaginatedResult<Task> findLiveTasks() {
-        PaginatedResult<Task> result = new PaginatedResult<>();
+
         CriteriaBuilder builder = createCriteriaBuilder();
         CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
         Root<Task> taskRoot = criteria.from(Task.class);
         criteria.select(taskRoot);
         criteria.where(builder.equal(taskRoot.get("status"), TaskStatus.STARTED));
-        List<Task> resultList = currentEntityManager().createQuery(criteria).getResultList();
-        for ( Task task : resultList ) {
-            deserialize(task);
-        }
-        result.setResults(resultList);
+        PaginatedResult<Task> result = new PaginatedResult<>(currentEntityManager().createQuery(criteria).getResultList());
         return result;
     }
 

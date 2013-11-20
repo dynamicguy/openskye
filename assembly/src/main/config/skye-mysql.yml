@@ -53,7 +53,7 @@ logging:
   loggers:
 
     # Sets the level for 'com.example.app' to DEBUG.
-    org.openskye: INFO
+    org.openskye: DEBUG
 
   appenders:
     - type: console

@@ -13,6 +13,7 @@ import org.openskye.domain.dao.UserDAO;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -50,6 +51,21 @@ public class AccountResource extends AbstractUpdatableDomainResource<User> {
     public UserSelf getUserSelf() {
         Subject subject = SecurityUtils.getSubject();
         return new UserSelf((User) subject.getPrincipal());
+    }
+
+    @ApiOperation(value = "Determine if user has a privilege",
+                  notes = "Given the user id and the permission name, " +
+                          "returns true if the permission is associated with the user or false otherwise.",
+                  response = Boolean.class)
+    @Path("isPermitted/{permission}")
+    @GET
+    @Transactional
+    @Timed
+    public Boolean isPermitted(@PathParam("permission") String permission)
+    {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+
+        return userDao.isPermitted(user.getId(), permission);
     }
 
 }

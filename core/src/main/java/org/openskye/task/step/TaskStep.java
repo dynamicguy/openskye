@@ -20,15 +20,15 @@ import java.util.concurrent.Callable;
 public abstract class TaskStep implements Callable<TaskStatus> {
 
     @JsonIgnore
-    @Getter
-    @Setter
-    Task task;
-    @JsonIgnore
     @Inject
     protected StoreRegistry storeRegistry;
     @JsonIgnore
     @Inject
     protected ObjectMetadataRepository omr;
+    @JsonIgnore
+    @Getter
+    @Setter
+    Task task;
 
     public abstract void validate();
 
@@ -75,4 +75,9 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @JsonIgnore
     public abstract String getLabel();  // example: "ARCHIVE"
 
+    /**
+     * When a task step is pulled back from JSON it loses the JPA relationships
+     * so we need to make sure we can pull them back in place
+     */
+    public abstract void rehydrate();
 }

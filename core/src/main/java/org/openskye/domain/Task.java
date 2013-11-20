@@ -3,15 +3,18 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
+import org.openskye.core.SkyeException;
 import org.openskye.task.step.TaskStep;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.io.IOException;
 
 /**
  * A Task
@@ -22,8 +25,11 @@ import java.util.Date;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Task implements Identifiable {
+
+    @Transient
+    private final static ObjectMapper MAPPER = new ObjectMapper();
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -39,15 +45,15 @@ public class Task implements Identifiable {
     private String workerName;
     @Column(name = "STATUS")
     private TaskStatus status = TaskStatus.CREATED;
-    @Temporal(TemporalType.DATE)
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "QUEUED")
-    private Date queued;
-    @Temporal(TemporalType.DATE)
+    private LocalDateTime queued;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "STARTED")
-    private Date started;
-    @Temporal(TemporalType.DATE)
+    private LocalDateTime started;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "ENDED")
-    private Date ended;
+    private LocalDateTime ended;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
 
@@ -57,7 +63,8 @@ public class Task implements Identifiable {
     @Column(name = "STEP_CLASS_NAME")
     @JsonIgnore
     private String stepClassName;
-    @Lob @Basic(fetch=FetchType.EAGER)
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     @Column(name = "STEP_JSON")
     @JsonIgnore
     private String stepJson;
@@ -65,5 +72,29 @@ public class Task implements Identifiable {
     private TaskStep step;
     @Transient
     private String stepLabel;
+
+    @PostLoad
+    public void deserialize() {
+        try {
+            Class clazz = Class.forName(getStepClassName());
+            TaskStep step = (TaskStep) MAPPER.readValue(getStepJson(), clazz);
+            step.setTask(this);
+            setStep(step);
+            setStepLabel(step.getLabel());
+        } catch (ReflectiveOperationException | IOException e) {
+            throw new SkyeException("Unable to deserialize task step", e);
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void serialize() {
+        try {
+            setStepClassName(getStep().getClass().getName());
+            setStepJson(MAPPER.writeValueAsString(getStep()));
+        } catch (IOException e) {
+            throw new SkyeException("Unable to serialize task step", e);
+        }
+    }
 
 }

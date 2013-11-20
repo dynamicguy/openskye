@@ -11,6 +11,7 @@ import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
+import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.stores.StoreRegistry;
 
 /**
@@ -18,18 +19,20 @@ import org.openskye.stores.StoreRegistry;
  */
 @NoArgsConstructor
 public class DestroyTaskStep extends TaskStep {
+
+    @Inject
+    private InformationStoreDefinitionDAO informationStoreDefinitionDAO;
     @Getter
     @Setter
     private String objectSetId;
     @Getter
     @Setter
     private InformationStoreDefinition targetInformationStoreDefinition;
-
     @JsonIgnore
     @Inject
     private StoreRegistry storeRegistry;
 
-    public DestroyTaskStep(String objectSetId,InformationStoreDefinition targetInformationStoreDefinition) {
+    public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
     }
@@ -41,6 +44,11 @@ public class DestroyTaskStep extends TaskStep {
     @Override
     public String getLabel() {
         return "DESTROY";
+    }
+
+    @Override
+    public void rehydrate() {
+        targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
     }
 
     @Override
