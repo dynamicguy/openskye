@@ -1,9 +1,12 @@
 package org.openskye.stores;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
+import com.google.inject.persist.PersistService;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
+import org.openskye.guice.InMemoryTestModule;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
 import org.openskye.task.TaskManager;
@@ -20,6 +23,17 @@ public class InMemoryArchiveTest {
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(InMemoryTestModule.class);
     @Inject
     public TaskManager taskManager;
+    @Inject
+    PersistService persistService;
+
+    @Before
+    public void checkStarted() {
+        try {
+            persistService.start();
+        } catch (IllegalStateException e) {
+            // Ignore it we are started
+        }
+    }
 
     @Test
     public void testBasicArchiving() throws Exception {

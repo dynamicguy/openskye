@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.guice.InMemoryTestModule;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
 

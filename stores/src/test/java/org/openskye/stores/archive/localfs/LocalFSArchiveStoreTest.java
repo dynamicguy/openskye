@@ -2,6 +2,7 @@ package org.openskye.stores.archive.localfs;
 
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
+import com.google.inject.persist.PersistService;
 import org.eobjects.metamodel.UpdateCallback;
 import org.eobjects.metamodel.UpdateScript;
 import org.eobjects.metamodel.UpdateableDataContext;
@@ -47,9 +48,17 @@ public class LocalFSArchiveStoreTest {
     public StoreRegistry registry;
     @Inject
     public ObjectMetadataRepository omr;
+    @Inject
+    public PersistService persistService;
 
     @Before
     public void setUp() {
+        try {
+            persistService.start();
+        } catch (IllegalStateException e) {
+            // Ignore it we are started
+        }
+
         insertTestData(((JDBCStructuredInformationStore) registry.build(getDis("test1")).get()).getDataContext());
         insertTestData(((JDBCStructuredInformationStore) registry.build(getDis("test2")).get()).getDataContext());
     }
@@ -98,7 +107,7 @@ public class LocalFSArchiveStoreTest {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setId(UUID.randomUUID().toString());
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        Path temp = Files.createTempDirectory("archive-"+UUID.randomUUID().toString());
+        Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test1");
         dis.setId(UUID.randomUUID().toString());
@@ -125,9 +134,9 @@ public class LocalFSArchiveStoreTest {
         taskManager.submit(archive);
 
         long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
-        assertThat("We should have 1 discovered simple objects, not "+discovered, discovered == 1);
+        assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
         long ingested = archive.getStatistics().getSimpleObjectsIngested();
-        assertThat("We should have 1 ingested simple objects, not "+ingested, ingested == 1);
+        assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 
     }
 
@@ -137,7 +146,7 @@ public class LocalFSArchiveStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        Path temp = Files.createTempDirectory("archive-"+UUID.randomUUID().toString());
+        Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test2");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
@@ -159,9 +168,9 @@ public class LocalFSArchiveStoreTest {
         taskManager.submit(archive);
 
         long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
-        assertThat("We should have 1 discovered simple objects, not "+discovered, discovered == 1);
+        assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
         long ingested = archive.getStatistics().getSimpleObjectsIngested();
-        assertThat("We should have 1 ingested simple objects, not "+ingested, ingested == 1);
+        assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 
         Optional<ArchiveStore> archiveStore = registry.build(das);
 

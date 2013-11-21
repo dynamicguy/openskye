@@ -1,6 +1,8 @@
 package org.openskye.stores.information.localfs;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
+import com.google.inject.persist.PersistService;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
@@ -30,6 +32,17 @@ public class LocalFSInformationStoreTest {
     public TaskManager taskManager;
     @Inject
     public StoreRegistry registry;
+    @Inject
+    public PersistService persistService;
+
+    @Before
+    public void setUp() {
+        try {
+            persistService.start();
+        } catch (IllegalStateException e) {
+            // Ignore it we are started
+        }
+    }
 
     public InformationStoreDefinition getLocalFsDis() {
         InformationStoreDefinition dis = new InformationStoreDefinition();

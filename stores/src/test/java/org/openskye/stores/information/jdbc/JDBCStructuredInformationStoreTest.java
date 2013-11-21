@@ -1,12 +1,14 @@
 package org.openskye.stores.information.jdbc;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
+import com.google.inject.persist.PersistService;
 import org.eobjects.metamodel.UpdateCallback;
 import org.eobjects.metamodel.UpdateScript;
 import org.eobjects.metamodel.UpdateableDataContext;
 import org.eobjects.metamodel.schema.ColumnType;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +21,6 @@ import org.openskye.task.step.ArchiveTaskStep;
 import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
-
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,6 +36,17 @@ public class JDBCStructuredInformationStoreTest {
     public TaskManager taskManager;
     @Inject
     public StoreRegistry registry;
+    @Inject
+    public PersistService persistService;
+
+    @Before
+    public void setUp() {
+        try {
+            persistService.start();
+        } catch (IllegalStateException e) {
+            // Ignore it we are started
+        }
+    }
 
     public InformationStoreDefinition getLocalMySQLDis() {
         InformationStoreDefinition dis = new InformationStoreDefinition();
