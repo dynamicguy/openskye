@@ -280,7 +280,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("objects:search")).thenReturn(true);
 
-        String api = API_ADDRESS + "/search/" + session.getDomain().getId() + "?query=" + pathSearch;
+        String api = API_ADDRESS + "/search/?query=" + pathSearch;
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
                 .resource(api)
@@ -295,7 +295,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("objects:search")).thenReturn(false);
 
-        String api = API_ADDRESS + "/search/" + session.getDomain().getId() + "?query=" + pathSearch;
+        String api = API_ADDRESS + "/search/?query=" + pathSearch;
 
         ClientResponse response = resourceRule.client()
                 .resource(api)
@@ -311,7 +311,6 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         when(subject.isPermitted("objects:search")).thenReturn(true);
 
         String api = API_ADDRESS + "/search/" +
-                session.getDomain().getId() + "/" +
                 projectSearch.getId() +
                 "?query=" + pathSearch;
 
@@ -329,7 +328,6 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         when(subject.isPermitted("objects:search")).thenReturn(false);
 
         String api = API_ADDRESS + "/search/" +
-                session.getDomain().getId() + "/" +
                 projectSearch.getId() +
                 "?query=" + pathSearch;
 

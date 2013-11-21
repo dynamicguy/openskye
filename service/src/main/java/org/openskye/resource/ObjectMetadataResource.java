@@ -247,7 +247,7 @@ public class ObjectMetadataResource {
      * Searches for {@link ObjectMetadata} across all {@link Project} instances
      * for the given {@link Domain} id.
      *
-     * @param query    The query to be performed.
+     * @param query The query to be performed.
      * @return A {@link PaginatedResult} containing the specified
      *         of the search requested.
      */
