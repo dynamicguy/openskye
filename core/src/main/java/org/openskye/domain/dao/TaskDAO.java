@@ -24,7 +24,6 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
             CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
             Root<Task> taskRoot = criteria.from(Task.class);
             criteria.select(taskRoot);
-            criteria.where(builder.equal(taskRoot.get("status"), TaskStatus.QUEUED));
             criteria.where(builder.and(
                     builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
                     builder.equal(taskRoot.get("workerName"), workerName)
