@@ -17,21 +17,11 @@ public class PaginatedResult<T> {
     private long totalResults;
     private List<T> results = new ArrayList<>();
 
-    public PaginatedResult<T> paginate(List<T> list)
-    {
-        this.results = list;
-        this.totalResults = results.size();
-
-        return this;
-    }
-
-    public PaginatedResult()
-    {
+    public PaginatedResult() {
         return;
     }
 
-    public PaginatedResult(Iterable<T> list)
-    {
+    public PaginatedResult(Iterable<T> list) {
         this.results = Lists.newArrayList(list);
 
         this.totalResults = results.size();
@@ -39,13 +29,19 @@ public class PaginatedResult<T> {
         return;
     }
 
-    public PaginatedResult(List<T> list)
-    {
+    public PaginatedResult(List<T> list) {
         this.results = list;
 
         this.totalResults = results.size();
 
         return;
+    }
+
+    public PaginatedResult<T> paginate(List<T> list) {
+        this.results = list;
+        this.totalResults = results.size();
+
+        return this;
     }
 
     @Override

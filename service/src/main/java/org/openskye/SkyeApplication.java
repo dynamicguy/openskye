@@ -15,6 +15,7 @@ import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.guice.*;
+import org.openskye.util.RequestQueryContextFilter;
 import org.openskye.util.SwaggerBundle;
 
 import javax.annotation.Nullable;
@@ -73,14 +74,17 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
                 return container;
             }
         });
+
+        // Set-up the filters
         environment.servlets().addFilter("Guice Filter", GuiceFilter.class)
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+        environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+        environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
                 .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
         // Complete the autoconfig
         autoConfig.run(environment, injector);
-
-        environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
         // Add a listener for us to be able to wire in Shiro
         environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule));

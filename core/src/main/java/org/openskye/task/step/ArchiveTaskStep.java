@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.Channel;
-import org.openskye.domain.ChannelArchiveStore;
-import org.openskye.domain.Project;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
 
 import javax.persistence.EntityManager;
@@ -61,6 +58,10 @@ public class ArchiveTaskStep extends TaskStep {
 
     @Override
     public TaskStatus call() throws Exception {
+
+        log.debug("Starting archive task " + task);
+        if (task.getStatistics() == null)
+            task.setStatistics(new TaskStatistics());
 
         emf.get().getTransaction().begin();
 

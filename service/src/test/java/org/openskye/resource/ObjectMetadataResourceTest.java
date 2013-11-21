@@ -1,11 +1,10 @@
 package org.openskye.resource;
 
-import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
-import org.junit.Test;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.domain.dao.PaginatedResult;
@@ -21,354 +20,323 @@ import static org.mockito.Mockito.when;
 /**
  * Tests the ObjectMetadataResource and the ObjectSetResource.
  */
-public class ObjectMetadataResourceTest extends AbstractObjectTest
-{
+public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @ClassRule
     public static final ResourceTestRule resourceRule = ResourceTestRule.builder()
-                                                                        .addResource(buildResource())
-                                                                        .addProvider(new AuthorizationExceptionMapper())
-                                                                        .addProvider(new AuthenticationExceptionMapper())
-                                                                        .build();
-
+            .addResource(buildResource())
+            .addProvider(new AuthorizationExceptionMapper())
+            .addProvider(new AuthenticationExceptionMapper())
+            .build();
     public static final String API_ADDRESS = "/api/1/objects";
     public static final MediaType MEDIA_TYPE = MediaType.APPLICATION_JSON_TYPE;
 
-    private static ObjectMetadataResource buildResource()
-    {
-        ObjectMetadataResource resource = new ObjectMetadataResource(repository, search);
-
-        resource.setDomainDAO(domains);
-        resource.setInformationStoreDefinitionDAO(informationStores);
-        resource.setProjectDAO(projects);
-        resource.setStoreRegistry(registry);
-        resource.setTaskDAO(tasks);
-
-        return resource;
+    private static ObjectMetadataResource buildResource() {
+        return new ObjectMetadataResource(repository, search, informationStores, domains, tasks, projects);
     }
 
     @Test
-    public void testAuthorizedCreate()
-    {
+    public void testAuthorizedCreate() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_CREATE)).thenReturn(true);
+        when(subject.isPermitted("objects:create")).thenReturn(true);
 
         // Since create generates a new UUID before attempting to put something into the repository,
         // it is impossible to assert to ensure that the instance that is written is the same as the
         // instance we passed in.
         ObjectMetadata metadata = resourceRule.client()
-                                              .resource(API_ADDRESS)
-                                              .type(MEDIA_TYPE)
-                                              .post(ObjectMetadata.class, metadataInstance);
+                .resource(API_ADDRESS)
+                .type(MEDIA_TYPE)
+                .post(ObjectMetadata.class, metadataInstance);
 
         assertThat("an object metadata was created", (metadata != null));
 
     }
 
     @Test
-    public void testUnauthorizedCreate()
-    {
+    public void testUnauthorizedCreate() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_CREATE)).thenReturn(false);
+        when(subject.isPermitted("objects:create")).thenReturn(false);
 
         ClientResponse response = resourceRule.client()
-                                              .resource(API_ADDRESS)
-                                              .type(MEDIA_TYPE)
-                                              .post(ClientResponse.class, metadataInstance);
+                .resource(API_ADDRESS)
+                .type(MEDIA_TYPE)
+                .post(ClientResponse.class, metadataInstance);
 
         assertThat("object creation was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedUpdate()
-    {
+    public void testAuthorizedUpdate() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_UPDATE)).thenReturn(true);
+        when(subject.isPermitted("objects:update")).thenReturn(true);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
         // In this case, the two ids should match.
         ObjectMetadata metadata = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .put(ObjectMetadata.class, metadataInstance);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .put(ObjectMetadata.class, metadataInstance);
 
         assertThat("object was updated", metadata.getId(), equalTo(metadataInstance.getId()));
     }
 
     @Test
-    public void testUnauthorizedUpdate()
-    {
+    public void testUnauthorizedUpdate() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_UPDATE)).thenReturn(false);
+        when(subject.isPermitted("objects:update")).thenReturn(false);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .put(ClientResponse.class, metadataInstance);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .put(ClientResponse.class, metadataInstance);
 
         assertThat("object update was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedGet()
-    {
+    public void testAuthorizedGet() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_GET)).thenReturn(true);
+        when(subject.isPermitted("objects:get")).thenReturn(true);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
         ObjectMetadata metadata = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ObjectMetadata.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ObjectMetadata.class);
 
         assertThat("object was correctly retrieved", metadata.getId(), equalTo(metadataInstance.getId()));
     }
 
     @Test
-    public void testUnauthorizedGet()
-    {
+    public void testUnauthorizedGet() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_GET)).thenReturn(false);
+        when(subject.isPermitted("objects:get")).thenReturn(false);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
-        ClientResponse response  = resourceRule.client()
-                                               .resource(api)
-                                               .type(MEDIA_TYPE)
-                                               .get(ClientResponse.class);
+        ClientResponse response = resourceRule.client()
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("get object was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedList()
-    {
+    public void testAuthorizedList() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_LIST)).thenReturn(true);
+        when(subject.isPermitted("objects:list")).thenReturn(true);
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                                                             .resource(API_ADDRESS)
-                                                             .type(MEDIA_TYPE)
-                                                             .get(PaginatedResult.class);
+                .resource(API_ADDRESS)
+                .type(MEDIA_TYPE)
+                .get(PaginatedResult.class);
 
         assertThat("repository lists expected results", result, equalTo(metadataResult));
     }
 
     @Test
-    public void testUnauthorizedList()
-    {
+    public void testUnauthorizedList() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_LIST)).thenReturn(false);
+        when(subject.isPermitted("objects:list")).thenReturn(false);
 
         ClientResponse response = resourceRule.client()
-                                              .resource(API_ADDRESS)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
+                .resource(API_ADDRESS)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("list operation was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedGetContentBlocks()
-    {
+    public void testAuthorizedGetContentBlocks() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_GET)).thenReturn(true);
+        when(subject.isPermitted("objects:get")).thenReturn(true);
 
         String api = API_ADDRESS + "/" +
-                     metadataInstance.getId() +
-                     "/blocks";
+                metadataInstance.getId() +
+                "/blocks";
 
         PaginatedResult<ArchiveContentBlock> result = resourceRule.client()
-                                                                  .resource(api)
-                                                                  .type(MEDIA_TYPE)
-                                                                  .get(PaginatedResult.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(PaginatedResult.class);
 
         assertThat("get archive content blocks yeilds expected result", result, equalTo(acbResult));
     }
 
     @Test
-    public void testUnauthorizedGetContentBlocks()
-    {
+    public void testUnauthorizedGetContentBlocks() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_GET)).thenReturn(false);
+        when(subject.isPermitted("objects:get")).thenReturn(false);
 
         String api = API_ADDRESS + "/" +
                 metadataInstance.getId() +
                 "/blocks";
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("get archive content blocks was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedGetByInformationStore()
-    {
+    public void testAuthorizedGetByInformationStore() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_LIST)).thenReturn(true);
+        when(subject.isPermitted("objects:list")).thenReturn(true);
 
         String api = API_ADDRESS + "/informationStore/" + isdSearch.getId();
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                                                             .resource(api)
-                                                             .type(MEDIA_TYPE)
-                                                             .get(PaginatedResult.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(PaginatedResult.class);
 
         assertThat("list by information store yields expected result", result, equalTo(metadataByIsdResult));
     }
 
     @Test
-    public void testUnauthorizedGetByInformationStore()
-    {
+    public void testUnauthorizedGetByInformationStore() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_LIST)).thenReturn(false);
+        when(subject.isPermitted("objects:list")).thenReturn(false);
 
         String api = API_ADDRESS + "/informationStore/" + isdSearch.getId();
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("list by information store is not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedGetByTask()
-    {
+    public void testAuthorizedGetByTask() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_LIST)).thenReturn(true);
+        when(subject.isPermitted("objects:list")).thenReturn(true);
 
         String api = API_ADDRESS + "/task/" + taskSearch.getId();
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                                                             .resource(api)
-                                                             .type(MEDIA_TYPE)
-                                                             .get(PaginatedResult.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(PaginatedResult.class);
 
         assertThat("list by task yields expected result", result, equalTo(metadataByTaskResult));
     }
 
     @Test
-    public void testUnauthorizedGetByTask()
-    {
+    public void testUnauthorizedGetByTask() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_LIST)).thenReturn(false);
+        when(subject.isPermitted("objects:list")).thenReturn(false);
 
         String api = API_ADDRESS + "/task/" + taskSearch.getId();
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("list by task is not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedIndex()
-    {
+    public void testAuthorizedIndex() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_INDEX)).thenReturn(true);
+        when(subject.isPermitted("objects:index")).thenReturn(true);
 
         String api = API_ADDRESS + "/index/" + metadataInstance.getId();
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .put(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .put(ClientResponse.class);
 
         assertThat("object was indexed", response.getStatus(), equalTo(expectedResponse.getStatus()));
     }
 
     @Test
-    public void testUnauthorizedIndex()
-    {
+    public void testUnauthorizedIndex() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_INDEX)).thenReturn(false);
+        when(subject.isPermitted("objects:index")).thenReturn(false);
 
         String api = API_ADDRESS + "/index/" + metadataInstance.getId();
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .put(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .put(ClientResponse.class);
 
         assertThat("index operation was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedSearch()
-    {
+    public void testAuthorizedSearch() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_SEARCH)).thenReturn(true);
+        when(subject.isPermitted("objects:search")).thenReturn(true);
 
         String api = API_ADDRESS + "/search/" + session.getDomain().getId() + "?query=" + pathSearch;
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                                                             .resource(api)
-                                                             .type(MEDIA_TYPE)
-                                                             .get(PaginatedResult.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(PaginatedResult.class);
 
         assertThat("search returned expected results", result, equalTo(metadataSearchResult));
     }
 
     @Test
-    public void testUnauthorizedSearch()
-    {
+    public void testUnauthorizedSearch() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_SEARCH)).thenReturn(false);
+        when(subject.isPermitted("objects:search")).thenReturn(false);
 
         String api = API_ADDRESS + "/search/" + session.getDomain().getId() + "?query=" + pathSearch;
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("search was not permitted", response.getStatus(), equalTo(401));
     }
 
     @Test
-    public void testAuthorizedSearchProject()
-    {
+    public void testAuthorizedSearchProject() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_SEARCH)).thenReturn(true);
+        when(subject.isPermitted("objects:search")).thenReturn(true);
 
         String api = API_ADDRESS + "/search/" +
-                     session.getDomain().getId() + "/" +
-                     projectSearch.getId() +
-                     "?query=" + pathSearch;
+                session.getDomain().getId() + "/" +
+                projectSearch.getId() +
+                "?query=" + pathSearch;
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                                                             .resource(api)
-                                                             .type(MEDIA_TYPE)
-                                                             .get(PaginatedResult.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(PaginatedResult.class);
 
         assertThat("search with project returned expected results", result, equalTo(metadataSearchResult));
     }
 
     @Test
-    public void testUnauthorizedSearchProject()
-    {
+    public void testUnauthorizedSearchProject() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(ObjectMetadataResource.OPERATION_SEARCH)).thenReturn(false);
+        when(subject.isPermitted("objects:search")).thenReturn(false);
 
         String api = API_ADDRESS + "/search/" +
-                     session.getDomain().getId() + "/" +
-                     projectSearch.getId() +
-                     "?query=" + pathSearch;
+                session.getDomain().getId() + "/" +
+                projectSearch.getId() +
+                "?query=" + pathSearch;
 
         ClientResponse response = resourceRule.client()
-                                              .resource(api)
-                                              .type(MEDIA_TYPE)
-                                              .get(ClientResponse.class);
+                .resource(api)
+                .type(MEDIA_TYPE)
+                .get(ClientResponse.class);
 
         assertThat("search with project was not permitted", response.getStatus(), equalTo(401));
     }

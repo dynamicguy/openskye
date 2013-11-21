@@ -21,7 +21,7 @@ public class QueryContext {
     private List<ObjectMetadata> objects = new ArrayList<>();
 
     public List<StructuredObject> resolveObjects(ArchiveStore archiveStore) {
-        log.debug("QueryContext is starting to resolve objects");
+        log.debug("RequestQueryContextHolder is starting to resolve objects");
         List<StructuredObject> structuredObjects = new ArrayList<>();
         for (ObjectMetadata om : objects) {
             log.debug("Resolving object metadata " + om);

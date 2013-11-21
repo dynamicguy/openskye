@@ -9,6 +9,7 @@ import org.openskye.core.InformationStore;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.*;
 import org.openskye.metadata.ObjectMetadataRepository;
+import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
 
 import javax.inject.Inject;
@@ -25,6 +26,9 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @JsonIgnore
     @Inject
     protected ObjectMetadataRepository omr;
+    @JsonIgnore
+    @Inject
+    protected ObjectMetadataSearch oms;
     @JsonIgnore
     @Getter
     @Setter

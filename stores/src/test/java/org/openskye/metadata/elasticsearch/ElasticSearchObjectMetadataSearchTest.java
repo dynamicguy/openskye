@@ -7,7 +7,6 @@ import org.openskye.core.ObjectMetadata;
 import org.openskye.core.SkyeSession;
 import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
-import org.openskye.util.Page;
 
 import javax.inject.Inject;
 import java.util.Iterator;
@@ -44,9 +43,6 @@ public class ElasticSearchObjectMetadataSearchTest {
         Project project = new Project();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         String metadataId = objectMetadata.getId();
-        Page page = new Page();
-        Iterable<ObjectMetadata> resultList;
-        Iterator<ObjectMetadata> resultIterator;
         Domain domain = this.session.getDomain();
 
         // Set up a project, and associate it with the domain for the session.
@@ -60,10 +56,6 @@ public class ElasticSearchObjectMetadataSearchTest {
         // on a static String, so other fields are not likely necessary.
         objectMetadata.setProject(project);
         objectMetadata.setPath(METADATA_PATH);
-
-        // Set up the page for the test.
-        page.setPageNumber(PAGE_NUMBER);
-        page.setPageSize(PAGE_SIZE);
 
         // First, we should clear all previous indices from the search client.
         this.search.clear();
@@ -80,12 +72,11 @@ public class ElasticSearchObjectMetadataSearchTest {
 
         // First, attempt to search for the object using just to domain,
         // which got to the OMS via the project we set up.
-        resultList = this.search.search(domain,
-                searchString,
-                page);
+        Iterable<ObjectMetadata> resultList = this.search.search(domain,
+                searchString);
 
         // The first test is that something was, in fact, found.
-        resultIterator = resultList.iterator();
+        Iterator<ObjectMetadata> resultIterator = resultList.iterator();
         assertThat("first search has results.", resultIterator.hasNext());
 
         // Now we should be able to get the first result is the expected
@@ -102,8 +93,7 @@ public class ElasticSearchObjectMetadataSearchTest {
         // project.
         resultList = this.search.search(domain,
                 project,
-                searchString,
-                page);
+                searchString);
 
         // Now, ensure that the something was found.
         resultIterator = resultList.iterator();
@@ -117,8 +107,6 @@ public class ElasticSearchObjectMetadataSearchTest {
 
         // Finally, ensure that there was only one result.
         assertThat("second search contains only one result.", (!resultIterator.hasNext()));
-
-        return;
     }
 
 }
