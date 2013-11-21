@@ -160,6 +160,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public void destroy(ObjectMetadata om) {
+        //TODO: Write destroy so it actually destroys something
         if (om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
             getSimpleObjectPath(om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), om, false).delete();
         }
