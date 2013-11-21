@@ -118,8 +118,9 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     injector.injectMembers(step);
                     step.rehydrate();
 
-
+                    emf.get().getTransaction().begin();
                     accept(taskId, workerConfig.getName());
+                    emf.get().getTransaction().commit();
 
                     futures.put(taskId, workers.submit(step));
                     log.debug(workerConfig.getName() + ": begin task " + taskId);
