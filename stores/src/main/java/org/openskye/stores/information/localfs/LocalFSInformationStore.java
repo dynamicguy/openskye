@@ -148,9 +148,9 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public void put(SimpleObject simpleObject) {
-        File targetFile = new File(getName() + "/" + simpleObject.getObjectMetadata().getPath());
+        File targetFile = new File(this.informationStoreDefinition.getProperties().get(FILE_PATH) + "/" + simpleObject.getObjectMetadata().getPath());
         if (targetFile.exists()) {
-            throw new SkyeException("Unable to put object " + simpleObject + " since it already exists in local filesystem");
+            throw new SkyeException("Unable to put object " + simpleObject + " at "+targetFile.getPath()+" since it already exists in local filesystem");
         }
         targetFile.mkdirs();
         targetFile.delete();

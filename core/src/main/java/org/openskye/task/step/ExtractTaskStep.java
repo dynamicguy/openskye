@@ -1,6 +1,7 @@
 package org.openskye.task.step;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,9 @@ import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 @NoArgsConstructor
 public class ExtractTaskStep extends TaskStep {
 
+    @Inject
     private InformationStoreDefinitionDAO informationStoreDefinitionDAO;
+    @Inject
     private ChannelDAO channelDAO;
     // An extract can either be aimed at an object set, or all the objects ever ingested from
     // a selected channel

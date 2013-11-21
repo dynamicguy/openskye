@@ -9,15 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openskye.cli.commands.fields.*;
+import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.*;
 import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.filters.PathRegExFilter;
 
-import javax.xml.ws.Response;
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,30 +31,72 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     private final String commandName = "objectSets";
     @Parameter(names = "--add")
     private boolean add;
+    @Parameter(names = "--objects")
+    private boolean objects;
 
     @Override
-    public void execute(){
+    public void execute() {
 
-        if(add){
+        if (add) {
             String select = getConsole().readLine("Please press 1 to add individual objects to this set, or 2 to add a set of objects based on a search: ");
-            if(select.equals("1")){
+            if (select.equals("1")) {
                 add();
-            }
-            else if(select.equals("2")){
+            } else if (select.equals("2")) {
                 addFromSearch();
-            }
-            else{
+            } else {
                 output.error("Invalid choice");
             }
-        }
-        else if(list){
+        } else if (list) {
             list();
-        }
-        else if(create){
+        } else if (objects) {
+            listObjects();
+        } else if (create) {
             create();
-        }
-        else if(delete){
+        } else if (delete) {
             delete();
+        }
+    }
+
+    private void listObjects() {
+        String objectSetID;
+        PaginatedResult objectSets = getResource("objectSets").get(PaginatedResult.class);
+        int i = 1;
+        output.message("Please select the object set you'd like to see objects for: ");
+        for (Object obj : objectSets.getResults()) {
+            try {
+                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
+            } catch (Exception e) {
+                throw new SkyeException("Unable to get Object Sets" , e);
+            }
+            i++;
+        }
+        while (true) {
+            String option = getConsole().readLine("Enter choice:");
+            int position = Integer.parseInt(option);
+            try {
+                ObjectSet result = getResource("objectSets/" + BeanUtils.getProperty(objectSets.getResults().get(position - 1), "id")).get(ObjectSet.class);
+                objectSetID = result.getId();
+                break;
+            } catch (Exception e) {
+                throw new SkyeException("Unable to select Object Set ", e);
+            }
+        }
+        PaginatedResult paginatedResult = getResource(getCollectionPlural()+"/metadata/"+objectSetID).get(PaginatedResult.class);
+        List<String> fieldsWithId = new ArrayList<>();
+        fieldsWithId.add("id");
+        fieldsWithId.addAll(new ObjectsCommand().getFieldNames());
+
+        if (paginatedResult.getResults().size() > 0) {
+            output.message("Listing " + getCollectionPlural());
+
+            ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
+            output.insertLines(1);
+            tableView.draw(output);
+            output.success("\nFound " + paginatedResult.getResults().size() + " objects");
+
+        } else {
+            output.success("\nNo " + getCollectionPlural() + " found");
+
         }
     }
 
@@ -74,7 +115,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     }
 
     @Override
-    public void create(){
+    public void create() {
         output.message("Creating a new " + getCollectionSingular() + ":\n");
         ObjectSet newObject = new ObjectSet();
 
@@ -96,25 +137,23 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
                 selectEnum((EnumerationField) field, newObject);
             }
         }
-        ObjectSet result = (ObjectSet)getResource(getCollectionPlural()).post(getClazz(), newObject);
+        ObjectSet result = (ObjectSet) getResource(getCollectionPlural()).post(getClazz(), newObject);
 
         output.success("Created " + getCollectionSingular() + " with id " + result.getId());
     }
 
-    public void addFromSearch(){
+    public void addFromSearch() {
         String objectSetID;
-        String domainID;
         String query;
 
         PaginatedResult objectSets = getResource("objectSets").get(PaginatedResult.class);
-        PaginatedResult domains = getResource("domains").get(PaginatedResult.class);
         int i = 1;
         output.message("Please select an object set to add objects to: ");
         for (Object obj : objectSets.getResults()) {
             try {
                 output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
             } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets" , e);
+                throw new SkyeException("Unable to get Object Sets", e);
             }
             i++;
         }
@@ -129,38 +168,15 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
                 throw new SkyeException("Unable to select Object Set ", e);
             }
         }
-
-        i = 1;
-        output.message("Please select a domain to search for objects: ");
-        for (Object obj : domains.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to get domains" , e);
-            }
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
-            try {
-                Domain result = getResource("domains/" + BeanUtils.getProperty(domains.getResults().get(position - 1), "id")).get(Domain.class);
-                domainID = result.getId();
-                break;
-            } catch (Exception e) {
-                throw new SkyeException("Unable to select domain ", e);
-            }
-        }
-
         query = getConsole().readLine("Please enter a query: ");
-        WebResource resource = client.resource(settings.getUrl() + getCollectionPlural()+"/"+objectSetID+"/search/"+domainID).queryParam("query",query);
+        WebResource resource = client.resource(settings.getUrl() + getCollectionPlural() + "/" + objectSetID + "/search").queryParam("query", query);
 
         ObjectSet result = resource.put(ObjectSet.class);
 
-        output.success("Successfully added objects to the Object Set with id: "+result.getId());
+        output.success("Successfully added objects to the Object Set with id: " + result.getId());
     }
 
-    public void add(){
+    public void add() {
         String objectSetID;
         String objectMetadataId;
 
@@ -173,7 +189,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
             try {
                 output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
             } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets" , e);
+                throw new SkyeException("Unable to get Object Sets", e);
             }
             i++;
         }
@@ -194,7 +210,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
             try {
                 output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "path"));
             } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets" , e);
+                throw new SkyeException("Unable to get Object Sets", e);
             }
             i++;
         }
@@ -209,7 +225,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
                 throw new SkyeException("Unable to select Object ", e);
             }
         }
-        getResource(getCollectionPlural()+"/"+objectSetID+"/"+objectMetadataId).put();
+        getResource(getCollectionPlural() + "/" + objectSetID + "/" + objectMetadataId).put();
     }
 
 
