@@ -247,32 +247,23 @@ public class ObjectMetadataResource {
      * Searches for {@link ObjectMetadata} across all {@link Project} instances
      * for the given {@link Domain} id.
      *
-     * @param domainId The id of the {@link Domain} for the search.
      * @param query    The query to be performed.
      * @return A {@link PaginatedResult} containing the specified
      *         of the search requested.
      */
     @ApiOperation(value = "Searches for ObjectMetadata",
-            notes = "Supply a Domain id, a query string (query), a page number (pageNumber), and a page size (pageSize).  Returns a list of ObjectMetadata in a paginated structure",
+            notes = "Supply a query string (query).  Returns a list of ObjectMetadata in a paginated structure",
             responseContainer = "List",
             response = ObjectMetadata.class)
-    @Path("/search/{domainId}")
+    @Path("/search")
     @GET
     @Transactional
     @Timed
-    public PaginatedResult<ObjectMetadata> search(@PathParam("domainId")
-                                                  String domainId,
-                                                  @ApiParam(value = "The query string", required = true)
+    public PaginatedResult<ObjectMetadata> search(@ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
         checkPermission("search");
-        Optional<Domain> domain = domains.get(domainId);
-
-        if (!domain.isPresent())
-            throw new NotFoundException();
-
-
-        return new PaginatedResult<>(search.search(domain.get(), query));
+        return new PaginatedResult<>(search.search(query));
 
     }
 
@@ -280,39 +271,32 @@ public class ObjectMetadataResource {
      * Searches for {@link ObjectMetadata} for a specific {@link Project} within
      * the specified {@link Domain}.
      *
-     * @param domainId  The id of the {@link Domain} for the search.
      * @param projectId The id of the {@link Project} to be searched.
      * @param query     The query to be performed.
      * @return A {@link PaginatedResult} containing the specified
      *         of the search requested.
      */
     @ApiOperation(value = "Searches for ObjectMetadata",
-            notes = "Supply a Domain id, a Project id, a query string (query), and optionally, a page number (pageNumber), and a page size(pageSize).  " +
+            notes = "Supply a  a Project id, a query string (query),  " +
                     "Returns a list of ObjectMetadata in a paginated structure",
             responseContainer = "List",
             response = ObjectMetadata.class)
-    @Path("/search/{domainId}/{projectId}")
+    @Path("/search/{projectId}")
     @GET
     @Transactional
     @Timed
-    public PaginatedResult<ObjectMetadata> search(@PathParam("domainId") String domainId,
-                                                  @PathParam("projectId") String projectId,
+    public PaginatedResult<ObjectMetadata> search(@PathParam("projectId") String projectId,
                                                   @ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
         checkPermission("search");
-
-        Optional<Domain> domain = domains.get(domainId);
-
-        if (!domain.isPresent())
-            throw new NotFoundException();
 
         Optional<Project> project = projects.get(projectId);
 
         if (!project.isPresent())
             throw new NotFoundException();
 
-        return new PaginatedResult<>(search.search(domain.get(), project.get(), query));
+        return new PaginatedResult<>(search.search(project.get(), query));
     }
 
     private void checkPermission(String operation) {

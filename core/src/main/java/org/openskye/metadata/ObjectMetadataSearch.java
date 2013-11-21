@@ -1,7 +1,6 @@
 package org.openskye.metadata;
 
 import org.openskye.core.ObjectMetadata;
-import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
 
 /**
@@ -14,21 +13,19 @@ public interface ObjectMetadataSearch {
      * Perform a search over repository using a query.
      * Returns all results.
      *
-     * @param domain The domain in which to search.
-     * @param query  The query.
+     * @param query The query.
      * @return The resulting {@link ObjectMetadata} instances.
      */
-    Iterable<ObjectMetadata> search(Domain domain, String query);
+    Iterable<ObjectMetadata> search(String query);
 
     /**
      * Perform a search over repository for a single project using a query.
      *
-     * @param domain  The domain in which to search.
      * @param project The project in which to search.
      * @param query   The query.
      * @return The resulting {@link ObjectMetadata} instances.
      */
-    Iterable<ObjectMetadata> search(Domain domain, Project project, String query);
+    Iterable<ObjectMetadata> search(Project project, String query);
 
     /**
      * Add {@link ObjectMetadata} to the search

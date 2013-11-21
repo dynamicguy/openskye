@@ -1,7 +1,6 @@
 package org.openskye.hadoop.metadata;
 
 import org.openskye.core.ObjectMetadata;
-import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
 import org.openskye.metadata.ObjectMetadataSearch;
 
@@ -12,12 +11,12 @@ import org.openskye.metadata.ObjectMetadataSearch;
 public class HBaseObjectMetadataSearch implements ObjectMetadataSearch {
 
     @Override
-    public Iterable<ObjectMetadata> search(Domain domain, String query) {
+    public Iterable<ObjectMetadata> search(String query) {
         return null;
     }
 
     @Override
-    public Iterable<ObjectMetadata> search(Domain domain, Project project, String query) {
+    public Iterable<ObjectMetadata> search(Project project, String query) {
         return null;
     }
 

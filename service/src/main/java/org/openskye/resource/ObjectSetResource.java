@@ -10,8 +10,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
-import org.openskye.core.SkyeException;
-import org.openskye.domain.Domain;
 import org.openskye.domain.dao.DomainDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.NotFoundException;
@@ -22,9 +20,6 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 @Api(value = "/api/1/objectSets", description = "Act upon ObjectMetadata using ObjectSet instances.")
 @Path("/api/1/objectSets")
@@ -256,50 +251,29 @@ public class ObjectSetResource {
     }
 
     @ApiOperation(value = "Add the results of a search to an ObjectSet",
-            notes = "Supply the ObjectSet id and the Domain id, as well as a query string. " +
+            notes = "Supply the ObjectSet id as well as a query string. " +
                     "Returns the ObjectSet with which the results can be accessed",
             response = ObjectSet.class)
-    @Path("/{setId}/search/{domainId}")
+    @Path("/{setId}/search")
     @PUT
     @Transactional
     @Timed
     public ObjectSet addFromSearch(@ApiParam(value = "The id of the ObjectSet", required = true)
                                    @PathParam("setId")
                                    String setId,
-                                   @ApiParam(value = "The id of the Domain to be searched", required = true)
-                                   @PathParam("domainId")
-                                   String domainId,
                                    @ApiParam(value = "The query string to perform", required = true)
                                    @QueryParam("query")
-                                   String query)
-    {
-        Optional<ObjectSet> objectSet;
-        Optional<Domain> domain;
-        Iterable<ObjectMetadata> metadataList;
+                                   String query) {
 
         if (!this.isPermitted(OPERATION_SEARCH))
             throw new UnauthorizedException();
 
-        try
-        {
-            query = URLDecoder.decode(query, "UTF-8");
-        }
-        catch(UnsupportedEncodingException ex)
-        {
-            throw new SkyeException("Failed to URL decode search query", ex);
-        }
-
-        objectSet = this.repository.getObjectSet(setId);
+        Optional<ObjectSet> objectSet = this.repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        domain = this.domains.get(domainId);
-
-        if (!domain.isPresent())
-            throw new NotFoundException();
-
-        metadataList = this.search.search(domain.get(), query);
+        Iterable<ObjectMetadata> metadataList = this.search.search(query);
 
         for (ObjectMetadata metadata : metadataList)
             this.repository.addObjectToSet(objectSet.get(), metadata);

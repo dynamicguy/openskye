@@ -72,8 +72,7 @@ public class ElasticSearchObjectMetadataSearchTest {
 
         // First, attempt to search for the object using just to domain,
         // which got to the OMS via the project we set up.
-        Iterable<ObjectMetadata> resultList = this.search.search(domain,
-                searchString);
+        Iterable<ObjectMetadata> resultList = this.search.search(searchString);
 
         // The first test is that something was, in fact, found.
         Iterator<ObjectMetadata> resultIterator = resultList.iterator();
@@ -91,8 +90,7 @@ public class ElasticSearchObjectMetadataSearchTest {
 
         // Next, we'll attempt to search with both the domain and the
         // project.
-        resultList = this.search.search(domain,
-                project,
+        resultList = this.search.search(project,
                 searchString);
 
         // Now, ensure that the something was found.

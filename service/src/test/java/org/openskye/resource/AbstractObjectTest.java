@@ -254,8 +254,8 @@ public class AbstractObjectTest
 
         pathSearch = URLEncoder.encode(pathA, "UTF-8");
 
-        when(search.search(any(Domain.class), eq(pathA))).thenReturn(metadataSearchList);
-        when(search.search(any(Domain.class), any(Project.class), eq(pathA))).thenReturn(metadataSearchList);
+        when(search.search(eq(pathA))).thenReturn(metadataSearchList);
+        when(search.search(any(Project.class), eq(pathA))).thenReturn(metadataSearchList);
 
         objectSetInstance.setId(UUID.randomUUID().toString());
         objectSetInstance.setName(setName);

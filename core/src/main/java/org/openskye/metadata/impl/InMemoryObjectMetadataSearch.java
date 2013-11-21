@@ -12,12 +12,12 @@ import org.openskye.metadata.ObjectMetadataSearch;
 public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
 
     @Override
-    public Iterable<ObjectMetadata> search(Domain domain, String query) {
+    public Iterable<ObjectMetadata> search(String query) {
         return null;
     }
 
     @Override
-    public Iterable<ObjectMetadata> search(Domain domain, Project project, String query) {
+    public Iterable<ObjectMetadata> search(Project project, String query) {
         return null;
     }
 
