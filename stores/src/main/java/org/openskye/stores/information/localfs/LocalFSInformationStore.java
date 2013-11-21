@@ -78,6 +78,7 @@ public class LocalFSInformationStore implements InformationStore {
     }
 
     private Iterable<SimpleObject> buildObjectsForPath(String path) {
+        log.debug("Scanning path " + path + " for objects");
         try (DirectoryStream<Path> ds =
                      Files.newDirectoryStream(Paths.get(path))) {
 
@@ -90,16 +91,22 @@ public class LocalFSInformationStore implements InformationStore {
                     metadata.setPath(p.toAbsolutePath().toString());
                     metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
                     container.setObjectMetadata(metadata);
+                    if (log.isDebugEnabled())
+                        log.debug("Found directory " + metadata);
                     all.add(container);
                 } else if (Files.isRegularFile(p)) {
                     UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
                     metadata.setPath(p.toAbsolutePath().toString());
+                    metadata.setProject(informationStoreDefinition.getProject());
                     metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
                     metadata.setMimeType(MimeTypeUtil.getContentType(p));
-                    metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+                    metadata.setInformationStoreId(informationStoreDefinition.getId());
                     unstructObj.setObjectMetadata(metadata);
+
+                    if (log.isDebugEnabled())
+                        log.debug("Found file " + metadata);
                     all.add(unstructObj);
                 }
             }

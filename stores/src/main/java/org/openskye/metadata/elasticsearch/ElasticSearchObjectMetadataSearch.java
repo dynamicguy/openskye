@@ -44,6 +44,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         List<ObjectMetadata> listMetadata = new ArrayList<>();
 
         try {
+            log.debug("Start start on "+session.getDomain().getId());
             SearchResponse response = this.client.prepareSearch()
                     .setIndices(session.getDomain().getId())
                     .setSearchType(SEARCH_TYPE)
@@ -109,8 +110,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void index(ObjectMetadata objectMetadata) {
         JsonObjectMetadata metadata = new JsonObjectMetadata(objectMetadata);
+
         String domainId = objectMetadata.getProject().getDomain().getId();
         String projectId = objectMetadata.getProject().getId();
+        log.debug("Starting to index " + objectMetadata +" on index "+domainId+" with type "+projectId);
 
         try {
             String json = this.objectMapper.writeValueAsString(metadata);
@@ -121,8 +124,6 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         } catch (JsonProcessingException ex) {
             throw new SkyeException("Failed to marshal ObjectMetadata as JSON.", ex);
         }
-
-
     }
 
     /**

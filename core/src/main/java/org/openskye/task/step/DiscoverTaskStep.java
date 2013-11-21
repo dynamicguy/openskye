@@ -93,7 +93,6 @@ public class DiscoverTaskStep extends TaskStep {
                         om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
                     }
                     om.setTaskId(task.getId());
-                    om.setProject(task.getProject());
                     omr.put(om);
                     oms.index(om);
                 }
