@@ -109,7 +109,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void index(ObjectMetadata objectMetadata) {
         JsonObjectMetadata metadata = new JsonObjectMetadata(objectMetadata);
-        String domainId = this.session.getDomain().getId();
+        String domainId = objectMetadata.getProject().getDomain().getId();
         String projectId = objectMetadata.getProject().getId();
 
         try {
