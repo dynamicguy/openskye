@@ -1,6 +1,10 @@
 package org.openskye.guice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.core.SkyeException;
 import org.openskye.metadata.ObjectMetadataRepository;
@@ -36,5 +40,16 @@ public class SkyeModule extends AbstractModule {
             throw new SkyeException("Unable to bind services, check your configuration", e);
         }
 
+    }
+
+
+    @Provides
+    @Singleton
+    protected ObjectMapper provideObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.registerModule(new JodaModule());
+
+        return mapper;
     }
 }
