@@ -118,21 +118,23 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
             Class<?> impl = Class.forName(metadata.getImplementation());
 
             if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) { //is there an ACB?
-                if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
-                    if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
-                        UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
-                        SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+                if (isObjectArchived(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata)) { //is the object currently archived?
+                    if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
+                        if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
+                            UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
+                            SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+                            simpleObject.setObjectMetadata(metadata);
+                            return Optional.of(simpleObject);
+                        }
+                    } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
+
+                        SimpleObject simpleObject = new LocalFileUnstructuredObject();
                         simpleObject.setObjectMetadata(metadata);
                         return Optional.of(simpleObject);
+                    } else {
+                        log.debug("Simple object type not supported!");
+                        return Optional.absent();
                     }
-                } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
-
-                    SimpleObject simpleObject = new LocalFileUnstructuredObject();
-                    simpleObject.setObjectMetadata(metadata);
-                    return Optional.of(simpleObject);
-                } else {
-                    log.debug("Simple object type not supported!");
-                    return Optional.absent();
                 }
             } else {
                 log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
@@ -160,7 +162,6 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public void destroy(ObjectMetadata om) {
-        //TODO: Write destroy so it actually destroys something
         if (om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
             getSimpleObjectPath(om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), om, false).delete();
         }
@@ -219,5 +220,15 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
         // Build a composite context
         DataContext compositeDataContext = DataContextFactory.createCompositeDataContext(dataContexts);
         return new QueryResultStructuredObject(compositeDataContext.executeQuery(query));
+    }
+
+    public boolean isObjectArchived(ArchiveContentBlock acb, ObjectMetadata om) {
+        String fileName = getLocalPath() + "/" + acb.getId() + "/" + om.getPath() + ".csv";
+        File simpleObjectDir = new File(fileName);
+        if (simpleObjectDir.exists()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

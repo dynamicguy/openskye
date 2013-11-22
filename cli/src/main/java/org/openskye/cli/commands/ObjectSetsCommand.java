@@ -87,7 +87,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         fieldsWithId.addAll(new ObjectsCommand().getFieldNames());
 
         if (paginatedResult.getResults().size() > 0) {
-            output.message("Listing " + getCollectionPlural());
+            output.message("Listing objects");
 
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
             output.insertLines(1);

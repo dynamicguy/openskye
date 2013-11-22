@@ -100,8 +100,8 @@ public class ExtractTaskStep extends TaskStep {
                         Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
                         if (simpleObject.isPresent()) {
                             targetInformationStore.get().put(simpleObject.get());
-                        } else {
-                            throw new SkyeException("Unable to get simple object from archive content block " + acb);
+                        } else { //the object's been deleted, remove the archive content block
+                            om.getArchiveContentBlocks().remove(acb);
                         }
                     } else {
                         throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
