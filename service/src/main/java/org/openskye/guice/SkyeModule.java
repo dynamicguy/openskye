@@ -5,6 +5,9 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.core.SkyeException;
 import org.openskye.metadata.ObjectMetadataRepository;
@@ -51,5 +54,20 @@ public class SkyeModule extends AbstractModule {
         mapper.registerModule(new JodaModule());
 
         return mapper;
+    }
+
+    @Provides
+    @Singleton
+    protected Client provideClient()
+    {
+        Client client = new TransportClient()
+                            .addTransportAddress(
+                                    new InetSocketTransportAddress(
+                                            "localhost",
+                                            9300
+                                    )
+                            );
+
+        return client;
     }
 }
