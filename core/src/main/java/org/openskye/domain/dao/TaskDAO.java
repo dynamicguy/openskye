@@ -20,7 +20,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
     public Optional<Task> findOldestQueued(String workerName) {
         Task nextTask = null;
         try {
-            CriteriaBuilder builder = createCriteriaBuilder();
+            CriteriaBuilder builder = getCriteriaBuilder();
             CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
             Root<Task> taskRoot = criteria.from(Task.class);
             criteria.select(taskRoot);
@@ -44,7 +44,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
 
     public PaginatedResult<Task> findLiveTasks() {
 
-        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
         Root<Task> taskRoot = criteria.from(Task.class);
         criteria.select(taskRoot);

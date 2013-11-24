@@ -14,7 +14,7 @@ import java.util.List;
 public class TaskLogDAO extends AbstractPaginatingDAO<TaskLog> {
 
     public PaginatedResult<TaskLog> getLogsForTask(Task task) {
-        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<TaskLog> criteria = builder.createQuery(TaskLog.class);
         Root<TaskLog> taskLogRoot = criteria.from(TaskLog.class);
         criteria.select(taskLogRoot);

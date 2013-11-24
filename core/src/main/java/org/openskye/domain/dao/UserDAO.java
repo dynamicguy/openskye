@@ -12,7 +12,7 @@ import java.util.List;
 public class UserDAO extends AbstractPaginatingDAO<User> {
 
     public Optional<User> findByEmail(String email) {
-        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> userRoot = criteria.from(User.class);
         criteria.select(userRoot);
@@ -26,7 +26,7 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
     }
 
     public Optional<User> findByApiKey(String key) {
-        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> userRoot = criteria.from(User.class);
         criteria.select(userRoot);
@@ -41,7 +41,7 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
 
     public boolean isPermitted(String userId, String permission)
     {
-        CriteriaBuilder builder = createCriteriaBuilder();
+        CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
         Root<Permission> permissionRoot = criteria.from(Permission.class);
         ListJoin<Permission, RolePermission> rolePermissionJoin = permissionRoot.joinList("rolePermissions");

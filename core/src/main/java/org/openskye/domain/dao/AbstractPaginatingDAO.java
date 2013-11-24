@@ -3,15 +3,19 @@ package org.openskye.domain.dao;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import io.dropwizard.util.Generics;
+import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeSession;
 import org.openskye.domain.AuditEvent;
 import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
+import org.openskye.query.RequestQueryContextHolder;
+import org.openskye.query.SortDirection;
 
 import javax.inject.Inject;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.validation.*;
 import java.util.Set;
@@ -23,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * more intelligent that the basic one since we will
  * need to include security and also pagination
  */
+@Slf4j
 public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @Inject
     private Provider<EntityManager> emf;
@@ -41,8 +46,31 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     public PaginatedResult<T> list() {
         CriteriaQuery<T> criteria = createCriteriaQuery();
         Root<T> selectEntity = criteria.from(entityClass);
+
         criteria.select(selectEntity);
-        return new PaginatedResult<>(currentEntityManager().createQuery(criteria).getResultList());
+        if (RequestQueryContextHolder.getContext().getSort() != null) {
+            try {
+                Path<Object> sortCol = selectEntity.get(RequestQueryContextHolder.getContext().getSort());
+                log.debug("Applying sort on " + sortCol);
+                if (RequestQueryContextHolder.getContext().getSortDir().equals(SortDirection.DESC)) {
+                    log.debug("Sorting desc");
+                    criteria.orderBy(getCriteriaBuilder().desc(sortCol));
+                } else {
+                    log.debug("Sorting asc");
+                    criteria.orderBy(getCriteriaBuilder().asc(sortCol));
+                }
+
+            } catch (IllegalArgumentException e) {
+                log.debug("Ignoring sort, column not found");
+            }
+        } else {
+            // By default lets sort by id so that we are
+            // at least a little deterministic
+            criteria.orderBy(getCriteriaBuilder().asc(selectEntity.get("id")));
+        }
+
+        TypedQuery<T> query = currentEntityManager().createQuery(criteria);
+        return new PaginatedResult<>(query.getResultList());
     }
 
     public boolean isAudited() {
@@ -50,10 +78,10 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     }
 
     protected CriteriaQuery<T> createCriteriaQuery() {
-        return createCriteriaBuilder().createQuery(entityClass);
+        return getCriteriaBuilder().createQuery(entityClass);
     }
 
-    protected CriteriaBuilder createCriteriaBuilder() {
+    protected CriteriaBuilder getCriteriaBuilder() {
         return currentEntityManager().getCriteriaBuilder();
     }
 
@@ -190,15 +218,5 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     public void lock(T instance, LockModeType mode) {
         currentEntityManager().lock(instance, mode);
     }
-
-    /**
-     * Create and begin a transaction
-     */
-    public EntityTransaction beginTransaction() {
-        EntityTransaction xt = currentEntityManager().getTransaction();
-        xt.begin();
-        return xt;
-    }
-
 }
 
