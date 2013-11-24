@@ -1,6 +1,7 @@
 package org.openskye.core;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
 import org.openskye.domain.Domain;
 import org.openskye.domain.User;
 
@@ -9,10 +10,18 @@ import org.openskye.domain.User;
  */
 public class SkyeSession {
     public User getUser() {
-        return (User) SecurityUtils.getSubject().getPrincipal();
+        try {
+            return (User) SecurityUtils.getSubject().getPrincipal();
+        } catch (UnavailableSecurityManagerException e) {
+            return null;
+        }
     }
 
     public Domain getDomain() {
-        return getUser().getDomain();
+        User user = getUser();
+        if (user != null)
+            return getUser().getDomain();
+        else
+            return null;
     }
 }

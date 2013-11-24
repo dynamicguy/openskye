@@ -3,6 +3,7 @@ package org.openskye.domain.dao;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import io.dropwizard.util.Generics;
+import org.openskye.core.SkyeSession;
 import org.openskye.domain.AuditEvent;
 import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
@@ -27,6 +28,8 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     private Provider<EntityManager> emf;
     @Inject
     private AuditLogDAO auditLogDAO;
+    @Inject
+    private SkyeSession skyeSession;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
     // We wanted to have exceptions before commit in the DAO
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -67,7 +70,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
             AuditLog auditLog = new AuditLog();
             auditLog.setAuditEntity(entityClass.getSimpleName());
             auditLog.setAuditEvent(event);
-
+            auditLog.setUser(skyeSession.getUser());
             auditLogDAO.create(auditLog);
         }
         return newInstance;
