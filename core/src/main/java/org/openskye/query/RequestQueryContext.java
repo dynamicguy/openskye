@@ -18,4 +18,7 @@ public class RequestQueryContext {
     private SortDirection sortDir = SortDirection.ASC;
     private Map<String, String> filter = new HashMap<>();
 
+    public int getOffset() {
+        return page * pageSize;
+    }
 }

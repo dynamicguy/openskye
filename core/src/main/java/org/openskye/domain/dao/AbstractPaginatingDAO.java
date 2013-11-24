@@ -8,6 +8,7 @@ import org.openskye.core.SkyeSession;
 import org.openskye.domain.AuditEvent;
 import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
+import org.openskye.query.RequestQueryContext;
 import org.openskye.query.RequestQueryContextHolder;
 import org.openskye.query.SortDirection;
 
@@ -48,11 +49,13 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         Root<T> selectEntity = criteria.from(entityClass);
 
         criteria.select(selectEntity);
-        if (RequestQueryContextHolder.getContext().getSort() != null) {
+        RequestQueryContext requestContext = RequestQueryContextHolder.getContext();
+
+        if (requestContext.getSort() != null) {
             try {
-                Path<Object> sortCol = selectEntity.get(RequestQueryContextHolder.getContext().getSort());
+                Path<Object> sortCol = selectEntity.get(requestContext.getSort());
                 log.debug("Applying sort on " + sortCol);
-                if (RequestQueryContextHolder.getContext().getSortDir().equals(SortDirection.DESC)) {
+                if (requestContext.getSortDir().equals(SortDirection.DESC)) {
                     log.debug("Sorting desc");
                     criteria.orderBy(getCriteriaBuilder().desc(sortCol));
                 } else {
@@ -70,6 +73,11 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         }
 
         TypedQuery<T> query = currentEntityManager().createQuery(criteria);
+
+        // Apply the pagination
+        query.setFirstResult(requestContext.getOffset());
+        query.setMaxResults(requestContext.getPageSize());
+
         return new PaginatedResult<>(query.getResultList());
     }
 
