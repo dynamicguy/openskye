@@ -3,6 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,7 +23,8 @@ import java.io.IOException;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "id")
-public class TaskLog implements Identifiable {
+public class
+        TaskLog implements Identifiable {
     @Transient
     private final static ObjectMapper MAPPER = new ObjectMapper();
     @Id

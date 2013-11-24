@@ -56,7 +56,6 @@ public class Task implements Identifiable {
     private LocalDateTime ended;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
-
     // The details of the Task are contained in a subclass of TaskStep.  Since
     // each type of step has its own set of fields, store it as a JSON blob and
     // reconstruct the step object in the DAO when accessed
