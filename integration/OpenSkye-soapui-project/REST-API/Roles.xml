@@ -1,7 +1,222 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:resource name="Roles" path="/api/${#Project#version}/roles" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:parameters/><con:resource name="NewRole" path="${#Project#newRoleId}"><con:settings/><con:parameters/><con:method name="GetRole" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:eb6="http://localhost/api/1/roles/8eb6dc32-3c56-4252-b111-7a32d490f5e7">eb6:Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>404</con:status><con:params/><con:element xmlns:ee8a="http://localhost/api/1/roles/7549ee8a-0d50-44f3-97fe-a593f59a6e93">ee8a:Fault</con:element></con:representation><con:request name="GetRoleRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="UpdateRole" method="PUT"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:db7="http://localhost/api/1/roles/db7a14e2-c882-42e9-8ae2-0835b3286c64">db7:Response</con:element></con:representation><con:request name="UpdateRoleRequest" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+<con:resource name="Roles" path="/api/${#Project#version}/roles" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="NewRole" path="${#Project#newRoleId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetRole" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:eb6="http://localhost/api/1/roles/8eb6dc32-3c56-4252-b111-7a32d490f5e7">eb6:Response</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:ee8a="http://localhost/api/1/roles/7549ee8a-0d50-44f3-97fe-a593f59a6e93">ee8a:Fault</con:element>
+      </con:representation>
+      <con:request name="GetRoleRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="UpdateRole" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:db7="http://localhost/api/1/roles/db7a14e2-c882-42e9-8ae2-0835b3286c64">db7:Response</con:element>
+      </con:representation>
+      <con:request name="UpdateRoleRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
 	"id": "${#Project#newRoleId}",
 	"name": "${#Project#newUserRoleNameUpdate}"
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="DeleteRole" method="DELETE"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/><con:element xmlns:eb6="http://localhost/api/1/roles/8eb6dc32-3c56-4252-b111-7a32d490f5e7">eb6:Fault</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:request name="DeleteRoleRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="AdminRolePermissions" path="${#Project#adminRoleId}/permissions"><con:settings/><con:parameters/><con:method name="GetAdminRolePermisssions" method="GET"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:request name="GetAdminRolePermissionsRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:method name="GetAllRoles" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:rol="http://localhost/api/1/roles">rol:Response</con:element></con:representation><con:request name="GetAllRolesRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="CreateRole" method="POST"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:rol="http://localhost/api/1/roles">rol:Response</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:request name="CreateRoleRequest" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="DeleteRole" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element xmlns:eb6="http://localhost/api/1/roles/8eb6dc32-3c56-4252-b111-7a32d490f5e7">eb6:Fault</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="DeleteRoleRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:resource name="AdminRolePermissions" path="${#Project#adminRoleId}/permissions">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetAdminRolePermisssions" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>401</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="GetAdminRolePermissionsRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllRoles" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/roles">rol:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllRolesRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateRole" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/roles">rol:Response</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:request name="CreateRoleRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
 	"name": "${#Project#newUserRoleName}"
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource>
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource>

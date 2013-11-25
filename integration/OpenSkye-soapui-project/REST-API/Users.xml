@@ -1,5 +1,484 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:resource name="Users" path="/api/${#Project#version}/users" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:parameters/><con:resource name="CurrentUser" path="${#Project#userId}"><con:settings/><con:parameters/><con:method name="GetCurrentUser" method="GET"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:a2f="http://atpblade04.infobelt.com/api/1/users/A2FE05E9-DE36-40E0-B0D6-19CDAB14ED21">a2f:Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>404</con:status><con:params/><con:element xmlns:af4="http://atpblade04.infobelt.com/api/1/users/AF439D18-17FE-4F27-B1A3-1968AD950281">af4:Fault</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=ISO-8859-1</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="CurrentUserRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="NewUser" path="${#Project#newUserId}"><con:settings/><con:parameters/><con:method name="DeleteUser" method="DELETE"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="DeleteUserRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="UpdateUser" method="PUT"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>500 400 404</con:status><con:params/><con:element xmlns:d2b="http://atpblade04.infobelt.com/api/1/users/0D2B1368-5029-4518-9B1E-E9A601F9C217">d2b:Fault</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>415</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/x-www-form-urlencoded</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>415</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/plain</con:mediaType><con:status>400</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>500</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:fa3="http://localhost/api/1/users/817fa308-7ae8-4860-857e-2c353c66e90f">fa3:Response</con:element></con:representation><con:request name="UpdateUserRequest" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+<con:resource name="Users" path="/api/${#Project#version}/users" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="CurrentUser" path="${#Project#userId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetCurrentUser" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>401</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:a2f="http://atpblade04.infobelt.com/api/1/users/A2FE05E9-DE36-40E0-B0D6-19CDAB14ED21">a2f:Response</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:af4="http://atpblade04.infobelt.com/api/1/users/AF439D18-17FE-4F27-B1A3-1968AD950281">af4:Fault</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element>html</con:element>
+      </con:representation>
+      <con:request name="CurrentUserRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:resource name="NewUser" path="${#Project#newUserId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="DeleteUser" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:request name="DeleteUserRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="UpdateUser" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>500 400 404</con:status>
+        <con:params/>
+        <con:element xmlns:d2b="http://atpblade04.infobelt.com/api/1/users/0D2B1368-5029-4518-9B1E-E9A601F9C217">d2b:Fault</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>415</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/x-www-form-urlencoded</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>415</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>text/plain</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:fa3="http://localhost/api/1/users/817fa308-7ae8-4860-857e-2c353c66e90f">fa3:Response</con:element>
+      </con:representation>
+      <con:request name="UpdateUserRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
          "id": "${#Project#newUserId}",
          "email": "${#Project#newUserEmailUpdate}",
          "name": "${#Project#newUserNameUpdate}",
@@ -7,11 +486,334 @@
             "id": "${#Project#userDomain}",
             "name": "${#Project#userDomainName}"
          }
-	}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:method name="GetAllUsers" method="GET"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>text/html; charset=ISO-8859-1</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Response</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="GetUsersRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="CreateUser" method="POST"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/x-www-form-urlencoded</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>405</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/><con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Fault</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=ISO-8859-1</con:mediaType><con:status>405</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/plain</con:mediaType><con:status>400</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="CreateUserRequest" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting><con:setting id="com.eviware.soapui.support.editor.views.xml.form2.FormEditorView@ViewType">All</con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+	}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllUsers" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>404</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Response</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>0</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:request name="GetUsersRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateUser" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/x-www-form-urlencoded</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Response</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>500</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Fault</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/plain</con:mediaType>
+      <con:status>400</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:request name="CreateUserRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        <con:setting id="com.eviware.soapui.support.editor.views.xml.form2.FormEditorView@ViewType">All</con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
    "email": "${#Project#newUserEmail}",
    "name": "${#Project#newUserName}",
    "domain":    {
       "id": "${#Project#userDomain}",
       "name": "${#Project#userDomainName}"
    }
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource>
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource>

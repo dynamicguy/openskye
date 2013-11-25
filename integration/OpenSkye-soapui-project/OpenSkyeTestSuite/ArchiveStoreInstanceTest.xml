@@ -1,31 +1,297 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ArchiveStoreInstanceTest" searchProperties="true" id="1d2099b5-758f-4207-b62f-ad5a7ebc6c60" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:testStep type="restrequest" name="createArchiveStoreInstance"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances" methodName="createArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="createArchiveStoreInstance" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+<con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ArchiveStoreInstanceTest" searchProperties="true" id="1d2099b5-758f-4207-b62f-ad5a7ebc6c60" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:testStep type="restrequest" name="createArchiveStoreInstance">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances" methodName="createArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="createArchiveStoreInstance" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
 "name":"test",
 "implementation":"example",
 "properties":{}
-}
-</con:request><con:assertion type="XPath Match" name="Check for existance of [id]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-exists( //ns1:Response/ns1:id)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [implementation]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-exists( //ns1:Response/ns1:implementation)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [name]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-exists( //ns1:Response/ns1:name)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [properties]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-exists( //ns1:Response/ns1:properties)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="transfer" name="Saveid"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>domainid</con:name><con:sourceType>ResponseAsXml</con:sourceType><con:sourceStep>createArchiveStoreInstance</con:sourceStep><con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-//ns1:Response[1]/ns1:id[1]</con:sourcePath><con:targetType>ArchiveStoreInstanceid</con:targetType><con:targetStep>#Project#</con:targetStep></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" entitize="false" transferToAll="false" transferChildNodes="false" useXQuery="false" ignoreEmpty="false"><con:name>name</con:name><con:sourceType>ResponseAsXml</con:sourceType><con:sourceStep>createArchiveStoreInstance</con:sourceStep><con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-//ns1:Response[1]/ns1:name[1]</con:sourcePath><con:targetType>ArchiveStoreInstancename</con:targetType><con:targetStep>#Project#</con:targetStep></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>implementation</con:name><con:sourceType>ResponseAsXml</con:sourceType><con:sourceStep>createArchiveStoreInstance</con:sourceStep><con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
-//ns1:Response[1]/ns1:implementation[1]</con:sourcePath><con:targetType>ArchiveStoreInstanceimplementation</con:targetType><con:targetStep>#Project#</con:targetStep></con:transfers></con:config></con:testStep><con:testStep type="restrequest" name="getArchiveStoreInstance"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="getArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="getArchiveStoreInstance" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:assertion type="XPath Match" name="Check for existance of [id]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:id)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [implementation]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:implementation)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [name]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:name)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [properties]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:properties)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Match content of [implementation]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-//ns1:Response[1]/ns1:implementation[1]/text()</path><content>${#Project#ArchiveStoreInstanceimplementation}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Match content of [name]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-//ns1:Response[1]/ns1:name[1]/text()</path><content>${#Project#ArchiveStoreInstancename}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="updateArchiveStoreInstance"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="updateArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="updateArchiveStoreInstance" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+}</con:request>
+        <con:assertion type="XPath Match" name="Check for existance of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+exists( //ns1:Response/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [implementation]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+exists( //ns1:Response/ns1:implementation)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+exists( //ns1:Response/ns1:name)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [properties]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+exists( //ns1:Response/ns1:properties)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="Saveid">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
+        <con:name>domainid</con:name>
+        <con:sourceType>ResponseAsXml</con:sourceType>
+        <con:sourceStep>createArchiveStoreInstance</con:sourceStep>
+        <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+//ns1:Response[1]/ns1:id[1]</con:sourcePath>
+        <con:targetType>ArchiveStoreInstanceid</con:targetType>
+        <con:targetStep>#Project#</con:targetStep>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" entitize="false" transferToAll="false" transferChildNodes="false" useXQuery="false" ignoreEmpty="false">
+        <con:name>name</con:name>
+        <con:sourceType>ResponseAsXml</con:sourceType>
+        <con:sourceStep>createArchiveStoreInstance</con:sourceStep>
+        <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+//ns1:Response[1]/ns1:name[1]</con:sourcePath>
+        <con:targetType>ArchiveStoreInstancename</con:targetType>
+        <con:targetStep>#Project#</con:targetStep>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
+        <con:name>implementation</con:name>
+        <con:sourceType>ResponseAsXml</con:sourceType>
+        <con:sourceStep>createArchiveStoreInstance</con:sourceStep>
+        <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances';
+//ns1:Response[1]/ns1:implementation[1]</con:sourcePath>
+        <con:targetType>ArchiveStoreInstanceimplementation</con:targetType>
+        <con:targetStep>#Project#</con:targetStep>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="getArchiveStoreInstance">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="getArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="getArchiveStoreInstance" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:assertion type="XPath Match" name="Check for existance of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [implementation]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:implementation)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:name)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [properties]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:properties)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [implementation]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+//ns1:Response[1]/ns1:implementation[1]/text()</path>
+            <content>${#Project#ArchiveStoreInstanceimplementation}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+//ns1:Response[1]/ns1:name[1]/text()</path>
+            <content>${#Project#ArchiveStoreInstancename}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="updateArchiveStoreInstance">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="updateArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="updateArchiveStoreInstance" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
 "id":"${#Project#ArchiveStoreInstanceid}",
 "name":"test",
 "implementation":"example",
 "properties":{}
-}</con:request><con:assertion type="XPath Match" name="Check for existance of [id]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:id)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [implementation]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:implementation)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [name]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
-exists( //ns1:Response/ns1:name)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="getAllArchiveStoreIsntance"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances" methodName="getAllArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="getAllArchiveStoreIsntance" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:assertion type="XPath Match" name="Check for existance of [id]"><con:configuration><path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#Version}/archiveStoreInstances';
-exists( //ns1:Response/ns1:results/ns1:e/ns1:id)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [implementation]"><con:configuration><path>declare namespace ns1='http://localhost/api/1/archiveStoreInstances';
-exists( //ns1:Response/ns1:results/ns1:e/ns1:implementation)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Check for existance of [name]"><con:configuration><path>declare namespace ns1='http://localhost/api/1/archiveStoreInstances';
-exists( //ns1:Response/ns1:results/ns1:e/ns1:name)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="deleteArchiveStoreInstance"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="deleteArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="deleteArchiveStoreInstance" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>
+}</con:request>
+        <con:assertion type="XPath Match" name="Check for existance of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [implementation]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:implementation)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}';
+exists( //ns1:Response/ns1:name)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="getAllArchiveStoreIsntance">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances" methodName="getAllArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="getAllArchiveStoreIsntance" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:assertion type="XPath Match" name="Check for existance of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#Version}/archiveStoreInstances';
+exists( //ns1:Response/ns1:results/ns1:e/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [implementation]">
+          <con:configuration>
+            <path>declare namespace ns1='http://localhost/api/1/archiveStoreInstances';
+exists( //ns1:Response/ns1:results/ns1:e/ns1:implementation)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://localhost/api/1/archiveStoreInstances';
+exists( //ns1:Response/ns1:results/ns1:e/ns1:name)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="deleteArchiveStoreInstance">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="deleteArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="deleteArchiveStoreInstance" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>
