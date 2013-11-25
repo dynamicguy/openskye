@@ -34,11 +34,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
             .build();
 
     private static ObjectSetResource buildResource() {
-        ObjectSetResource resource = new ObjectSetResource(repository, search);
-
-        resource.setDomainDAO(domains);
-
-        return resource;
+        return new ObjectSetResource(repository, search);
     }
 
     @Test
