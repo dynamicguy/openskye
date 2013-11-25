@@ -81,12 +81,33 @@
         <con:params/>
         <con:element xmlns:ae79="http://localhost/api/1/archiveStoreDefinitions/7240ae79-8cc1-46bb-be8b-0d5d6a4e79e6">ae79:Fault</con:element>
       </con:representation>
-      <con:request name="updateArchiveStoreDefinition" mediaType="application/json" postQueryString="false">
+      <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>204</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="updateArchiveStoreDefinition" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
         </con:settings>
         <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
-        <con:request/>
+        <con:request>{
+"id":"${#Project#ArchiveStoreDefinitionId}",
+"name":"test",
+"description":"description",
+"project":{
+"id":"${#Project#ProjectId}",
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	},
+"name":"test",
+"active":"true",
+"description":"description"
+},
+"archiveStoreInstance":
+{
+"id":"${#Project#ArchiveStoreInstanceid}",
+"name":"test",
+"implementation":"example",
+"properties":{}
+},
+"properties":{}
+}</con:request>
         <con:credentials>
           <con:authType>Global HTTP Settings</con:authType>
         </con:credentials>
@@ -260,7 +281,7 @@
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType>application/json</con:mediaType>
-      <con:status>400</con:status>
+      <con:status>400 500</con:status>
       <con:params/>
       <con:element xmlns:arc="http://localhost/api/1/archiveStoreDefinitions">arc:Fault</con:element>
     </con:representation>
