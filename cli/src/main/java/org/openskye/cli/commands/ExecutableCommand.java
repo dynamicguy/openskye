@@ -1,5 +1,6 @@
 package org.openskye.cli.commands;
 
+import com.beust.jcommander.DynamicParameter;
 import com.google.common.base.CaseFormat;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -8,19 +9,18 @@ import org.openskye.cli.ConsoleLogger;
 import org.openskye.cli.SkyeCliSettings;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.dao.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
 import java.io.Console;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * The interface for an executable command
  */
 public abstract class ExecutableCommand {
 
+    @DynamicParameter(names = {"-P"}, description = "Additional parameters")
+    public Map<String, String> dynamicParams = new HashMap<>();
     protected SkyeCliSettings settings;
     protected Client client = Client.create();
     protected ConsoleLogger output;
@@ -59,11 +59,11 @@ public abstract class ExecutableCommand {
     protected Object enterNumber(NumberField field, Object newObject) {
         while (true) {
             try {
-                String input = getConsole().readLine("Enter "+field.getName()+":");
+                String input = getConsole().readLine("Enter " + field.getName() + ":");
                 Long value = Long.parseLong(input);
                 BeanUtils.setProperty(newObject, field.getName(), value);
                 break;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new SkyeException("Unable to assign number value to this object", e);
             }
         }
@@ -73,10 +73,10 @@ public abstract class ExecutableCommand {
     protected Object enterText(TextField field, Object newObject) {
         while (true) {
             try {
-                String input = getConsole().readLine("Enter "+field.getName()+":");
+                String input = getConsole().readLine("Enter " + field.getName() + ":");
                 BeanUtils.setProperty(newObject, field.getName(), input);
                 break;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new SkyeException("Unable to assign text value to this object", e);
             }
         }
@@ -86,11 +86,11 @@ public abstract class ExecutableCommand {
     protected Object enterBoolean(BooleanField field, Object newObject) {
         while (true) {
             try {
-                String input = getConsole().readLine("Enter "+field.getName()+" (true/false):");
+                String input = getConsole().readLine("Enter " + field.getName() + " (true/false):");
                 Boolean value = Boolean.parseBoolean(input);
                 BeanUtils.setProperty(newObject, field.getName(), value);
                 break;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new SkyeException("Unable to assign boolean value to this object", e);
             }
         }
@@ -121,53 +121,25 @@ public abstract class ExecutableCommand {
     }
 
     protected Object selectReferenceField(ReferenceField field, Object newObject) {
-
-        // We need to display a list of the available options for the reference field
-        // and then let the user choose one
-
-        PaginatedResult paginatedResult = getResource(field.getResource()).get(PaginatedResult.class);
-        if (paginatedResult.getResults().size() == 0) {
-            output.message("You must have at least 1 " + field.getName() + " to create this object");
-            throw new SkyeException("Objects missing that need to be created");
-
-        } else {
-            output.message("Select " + field.getName() + " by number,  the options are below:");
-            int i = 1;
-            for (Object obj : paginatedResult.getResults()) {
-                try {
-                    output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, field.getValue()));
-                } catch (Exception e) {
-                    throw new SkyeException("Unable to build reference field for " + field, e);
-                }
-                i++;
-            }
-            while (true) {
-                String option = getConsole().readLine("Enter choice:");
-                int position = Integer.parseInt(option);
-                try {
-                    Object result = Class.forName(field.getClazz().getCanonicalName()).newInstance();
-                    BeanUtils.setProperty(result, "id", BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId()));
-                    result = getResource(field.getResource() + "/" + BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), field.getId())).get(field.getClazz());
-                    BeanUtils.setProperty(newObject, field.getName(), result);
-                    break;
-                } catch (Exception e) {
-                    throw new SkyeException("Unable to build reference field for " + field, e);
-                }
-            }
+        String id = dynamicParams.get(field.getName());
+        try {
+            Object result = getResource(field.getResource() + "/" + id).get(field.getClazz());
+            output.raw(result.toString());
+            BeanUtils.setProperty(newObject, field.getName(), result);
+        } catch (Exception e) {
+            throw new SkyeException("Unable to build reference field for " + field, e);
         }
+
         return newObject;
     }
 
     protected Object setPropertiesField(PropertiesField props, Object newObject) {
+        String properties = dynamicParams.get(props.getName());
+        String[] propertyPairs = properties.split(",");
         output.message("Please enter the properties and values.");
-        while (true) {
-            String property = getConsole().readLine("Property: ");
-            String value = getConsole().readLine("Value: ");
-            props.addProperty(property, value);
-            String answer = getConsole().readLine("Do you have any more properties? Y/N ");
-            if (answer.equalsIgnoreCase("N")) {
-                break;
-            }
+        for(String pair : propertyPairs) {
+            String[] pairSplit = pair.split(":");
+            props.addProperty(pairSplit[0], pairSplit[1]);
         }
         try {
             BeanUtils.setProperty(newObject, props.getName(), props.getProperties());

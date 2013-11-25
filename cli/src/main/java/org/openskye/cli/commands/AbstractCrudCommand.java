@@ -1,5 +1,6 @@
 package org.openskye.cli.commands;
 
+import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.google.common.base.CaseFormat;
 import lombok.Data;
@@ -15,9 +16,7 @@ import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.io.Console;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * An Abstract Base for Crud-like commands which are in
@@ -36,10 +35,12 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     protected boolean delete;
     @Parameter(names = "--create")
     protected boolean create;
-    @Parameter(names = "--file")
-    protected String name;
+    @Parameter(names = "--get")
+    protected boolean get;
     @Parameter
     private List<String> id;
+
+
 
     public abstract List<Field> getFields();
 
@@ -57,9 +58,13 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             create();
         } else if (delete) {
             delete();
+        } else if(get){
+            get();
         }
 
     }
+
+
 
     public Collection<? extends String> getFieldNames() {
         List<String> fieldNames = new ArrayList();
@@ -101,6 +106,18 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         }
     }
 
+    private void get() {
+        String id = dynamicParams.get("id");
+        if(id==null){
+            output.error("You must enter an id");
+        }
+        else{
+            Object result = getResource(getCollectionPlural()+"/"+id).get(getClazz());
+            //TODO: Print this result in a nicer way
+            output.raw(result.toString());
+        }
+    }
+
     public void create() {
         output.message("Creating a new " + getCollectionSingular() + ":\n");
         Object newObject;
@@ -109,11 +126,11 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         } catch (Exception e) {
             throw new SkyeException("Unable to create instance of " + getClazz(), e);
         }
-        Console console = getConsole();
         for (Field field : getFields()) {
             String attributeName = field.getName();
+            String attributeVal = dynamicParams.get(attributeName);
             if (field instanceof TextField) {
-                String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
+                String newValue = attributeVal;
                 try {
                     BeanUtils.setProperty(newObject, attributeName, newValue);
                     output.raw(newObject.toString());
@@ -121,9 +138,9 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
                 }
             } else if (field instanceof ReferenceField) {
-                selectReferenceField((ReferenceField) field, newObject);
+                newObject=selectReferenceField((ReferenceField) field, newObject);
             } else if (field instanceof PropertiesField) {
-                setPropertiesField((PropertiesField) field, newObject);
+                newObject=setPropertiesField((PropertiesField) field, newObject);
             } else if (field instanceof EnumerationField) {
                 selectEnum((EnumerationField) field, newObject);
             }
@@ -134,13 +151,14 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
     }
 
     public void delete() {
+        String id = dynamicParams.get("id");
         if (id == null)
             throw new CliException("You must provide an id to delete a " + getCollectionSingular());
 
-        for (String idInstance : id) {
-            getResource(getCollectionPlural() + "/" + idInstance).delete();
+        else {
+            getResource(getCollectionPlural() + "/" + id).delete();
 
-            output.success("Deleted " + getCollectionSingular() + " with id " + idInstance);
+            output.success("Deleted " + getCollectionSingular() + " with id " + id);
         }
     }
 }
