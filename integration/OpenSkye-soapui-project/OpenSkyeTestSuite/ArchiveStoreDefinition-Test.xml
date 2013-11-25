@@ -497,7 +497,168 @@ exists( //ns1:Response/ns1:project/ns1:name)</path>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
         </con:settings>
         <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
-        <con:request/>
+        <con:request>{
+"id":"${#Project#ArchiveStoreDefinitionId}",
+"name":"test",
+"description":"description",
+"project":{
+"id":"${#Project#ProjectId}",
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	},
+"name":"test",
+"active":"true",
+"description":"description"
+},
+"archiveStoreInstance":
+{
+"id":"${#Project#ArchiveStoreInstanceid}",
+"name":"test",
+"implementation":"example",
+"properties":{}
+},
+"properties":{}
+}</con:request>
+        <con:assertion type="XPath Match" name="Check for existance of [Response]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [archiveStoreInstance]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:archiveStoreInstance)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [asi.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:archiveStoreInstance/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [description]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:description)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:name)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [project]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:project)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [project.domain]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:project/ns1:domain)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [project.domain.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:project/ns1:domain/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [project.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+exists( //ns1:Response/ns1:project/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [asi.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+//ns1:Response[1]/ns1:archiveStoreInstance[1]/ns1:id[1]/text()</path>
+            <content>${#Project#ArchiveStoreInstanceId}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+//ns1:Response[1]/ns1:id[1]/text()</path>
+            <content>${#Project#ArchiveStoreDefinitionId}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [project.domain.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+//ns1:Response[1]/ns1:project[1]/ns1:domain[1]/ns1:id[1]/text()</path>
+            <content>${#Project#skyeDomain}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [project.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/archiveStoreDefinitions/${#Project#ArchiveStoreDefinitionId}';
+//ns1:Response[1]/ns1:project[1]/ns1:id[1]/text()</path>
+            <content>${#Project#ProjectId}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:authType>Global HTTP Settings</con:authType>
         </con:credentials>
@@ -525,7 +686,10 @@ exists( //ns1:Response/ns1:project/ns1:name)</path>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="deleteArchiveStoreInstance"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="deleteArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="deleteArchiveStoreInstance" mediaType="application/json">
+  <con:testStep type="restrequest" name="deleteArchiveStoreInstance">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/archiveStoreInstances/${#Project#ArchiveStoreInstanceid}" methodName="deleteArchiveStoreInstance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="deleteArchiveStoreInstance" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
         </con:settings>
@@ -537,7 +701,13 @@ exists( //ns1:Response/ns1:project/ns1:name)</path>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:jmsPropertyConfig/>
         <con:parameters/>
-      </con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="deleteProject"><con:settings/><con:config service="REST API" resourcePath="/api/${#Project#version}/projects/${#Project#ProjectId}" methodName="deleteProject" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="deleteProject" mediaType="application/json">
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="deleteProject">
+    <con:settings/>
+    <con:config service="REST API" resourcePath="/api/${#Project#version}/projects/${#Project#ProjectId}" methodName="deleteProject" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="deleteProject" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
         </con:settings>
@@ -549,6 +719,9 @@ exists( //ns1:Response/ns1:project/ns1:name)</path>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:jmsPropertyConfig/>
         <con:parameters/>
-      </con:restRequest></con:config></con:testStep><con:properties/>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
   <con:reportParameters/>
 </con:testCase>

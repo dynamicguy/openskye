@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="REST API" type="rest" basePath="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
-  
-  <con:definitionCache type="TEXT" rootPart=""/><con:endpoints>
+  <con:definitionCache type="TEXT" rootPart=""/>
+  <con:endpoints>
     <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
   </con:endpoints>
 </con:interface>

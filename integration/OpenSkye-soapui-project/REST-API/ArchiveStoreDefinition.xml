@@ -81,7 +81,31 @@
         <con:params/>
         <con:element xmlns:ae79="http://localhost/api/1/archiveStoreDefinitions/7240ae79-8cc1-46bb-be8b-0d5d6a4e79e6">ae79:Fault</con:element>
       </con:representation>
-      <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>204</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="updateArchiveStoreDefinition" mediaType="application/json" postQueryString="false">
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:df8="http://localhost/api/1/archiveStoreDefinitions/df847b73-e56e-411b-83f9-5720c510000d">df8:Response</con:element>
+      </con:representation>
+      <con:request name="updateArchiveStoreDefinition" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
         </con:settings>
