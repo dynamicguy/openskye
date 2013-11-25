@@ -204,6 +204,96 @@ exists( //ns1:Response/ns1:name)</path>
 "active":"true",
 "description":"description"
 }</con:request>
+        <con:assertion type="XPath Match" name="Check for existance of [Response]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [active]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response/ns1:active)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [description]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response/ns1:description)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [domain]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response/ns1:domain)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [domain.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response/ns1:domain/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response/ns1:id)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Check for existance of [name]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+exists( //ns1:Response/ns1:name)</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [domain.id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+//ns1:Response[1]/ns1:domain[1]/ns1:id[1]/text()</path>
+            <content>${#Project#skyeDomain}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="XPath Match" name="Match content of [id]">
+          <con:configuration>
+            <path>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/projects/${#Project#ProjectId}';
+//ns1:Response[1]/ns1:id[1]/text()</path>
+            <content>${#Project#ProjectId}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:authType>Global HTTP Settings</con:authType>
         </con:credentials>
