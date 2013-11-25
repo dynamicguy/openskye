@@ -21,6 +21,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Resource which operates on {@link ObjectSet} instances.
+ */
 @Api(value = "/api/1/objectSets", description = "Act upon ObjectMetadata using ObjectSet instances.")
 @Path("/api/1/objectSets")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,21 +37,27 @@ public class ObjectSetResource {
     public static final String OPERATION_SEARCH = "objectSets:search";
     private ObjectMetadataRepository repository;
     private ObjectMetadataSearch search;
-    private DomainDAO domains;
 
+    /**
+     * Constructs a working ObjectSetResource.
+     *
+     * @param injectedRepository The {@link ObjectMetadataRepository} for the resource.
+     *
+     * @param injectedSearch The {@link ObjectMetadataSearch} for the resource.
+     */
     @Inject
     public ObjectSetResource(ObjectMetadataRepository injectedRepository, ObjectMetadataSearch injectedSearch) {
         repository = injectedRepository;
         search = injectedSearch;
     }
 
-    @Inject
-    public ObjectSetResource setDomainDAO(DomainDAO injectedDao) {
-        domains = injectedDao;
-
-        return this;
-    }
-
+    /**
+     * Creates a new {@link ObjectSet}.
+     *
+     * @param newInstance The new instance to be created.
+     *
+     * @return The newly created instance, with its id field set.
+     */
     @ApiOperation(value = "Creates an ObjectSet",
             notes = "Supply the name of the ObjectSet to be created.  " +
                     "Returns the created ObjectSet with its new id.",
@@ -57,12 +66,18 @@ public class ObjectSetResource {
     @Transactional
     @Timed
     public ObjectSet create(ObjectSet newInstance) {
-        if (!this.isPermitted(OPERATION_CREATE))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_CREATE);
 
-        return this.repository.createObjectSet(newInstance.getName());
+        return repository.createObjectSet(newInstance.getName());
     }
 
+    /**
+     * Gets the requested {@link ObjectSet}.
+     *
+     * @param id The id of the {@link ObjectSet}.
+     *
+     * @return The requested {@link ObjectSet}.
+     */
     @ApiOperation(value = "Gets an ObjectSet",
             notes = "Supply the id of the ObjectSet.  Returns the requested ObjectSet",
             response = ObjectSet.class)
@@ -71,12 +86,10 @@ public class ObjectSetResource {
     @Transactional
     @Timed
     public ObjectSet get(@PathParam("id") String id) {
-        Optional<ObjectSet> objectSet;
 
-        if (!this.isPermitted(OPERATION_GET))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_GET);
 
-        objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = this.repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
@@ -84,6 +97,11 @@ public class ObjectSetResource {
         return objectSet.get();
     }
 
+    /**
+     * Lists all existing {@link ObjectSet} instances.
+     *
+     * @return A {@link PaginatedResult} structure listing all {@link ObjectSet} instances.
+     */
     @ApiOperation(value = "Gets all ObjectSet instances",
             notes = "Returns all ObjectSet instances in a paginated structure",
             responseContainer = "List",
@@ -92,14 +110,18 @@ public class ObjectSetResource {
     @Transactional
     @Timed
     public PaginatedResult<ObjectSet> getAll() {
-        if (!this.isPermitted(OPERATION_LIST))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_LIST);
 
-        PaginatedResult<ObjectSet> result = new PaginatedResult<>(this.repository.getAllObjectSets());
-
-        return result;
+        return new PaginatedResult<>(repository.getAllObjectSets());
     }
 
+    /**
+     * Deletes the requested {@link ObjectSet}.
+     *
+     * @param id The id of the {@link ObjectSet} to be deleted.
+     *
+     * @return A {@link Response} which indicates that the set was deleted.
+     */
     @ApiOperation(value = "Deletes an ObjectSet",
             notes = "Supply the id of the ObjectSet to be deleted")
     @Path("/{id}")
@@ -107,21 +129,28 @@ public class ObjectSetResource {
     @Transactional
     @Timed
     public Response delete(@PathParam("id") String id) {
-        Optional<ObjectSet> objectSet;
 
-        if (!this.isPermitted(OPERATION_DELETE))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_DELETE);
 
-        objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        this.repository.deleteObjectSet(objectSet.get());
+        repository.deleteObjectSet(objectSet.get());
 
         return Response.ok().build();
     }
 
+    /**
+     * Checks to see if the specified {@link ObjectMetadata} is found in the {@link ObjectSet}.
+     *
+     * @param setId The id of the {@link ObjectSet} to be queried.
+     *
+     * @param metadataId The id of the {@link ObjectMetadata} to be found.
+     *
+     * @return True if the {@link ObjectMetadata} is found in the {@link ObjectSet}, or false if it is not.
+     */
     @ApiOperation(value = "Determines if the ObjectMetadata is found in the ObjectSet",
             notes = "Supply the id of the ObjectSet and the id of the ObjectMetadata.  " +
                     "Returns true if the ObjectMetadata is in the set, or false if it is not",
@@ -136,25 +165,29 @@ public class ObjectSetResource {
                            @ApiParam(value = "The id of the ObjectMetadata", required = true)
                            @PathParam("metadataId")
                            String metadataId) {
-        Optional<ObjectSet> objectSet;
-        Optional<ObjectMetadata> objectMetadata;
 
-        if (!this.isPermitted(OPERATION_GET))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_GET);
 
-        objectSet = this.repository.getObjectSet(setId);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        objectMetadata = this.repository.get(metadataId);
+        Optional<ObjectMetadata> objectMetadata = repository.get(metadataId);
 
         if (!objectMetadata.isPresent())
             throw new NotFoundException();
 
-        return this.repository.isObjectInSet(objectSet.get(), objectMetadata.get());
+        return repository.isObjectInSet(objectSet.get(), objectMetadata.get());
     }
 
+    /**
+     * Gets all {@link ObjectMetadata} instances in the requested {@link ObjectSet}.
+     *
+     * @param id The id of the {@link ObjectSet}.
+     *
+     * @return A {@link PaginatedResult} structure containing a list of all {@link ObjectMetadata} instances found in the {@link ObjectSet}.
+     */
     @ApiOperation(value = "Gets all ObjectMetadata in a given ObjectSet",
             notes = "Supply the ObjectSet id.  Returns a paginated structure containing all ObjectMetadata in the set",
             responseContainer = "List",
@@ -164,22 +197,26 @@ public class ObjectSetResource {
     @Transactional
     @Timed
     public PaginatedResult<ObjectMetadata> getObjects(@PathParam("id") String id) {
-        PaginatedResult<ObjectMetadata> result;
-        Optional<ObjectSet> objectSet;
 
-        if (!this.isPermitted(OPERATION_GET))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_GET);
 
-        objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        result = new PaginatedResult<>(this.repository.getObjects(objectSet.get()));
-
-        return result;
+        return new PaginatedResult<>(repository.getObjects(objectSet.get()));
     }
 
+    /**
+     * Adds an {@link ObjectMetadata} instance to the {@link ObjectSet}.
+     *
+     * @param setId The id of a previously created {@link ObjectSet}.
+     *
+     * @param metadataId The id of a previously created {@link ObjectMetadata}.
+     *
+     * @return A {@link Response} which indicates that the {@link ObjectMetadata} was successfully added to the {@link ObjectSet}.
+     */
     @ApiOperation(value = "Adds a reference for an ObjectMetadata to the ObjectSet",
             notes = "Supply the ObjectSet id and the ObjectMetadata id.  " +
                     "The ObjectMetadata and ObjectSet must have been previously created")
@@ -193,27 +230,33 @@ public class ObjectSetResource {
                               @ApiParam(value = "The id of the ObjectMetadata to be added", required = true)
                               @PathParam("metadataId")
                               String metadataId) {
-        Optional<ObjectSet> objectSet;
-        Optional<ObjectMetadata> objectMetadata;
 
-        if (!this.isPermitted(OPERATION_ADD))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_ADD);
 
-        objectSet = this.repository.getObjectSet(setId);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        objectMetadata = this.repository.get(metadataId);
+        Optional<ObjectMetadata> objectMetadata = repository.get(metadataId);
 
         if (!objectMetadata.isPresent())
             throw new NotFoundException();
 
-        this.repository.addObjectToSet(objectSet.get(), objectMetadata.get());
+        repository.addObjectToSet(objectSet.get(), objectMetadata.get());
 
         return Response.ok().build();
     }
 
+    /**
+     * Removes an {@link ObjectMetadata} instance from the {@link ObjectSet}.
+     *
+     * @param setId The id of a previously created {@link ObjectSet}.
+     *
+     * @param metadataId The id of a previously created {@link ObjectMetadata}.
+     *
+     * @return A {@link Response} which indicates that the {@link ObjectMetadata} was successfully removed from the {@link ObjectSet}.
+     */
     @ApiOperation(value = "Deletes a reference for an ObjectMetadata from the ObjectSet",
             notes = "Supply the ObjectSet id and the ObjectMetadata id.  " +
                     "The ObjectMetadata and ObjectSet must have been previously created.  " +
@@ -229,27 +272,33 @@ public class ObjectSetResource {
                                  @ApiParam(value = "The id of the ObjectMetadata to be removed", required = true)
                                  @PathParam("metadataId")
                                  String metadataId) {
-        Optional<ObjectSet> objectSet;
-        Optional<ObjectMetadata> objectMetadata;
 
-        if (!this.isPermitted(OPERATION_REMOVE))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_REMOVE);
 
-        objectSet = this.repository.getObjectSet(setId);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        objectMetadata = this.repository.get(metadataId);
+        Optional<ObjectMetadata> objectMetadata = repository.get(metadataId);
 
         if (!objectMetadata.isPresent())
             throw new NotFoundException();
 
-        this.repository.removeObjectFromSet(objectSet.get(), objectMetadata.get());
+        repository.removeObjectFromSet(objectSet.get(), objectMetadata.get());
 
         return Response.ok().build();
     }
 
+    /**
+     * Searches for {@link ObjectMetadata} instances which match a query and adds them to the {@link ObjectSet}.
+     *
+     * @param setId The id of the {@link ObjectSet} to which the results will be added.
+     *
+     * @param query The query string for which the search is run.
+     *
+     * @return The {@link ObjectSet} to which the results are added.
+     */
     @ApiOperation(value = "Add the results of a search to an ObjectSet",
             notes = "Supply the ObjectSet id as well as a query string. " +
                     "Returns the ObjectSet with which the results can be accessed",
@@ -265,24 +314,25 @@ public class ObjectSetResource {
                                    @QueryParam("query")
                                    String query) {
 
-        if (!this.isPermitted(OPERATION_SEARCH))
-            throw new UnauthorizedException();
+        checkPermission(OPERATION_SEARCH);
 
-        Optional<ObjectSet> objectSet = this.repository.getObjectSet(setId);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        Iterable<ObjectMetadata> metadataList = this.search.search(query);
+        Iterable<ObjectMetadata> metadataList = search.search(query);
 
         for (ObjectMetadata metadata : metadataList)
-            this.repository.addObjectToSet(objectSet.get(), metadata);
+            repository.addObjectToSet(objectSet.get(), metadata);
 
         return objectSet.get();
     }
 
-    private boolean isPermitted(String operation) {
-        return SecurityUtils.getSubject().isPermitted(operation);
+    protected void checkPermission(String operation)
+    {
+        if(!SecurityUtils.getSubject().isPermitted(operation))
+            throw new UnauthorizedException();
     }
 }
 

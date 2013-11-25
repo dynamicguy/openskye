@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="OpenSkye" resourceRoot="" soapui-version="4.6.1" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="IncludeOverview">true</con:setting>
+    <con:setting id="IncludeResults">true</con:setting>
+    <con:setting id="FlowLayout">false</con:setting>
+    <con:setting id="ErrorDetails">true</con:setting>
+    <con:setting id="IncludeCoverage">true</con:setting>
+  </con:settings>
+  <con:endpointStrategy xsi:type="con:DefaultEndpointStrategy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:endpoint mode="COMPLEMENT" username="admin@openskye.org" password="changeme">http://atpblade04.infobelt.com:5000/api/1/account</con:endpoint>
+  </con:endpointStrategy>
+  <con:requirements/>
+  <con:properties>
+    <con:property>
+      <con:name>userApiKey</con:name>
+      <con:value>123</con:value>
+    </con:property>
+    <con:property>
+      <con:name>userEmail</con:name>
+      <con:value>admin@openskye.org</con:value>
+    </con:property>
+    <con:property>
+      <con:name>userId</con:name>
+      <con:value>7d027b65-b266-4c58-a1a7-22a138258373</con:value>
+    </con:property>
+    <con:property>
+      <con:name>userName</con:name>
+      <con:value>Skye Admin</con:value>
+    </con:property>
+    <con:property>
+      <con:name>version</con:name>
+      <con:value>1</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserId</con:name>
+      <con:value>204f7b09-8bd0-4b27-bf7e-f0be093d6160</con:value>
+    </con:property>
+    <con:property>
+      <con:name>userDomain</con:name>
+      <con:value>68e3c34f-6f10-4308-a678-4eeb9137ce94</con:value>
+    </con:property>
+    <con:property>
+      <con:name>apiAddress</con:name>
+      <con:value>localhost</con:value>
+    </con:property>
+    <con:property>
+      <con:name>skyeDomain</con:name>
+      <con:value>68e3c34f-6f10-4308-a678-4eeb9137ce94</con:value>
+    </con:property>
+    <con:property>
+      <con:name>skyeDomainName</con:name>
+      <con:value>Skye</con:value>
+    </con:property>
+    <con:property>
+      <con:name>testDomainName</con:name>
+      <con:value>Test Domain</con:value>
+    </con:property>
+    <con:property>
+      <con:name>testDomainId</con:name>
+      <con:value>fb5a54b8-543b-46b8-8f16-e54f68594319</con:value>
+    </con:property>
+    <con:property>
+      <con:name>testDomainNameUpdate</con:name>
+      <con:value>Edited Domain</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserName</con:name>
+      <con:value>Test User</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserEmail</con:name>
+      <con:value>testUser@openskye.org</con:value>
+    </con:property>
+    <con:property>
+      <con:name>userDomainName</con:name>
+      <con:value>Skye</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserRoleName</con:name>
+      <con:value>testUserRole</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newRoleId</con:name>
+      <con:value>6e4165f9-a11b-4ad7-af76-a2bc05c5e3ed</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserRoleId</con:name>
+      <con:value>3c2f328e-8b07-4257-8290-653150bec066</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserRoleNameUpdate</con:name>
+      <con:value>editedUserRole</con:value>
+    </con:property>
+    <con:property>
+      <con:name>adminRoleId</con:name>
+      <con:value>14bb9702-28fd-4020-a91c-cafd9aecd149</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ArchiveStoreInstanceid</con:name>
+      <con:value>d538bf0b-ba7d-46de-a264-bdc4fb07cf5c</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ArchiveStoreInstancename</con:name>
+      <con:value>test</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ArchiveStoreInstanceimplementation</con:name>
+      <con:value>example</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserEmailUpdate</con:name>
+      <con:value>editedUser@openskye.org</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newUserNameUpdate</con:name>
+      <con:value>Edited User</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newPermissionName</con:name>
+      <con:value>Test Permission</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newPermissionId</con:name>
+      <con:value>b4f22366-3f64-4229-b905-de62d900748c</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newPermissionNameUpdate</con:name>
+      <con:value>Edited Permission</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newRolePermissionId</con:name>
+      <con:value>b06d603f-04e4-4bb0-8440-85207d4954e1</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ProjectId</con:name>
+      <con:value>eda80c6c-df5a-4b84-88ac-b46ddbe46043</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ProjectDomainId</con:name>
+      <con:value>c7db6c32-dd47-449d-a78e-911412732f72</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ArchiveStoreDefinitionId</con:name>
+      <con:value>c1831c90-4ecb-4446-959a-629f877adb57</con:value>
+    </con:property>
+  </con:properties>
+  <con:wssContainer/>
+  <con:databaseConnectionContainer/>
+  <con:sensitiveInformation/>
+</con:soapui-project>
