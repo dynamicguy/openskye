@@ -51,7 +51,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         criteria.select(selectEntity);
         RequestQueryContext requestContext = RequestQueryContextHolder.getContext();
 
-        if (requestContext.getSort() != null) {
+        if (requestContext != null && requestContext.getSort() != null) {
             try {
                 Path<Object> sortCol = selectEntity.get(requestContext.getSort());
                 log.debug("Applying sort on " + sortCol);
