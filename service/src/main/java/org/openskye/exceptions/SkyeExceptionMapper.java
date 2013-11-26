@@ -2,6 +2,7 @@ package org.openskye.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeException;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -10,8 +11,9 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class SkyeExceptionMapper implements
         ExceptionMapper<SkyeException> {
+
     public Response toResponse(SkyeException ex) {
-        log.error("Skye Error",ex);
+        log.error("Skye Error", ex);
         ExceptionMessage message = new ExceptionMessage();
         message.setErrorCode(5000);
         message.setMessage(ex.getMessage());

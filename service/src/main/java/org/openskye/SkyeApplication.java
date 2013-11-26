@@ -14,6 +14,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.SkyeConfiguration;
+import org.openskye.exceptions.ConstraintViolationExceptionMapper;
 import org.openskye.guice.*;
 import org.openskye.util.RequestQueryContextFilter;
 import org.openskye.util.SwaggerBundle;
@@ -44,6 +45,10 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
     @Override
     public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {
+
+        // Adding in the exception mappers
+        environment.jersey().register(new ConstraintViolationExceptionMapper());
+
 
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);

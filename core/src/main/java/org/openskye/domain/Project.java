@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -41,6 +42,7 @@ public class Project implements Identifiable {
     @JsonIgnore
     private List<Channel> channels = new ArrayList<>();
     @NotNull
+    @NotBlank
     private String name;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore

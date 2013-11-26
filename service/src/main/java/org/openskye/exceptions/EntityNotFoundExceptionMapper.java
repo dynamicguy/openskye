@@ -10,6 +10,7 @@ import javax.ws.rs.ext.Provider;
 public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
     @Override
     public Response toResponse(EntityNotFoundException exception) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        ExceptionMessage em = new ExceptionMessage(22000, "Entity not found", exception.getMessage());
+        return Response.status(Response.Status.NOT_FOUND).entity(em).type("application/json").build();
     }
 }
