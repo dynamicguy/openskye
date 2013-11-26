@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:resource name="ObjectMetadata" path="/api/${#Project#version}/objects" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:parameters/>
+  <con:method name="GetAllObjectMetadata" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:obj="http://localhost/api/1/objects">obj:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllObjectMetadataRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateObjectMetadata" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>400 500</con:status>
+      <con:params/>
+      <con:element xmlns:obj="http://localhost/api/1/objects">obj:Fault</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:obj="http://localhost/api/1/objects">obj:Response</con:element>
+    </con:representation>
+    <con:request name="CreateObjectMetadataRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+    "path" : "${#Project#newMetadataPath}",
+    "implementation" : "${#Project#newMetadataImplementation}",
+    "taskId" : "${#Project#newMetadataTaskId}",
+    "container" : "${#Project#newMetadataContainer}",
+    "tags" : [],
+    "metadata" : {},
+    "project" :
+    {
+		"id" : "${#Project#ProjectId}",
+		"domain" :
+		{
+			"id" : "${#Project#skyeDomain}"
+		}
+    },
+    "mimeType" : "${#Project#newMetadataMime}",
+    "checksum" : "${#Project#newMetadataChecksum}",
+    "informationStoreId" : "${#Project#newMetadataIsdId}",
+    "archiveContentBlocks" : []
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource>
