@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 
 /**
  * This resource creates an API which deals with {@link ObjectMetadata}. It
@@ -73,7 +74,7 @@ public class ObjectMetadataResource {
 
         // If the id field is set on the newInstance, we should set
         // it to null, so that a random id is generated.
-        newInstance.setId(null);
+        newInstance.setId(UUID.randomUUID().toString());
         repository.put(newInstance);
         search.index(newInstance);
 

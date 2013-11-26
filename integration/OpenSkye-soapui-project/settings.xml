@@ -22,7 +22,7 @@
     </con:property>
     <con:property>
       <con:name>userId</con:name>
-      <con:value>7d027b65-b266-4c58-a1a7-22a138258373</con:value>
+      <con:value>7b1164f1-eb65-4892-8f01-0ff692801b87</con:value>
     </con:property>
     <con:property>
       <con:name>userName</con:name>
@@ -34,11 +34,11 @@
     </con:property>
     <con:property>
       <con:name>newUserId</con:name>
-      <con:value>2e01e586-9296-4184-abb4-1fa2963aecf7</con:value>
+      <con:value>4168b70b-c9c0-4280-b386-fd49eeda242c</con:value>
     </con:property>
     <con:property>
       <con:name>userDomain</con:name>
-      <con:value>315eb01d-5a23-46b7-948e-20081449e0ba</con:value>
+      <con:value>a9df0d11-b01f-40ad-9e39-4e1464c35862</con:value>
     </con:property>
     <con:property>
       <con:name>apiAddress</con:name>
@@ -46,7 +46,7 @@
     </con:property>
     <con:property>
       <con:name>skyeDomain</con:name>
-      <con:value>315eb01d-5a23-46b7-948e-20081449e0ba</con:value>
+      <con:value>a4330706-f0e9-4ac7-9dc9-7321e21704ac</con:value>
     </con:property>
     <con:property>
       <con:name>skyeDomainName</con:name>
@@ -58,7 +58,7 @@
     </con:property>
     <con:property>
       <con:name>testDomainId</con:name>
-      <con:value>b8647e25-eba4-4fcf-bf0c-67c6712856f9</con:value>
+      <con:value>2d84739c-e78b-4f1d-9471-d845bb555ab4</con:value>
     </con:property>
     <con:property>
       <con:name>testDomainNameUpdate</con:name>
@@ -82,11 +82,11 @@
     </con:property>
     <con:property>
       <con:name>newRoleId</con:name>
-      <con:value>06b1870e-97a6-446c-aacb-34ce1d6c19a7</con:value>
+      <con:value>0f4322cd-0197-4c58-92b6-8f7ff52c9368</con:value>
     </con:property>
     <con:property>
       <con:name>newUserRoleId</con:name>
-      <con:value>d71b9aff-c895-4cc6-b75e-4a08a44cad6c</con:value>
+      <con:value>dc1ea240-0368-4ecd-a938-c26ab46150ac</con:value>
     </con:property>
     <con:property>
       <con:name>newUserRoleNameUpdate</con:name>
@@ -94,7 +94,7 @@
     </con:property>
     <con:property>
       <con:name>adminRoleId</con:name>
-      <con:value>f15d42f6-6ea8-4431-b74d-288379fe0ab0</con:value>
+      <con:value>af7785a5-dbd5-4e82-8e61-86f74107dcdb</con:value>
     </con:property>
     <con:property>
       <con:name>ArchiveStoreInstanceid</con:name>
@@ -122,7 +122,7 @@
     </con:property>
     <con:property>
       <con:name>newPermissionId</con:name>
-      <con:value>9bad88bd-4e94-406b-8f63-471b6ad9d1c0</con:value>
+      <con:value>f4ae63a9-cc04-4be2-87a5-8a8ce6582c76</con:value>
     </con:property>
     <con:property>
       <con:name>newPermissionNameUpdate</con:name>
@@ -130,19 +130,51 @@
     </con:property>
     <con:property>
       <con:name>newRolePermissionId</con:name>
-      <con:value>67207171-6d8d-4e91-96ce-9d98dfc3b558</con:value>
+      <con:value>0aa99157-5a62-4118-aa26-1779c3ef9ca2</con:value>
     </con:property>
     <con:property>
       <con:name>ProjectId</con:name>
-      <con:value>4fdef2f0-90c6-45be-a7f6-3f12023b96ac</con:value>
+      <con:value>f5d32080-3561-4457-ad1e-5c5bdabe15e1</con:value>
     </con:property>
     <con:property>
       <con:name>ProjectDomainId</con:name>
-      <con:value>315eb01d-5a23-46b7-948e-20081449e0ba</con:value>
+      <con:value>a4330706-f0e9-4ac7-9dc9-7321e21704ac</con:value>
     </con:property>
     <con:property>
       <con:name>ArchiveStoreDefinitionId</con:name>
       <con:value>df847b73-e56e-411b-83f9-5720c510000d</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataId</con:name>
+      <con:value/>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataPath</con:name>
+      <con:value>/tmp/metadata</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataImplementation</con:name>
+      <con:value>implementation</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataTaskId</con:name>
+      <con:value>taskId</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataContainer</con:name>
+      <con:value>false</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataMime</con:name>
+      <con:value>text/csv</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataChecksum</con:name>
+      <con:value>checksum</con:value>
+    </con:property>
+    <con:property>
+      <con:name>newMetadataIsdId</con:name>
+      <con:value>isdId</con:value>
     </con:property>
   </con:properties>
   <con:wssContainer/>
