@@ -9,7 +9,7 @@ import javax.ws.rs.ext.Provider;
 public class EntityExistsExceptionMapper implements ExceptionMapper<EntityExistsException> {
     @Override
     public Response toResponse(EntityExistsException exception) {
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        ExceptionMessage em = new ExceptionMessage(18000, "Entity exists", exception.getMessage());
+        return Response.status(Response.Status.BAD_REQUEST).entity(em).type("application/json").build();
     }
 }
