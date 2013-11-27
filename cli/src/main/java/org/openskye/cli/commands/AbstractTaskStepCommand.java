@@ -120,7 +120,12 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new ExtractTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         //TODO extract should optionally take a set ID parameter instead of a channel
-        step = (ExtractTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
+        if(dynamicParams.get("objectSetId")!=null){
+            ((ExtractTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
+        }
+        else{
+            step = (ExtractTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
+        }
         step = setTargetInformationStore(step);
         create(step);
     }
@@ -128,7 +133,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        step = setObjectSetID(step);
+        ((DestroyTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
         step = setTargetInformationStore(step);
         create(step);
     }
@@ -143,25 +148,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
 
     public TaskStep setTargetInformationStore(TaskStep step){
 
-        ReferenceField informationStores = new ReferenceField(InformationStoreDefinition.class);
-        PaginatedResult paginatedResult = getResource(informationStores.getResource()).get(PaginatedResult.class);
-        int i = 1;
-
-
-        for (Object obj : paginatedResult.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, informationStores.getValue()));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to find information stores ", e);
-            }
-            i++;
-        }
-
-        String option = getConsole().readLine("Enter choice:");
-        int position = Integer.parseInt(option);
-
         try {
-            InformationStoreDefinition chosenDef = getResource(informationStores.getResource() + "/" + BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), informationStores.getId())).get(InformationStoreDefinition.class);
+            InformationStoreDefinition chosenDef = getResource("informationStores/" + dynamicParams.get("targetInformationStoreDefinition")).get(InformationStoreDefinition.class);
             if(step instanceof ExtractTaskStep){
                 ((ExtractTaskStep)step).setTargetInformationStoreDefinition(chosenDef);
             }
@@ -175,33 +163,5 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         return step;
     }
 
-    public TaskStep setObjectSetID(TaskStep step){
-        ReferenceField objectSets = new ReferenceField(ObjectSet.class);
-        PaginatedResult paginatedResult = getResource(objectSets.getResource()).get(PaginatedResult.class);
-        if(paginatedResult.getResults().size()==0){
-            output.error("You must have at least one object set to run a destruction task. Please create an object set first");
-            return null;
-        }
-        int i=0;
-        for (Object obj : paginatedResult.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, objectSets.getValue()));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to find information stores ", e);
-            }
-            i++;
-        }
 
-        String option = getConsole().readLine("Enter choice:");
-        int position = Integer.parseInt(option);
-
-        try {
-            ObjectSet chosenSet = getResource(objectSets.getResource() + "/" + BeanUtils.getProperty(paginatedResult.getResults().get(position - 1), objectSets.getId())).get(ObjectSet.class);
-            ((DestroyTaskStep) step).setObjectSetId(chosenSet.getId());
-
-        } catch (Exception e) {
-            throw new SkyeException("Could not assign object set", e);
-        }
-        return step;
-    }
 }
