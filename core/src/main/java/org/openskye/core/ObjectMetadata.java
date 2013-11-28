@@ -3,10 +3,13 @@ package org.openskye.core;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Optional;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.openskye.domain.Project;
 
+import javax.persistence.*;
 import java.util.*;
 
 /**
@@ -15,26 +18,36 @@ import java.util.*;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Slf4j
+@Entity
+@Table(name = "OBJECT_METADATA")
+@EqualsAndHashCode(of = "id")
 public class ObjectMetadata {
 
+    @Id
+    @Column(unique = true)
     private String id = UUID.randomUUID().toString();
     private String path;
-    // Identify the implementation of the simple object
     private String implementation;
-    // The taskId for the task that found/ingested the simple object
     private String taskId;
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Tag> tags = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> metadata = new HashMap<>();
-    private boolean container;
+    private boolean container = false;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime created = new DateTime();
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime ingested = new DateTime();
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime lastModified = new DateTime();
-    private Project project;
-    private long originalSize = 0;
-    private long archiveSize = 0;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Project project = null;
+    private long originalSize;
+    private long archiveSize;
     private String mimeType;
     private String checksum;
     private String informationStoreId;
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
     /**

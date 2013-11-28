@@ -31,6 +31,16 @@ public interface ObjectMetadataRepository {
     void deleteObjectSet(ObjectSet objectSet);
 
     /**
+     * Based on the checksum and original size we look to see if we have already got a
+     * copy of that content in the archive
+     *
+     * @param checksum
+     * @param originalSize
+     * @return Optionally return the existing ACB
+     */
+    Optional<ArchiveContentBlock> getArchiveContentBlock(String checksum, long originalSize);
+
+    /**
      * Adds an {@link ObjectMetadata} to a given {@link ObjectSet}
      *
      * @param objectSet      the object set
@@ -70,7 +80,6 @@ public interface ObjectMetadataRepository {
      * Puts a object metadata
      *
      * @param objectMetadata The new instance to be created.
-     *
      * @return The newly created instance with its id set.
      */
     ObjectMetadata put(ObjectMetadata objectMetadata);
@@ -115,7 +124,7 @@ public interface ObjectMetadataRepository {
      * Gets a list of all {@link ObjectMetadata} instances.
      *
      * @return An {@link Iterable} collection of {@link ObjectMetadata}
-     * instances.
+     *         instances.
      */
     Iterable<ObjectMetadata> getAllObjects();
 

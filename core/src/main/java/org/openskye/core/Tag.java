@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.Embeddable;
+
 /**
  * Represents a named tag that can be associated with {@link SimpleObject}
  */
+@Embeddable
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "name")

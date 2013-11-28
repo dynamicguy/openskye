@@ -25,22 +25,31 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public ObjectSet createObjectSet(String name) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void deleteObjectSet(ObjectSet objectSet) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Optional<ArchiveContentBlock> getArchiveContentBlock(String checksum, long originalSize) {
+        return Optional.absent();
     }
 
     @Override
     public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -71,8 +80,8 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
         List<ObjectMetadata> matchingObjects = new ArrayList<ObjectMetadata>();
-        for ( ObjectMetadata objectMetadata : objects.values() ) {
-            if ( objectMetadata.getInformationStoreId().equals(informationStoreDefinition.getId()) ) {
+        for (ObjectMetadata objectMetadata : objects.values()) {
+            if (objectMetadata.getInformationStoreId().equals(informationStoreDefinition.getId())) {
                 matchingObjects.add(objectMetadata);
             }
         }
@@ -90,33 +99,36 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Optional<ObjectSet> getObjectSet(String objectSetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Iterable<ObjectSet> getAllObjectSets()
-    {
-        return null;
+    public Iterable<ObjectSet> getAllObjectSets() {
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Iterable<ObjectMetadata> getAllObjects()
-    {
+    public Iterable<ObjectMetadata> getAllObjects() {
         return this.objects.values();
     }
 
     @Override
     public InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 }
