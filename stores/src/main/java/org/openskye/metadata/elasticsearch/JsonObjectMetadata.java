@@ -13,8 +13,7 @@ import java.util.*;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JsonObjectMetadata
-{
+public class JsonObjectMetadata {
 
     private String id;
     private String path;
@@ -26,9 +25,9 @@ public class JsonObjectMetadata
     private Set<Tag> tags = new HashSet<>();
     private Map<String, String> metadata = new HashMap<>();
     private boolean container;
-    private DateTime created = new DateTime();
-    private DateTime ingested = new DateTime();
-    private DateTime lastModified = new DateTime();
+    private DateTime created;
+    private DateTime ingested;
+    private DateTime lastModified;
     private Project project;
     private long originalSize = 0;
     private long archiveSize = 0;
@@ -38,13 +37,11 @@ public class JsonObjectMetadata
     @JsonIgnore
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
-    public JsonObjectMetadata()
-    {
+    public JsonObjectMetadata() {
 
     }
 
-    public JsonObjectMetadata(ObjectMetadata objectMetadata)
-    {
+    public JsonObjectMetadata(ObjectMetadata objectMetadata) {
         this.id = objectMetadata.getId();
         this.path = objectMetadata.getPath();
         this.implementation = objectMetadata.getImplementation();
@@ -64,8 +61,7 @@ public class JsonObjectMetadata
         this.archiveContentBlocks = objectMetadata.getArchiveContentBlocks();
     }
 
-    public ObjectMetadata toObjectMetadata()
-    {
+    public ObjectMetadata toObjectMetadata() {
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
         objectMetadata.setId(this.id);

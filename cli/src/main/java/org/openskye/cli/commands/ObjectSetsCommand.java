@@ -7,15 +7,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.openskye.cli.commands.fields.*;
+import org.openskye.cli.commands.fields.Field;
+import org.openskye.cli.commands.fields.FieldBuilder;
+import org.openskye.cli.commands.fields.TextField;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.dao.PaginatedResult;
 
-import java.io.Console;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +39,10 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     public void execute() {
 
         if (add) {
-            String select = getConsole().readLine("Please press 1 to add individual objects to this set, or 2 to add a set of objects based on a search: ");
-            if (select.equals("1")) {
-                add();
-            } else if (select.equals("2")) {
+            if (dynamicParams.get("query") != null) { //did the user add -P query=...
                 addFromSearch();
             } else {
-                output.error("Invalid choice");
+                addFromSearch();
             }
         } else if (list) {
             list();
@@ -58,30 +56,9 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     }
 
     private void listObjects() {
-        String objectSetID;
-        PaginatedResult objectSets = getResource("objectSets").get(PaginatedResult.class);
-        int i = 1;
-        output.message("Please select the object set you'd like to see objects for: ");
-        for (Object obj : objectSets.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets" , e);
-            }
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
-            try {
-                ObjectSet result = getResource("objectSets/" + BeanUtils.getProperty(objectSets.getResults().get(position - 1), "id")).get(ObjectSet.class);
-                objectSetID = result.getId();
-                break;
-            } catch (Exception e) {
-                throw new SkyeException("Unable to select Object Set ", e);
-            }
-        }
-        PaginatedResult paginatedResult = getResource(getCollectionPlural()+"/metadata/"+objectSetID).get(PaginatedResult.class);
+        String objectSetID = dynamicParams.get("objectSetId");
+
+        PaginatedResult paginatedResult = getResource(getCollectionPlural() + "/metadata/" + objectSetID).get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
         fieldsWithId.addAll(new ObjectsCommand().getFieldNames());
@@ -114,64 +91,17 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         return commandName;
     }
 
-    @Override
-    public void create() {
-        output.message("Creating a new " + getCollectionSingular() + ":\n");
-        ObjectSet newObject = new ObjectSet();
-
-        Console console = getConsole();
-        for (Field field : getFields()) {
-            String attributeName = field.getName();
-            if (field instanceof TextField) {
-                String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
-                try {
-                    BeanUtils.setProperty(newObject, attributeName, newValue);
-                } catch (Exception e) {
-                    throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
-                }
-            } else if (field instanceof ReferenceField) {
-                selectReferenceField((ReferenceField) field, newObject);
-            } else if (field instanceof PropertiesField) {
-                setPropertiesField((PropertiesField) field, newObject);
-            } else if (field instanceof EnumerationField) {
-                selectEnum((EnumerationField) field, newObject);
-            }
-        }
-        ObjectSet result = (ObjectSet) getResource(getCollectionPlural()).post(getClazz(), newObject);
-
-        output.success("Created " + getCollectionSingular() + " with id " + result.getId());
-    }
-
     public void addFromSearch() {
-        String objectSetID;
-        String query;
+        String objectSetID = dynamicParams.get("objectSetId");
+        String query = dynamicParams.get("query");
 
-        PaginatedResult objectSets = getResource("objectSets").get(PaginatedResult.class);
-        int i = 1;
-        output.message("Please select an object set to add objects to: ");
-        for (Object obj : objectSets.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets", e);
-            }
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
-            try {
-                ObjectSet result = getResource("objectSets/" + BeanUtils.getProperty(objectSets.getResults().get(position - 1), "id")).get(ObjectSet.class);
-                objectSetID = result.getId();
-                break;
-            } catch (Exception e) {
-                throw new SkyeException("Unable to select Object Set ", e);
-            }
-        }
-        query = getConsole().readLine("Please enter a query: ");
+
         WebResource resource = client.resource(settings.getUrl() + getCollectionPlural() + "/" + objectSetID + "/search").queryParam("query", query);
-
-        ObjectSet result = resource.put(ObjectSet.class);
+        WebResource.Builder builder = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
+        if (settings.getApiKey() != null) {
+            builder.header("X-Api-Key", settings.getApiKey());
+        }
+        ObjectSet result = builder.put(ObjectSet.class);
 
         output.success("Successfully added objects to the Object Set with id: " + result.getId());
     }
