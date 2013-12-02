@@ -39,7 +39,13 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
+
+        // We need to work out if we already have an ACB in this archive store that
+        // has the same content,  and if we do then we need to make sure that we just point
+        // to that and de-dupe the storage
+
         ArchiveContentBlock acb = new ArchiveContentBlock();
+
         ObjectMetadata om = simpleObject.getObjectMetadata();
         acb.setArchiveStoreDefinitionId(this.localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId());
 

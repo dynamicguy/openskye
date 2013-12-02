@@ -76,7 +76,7 @@
         <module>stores</module>
         <module>cli</module>
         <module>service</module>
-        <module>hadoop</module>
+        <!--<module>hadoop</module>-->
         <module>assembly</module>
         <module>worker</module>
     </modules>

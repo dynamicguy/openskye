@@ -28,8 +28,10 @@
         <class>org.openskye.domain.TaskSchedule</class>
         <class>org.openskye.domain.TaskStatistics</class>
         <class>org.openskye.domain.ChannelFilterDefinition</class>
-        <class>org.openskye.metadata.impl.jpa.JPAObjectSet</class>
-        <class>org.openskye.metadata.impl.jpa.JPAObjectMetadata</class>
+        <class>org.openskye.core.ObjectSet</class>
+        <class>org.openskye.core.ObjectMetadata</class>
+        <class>org.openskye.core.Tag</class>
+        <class>org.openskye.core.ArchiveContentBlock</class>
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>

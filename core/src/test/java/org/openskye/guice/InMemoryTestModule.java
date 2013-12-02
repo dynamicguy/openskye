@@ -5,8 +5,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
+import org.openskye.metadata.impl.InMemoryObjectMetadataRepository;
 import org.openskye.metadata.impl.InMemoryObjectMetadataSearch;
-import org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.TaskScheduler;
@@ -30,7 +30,7 @@ public class InMemoryTestModule extends AbstractModule {
         bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
         bind(TaskScheduler.class).to(InMemoryTaskScheduler.class).asEagerSingleton();
         bind(StoreRegistry.class).asEagerSingleton();
-        bind(ObjectMetadataRepository.class).to(JPAObjectMetadataRepository.class);
+        bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class);
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class);
 
         install(new GuiceBerryModule());

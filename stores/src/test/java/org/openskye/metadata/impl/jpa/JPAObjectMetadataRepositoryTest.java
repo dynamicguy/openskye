@@ -28,7 +28,7 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * This class performs unit testing for the jpa package of classes, including
- * {@link JPAArchiveContentBlock}, {@link JPAObjectMetadata}, and the
+ * {@link ArchiveContentBlock}, {@link ObjectMetadata}, and the
  * {@link JPAObjectMetadataRepository}.
  */
 public class JPAObjectMetadataRepositoryTest {
@@ -75,7 +75,7 @@ public class JPAObjectMetadataRepositoryTest {
         archiveStoreInstanceDAO.create(asi);
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
         asd.setName("Test");
-        ArchiveContentBlock acb = new JPAArchiveContentBlock().toArchiveContentBlock();
+        ArchiveContentBlock acb = new ArchiveContentBlock();
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -97,7 +97,7 @@ public class JPAObjectMetadataRepositoryTest {
         Project project = new Project();
         project.setName("Test Project");
         Project newProject = projects.create(project);
-        TestTaskStep step = new TestTaskStep(newProject,2,1,true);
+        TestTaskStep step = new TestTaskStep(newProject, 2, 1, true);
         Task task = step.toTask();
         task.setStatistics(taskStatistics);
         tasks.create(task);
@@ -211,6 +211,5 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("object set not has been removed",
                 (!setOutput.isPresent()));
 
-        return;
     }
 }

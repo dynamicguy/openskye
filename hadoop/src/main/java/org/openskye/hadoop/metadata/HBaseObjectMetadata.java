@@ -3,9 +3,6 @@ package org.openskye.hadoop.metadata;
 import lombok.Data;
 import org.joda.time.DateTime;
 import org.openskye.domain.Project;
-import org.openskye.metadata.impl.jpa.JPAArchiveContentBlock;
-import org.openskye.metadata.impl.jpa.JPAObjectMetadata;
-import org.openskye.metadata.impl.jpa.JPATag;
 
 import javax.persistence.*;
 import java.util.*;
