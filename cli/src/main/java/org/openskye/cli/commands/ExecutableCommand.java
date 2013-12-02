@@ -134,19 +134,21 @@ public abstract class ExecutableCommand {
     }
 
     protected Object setPropertiesField(PropertiesField props, Object newObject) {
-        String properties = dynamicParams.get(props.getName());
-        String[] propertyPairs = properties.split(",");
-        output.message("Please enter the properties and values.");
-        for(String pair : propertyPairs) {
-            String[] pairSplit = pair.split(":");
-            props.addProperty(pairSplit[0], pairSplit[1]);
-        }
-        try {
-            BeanUtils.setProperty(newObject, props.getName(), props.getProperties());
-        } catch (Exception e) {
-            throw new SkyeException("Unable to add properties to object", e);
+        if(dynamicParams.get(props.getName())!=null){
+            String properties = dynamicParams.get(props.getName());
+            String[] propertyPairs = properties.split(",");
+            for(String pair : propertyPairs) {
+                String[] pairSplit = pair.split(":");
+                props.addProperty(pairSplit[0], pairSplit[1]);
+            }
+            try {
+                BeanUtils.setProperty(newObject, props.getName(), props.getProperties());
+            } catch (Exception e) {
+                throw new SkyeException("Unable to add properties to object", e);
+            }
         }
         return newObject;
+
     }
 
     public Collection<? extends String> getFieldNames() {
