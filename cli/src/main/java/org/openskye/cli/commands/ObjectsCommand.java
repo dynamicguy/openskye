@@ -11,13 +11,6 @@ import org.openskye.domain.Project;
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: atcmostafavi
- * Date: 11/11/13
- * Time: 1:16 PM
- * To change this template use File | Settings | File Templates.
- */
 @Parameters(commandDescription = "Manage Object Metadata")
 @Data
 @Slf4j
@@ -40,6 +33,11 @@ public class ObjectsCommand extends AbstractCrudCommand {
     @Override
     public String getCollectionPlural() {
         return "objects";
+    }
+
+    @Override
+    public void create(){
+        output.error("You cannot directly create object metadata");
     }
 
 }
