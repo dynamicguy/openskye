@@ -7,15 +7,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.openskye.cli.commands.fields.*;
+import org.openskye.cli.commands.fields.Field;
+import org.openskye.cli.commands.fields.FieldBuilder;
+import org.openskye.cli.commands.fields.TextField;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.dao.PaginatedResult;
 
-import java.io.Console;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     public void execute() {
 
         if (add) {
-            if (dynamicParams.get("query")!=null) { //did the user add -P query=...
+            if (dynamicParams.get("query") != null) { //did the user add -P query=...
                 addFromSearch();
             } else {
                 addFromSearch();
@@ -57,7 +58,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     private void listObjects() {
         String objectSetID = dynamicParams.get("objectSetId");
 
-        PaginatedResult paginatedResult = getResource(getCollectionPlural()+"/metadata/"+objectSetID).get(PaginatedResult.class);
+        PaginatedResult paginatedResult = getResource(getCollectionPlural() + "/metadata/" + objectSetID).get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
         fieldsWithId.addAll(new ObjectsCommand().getFieldNames());
@@ -90,16 +91,17 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         return commandName;
     }
 
-
-
     public void addFromSearch() {
-        String objectSetID=dynamicParams.get("objectSetId");
-        String query=dynamicParams.get("query");
+        String objectSetID = dynamicParams.get("objectSetId");
+        String query = dynamicParams.get("query");
 
 
         WebResource resource = client.resource(settings.getUrl() + getCollectionPlural() + "/" + objectSetID + "/search").queryParam("query", query);
-
-        ObjectSet result = resource.put(ObjectSet.class);
+        WebResource.Builder builder = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
+        if (settings.getApiKey() != null) {
+            builder.header("X-Api-Key", settings.getApiKey());
+        }
+        ObjectSet result = builder.put(ObjectSet.class);
 
         output.success("Successfully added objects to the Object Set with id: " + result.getId());
     }
