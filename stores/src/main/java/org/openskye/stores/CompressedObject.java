@@ -30,7 +30,8 @@ public class CompressedObject extends SimpleObject {
             ArchiveEntry currentEntry = stream.getNextEntry();
             while(currentEntry!=null){
                 ObjectMetadata om = this.getObjectMetadata();
-                om.setPath(this.getObjectMetadata().getPath()+"/"+currentEntry.getName());
+                String originalPath = this.getObjectMetadata().getPath();
+                om.setPath(originalPath+"/"+currentEntry.getName());
                 om.setOriginalSize(currentEntry.getSize());
                 om.setContainer(currentEntry.isDirectory());
                 om.setLastModified(new DateTime(currentEntry.getLastModifiedDate()));
@@ -38,6 +39,7 @@ public class CompressedObject extends SimpleObject {
                 SimpleObject so = new LocalFileUnstructuredObject();
                 so.setObjectMetadata(om);
                 objects.add(so);
+                currentEntry=stream.getNextEntry();
             }
             return objects;
         } catch (Exception e) {
