@@ -6,14 +6,11 @@ import com.sun.jersey.api.client.WebResource;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.TextField;
 import org.openskye.cli.util.ObjectTableView;
-import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
-import org.openskye.core.SkyeException;
 import org.openskye.domain.dao.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
@@ -42,7 +39,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
             if (dynamicParams.get("query") != null) { //did the user add -P query=...
                 addFromSearch();
             } else {
-                addFromSearch();
+                add();
             }
         } else if (list) {
             list();
@@ -107,54 +104,9 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     }
 
     public void add() {
-        String objectSetID;
-        String objectMetadataId;
+        String objectSetID = dynamicParams.get("objectSetId");
+        String objectMetadataId = dynamicParams.get("objectId");
 
-        PaginatedResult objectSets = getResource("objectSets").get(PaginatedResult.class);
-        PaginatedResult objectMetadata = getResource("objects").get(PaginatedResult.class);
-
-        int i = 1;
-        output.message("Please select an object set to add objects to: ");
-        for (Object obj : objectSets.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "name"));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets", e);
-            }
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
-            try {
-                ObjectSet result = getResource("objectSets/" + BeanUtils.getProperty(objectSets.getResults().get(position - 1), "id")).get(ObjectSet.class);
-                objectSetID = result.getId();
-                break;
-            } catch (Exception e) {
-                throw new SkyeException("Unable to select Object Set ", e);
-            }
-        }
-        i = 1;
-        output.message("Please select an object to add to this set: ");
-        for (Object obj : objectMetadata.getResults()) {
-            try {
-                output.raw(" " + i + "/ " + BeanUtils.getProperty(obj, "path"));
-            } catch (Exception e) {
-                throw new SkyeException("Unable to get Object Sets", e);
-            }
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
-            try {
-                ObjectMetadata result = getResource("objects/" + BeanUtils.getProperty(objectMetadata.getResults().get(position - 1), "id")).get(ObjectMetadata.class);
-                objectMetadataId = result.getId();
-                break;
-            } catch (Exception e) {
-                throw new SkyeException("Unable to select Object ", e);
-            }
-        }
         getResource(getCollectionPlural() + "/" + objectSetID + "/" + objectMetadataId).put();
     }
 

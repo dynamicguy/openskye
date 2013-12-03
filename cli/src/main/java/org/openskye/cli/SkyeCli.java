@@ -38,6 +38,7 @@ public class SkyeCli {
         JCommander jc = new JCommander(skyeCommand);
         jc.setProgramName("openskye");
 
+
         ConsoleLogger consoleLogger = new ConsoleLogger();
         // Set-up the all the commands
         List<ExecutableCommand> commands = new ArrayList<>();
@@ -57,6 +58,7 @@ public class SkyeCli {
         commands.add(new ChannelsCommand());
         commands.add(new ObjectSetsCommand());
         commands.add(new ObjectsCommand());
+        commands.add(new SkyeCommand());
 
         SkyeCliSettings skyeCliSettings = SkyeCliSettings.load();
 
@@ -80,7 +82,12 @@ public class SkyeCli {
                 if (command.getCommandName() == null) {
                     consoleLogger.error("Missing command name for "+command.getClass().getSimpleName());
                 } else if (command.getCommandName().equals(jc.getParsedCommand())) {
-                    command.execute();
+                    if(command.getCommandName().equals("help")){
+                        jc.usage();
+                    }
+                    else{
+                        command.execute();
+                    }
                 }
             }
         } catch (MissingCommandException e) {

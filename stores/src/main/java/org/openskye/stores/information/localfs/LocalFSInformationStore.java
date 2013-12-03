@@ -3,6 +3,7 @@ package org.openskye.stores.information.localfs;
 import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.eobjects.metamodel.DataContextFactory;
 import org.eobjects.metamodel.UpdateCallback;
 import org.eobjects.metamodel.UpdateScript;
@@ -15,6 +16,7 @@ import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.stores.CompressedObject;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 import org.openskye.stores.util.MimeTypeUtil;
 
@@ -95,19 +97,38 @@ public class LocalFSInformationStore implements InformationStore {
                         log.debug("Found directory " + metadata);
                     all.add(container);
                 } else if (Files.isRegularFile(p)) {
-                    UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
-                    ObjectMetadata metadata = new ObjectMetadata();
-                    metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
-                    metadata.setPath(p.toAbsolutePath().toString());
-                    metadata.setProject(informationStoreDefinition.getProject());
-                    metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
-                    metadata.setMimeType(MimeTypeUtil.getContentType(p));
-                    metadata.setInformationStoreId(informationStoreDefinition.getId());
-                    unstructObj.setObjectMetadata(metadata);
+                    if(isCompressedFile(p)){
+                        CompressedObject compressedObj = new CompressedObject();
+                        ObjectMetadata metadata = new ObjectMetadata();
+                        metadata.setImplementation(CompressedObject.class.getCanonicalName());
+                        metadata.setPath(p.toAbsolutePath().toString());
+                        metadata.setProject(informationStoreDefinition.getProject());
+                        metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
+                        metadata.setMimeType(MimeTypeUtil.getContentType(p));
+                        metadata.setInformationStoreId(informationStoreDefinition.getId());
+                        compressedObj.setObjectMetadata(metadata);
+                        List<SimpleObject> objects = compressedObj.getObjectsContained();
+                        if (log.isDebugEnabled())
+                            log.debug("Found compressed file " + metadata);
+                        for(SimpleObject obj : objects){
+                            all.add(obj);
+                        }
+                    }
+                    else{
+                        UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
+                        ObjectMetadata metadata = new ObjectMetadata();
+                        metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
+                        metadata.setPath(p.toAbsolutePath().toString());
+                        metadata.setProject(informationStoreDefinition.getProject());
+                        metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
+                        metadata.setMimeType(MimeTypeUtil.getContentType(p));
+                        metadata.setInformationStoreId(informationStoreDefinition.getId());
+                        unstructObj.setObjectMetadata(metadata);
 
-                    if (log.isDebugEnabled())
-                        log.debug("Found file " + metadata);
-                    all.add(unstructObj);
+                        if (log.isDebugEnabled())
+                            log.debug("Found file " + metadata);
+                        all.add(unstructObj);
+                    }
                 }
             }
             return all;
@@ -197,6 +218,13 @@ public class LocalFSInformationStore implements InformationStore {
         } else {
             throw new SkyeException("Local filesystem information store does not support " + simpleObject + " for put");
         }
+    }
+
+    public boolean isCompressedFile(Path p){
+        File f = p.toFile();
+        String[] suffixes = new String[]{".zip", ".tar", ".tar.gz"};
+        SuffixFileFilter filter = new SuffixFileFilter(suffixes);
+        return filter.accept(f);
     }
 
 }

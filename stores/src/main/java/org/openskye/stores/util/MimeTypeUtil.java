@@ -4,6 +4,7 @@ import org.apache.tika.Tika;
 import org.openskye.core.SkyeException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
@@ -19,5 +20,17 @@ public class MimeTypeUtil {
         } catch (IOException e) {
             throw new SkyeException("Unable to identify mimetype on path " + path, e);
         }
+    }
+
+    public static String getContentType(InputStream in){
+        try {
+            return tika.detect(in);
+        } catch (IOException e) {
+            throw new SkyeException("Unable to identify mimetype", e);
+        }
+    }
+
+    public static String getContentType(byte[] bytes){
+        return tika.detect(bytes);
     }
 }
