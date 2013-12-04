@@ -1,18 +1,15 @@
 package org.openskye.stores;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.joda.time.DateTime;
-import org.openskye.core.ObjectMetadata;
-import org.openskye.core.SimpleObject;
-import org.openskye.core.SkyeException;
+import org.openskye.core.*;
 import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 import org.openskye.stores.util.MimeTypeUtil;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +18,7 @@ import java.util.List;
  * An implementation of a {@link SimpleObject} that can be used
  * for compressed files (e.g. zip, tar)
  */
-public class CompressedObject extends SimpleObject {
+public class FileSystemCompressedObject extends UnstructuredCompressedObject {
 
     public List<SimpleObject> getObjectsContained(){
         try {
@@ -60,4 +57,17 @@ public class CompressedObject extends SimpleObject {
         return content;
     }
 
+    @Override
+    public InputStream getContent() throws MissingObjectException {
+        ArchiveInputStream stream = null;
+        try {
+            stream = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(this.getObjectMetadata().getPath())));
+        } catch (ArchiveException e) {
+            throw new SkyeException("Cannot create ArchiveStream", e);
+        } catch (FileNotFoundException e) {
+            throw new SkyeException("Path not found", e);
+        }
+
+        return stream;
+    }
 }

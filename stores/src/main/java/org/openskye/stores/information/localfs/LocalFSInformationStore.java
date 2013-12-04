@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.stores.CompressedObject;
+import org.openskye.stores.FileSystemCompressedObject;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 import org.openskye.stores.util.MimeTypeUtil;
 
@@ -98,9 +98,9 @@ public class LocalFSInformationStore implements InformationStore {
                     all.add(container);
                 } else if (Files.isRegularFile(p)) {
                     if(isCompressedFile(p)){
-                        CompressedObject compressedObj = new CompressedObject();
+                        UnstructuredCompressedObject compressedObj = new FileSystemCompressedObject();
                         ObjectMetadata metadata = new ObjectMetadata();
-                        metadata.setImplementation(CompressedObject.class.getCanonicalName());
+                        metadata.setImplementation(FileSystemCompressedObject.class.getCanonicalName());
                         metadata.setPath(p.toAbsolutePath().toString());
                         metadata.setProject(informationStoreDefinition.getProject());
                         metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
