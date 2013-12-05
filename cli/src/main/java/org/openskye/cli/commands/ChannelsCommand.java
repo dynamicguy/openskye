@@ -5,13 +5,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.*;
 import org.openskye.filters.PathRegExFilter;
 
-import java.io.Console;
 import java.util.List;
 
 /**
@@ -39,13 +37,14 @@ public class ChannelsCommand extends AbstractCrudCommand {
         output.message("Creating a new " + getCollectionSingular() + ":\n");
         Channel newObject = new Channel();
 
-        Console console = getConsole();
         for (Field field : getFields()) {
             String attributeName = field.getName();
+            String attributeVal = dynamicParams.get(attributeName);
             if (field instanceof TextField) {
-                String newValue = console.readLine(StringUtils.capitalize(attributeName) + ": ");
+                String newValue = attributeVal;
                 try {
                     BeanUtils.setProperty(newObject, attributeName, newValue);
+                    output.raw(newObject.toString());
                 } catch (Exception e) {
                     throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
                 }
