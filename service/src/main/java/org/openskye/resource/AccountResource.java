@@ -1,20 +1,19 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.openskye.domain.User;
-import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -26,46 +25,51 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "/api/1/account", description = "Access and manage your account information")
 @Path("/api/1/account")
 @Produces(MediaType.APPLICATION_JSON)
-/**
- * Manage account information for the currently authorized user
- */
-public class AccountResource extends AbstractUpdatableDomainResource<User> {
+@Slf4j
+public class AccountResource {
 
     @Inject
     private UserDAO userDao;
 
-    @Override
-    protected AbstractPaginatingDAO<User> getDAO() {
-        return userDao;
-    }
-
-    @Override
-    protected String getPermissionDomain() {
-        return "user";
-    }
-
     @GET
     @ApiOperation(value = "Based on your login will return your API key", response = UserSelf.class)
-    @Transactional
     @Timed
     public UserSelf getUserSelf() {
         Subject subject = SecurityUtils.getSubject();
         return new UserSelf((User) subject.getPrincipal());
     }
 
-    @ApiOperation(value = "Determine if user has a privilege",
-                  notes = "Given the user id and the permission name, " +
-                          "returns true if the permission is associated with the user or false otherwise.",
-                  response = Boolean.class)
-    @Path("isPermitted/{permission}")
-    @GET
+    @PUT
+    @ApiOperation(value = "This will allow you to update yourself", response = UserSelf.class)
     @Transactional
     @Timed
-    public Boolean isPermitted(@PathParam("permission") String permission)
-    {
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
+    @Path("/{id}")
+    public UserSelf updateSelf(@PathParam("id") String id, UpdateUser updateUser) {
+        Subject subject = SecurityUtils.getSubject();
+        User activeUser = (User) subject.getPrincipal();
+        Optional<User> user = userDao.get(activeUser.getId());
+        if (!activeUser.getId().equals(id) || !user.isPresent()) {
+            throw new EntityNotFoundException();
+        } else {
+            User userToUpdate = user.get();
+            userToUpdate.setEmail(updateUser.getEmail());
+            userToUpdate.setName(updateUser.getName());
+            log.debug("Updating active user to " + userToUpdate);
+            userDao.update(userToUpdate);
+            return new UserSelf(userToUpdate);
+        }
 
-        return userDao.isPermitted(user.getId(), permission);
+    }
+
+    @ApiOperation(value = "Determine if user has a privilege",
+            notes = "For the current user and the permission name, " +
+                    "returns true if the permission is associated with the user or false otherwise.",
+            response = Boolean.class)
+    @Path("/permission/{permission}")
+    @GET
+    @Timed
+    public Boolean isPermitted(@PathParam("permission") String permission) {
+        return SecurityUtils.getSubject().isPermitted(permission);
     }
 
 }

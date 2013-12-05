@@ -27,7 +27,9 @@ public class RequestQueryContextFilter implements Filter {
         if (servletRequest instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = WebUtils.toHttp(servletRequest);
 
-            log.debug("Got query string " + httpRequest.getQueryString());
+            if (httpRequest.getQueryString() != null)
+                log.debug("Got query string " + httpRequest.getQueryString());
+
             if (httpRequest.getParameter("_page") != null) {
                 try {
                     log.debug("Setting page to " + httpRequest.getParameter("_page"));
@@ -45,7 +47,9 @@ public class RequestQueryContextFilter implements Filter {
                 }
             }
 
-            log.debug("Setting sort to " + httpRequest.getParameter("_sort"));
+            if (httpRequest.getParameter("_sort") != null)
+                log.debug("Setting sort to " + httpRequest.getParameter("_sort"));
+
             context.setSort(httpRequest.getParameter("_sort"));
 
             if ("desc".equals(httpRequest.getParameter("_sortDir"))) {

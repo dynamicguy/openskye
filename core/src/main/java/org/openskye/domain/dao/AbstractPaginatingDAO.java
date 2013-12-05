@@ -103,6 +103,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      */
     private T audit(T newInstance, AuditEvent event) {
         if (isAudited()) {
+            log.debug("Auditing change to "+newInstance);
             AuditLog auditLog = new AuditLog();
             auditLog.setAuditEntity(entityClass.getSimpleName());
             auditLog.setAuditEvent(event);
@@ -172,7 +173,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
             throw new ValidationException();
         validate(updatedInstance);
 
-        this.currentEntityManager().merge(updatedInstance);
+        updatedInstance = this.currentEntityManager().merge(updatedInstance);
         audit(updatedInstance, AuditEvent.UPDATE);
 
         return updatedInstance;
