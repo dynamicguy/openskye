@@ -54,4 +54,12 @@ public class User implements Identifiable {
             setPasswordHash(BCrypt.hashpw(UUID.randomUUID().toString(), BCrypt.gensalt()));
         }
     }
+
+    public void addRole(UserRole userRole){
+        userRoles.add(userRole);
+    }
+
+    public void removeRole(UserRole userRole){
+        userRoles.remove(userRole);
+    }
 }
