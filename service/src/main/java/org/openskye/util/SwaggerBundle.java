@@ -27,7 +27,7 @@ public class SwaggerBundle implements Bundle {
     public void run(Environment environment) {
         // Set the swagger config options
         SwaggerConfig config = ConfigFactory.config();
-        config.setApiVersion("1");
+        config.setApiVersion("1.0.0");
         config.setBasePath("http://localhost:5000");
 
         environment.jersey().register(new ApiListingResourceJSON());
