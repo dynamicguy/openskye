@@ -1,6 +1,8 @@
 package org.openskye.util;
 
+import com.wordnik.swagger.config.ConfigFactory;
 import com.wordnik.swagger.config.ScannerFactory;
+import com.wordnik.swagger.config.SwaggerConfig;
 import com.wordnik.swagger.jaxrs.config.DefaultJaxrsScanner;
 import com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider;
 import com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON;
@@ -23,6 +25,11 @@ public class SwaggerBundle implements Bundle {
 
     @Override
     public void run(Environment environment) {
+        // Set the swagger config options
+        SwaggerConfig config = ConfigFactory.config();
+        config.setApiVersion("1.3.0");
+        config.setBasePath("http://localhost:5000");
+
         environment.jersey().register(new ApiListingResourceJSON());
         // add swagger providers
         environment.jersey().register(new ApiDeclarationProvider());
@@ -33,6 +40,5 @@ public class SwaggerBundle implements Bundle {
 
         // add a reader, the DefaultJaxrsApiReader will scan @Api annotations and create the swagger spec from them
         ClassReaders.setReader(new DefaultJaxrsApiReader());
-
     }
 }
