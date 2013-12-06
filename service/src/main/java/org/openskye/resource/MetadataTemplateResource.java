@@ -35,6 +35,7 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
     @Transactional
     @Timed
     public MetadataTemplate create(MetadataTemplate newInstance) {
+        newInstance.setDomain(getCurrentUser().getDomain());
         return super.create(newInstance);
     }
 
