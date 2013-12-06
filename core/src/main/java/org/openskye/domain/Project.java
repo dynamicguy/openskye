@@ -49,5 +49,9 @@ public class Project implements Identifiable {
     private List<Task> tasks = new ArrayList<>();
     private boolean active = true;
     private String description;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    @JsonIgnore
+    private List<ProjectUser> projectUsers = new ArrayList<>();
+
 
 }

@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.User;
 import org.openskye.domain.UserRole;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
@@ -123,5 +124,22 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @Override
     public Response delete(@PathParam("id") String id) {
         return super.delete(id);
+    }
+
+    @ApiOperation(value="Deactivate a user", notes="Given the user ID, deactivates the user by removing their API key (they can be reactivated again by assigning a new API key", response = User.class)
+    @Path("/deactivate/{id}")
+    @PUT
+    @Transactional
+    @Timed
+    public User deactivateUser(@PathParam("id") String userID){
+        Optional<User> userOpt = userDAO.get(userID);
+        if(userOpt.isPresent()){
+            User currentUser = userOpt.get();
+
+            userDAO.update(currentUser);
+            return currentUser;
+        } else {
+            throw new SkyeException("User not found");
+        }
     }
 }

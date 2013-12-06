@@ -4,13 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.Channel;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.dao.AbstractPaginatingDAO;
-import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.domain.dao.ProjectDAO;
+import org.openskye.domain.*;
+import org.openskye.domain.dao.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -112,5 +107,12 @@ public class ProjectResource extends AbstractUpdatableDomainResource<Project> {
         return new PaginatedResult<InformationStoreDefinition>().paginate(project.getInformationStores());
     }
 
+    @Path("/{id}/users")
+    @GET
+    @ApiOperation(value = "Return the users associated with this project")
+    public PaginatedResult<ProjectUser> getProjectUsers(@PathParam("id") String id){
+        Project project = get(id);
+        return new PaginatedResult<ProjectUser>().paginate(project.getProjectUsers());
+    }
 
 }

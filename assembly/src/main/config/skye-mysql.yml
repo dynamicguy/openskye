@@ -9,7 +9,7 @@ database:
   password: password
 
   # the JDBC URL
-  url: "jdbc:mysql://localhost/openskye"
+  url: "jdbc:mysql://localhost/openskye2"
 
   # Hibernate dialect
   dialect: "org.hibernate.dialect.MySQLDialect"
