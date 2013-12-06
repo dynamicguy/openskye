@@ -2,6 +2,8 @@ package org.openskye.task.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.Setter;
 import org.openskye.core.ArchiveStore;
@@ -12,7 +14,7 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
 
-import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.util.concurrent.Callable;
 
 /**
@@ -33,11 +35,29 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @Getter
     @Setter
     Task task;
+    @JsonIgnore
+    @Inject
+    private Provider<EntityManager> emf;
+    @JsonIgnore
+    protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
 
     public abstract void validate();
 
     @JsonIgnore
     public abstract Project getProject();
+
+    protected void beginTransaction() {
+        hasOuterTransaction = emf.get().getTransaction().isActive();
+        if ( !hasOuterTransaction ) {
+            emf.get().getTransaction().begin();
+        }
+    }
+
+    protected void commitTransaction() {
+        if ( !hasOuterTransaction ) {
+            emf.get().getTransaction().commit();
+        }
+    }
 
     public Task toTask() {
         // Create a new Task object from this step
