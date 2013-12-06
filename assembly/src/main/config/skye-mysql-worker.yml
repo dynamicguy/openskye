@@ -11,6 +11,9 @@ database:
   # the JDBC URL
   url: "jdbc:mysql://localhost/openskye"
 
+  # Hibernate dialect
+  dialect: "org.hibernate.dialect.MySQLDialect"
+
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
   oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch

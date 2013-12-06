@@ -11,6 +11,7 @@ public class DatabaseConfiguration {
     private String driverClass;
     private String user;
     private String password;
+    private String dialect;
     @NotNull
     private String url;
 

@@ -48,6 +48,7 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         props.put("javax.persistence.jdbc.user", configuration.getDatabaseConfiguration().getUser());
         props.put("javax.persistence.jdbc.password", configuration.getDatabaseConfiguration().getPassword());
         props.put("javax.persistence.jdbc.driver", configuration.getDatabaseConfiguration().getDriverClass());
+        props.put("hibernate.dialect", configuration.getDatabaseConfiguration().getDialect());
         jpaPersistModule.properties(props);
 
         DropwizardEnvironmentModule<SkyeWorkerConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeWorkerConfiguration.class);

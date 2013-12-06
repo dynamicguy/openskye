@@ -60,6 +60,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         props.put("javax.persistence.jdbc.user", configuration.getDatabaseConfiguration().getUser());
         props.put("javax.persistence.jdbc.password", configuration.getDatabaseConfiguration().getPassword());
         props.put("javax.persistence.jdbc.driver", configuration.getDatabaseConfiguration().getDriverClass());
+        props.put("hibernate.dialect", configuration.getDatabaseConfiguration().getDialect());
         jpaPersistModule.properties(props);
 
         DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
