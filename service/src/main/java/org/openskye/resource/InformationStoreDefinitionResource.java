@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -78,7 +79,15 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public PaginatedResult<InformationStoreDefinition> getAll() {
-        return super.getAll();
+        PaginatedResult<InformationStoreDefinition> paginatedResult = super.getAll();
+        List<InformationStoreDefinition> results = paginatedResult.getResults();
+        for(InformationStoreDefinition isd : results){
+            if(!isPermitted("list",isd.getProject().getId())){
+                results.remove(isd);
+            }
+        }
+        paginatedResult.setResults(results);
+        return paginatedResult;
     }
 
     @ApiOperation(value = "Delete information store definition instance", notes = "Deletes the information store definition instance (found by unique id)")

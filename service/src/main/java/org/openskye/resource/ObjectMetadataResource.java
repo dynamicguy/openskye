@@ -3,6 +3,7 @@ package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -248,8 +249,14 @@ public class ObjectMetadataResource {
     public PaginatedResult<ObjectMetadata> search(@ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
-        checkPermission("search", "*");
-        return new PaginatedResult<>(search.search(query));
+        List<ObjectMetadata> results = Lists.newArrayList(search.search(query));
+        for(ObjectMetadata om : results){
+            if(!SecurityUtils.getSubject().isPermitted("objects:search:"+om.getProject().getId())){
+                results.remove(om);
+            }
+        }
+
+        return new PaginatedResult<>(results);
 
     }
 

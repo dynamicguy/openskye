@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link ArchiveStoreDefinition}
@@ -81,7 +82,15 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public PaginatedResult<ArchiveStoreDefinition> getAll() {
-        return super.getAll();
+        PaginatedResult<ArchiveStoreDefinition> paginatedResult = super.getAll();
+        List<ArchiveStoreDefinition> results = paginatedResult.getResults();
+        for(ArchiveStoreDefinition asd : results){
+            if(!isPermitted("list",asd.getProject().getId())){
+                results.remove(asd);
+            }
+        }
+        paginatedResult.setResults(results);
+        return paginatedResult;
     }
 
     @ApiOperation(value = "Delete archive store definition instance", notes = "Deletes the archive store definition instance (found by unique id)")

@@ -16,6 +16,7 @@ import org.openskye.domain.dao.PaginatedResult;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -87,7 +88,15 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public PaginatedResult<Channel> getAll() {
-        return super.getAll();
+        PaginatedResult<Channel> paginatedResult = super.getAll();
+        List<Channel> results = paginatedResult.getResults();
+        for(Channel channel : results){
+            if(!isPermitted("list",channel.getProject().getId())){
+                results.remove(channel);
+            }
+        }
+        paginatedResult.setResults(results);
+        return paginatedResult;
     }
 
     @ApiOperation(value = "Delete channel", notes = "Deletes the channel(found by unique id)")
