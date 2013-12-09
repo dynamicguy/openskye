@@ -5,9 +5,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +30,10 @@ public class User implements Identifiable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
+    @NotNull
+    @NotBlank
+    @NaturalId
+    @Email
     private String email;
     private String name;
     @JsonIgnore
@@ -55,11 +63,7 @@ public class User implements Identifiable {
         }
     }
 
-    public void addRole(UserRole userRole){
-        userRoles.add(userRole);
-    }
-
-    public void removeRole(UserRole userRole){
-        userRoles.remove(userRole);
+    public boolean isPassword(String passwordToTest) {
+        return BCrypt.hashpw(passwordToTest, BCrypt.gensalt()).equals(password);
     }
 }

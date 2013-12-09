@@ -39,28 +39,6 @@ public class AccountResource {
         return new UserSelf((User) subject.getPrincipal());
     }
 
-    @PUT
-    @ApiOperation(value = "This will allow you to update yourself", response = UserSelf.class)
-    @Transactional
-    @Timed
-    @Path("/{id}")
-    public UserSelf updateSelf(@PathParam("id") String id, UpdateUser updateUser) {
-        Subject subject = SecurityUtils.getSubject();
-        User activeUser = (User) subject.getPrincipal();
-        Optional<User> user = userDao.get(activeUser.getId());
-        if (!activeUser.getId().equals(id) || !user.isPresent()) {
-            throw new EntityNotFoundException();
-        } else {
-            User userToUpdate = user.get();
-            userToUpdate.setEmail(updateUser.getEmail());
-            userToUpdate.setName(updateUser.getName());
-            log.debug("Updating active user to " + userToUpdate);
-            userDao.update(userToUpdate);
-            return new UserSelf(userToUpdate);
-        }
-
-    }
-
     @ApiOperation(value = "Determine if user has a privilege",
             notes = "For the current user and the permission name, " +
                     "returns true if the permission is associated with the user or false otherwise.",

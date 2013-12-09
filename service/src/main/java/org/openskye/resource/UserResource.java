@@ -15,6 +15,7 @@ import org.openskye.exceptions.BadRequestException;
 import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -32,34 +33,6 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         this.userDAO = dao;
     }
 
-    @Override
-    protected void validateCreate(User newInstance) {
-        if (newInstance.getEmail() == null) {
-            throw new BadRequestException("No email provided in user data");
-        } else if (userDAO.findByEmail(newInstance.getEmail()) == null) {
-            return;
-        } else if (userDAO.findByEmail(newInstance.getEmail()).isPresent()) {
-            throw new BadRequestException("User email already in use");
-        }
-    }
-
-    @Override
-    protected void validateUpdate(String id, User newInstance) {
-        Optional<User> user = userDAO.get(id);
-        if (user == null || !user.isPresent()) {
-            throw new NotFoundException();
-        }
-        String oldEmail = user.get().getEmail();
-        String newEmail = newInstance.getEmail();
-        if (newEmail == null) {
-            throw new BadRequestException("No email provided in user data");
-        } else if (newEmail.equals(oldEmail)) {
-            return;
-        } else if (userDAO.findByEmail(newEmail) != null && userDAO.findByEmail(newEmail).isPresent()) {
-            throw new BadRequestException("User email already in use");
-        }
-    }
-
     @ApiOperation(value = "Create new user", notes = "Create a new user and return with its unique id", response = User.class)
     @POST
     @Transactional
@@ -74,9 +47,26 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @PUT
     @Transactional
     @Timed
-    @Override
-    public User update(@PathParam("id") String id, User newInstance) {
-        return super.update(id, newInstance);
+    public User update(@PathParam("id") String id, UpdateUser userUpdate) {
+        authorize("update");
+
+        // We need to merge the user that we have in the system
+        // with the one that is coming in to handle password changes
+
+        User user = get(id);
+        user.setEmail(userUpdate.getEmail());
+        user.setName(userUpdate.getName());
+
+        // Check if we have a password
+        if (userUpdate.getOldPassword() != null &&
+                userUpdate.getNewPassword() != null &&
+                user.isPassword(userUpdate.getOldPassword())) {
+            user.setPassword(userUpdate.getNewPassword());
+            user.encryptPassword();
+        }
+
+        validateUpdate(id, user);
+        return getDAO().update(id, user);
     }
 
     @ApiOperation(value = "Find user by id", notes = "Return a user by their unique id", response = User.class)
@@ -126,14 +116,14 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         return super.delete(id);
     }
 
-    @ApiOperation(value="Deactivate a user", notes="Given the user ID, deactivates the user by removing their API key (they can be reactivated again by assigning a new API key", response = User.class)
+    @ApiOperation(value = "Deactivate a user", notes = "Given the user ID, deactivates the user by removing their API key (they can be reactivated again by assigning a new API key", response = User.class)
     @Path("/deactivate/{id}")
     @PUT
     @Transactional
     @Timed
-    public User deactivateUser(@PathParam("id") String userID){
+    public User deactivateUser(@PathParam("id") String userID) {
         Optional<User> userOpt = userDAO.get(userID);
-        if(userOpt.isPresent()){
+        if (userOpt.isPresent()) {
             User currentUser = userOpt.get();
 
             userDAO.update(currentUser);
