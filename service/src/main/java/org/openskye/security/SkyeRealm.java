@@ -6,7 +6,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.mindrot.jbcrypt.BCrypt;
 import org.openskye.domain.RolePermission;
 import org.openskye.domain.User;
 import org.openskye.domain.UserRole;
@@ -48,8 +47,7 @@ public class SkyeRealm extends AuthorizingRealm {
             Optional<User> user = userDao.findByEmail(token.getUsername());
             if (user.isPresent()) { //user is found
                 String pwd = new String(token.getPassword());
-                Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
-                if (passwordsMatch) { //user has correct password
+                if (user.get().isPassword(pwd)) { //user has correct password
                     SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
                     return simpleAuthInfo;
                 } else {

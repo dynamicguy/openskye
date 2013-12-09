@@ -12,10 +12,8 @@ import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.UserDAO;
 import org.openskye.exceptions.BadRequestException;
-import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -58,9 +56,13 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         user.setName(userUpdate.getName());
 
         // Check if we have a password
-        if (userUpdate.getOldPassword() != null &&
-                userUpdate.getNewPassword() != null &&
-                user.isPassword(userUpdate.getOldPassword())) {
+        if (userUpdate.getOldPassword() != null) {
+            if (userUpdate.getNewPassword() == null || userUpdate.getNewPassword().trim().equals("")) {
+                throw new BadRequestException("You need to provide a new password");
+            }
+            if (!user.isPassword(userUpdate.getOldPassword())) {
+                throw new BadRequestException("Your old password doesn't match");
+            }
             user.setPassword(userUpdate.getNewPassword());
             user.encryptPassword();
         }

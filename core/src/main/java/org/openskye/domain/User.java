@@ -66,6 +66,6 @@ public class User implements Identifiable {
     }
 
     public boolean isPassword(String passwordToTest) {
-        return BCrypt.hashpw(passwordToTest, BCrypt.gensalt()).equals(password);
+        return BCrypt.checkpw(passwordToTest, passwordHash);
     }
 }

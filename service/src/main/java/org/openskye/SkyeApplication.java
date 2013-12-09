@@ -50,9 +50,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
     public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {
 
-        // Adding in the exception mappers
-        environment.jersey().register(new ConstraintViolationExceptionMapper());
-
         // Remove all of Dropwizard's custom ExceptionMappers
         ResourceConfig jrConfig = environment.jersey().getResourceConfig();
         Set<Object> dwSingletons = jrConfig.getSingletons();
@@ -68,6 +65,8 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
             jrConfig.getSingletons().remove(s);
         }
 
+        // Adding in the exception mappers
+        environment.jersey().register(new ConstraintViolationExceptionMapper());
 
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
