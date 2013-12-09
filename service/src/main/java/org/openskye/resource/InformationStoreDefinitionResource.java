@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
@@ -34,7 +36,11 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Transactional
     @Timed
     public InformationStoreDefinition create(InformationStoreDefinition newInstance) {
-        return super.create(newInstance);
+        if(isPermitted("create",newInstance.getProject().getId())){
+            return super.create(newInstance);
+        }else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Update information store definition", notes = "Enter the id of the information store definition to update and enter the new information. Returns the updated information store definition", response = InformationStoreDefinition.class)
@@ -44,7 +50,11 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public InformationStoreDefinition update(@PathParam("id") String id, InformationStoreDefinition newInstance) {
-        return super.update(id, newInstance);
+        if(isPermitted("update",newInstance.getProject().getId())){
+            return super.update(id, newInstance);
+        }else{
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Find information store definition by id", notes = "Return an information store definition by its id", response = InformationStoreDefinition.class)
@@ -54,7 +64,12 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public InformationStoreDefinition get(@PathParam("id") String id) {
-        return super.get(id);
+        InformationStoreDefinition result = super.get(id);
+        if(isPermitted("get",result.getProject().getId())){
+            return result;
+        }else{
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "List all", notes = "Returns all information stores definitions in a paginated structure", responseContainer = "List", response = InformationStoreDefinition.class)
@@ -73,7 +88,11 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        return super.delete(id);
+        if(isPermitted("delete",id)) {
+            return super.delete(id);
+        } else{
+            throw new UnauthorizedException();
+        }
     }
 
     @Override
@@ -86,5 +105,7 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
         return "informationStoreDefinition";
     }
 
-
+    public boolean isPermitted(String action, String projectId) {
+        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
+    }
 }

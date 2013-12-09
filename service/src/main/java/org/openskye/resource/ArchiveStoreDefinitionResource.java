@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
@@ -34,7 +36,12 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Transactional
     @Timed
     public ArchiveStoreDefinition create(ArchiveStoreDefinition newInstance) {
-        return super.create(newInstance);
+        String projectId = newInstance.getProject().getId();
+        if (isPermitted("create", projectId)) {
+            return super.create(newInstance);
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Update archive store definition", notes = "Enter the id of the archive store definition to update and enter the new information. Returns the updated archive store definition", response = ArchiveStoreDefinition.class)
@@ -44,7 +51,12 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public ArchiveStoreDefinition update(@PathParam("id") String id, ArchiveStoreDefinition newInstance) {
-        return super.update(id, newInstance);
+        String projectId = newInstance.getProject().getId();
+        if (isPermitted("update", projectId)) {
+            return super.update(id, newInstance);
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Find archive store definition by id", notes = "Return an archive store definition by its id", response = ArchiveStoreDefinition.class)
@@ -54,7 +66,13 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public ArchiveStoreDefinition get(@PathParam("id") String id) {
-        return super.get(id);
+        ArchiveStoreDefinition result = super.get(id);
+        if(isPermitted("get",result.getProject().getId())){
+            return result;
+        }
+        else{
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "List all", notes = "Returns all archive stores definitions in a paginated structure", responseContainer = "List", response = ArchiveStoreDefinition.class)
@@ -73,7 +91,12 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        return super.delete(id);
+        ArchiveStoreDefinition definition = super.get(id);
+        if(isPermitted("delete",definition.getProject().getId())){
+            return super.delete(id);
+        }else{
+            throw new UnauthorizedException();
+        }
     }
 
     @Override
@@ -86,5 +109,8 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
         return "archiveStoreDefinition";
     }
 
+    public boolean isPermitted(String action, String projectId) {
+        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
+    }
 
 }

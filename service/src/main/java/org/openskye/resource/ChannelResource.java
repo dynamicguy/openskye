@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
 import org.openskye.domain.ChannelFilterDefinition;
@@ -34,16 +36,20 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Transactional
     @Timed
     public Channel create(Channel newInstance) {
-        super.create(newInstance);
-        for(ChannelArchiveStore cas : newInstance.getChannelArchiveStores()){
-            cas.setChannel(newInstance);
-        }
-        if(newInstance.getChannelFilters().size()>0){
-            for(ChannelFilterDefinition def : newInstance.getChannelFilters()){
-                def.setChannel(newInstance);
+        if (isPermitted("create", newInstance.getProject().getId())) {
+            super.create(newInstance);
+            for (ChannelArchiveStore cas : newInstance.getChannelArchiveStores()) {
+                cas.setChannel(newInstance);
             }
+            if (newInstance.getChannelFilters().size() > 0) {
+                for (ChannelFilterDefinition def : newInstance.getChannelFilters()) {
+                    def.setChannel(newInstance);
+                }
+            }
+            return newInstance;
+        } else {
+            throw new UnauthorizedException();
         }
-        return newInstance;
     }
 
     @ApiOperation(value = "Update channel", notes = "Enter the id of the channel to update and new information. Returns the updated channel", response = Channel.class)
@@ -53,7 +59,11 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public Channel update(@PathParam("id") String id, Channel newInstance) {
-        return super.update(id, newInstance);
+        if (isPermitted("update", newInstance.getProject().getId())) {
+            return super.update(id, newInstance);
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Find chanel by id", notes = "Return a channel by its unique id", response = Channel.class)
@@ -63,7 +73,12 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public Channel get(@PathParam("id") String id) {
-        return super.get(id);
+        Channel result = super.get(id);
+        if (isPermitted("get", result.getProject().getId())) {
+            return result;
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "List all channels", notes = "Returns all channels in a paginated structure", responseContainer = "List", response = Channel.class)
@@ -82,7 +97,12 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        return super.delete(id);
+        Channel result = super.get(id);
+        if (isPermitted("delete", result.getProject().getId())) {
+            return super.delete(id);
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @Override
@@ -99,8 +119,15 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @GET
     @ApiOperation(value = "Return the archive stores used by this channel")
     public PaginatedResult<ChannelArchiveStore> getChannelArchiveStores(@PathParam("id") String id) {
-        Channel channel = get(id);
-        return new PaginatedResult<ChannelArchiveStore>().paginate(channel.getChannelArchiveStores());
+        Channel channel = super.get(id);
+        if(isPermitted("get",channel.getProject().getId())){
+            return new PaginatedResult<ChannelArchiveStore>().paginate(channel.getChannelArchiveStores());
+        } else{
+            throw new UnauthorizedException();
+        }
+    }
 
+    public boolean isPermitted(String action, String projectId) {
+        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
     }
 }

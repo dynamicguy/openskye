@@ -26,7 +26,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This resource creates an API which deals with {@link ObjectMetadata}. It
@@ -65,12 +66,13 @@ public class ObjectMetadataResource {
     public Response index(@ApiParam(value = "The id of the ObjectMetadata", required = true)
                           @PathParam("id")
                           String id) {
-        checkPermission("index");
+
 
         Optional<ObjectMetadata> metadata = repository.get(id);
 
         if (!metadata.isPresent())
             throw new NotFoundException();
+        checkPermission("index", metadata.get().getProject().getId());
 
         search.index(metadata.get());
 
@@ -93,7 +95,7 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public ObjectMetadata update(@PathParam("id") String id, ObjectMetadata newInstance) {
-        checkPermission("update");
+        checkPermission("update", newInstance.getProject().getId());
 
         if (!id.equals(newInstance.getId()))
             throw new BadRequestException();
@@ -116,12 +118,13 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public ObjectMetadata get(@PathParam("id") String id) {
-        checkPermission("get");
 
         Optional<ObjectMetadata> metadata = repository.get(id);
 
         if (!metadata.isPresent())
             throw new NotFoundException();
+        checkPermission("get", metadata.get().getProject().getId());
+
 
         return metadata.get();
     }
@@ -142,10 +145,10 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public PaginatedResult<ArchiveContentBlock> getContentBlocks(@PathParam("id") String id) {
-        checkPermission("get");
         Optional<ObjectMetadata> metadata = repository.get(id);
         if (!metadata.isPresent())
             throw new NotFoundException();
+        checkPermission("get", metadata.get().getProject().getId());
 
         return new PaginatedResult<>(metadata.get().getArchiveContentBlocks());
     }
@@ -163,9 +166,14 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public PaginatedResult<ObjectMetadata> getAll() {
-        checkPermission("list");
+        List<ObjectMetadata> result = new ArrayList<>();
+        for (ObjectMetadata objectMetadata : repository.getAllObjects()) {
+            if (SecurityUtils.getSubject().isPermitted("objects:list:" + objectMetadata.getProject().getId())) {
+                result.add(objectMetadata);
+            }
+        }
 
-        return new PaginatedResult<>(repository.getAllObjects());
+        return new PaginatedResult<>(result);
     }
 
     /**
@@ -183,12 +191,14 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public PaginatedResult<ObjectMetadata> getByInformationStore(@PathParam("isdId") String isdId) {
-        checkPermission("list");
 
         Optional<InformationStoreDefinition> isd = informationStores.get(isdId);
 
         if (!isd.isPresent())
             throw new NotFoundException();
+
+        checkPermission("list", isd.get().getProject().getId());
+
 
         return new PaginatedResult<>(repository.getObjects(isd.get()));
     }
@@ -208,12 +218,12 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public PaginatedResult<ObjectMetadata> getByTask(@PathParam("taskId") String taskId) {
-        checkPermission("list");
 
         Optional<Task> task = tasks.get(taskId);
 
         if (!task.isPresent())
             throw new NotFoundException();
+        checkPermission("list", task.get().getProject().getId());
 
         return new PaginatedResult<>(repository.getObjects(task.get()));
 
@@ -238,7 +248,7 @@ public class ObjectMetadataResource {
     public PaginatedResult<ObjectMetadata> search(@ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
-        checkPermission("search");
+        checkPermission("search", "*");
         return new PaginatedResult<>(search.search(query));
 
     }
@@ -265,7 +275,7 @@ public class ObjectMetadataResource {
                                                   @ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
-        checkPermission("search");
+        checkPermission("search", projectId);
 
         Optional<Project> project = projects.get(projectId);
 
@@ -275,8 +285,8 @@ public class ObjectMetadataResource {
         return new PaginatedResult<>(search.search(project.get(), query));
     }
 
-    private void checkPermission(String operation) {
-        if (!SecurityUtils.getSubject().isPermitted("objects:" + operation)) {
+    private void checkPermission(String operation, String projectId) {
+        if (!SecurityUtils.getSubject().isPermitted("objects:" + operation + ":" + projectId)) {
             throw new UnauthorizedException();
         }
     }
