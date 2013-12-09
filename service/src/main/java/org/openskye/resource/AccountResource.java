@@ -1,8 +1,6 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Optional;
-import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +10,10 @@ import org.openskye.domain.User;
 import org.openskye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -36,7 +36,7 @@ public class AccountResource {
     @Timed
     public UserSelf getUserSelf() {
         Subject subject = SecurityUtils.getSubject();
-        return new UserSelf((User) subject.getPrincipal());
+        return new UserSelf(userDao.get(((User) subject.getPrincipal()).getId()).get());
     }
 
     @ApiOperation(value = "Determine if user has a privilege",

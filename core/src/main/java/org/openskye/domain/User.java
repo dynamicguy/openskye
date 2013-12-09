@@ -35,6 +35,8 @@ public class User implements Identifiable {
     @NaturalId
     @Email
     private String email;
+    @NotNull
+    @NotBlank
     private String name;
     @JsonIgnore
     private String passwordHash;

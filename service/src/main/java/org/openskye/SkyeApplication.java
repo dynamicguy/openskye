@@ -20,7 +20,11 @@ import org.openskye.util.RequestQueryContextFilter;
 import org.openskye.util.SwaggerBundle;
 
 import javax.annotation.Nullable;
+import javax.ws.rs.ext.ExceptionMapper;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * The Skye Application
@@ -48,6 +52,21 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
 
         // Adding in the exception mappers
         environment.jersey().register(new ConstraintViolationExceptionMapper());
+
+        // Remove all of Dropwizard's custom ExceptionMappers
+        ResourceConfig jrConfig = environment.jersey().getResourceConfig();
+        Set<Object> dwSingletons = jrConfig.getSingletons();
+        List<Object> singletonsToRemove = new ArrayList<Object>();
+
+        for (Object s : dwSingletons) {
+            if (s instanceof ExceptionMapper && s.getClass().getName().startsWith("io.dropwizard.jersey.")) {
+                singletonsToRemove.add(s);
+            }
+        }
+
+        for (Object s : singletonsToRemove) {
+            jrConfig.getSingletons().remove(s);
+        }
 
 
         final GuiceContainer container = new GuiceContainer();
