@@ -48,7 +48,9 @@ public class DestroyTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
+        if ( targetInformationStoreDefinition.getImplementation() == null ) {
+            targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
+        }
     }
 
     @Override

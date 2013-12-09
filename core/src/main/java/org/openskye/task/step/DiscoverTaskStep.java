@@ -43,7 +43,9 @@ public class DiscoverTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        channel = channelDAO.get(channel.getId()).get();
+        if ( channel.getInformationStoreDefinition() == null ) {
+            channel = channelDAO.get(channel.getId()).get();
+        }
     }
 
     @Override

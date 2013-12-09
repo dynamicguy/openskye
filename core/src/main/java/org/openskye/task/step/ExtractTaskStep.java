@@ -59,8 +59,12 @@ public class ExtractTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        channel = channelDAO.get(channel.getId()).get();
-        targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
+        if ( channel.getInformationStoreDefinition() == null ) {
+            channel = channelDAO.get(channel.getId()).get();
+        }
+        if ( targetInformationStoreDefinition.getImplementation() == null ) {
+            targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
+        }
     }
 
     @Override

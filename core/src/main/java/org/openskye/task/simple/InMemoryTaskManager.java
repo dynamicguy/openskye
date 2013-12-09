@@ -32,6 +32,7 @@ public class InMemoryTaskManager implements TaskManager {
         TaskStep step = task.getStep();
         log.info("Creating task step for " + task);
         injector.injectMembers(step);
+        step.rehydrate();
         log.info("Start task step for " + task);
         TaskStatus status;
         try {
