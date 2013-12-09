@@ -56,31 +56,6 @@ public class ObjectMetadataResource {
         this.projects = projects;
     }
 
-    /**
-     * Creates a new {@link ObjectMetadata}.  Note that the object will be
-     * indexed upon creation for searching.
-     *
-     * @param newInstance The instance to be created.
-     * @return The created instance with its id field set.
-     */
-    @ApiOperation(value = "Create ObjectMetadata",
-            notes = "Creates a new ObjectMetadata and returns with its id",
-            response = ObjectMetadata.class)
-    @POST
-    @Transactional
-    @Timed
-    public ObjectMetadata create(ObjectMetadata newInstance) {
-        checkPermission("create");
-
-        // If the id field is set on the newInstance, we should set
-        // it to null, so that a random id is generated.
-        newInstance.setId(UUID.randomUUID().toString());
-        repository.put(newInstance);
-        search.index(newInstance);
-
-        return newInstance;
-    }
-
     @ApiOperation(value = "Index ObjectMetadata",
             notes = "Provide the ObjectMetadata id.  It is retrieved and the index is either created or updated.")
     @Path("/index/{id}")
