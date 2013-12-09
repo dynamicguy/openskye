@@ -42,7 +42,9 @@ public class ArchiveTaskStep extends TaskStep {
     public void rehydrate() {
         // When we come back form JSON we have the id
         // but we need the entity
-        setChannel(channelDAO.get(channel.getId()).get());
+        if ( channel.getInformationStoreDefinition() == null ) {
+            setChannel(channelDAO.get(channel.getId()).get());
+        }
     }
 
     @Override
