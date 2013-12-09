@@ -6,12 +6,13 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.openskye.domain.RolePermission;
-import org.openskye.domain.User;
-import org.openskye.domain.UserRole;
+import org.mindrot.jbcrypt.BCrypt;
+import org.openskye.domain.*;
+import org.openskye.domain.dao.ProjectUserDAO;
 import org.openskye.domain.dao.UserDAO;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
 /**
@@ -22,6 +23,9 @@ public class SkyeRealm extends AuthorizingRealm {
     @Inject
     private UserDAO userDao;
 
+    @Inject
+    private ProjectUserDAO projectUserDAO;
+
     public SkyeRealm() {
         super();
     }
@@ -29,12 +33,24 @@ public class SkyeRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         User u = (User) getAvailablePrincipal(principals);
+        Optional<List<ProjectUser>> pu = projectUserDAO.findByUser(u.getId());
         SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
         for (UserRole role : u.getUserRoles()) {
             authInfo.addRole((role.getRole().getName()));
             for (RolePermission rp : role.getRole().getRolePermissions()) {
                 authInfo.addStringPermission(rp.getPermission().getPermission());
             }
+        }
+        if(pu.isPresent()){
+            for(ProjectUser pUser : pu.get()){
+                for(Role pRole : pUser.getProjectUserRoles()){
+                    authInfo.addRole(pRole.getName());
+                    for(RolePermission rp : pRole.getRolePermissions()){
+                        authInfo.addStringPermission(rp.getPermission().getPermission()+":"+pUser.getProject().getId());
+                    }
+                }
+            }
+
         }
 
         return authInfo;
@@ -47,7 +63,8 @@ public class SkyeRealm extends AuthorizingRealm {
             Optional<User> user = userDao.findByEmail(token.getUsername());
             if (user.isPresent()) { //user is found
                 String pwd = new String(token.getPassword());
-                if (user.get().isPassword(pwd)) { //user has correct password
+                Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
+                if (passwordsMatch) { //user has correct password
                     SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
                     return simpleAuthInfo;
                 } else {
