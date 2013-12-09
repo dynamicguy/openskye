@@ -35,36 +35,6 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     }
 
     @Test
-    public void testAuthorizedCreate() {
-        ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:create")).thenReturn(true);
-
-        // Since create generates a new UUID before attempting to put something into the repository,
-        // it is impossible to assert to ensure that the instance that is written is the same as the
-        // instance we passed in.
-        ObjectMetadata metadata = resourceRule.client()
-                .resource(API_ADDRESS)
-                .type(MEDIA_TYPE)
-                .post(ObjectMetadata.class, metadataInstance);
-
-        assertThat("an object metadata was created", (metadata != null));
-
-    }
-
-    @Test
-    public void testUnauthorizedCreate() {
-        ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:create")).thenReturn(false);
-
-        ClientResponse response = resourceRule.client()
-                .resource(API_ADDRESS)
-                .type(MEDIA_TYPE)
-                .post(ClientResponse.class, metadataInstance);
-
-        assertThat("object creation was not permitted", response.getStatus(), equalTo(401));
-    }
-
-    @Test
     public void testAuthorizedUpdate() {
         ThreadContext.bind(subject);
         when(subject.isPermitted("objects:update")).thenReturn(true);
