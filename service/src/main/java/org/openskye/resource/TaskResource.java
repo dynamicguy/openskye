@@ -5,6 +5,8 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskLog;
 import org.openskye.domain.dao.*;
@@ -14,6 +16,7 @@ import org.openskye.task.step.*;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -38,10 +41,14 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     }
 
     private Task createFromStep(TaskStep newStep) {
-        authorize("create");
-        Task newInstance = super.create(newStep.toTask());
-        taskManager.submit(newInstance);
-        return newInstance;
+        if (isPermitted("create", newStep.getProject().getId())) {
+            authorize("create");
+            Task newInstance = super.create(newStep.toTask());
+            taskManager.submit(newInstance);
+            return newInstance;
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Create new discovery task", notes = "Create a new discovery task and return with its unique id", response = Task.class)
@@ -105,7 +112,12 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Timed
     @Override
     public Task get(@PathParam("id") String id) {
-        return super.get(id);
+        Task result = super.get(id);
+        if (isPermitted("get", result.getProject().getId())) {
+            return result;
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "Find task logs for task by id", notes = "Return task logs for task by id", responseContainer = "List", response = TaskLog.class)
@@ -114,7 +126,11 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Transactional
     @Timed
     public PaginatedResult<TaskLog> getTaskLogs(@PathParam("id") String id) {
-        return taskLogDAO.getLogsForTask(super.get(id));
+        if(isPermitted("get",super.get(id).getProject().getId())){
+            return taskLogDAO.getLogsForTask(super.get(id));
+        } else{
+            throw new UnauthorizedException();
+        }
     }
 
     @ApiOperation(value = "List all tasks", notes = "Returns all tasks in a paginated structure", responseContainer = "List", response = Task.class)
@@ -123,7 +139,15 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Timed
     @Override
     public PaginatedResult<Task> getAll() {
-        return super.getAll();
+        PaginatedResult<Task> paginatedResult = super.getAll();
+        List<Task> results = paginatedResult.getResults();
+        for(Task t : results){
+            if(!isPermitted("list", t.getProject().getId())){
+                results.remove(t);
+            }
+        }
+        paginatedResult.setResults(results);
+        return paginatedResult;
     }
 
     @Override
@@ -136,5 +160,8 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         return "task";
     }
 
+    public boolean isPermitted(String action, String projectId) {
+        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
+    }
 
 }
