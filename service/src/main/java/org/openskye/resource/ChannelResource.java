@@ -4,14 +4,13 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.Channel;
 import org.openskye.domain.ChannelArchiveStore;
 import org.openskye.domain.ChannelFilterDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 @Api(value = "/api/1/channels", description = "Manage channels")
 @Path("/api/1/channels")
-public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
+public class ChannelResource extends ProjectSpecificResource<Channel> {
 
     private ChannelDAO channelDAO;
 
@@ -37,20 +36,18 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Transactional
     @Timed
     public Channel create(Channel newInstance) {
-        if (isPermitted("create", newInstance.getProject().getId())) {
-            super.create(newInstance);
-            for (ChannelArchiveStore cas : newInstance.getChannelArchiveStores()) {
-                cas.setChannel(newInstance);
-            }
-            if (newInstance.getChannelFilters().size() > 0) {
-                for (ChannelFilterDefinition def : newInstance.getChannelFilters()) {
-                    def.setChannel(newInstance);
-                }
-            }
-            return newInstance;
-        } else {
-            throw new UnauthorizedException();
+        projectID = newInstance.getProject().getId();
+        super.create(newInstance);
+        for (ChannelArchiveStore cas : newInstance.getChannelArchiveStores()) {
+            cas.setChannel(newInstance);
         }
+        if (newInstance.getChannelFilters().size() > 0) {
+            for (ChannelFilterDefinition def : newInstance.getChannelFilters()) {
+                def.setChannel(newInstance);
+            }
+        }
+        return newInstance;
+
     }
 
     @ApiOperation(value = "Update channel", notes = "Enter the id of the channel to update and new information. Returns the updated channel", response = Channel.class)
@@ -60,11 +57,8 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public Channel update(@PathParam("id") String id, Channel newInstance) {
-        if (isPermitted("update", newInstance.getProject().getId())) {
-            return super.update(id, newInstance);
-        } else {
-            throw new UnauthorizedException();
-        }
+        projectID = newInstance.getProject().getId();
+        return super.update(id, newInstance);
     }
 
     @ApiOperation(value = "Find chanel by id", notes = "Return a channel by its unique id", response = Channel.class)
@@ -74,11 +68,14 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public Channel get(@PathParam("id") String id) {
-        Channel result = super.get(id);
-        if (isPermitted("get", result.getProject().getId())) {
-            return result;
+        projectID="";
+        authorize("get");
+        if(channelDAO.get(id).isPresent()){
+            Channel result = channelDAO.get(id).get();
+            projectID=result.getProject().getId();
+            return super.get(id);
         } else {
-            throw new UnauthorizedException();
+            throw new NotFoundException();
         }
     }
 
@@ -88,10 +85,11 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public PaginatedResult<Channel> getAll() {
+        projectID="";
         PaginatedResult<Channel> paginatedResult = super.getAll();
         List<Channel> results = paginatedResult.getResults();
-        for(Channel channel : results){
-            if(!isPermitted("list",channel.getProject().getId())){
+        for (Channel channel : results) {
+            if (!isPermitted("list", channel.getProject().getId())) {
                 results.remove(channel);
             }
         }
@@ -106,11 +104,12 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        Channel result = super.get(id);
-        if (isPermitted("delete", result.getProject().getId())) {
+        if(channelDAO.get(id).isPresent()){
+            Channel result = channelDAO.get(id).get();
+            projectID=result.getProject().getId();
             return super.delete(id);
         } else {
-            throw new UnauthorizedException();
+            throw new NotFoundException();
         }
     }
 
@@ -128,15 +127,13 @@ public class ChannelResource extends AbstractUpdatableDomainResource<Channel> {
     @GET
     @ApiOperation(value = "Return the archive stores used by this channel")
     public PaginatedResult<ChannelArchiveStore> getChannelArchiveStores(@PathParam("id") String id) {
-        Channel channel = super.get(id);
-        if(isPermitted("get",channel.getProject().getId())){
+        if(channelDAO.get(id).isPresent()){
+            Channel channel = channelDAO.get(id).get();
+            projectID=channel.getProject().getId();
+            authorize("get");
             return new PaginatedResult<ChannelArchiveStore>().paginate(channel.getChannelArchiveStores());
-        } else{
-            throw new UnauthorizedException();
+        } else {
+            throw new NotFoundException();
         }
-    }
-
-    public boolean isPermitted(String action, String projectId) {
-        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
     }
 }

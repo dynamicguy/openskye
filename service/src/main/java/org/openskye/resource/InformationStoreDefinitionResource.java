@@ -4,12 +4,11 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,7 +22,7 @@ import java.util.List;
 @Api(value = "/api/1/informationStoreDefinitions", description = "Manage information store definitions")
 @Path("/api/1/informationStoreDefinitions")
 @Produces(MediaType.APPLICATION_JSON)
-public class InformationStoreDefinitionResource extends AbstractUpdatableDomainResource<InformationStoreDefinition> {
+public class InformationStoreDefinitionResource extends ProjectSpecificResource<InformationStoreDefinition> {
 
     protected InformationStoreDefinitionDAO informationStoreDefinitionDAO;
 
@@ -37,11 +36,8 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Transactional
     @Timed
     public InformationStoreDefinition create(InformationStoreDefinition newInstance) {
-        if(isPermitted("create",newInstance.getProject().getId())){
-            return super.create(newInstance);
-        }else {
-            throw new UnauthorizedException();
-        }
+        projectID = newInstance.getProject().getId();
+        return super.create(newInstance);
     }
 
     @ApiOperation(value = "Update information store definition", notes = "Enter the id of the information store definition to update and enter the new information. Returns the updated information store definition", response = InformationStoreDefinition.class)
@@ -51,11 +47,8 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public InformationStoreDefinition update(@PathParam("id") String id, InformationStoreDefinition newInstance) {
-        if(isPermitted("update",newInstance.getProject().getId())){
-            return super.update(id, newInstance);
-        }else{
-            throw new UnauthorizedException();
-        }
+        projectID = newInstance.getProject().getId();
+        return super.update(id, newInstance);
     }
 
     @ApiOperation(value = "Find information store definition by id", notes = "Return an information store definition by its id", response = InformationStoreDefinition.class)
@@ -65,11 +58,14 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public InformationStoreDefinition get(@PathParam("id") String id) {
-        InformationStoreDefinition result = super.get(id);
-        if(isPermitted("get",result.getProject().getId())){
+        projectID="";
+        authorize("get");
+        if(informationStoreDefinitionDAO.get(id).isPresent()){
+            InformationStoreDefinition result = informationStoreDefinitionDAO.get(id).get();
+            projectID=result.getProject().getId();
             return result;
-        }else{
-            throw new UnauthorizedException();
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -79,10 +75,11 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public PaginatedResult<InformationStoreDefinition> getAll() {
+        projectID="";
         PaginatedResult<InformationStoreDefinition> paginatedResult = super.getAll();
         List<InformationStoreDefinition> results = paginatedResult.getResults();
-        for(InformationStoreDefinition isd : results){
-            if(!isPermitted("list",isd.getProject().getId())){
+        for (InformationStoreDefinition isd : results) {
+            if (!isPermitted("list", isd.getProject().getId())) {
                 results.remove(isd);
             }
         }
@@ -97,10 +94,12 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        if(isPermitted("delete",id)) {
+        if(informationStoreDefinitionDAO.get(id).isPresent()){
+            InformationStoreDefinition result = informationStoreDefinitionDAO.get(id).get();
+            projectID=result.getProject().getId();
             return super.delete(id);
-        } else{
-            throw new UnauthorizedException();
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -112,9 +111,5 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Override
     protected String getPermissionDomain() {
         return "informationStoreDefinition";
-    }
-
-    public boolean isPermitted(String action, String projectId) {
-        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
     }
 }

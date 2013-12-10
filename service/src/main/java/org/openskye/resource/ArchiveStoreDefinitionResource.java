@@ -4,12 +4,11 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,7 +22,7 @@ import java.util.List;
 @Api(value = "/api/1/archiveStoreDefinitions", description = "Manage archive store definitions")
 @Path("/api/1/archiveStoreDefinitions")
 @Produces(MediaType.APPLICATION_JSON)
-public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResource<ArchiveStoreDefinition> {
+public class ArchiveStoreDefinitionResource extends ProjectSpecificResource<ArchiveStoreDefinition> {
 
     protected ArchiveStoreDefinitionDAO archiveStoreDefinitionDAO;
 
@@ -37,12 +36,8 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Transactional
     @Timed
     public ArchiveStoreDefinition create(ArchiveStoreDefinition newInstance) {
-        String projectId = newInstance.getProject().getId();
-        if (isPermitted("create", projectId)) {
-            return super.create(newInstance);
-        } else {
-            throw new UnauthorizedException();
-        }
+        projectID = newInstance.getProject().getId();
+        return super.create(newInstance);
     }
 
     @ApiOperation(value = "Update archive store definition", notes = "Enter the id of the archive store definition to update and enter the new information. Returns the updated archive store definition", response = ArchiveStoreDefinition.class)
@@ -52,12 +47,8 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public ArchiveStoreDefinition update(@PathParam("id") String id, ArchiveStoreDefinition newInstance) {
-        String projectId = newInstance.getProject().getId();
-        if (isPermitted("update", projectId)) {
-            return super.update(id, newInstance);
-        } else {
-            throw new UnauthorizedException();
-        }
+        projectID = newInstance.getProject().getId();
+        return super.update(id, newInstance);
     }
 
     @ApiOperation(value = "Find archive store definition by id", notes = "Return an archive store definition by its id", response = ArchiveStoreDefinition.class)
@@ -67,13 +58,16 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public ArchiveStoreDefinition get(@PathParam("id") String id) {
-        ArchiveStoreDefinition result = super.get(id);
-        if(isPermitted("get",result.getProject().getId())){
-            return result;
+        projectID="";
+        authorize("get");
+        if(archiveStoreDefinitionDAO.get(id).isPresent()){
+            ArchiveStoreDefinition result = archiveStoreDefinitionDAO.get(id).get();
+            projectID = result.getProject().getId();
+            return super.get(id);
+        } else {
+            throw new NotFoundException();
         }
-        else{
-            throw new UnauthorizedException();
-        }
+
     }
 
     @ApiOperation(value = "List all", notes = "Returns all archive stores definitions in a paginated structure", responseContainer = "List", response = ArchiveStoreDefinition.class)
@@ -82,10 +76,11 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public PaginatedResult<ArchiveStoreDefinition> getAll() {
+        projectID="";
         PaginatedResult<ArchiveStoreDefinition> paginatedResult = super.getAll();
         List<ArchiveStoreDefinition> results = paginatedResult.getResults();
-        for(ArchiveStoreDefinition asd : results){
-            if(!isPermitted("list",asd.getProject().getId())){
+        for (ArchiveStoreDefinition asd : results) {
+            if (!isPermitted("list", asd.getProject().getId())) {
                 results.remove(asd);
             }
         }
@@ -100,11 +95,12 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        ArchiveStoreDefinition definition = super.get(id);
-        if(isPermitted("delete",definition.getProject().getId())){
+        if(archiveStoreDefinitionDAO.get(id).isPresent()){
+            ArchiveStoreDefinition definition = archiveStoreDefinitionDAO.get(id).get();
+            projectID=definition.getProject().getId();
             return super.delete(id);
-        }else{
-            throw new UnauthorizedException();
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -116,10 +112,6 @@ public class ArchiveStoreDefinitionResource extends AbstractUpdatableDomainResou
     @Override
     protected String getPermissionDomain() {
         return "archiveStoreDefinition";
-    }
-
-    public boolean isPermitted(String action, String projectId) {
-        return SecurityUtils.getSubject().isPermitted(getPermissionDomain() + ":" + action + ":" + projectId);
     }
 
 }

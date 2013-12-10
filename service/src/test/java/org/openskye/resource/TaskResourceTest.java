@@ -25,7 +25,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TaskResourceTest extends AbstractResourceTest<Task> {
+public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
 
     public static final TaskDAO dao = mock(TaskDAO.class);
     public static final ChannelDAO channelDAO = mock(ChannelDAO.class);
@@ -39,6 +39,14 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
             .build();
     private final Task task = new Task();
     private PaginatedResult<Task> expectedResult = new PaginatedResult<>();
+
+    @Override
+    public void setUp(){
+        super.setUp();
+        Project project = new Project();
+        project.setId(projectID);
+        task.setProject(project);
+    }
 
     @Override
     public String getSingular() {
@@ -73,7 +81,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     private Channel mockChannel() {
         Channel channel = new Channel();
         Project project = new Project();
-        project.setId(UUID.randomUUID().toString());
+        project.setId(projectID);
         channel.setProject(project);
         return channel;
     }
@@ -81,7 +89,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     private InformationStoreDefinition mockStore() {
         InformationStoreDefinition store = new InformationStoreDefinition();
         Project project = new Project();
-        project.setId(UUID.randomUUID().toString());
+        project.setId(projectID);
         store.setProject(project);
         return store;
     }
@@ -89,7 +97,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     @Test
     public void testPostArchive() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
         ArchiveTaskStep step = new ArchiveTaskStep(mockChannel());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/archive").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
@@ -98,7 +106,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     @Test
     public void testPostDestroy() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
         DestroyTaskStep step = new DestroyTaskStep(UUID.randomUUID().toString(), mockStore());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/destroy").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
@@ -107,7 +115,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     @Test
     public void testPostDiscover() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
         DiscoverTaskStep step = new DiscoverTaskStep(mockChannel());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/discover").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
@@ -116,7 +124,7 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
     @Test
     public void testPostExtract() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
         ExtractTaskStep step = new ExtractTaskStep(UUID.randomUUID().toString(), mockStore());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/extract").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));

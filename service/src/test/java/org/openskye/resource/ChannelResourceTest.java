@@ -3,6 +3,7 @@ package org.openskye.resource;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
 import org.openskye.domain.Channel;
+import org.openskye.domain.Project;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
@@ -11,7 +12,7 @@ import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
-public class ChannelResourceTest extends AbstractResourceTest<Channel> {
+public class ChannelResourceTest extends ProjectSpecificResourceTest<Channel> {
 
     public static final ChannelDAO dao = mock(ChannelDAO.class);
     @ClassRule
@@ -22,6 +23,14 @@ public class ChannelResourceTest extends AbstractResourceTest<Channel> {
             .build();
     private final Channel channel = new Channel();
     private PaginatedResult<Channel> expectedResult = new PaginatedResult<>();
+
+    @Override
+    public void setUp(){
+        super.setUp();
+        Project project = new Project();
+        project.setId(projectID);
+        channel.setProject(project);
+    }
 
     @Override
     public String getSingular() {
