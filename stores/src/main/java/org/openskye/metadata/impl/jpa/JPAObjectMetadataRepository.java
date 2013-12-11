@@ -127,7 +127,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * @param objectMetadata The {@link ObjectMetadata} for which the query is
      *                       run.
      * @return True if the {@link ObjectMetadata} is found in the
-     *         {@link ObjectSet}, or false if it is not found.
+     * {@link ObjectSet}, or false if it is not found.
      */
     @Override
     public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
@@ -147,7 +147,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      *
      * @param id The identifier of the object
      * @return An Optional wrapper which will include the requested
-     *         {@link ObjectMetadata}, if it is found.
+     * {@link ObjectMetadata}, if it is found.
      */
     @Override
     public Optional<ObjectMetadata> get(String id) {
@@ -181,7 +181,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * @param informationStoreDefinition The {@link InformationStoreDefinition}
      *                                   which describes the information store.
      * @return An {@link Iterable} collection of {@link ObjectMetadata} based
-     *         on the given {@link InformationStoreDefinition}.
+     * on the given {@link InformationStoreDefinition}.
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
@@ -208,7 +208,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      *
      * @param task The {@link Task} for which the query will run.
      * @return An {@link Iterable} collection containing all of the
-     *         {@link ObjectMetadata} for the given {@link Task}.
+     * {@link ObjectMetadata} for the given {@link Task}.
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Task task) {
@@ -237,7 +237,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      *
      * @param objectSet The {@link ObjectSet} for which the query will be run.
      * @return An {@link Iterable} collection containing all of the
-     *         {@link ObjectMetadata} in the given {@link ObjectSet}.
+     * {@link ObjectMetadata} in the given {@link ObjectSet}.
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
@@ -262,7 +262,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      *
      * @param objectSetId the id of the object set for lookup
      * @return An {@link Optional} wrapper containing the {@link ObjectSet},
-     *         if it is found.
+     * if it is found.
      */
     @Override
     public Optional<ObjectSet> getObjectSet(String objectSetId) {
@@ -314,7 +314,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * @param objectMetadata The {@link ObjectMetadata} for which the query
      *                       will be run.
      * @return The {@link InformationStoreDefinition} related to the given
-     *         {@link ObjectMetadata}.
+     * {@link ObjectMetadata}.
      */
     @Override
     public InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata) {
@@ -333,7 +333,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * @param archiveContentBlock The {@link ArchiveContentBlock} for which the
      *                            query will be run.
      * @return The {@link ArchiveStoreDefinition} related to the given
-     *         {@link ArchiveContentBlock}.
+     * {@link ArchiveContentBlock}.
      */
     @Override
     public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
@@ -343,5 +343,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
             throw new SkyeException("The ArchiveStoreDefinition Id is invalid.");
 
         return asd.get();
+    }
+
+    @Override
+    public void updateObjectSet(Optional<ObjectSet> objectSet) {
+        log.debug("Updating objectset " + objectSet);
+        getEntityManager().merge(objectSet);
     }
 }

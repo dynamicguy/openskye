@@ -55,7 +55,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     private void listObjects() {
         String objectSetID = dynamicParams.get("objectSetId");
 
-        PaginatedResult paginatedResult = getResource(getCollectionPlural() + "/metadata/" + objectSetID).get(PaginatedResult.class);
+        PaginatedResult paginatedResult = getResource(getCollectionPlural() + objectSetID   + "/metadata/").get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
         fieldsWithId.addAll(new ObjectsCommand().getFieldNames());

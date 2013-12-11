@@ -10,7 +10,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
-import org.openskye.domain.dao.DomainDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.NotFoundException;
 import org.openskye.metadata.ObjectMetadataRepository;
@@ -42,8 +41,7 @@ public class ObjectSetResource {
      * Constructs a working ObjectSetResource.
      *
      * @param injectedRepository The {@link ObjectMetadataRepository} for the resource.
-     *
-     * @param injectedSearch The {@link ObjectMetadataSearch} for the resource.
+     * @param injectedSearch     The {@link ObjectMetadataSearch} for the resource.
      */
     @Inject
     public ObjectSetResource(ObjectMetadataRepository injectedRepository, ObjectMetadataSearch injectedSearch) {
@@ -55,7 +53,6 @@ public class ObjectSetResource {
      * Creates a new {@link ObjectSet}.
      *
      * @param newInstance The new instance to be created.
-     *
      * @return The newly created instance, with its id field set.
      */
     @ApiOperation(value = "Creates an ObjectSet",
@@ -72,10 +69,66 @@ public class ObjectSetResource {
     }
 
     /**
+     * Holds the requested {@link ObjectSet}.
+     *
+     * @param id The id of the {@link ObjectSet}.
+     * @return The updated {@link ObjectSet}.
+     */
+    @ApiOperation(value = "Holds an ObjectSet",
+            notes = "Supply the id of the ObjectSet.  Holds the requested ObjectSet",
+            response = ObjectSet.class)
+    @Path("/{id}/hold")
+    @PUT
+    @Transactional
+    @Timed
+    public ObjectSet hold(@PathParam("id") String id) {
+
+        checkPermission(OPERATION_GET);
+
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
+
+        if (!objectSet.isPresent())
+            throw new NotFoundException();
+
+        objectSet.get().setOnHold(true);
+        
+        repository.updateObjectSet(objectSet);
+
+        return objectSet.get();
+    }
+
+    /**
+     * Unholds the requested {@link ObjectSet}.
+     *
+     * @param id The id of the {@link ObjectSet}.
+     * @return The updated {@link ObjectSet}.
+     */
+    @ApiOperation(value = "Unholds an ObjectSet",
+            notes = "Supply the id of the ObjectSet.  Unholds the requested ObjectSet",
+            response = ObjectSet.class)
+    @Path("/{id}/unhold")
+    @PUT
+    @Transactional
+    @Timed
+    public ObjectSet unhold(@PathParam("id") String id) {
+
+        checkPermission(OPERATION_GET);
+
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
+
+        if (!objectSet.isPresent())
+            throw new NotFoundException();
+
+        objectSet.get().setOnHold(false);
+        repository.updateObjectSet(objectSet);
+
+        return objectSet.get();
+    }
+
+    /**
      * Gets the requested {@link ObjectSet}.
      *
      * @param id The id of the {@link ObjectSet}.
-     *
      * @return The requested {@link ObjectSet}.
      */
     @ApiOperation(value = "Gets an ObjectSet",
@@ -89,7 +142,7 @@ public class ObjectSetResource {
 
         checkPermission(OPERATION_GET);
 
-        Optional<ObjectSet> objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
@@ -119,7 +172,6 @@ public class ObjectSetResource {
      * Deletes the requested {@link ObjectSet}.
      *
      * @param id The id of the {@link ObjectSet} to be deleted.
-     *
      * @return A {@link Response} which indicates that the set was deleted.
      */
     @ApiOperation(value = "Deletes an ObjectSet",
@@ -145,10 +197,8 @@ public class ObjectSetResource {
     /**
      * Checks to see if the specified {@link ObjectMetadata} is found in the {@link ObjectSet}.
      *
-     * @param setId The id of the {@link ObjectSet} to be queried.
-     *
+     * @param setId      The id of the {@link ObjectSet} to be queried.
      * @param metadataId The id of the {@link ObjectMetadata} to be found.
-     *
      * @return True if the {@link ObjectMetadata} is found in the {@link ObjectSet}, or false if it is not.
      */
     @ApiOperation(value = "Determines if the ObjectMetadata is found in the ObjectSet",
@@ -185,14 +235,13 @@ public class ObjectSetResource {
      * Gets all {@link ObjectMetadata} instances in the requested {@link ObjectSet}.
      *
      * @param id The id of the {@link ObjectSet}.
-     *
      * @return A {@link PaginatedResult} structure containing a list of all {@link ObjectMetadata} instances found in the {@link ObjectSet}.
      */
     @ApiOperation(value = "Gets all ObjectMetadata in a given ObjectSet",
             notes = "Supply the ObjectSet id.  Returns a paginated structure containing all ObjectMetadata in the set",
             responseContainer = "List",
             response = ObjectMetadata.class)
-    @Path("/metadata/{id}")
+    @Path("/{id}/metadata")
     @GET
     @Transactional
     @Timed
@@ -211,10 +260,8 @@ public class ObjectSetResource {
     /**
      * Adds an {@link ObjectMetadata} instance to the {@link ObjectSet}.
      *
-     * @param setId The id of a previously created {@link ObjectSet}.
-     *
+     * @param setId      The id of a previously created {@link ObjectSet}.
      * @param metadataId The id of a previously created {@link ObjectMetadata}.
-     *
      * @return A {@link Response} which indicates that the {@link ObjectMetadata} was successfully added to the {@link ObjectSet}.
      */
     @ApiOperation(value = "Adds a reference for an ObjectMetadata to the ObjectSet",
@@ -251,10 +298,8 @@ public class ObjectSetResource {
     /**
      * Removes an {@link ObjectMetadata} instance from the {@link ObjectSet}.
      *
-     * @param setId The id of a previously created {@link ObjectSet}.
-     *
+     * @param setId      The id of a previously created {@link ObjectSet}.
      * @param metadataId The id of a previously created {@link ObjectMetadata}.
-     *
      * @return A {@link Response} which indicates that the {@link ObjectMetadata} was successfully removed from the {@link ObjectSet}.
      */
     @ApiOperation(value = "Deletes a reference for an ObjectMetadata from the ObjectSet",
@@ -294,9 +339,7 @@ public class ObjectSetResource {
      * Searches for {@link ObjectMetadata} instances which match a query and adds them to the {@link ObjectSet}.
      *
      * @param setId The id of the {@link ObjectSet} to which the results will be added.
-     *
      * @param query The query string for which the search is run.
-     *
      * @return The {@link ObjectSet} to which the results are added.
      */
     @ApiOperation(value = "Add the results of a search to an ObjectSet",
@@ -329,9 +372,8 @@ public class ObjectSetResource {
         return objectSet.get();
     }
 
-    protected void checkPermission(String operation)
-    {
-        if(!SecurityUtils.getSubject().isPermitted(operation))
+    protected void checkPermission(String operation) {
+        if (!SecurityUtils.getSubject().isPermitted(operation))
             throw new UnauthorizedException();
     }
 }

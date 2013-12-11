@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +27,10 @@ public class ObjectSet {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true)
     private String id;
+    @NotBlank
+    @NotNull
     private String name;
+    private boolean onHold;
     @ManyToMany
     @JoinTable(
             name = "OBJECT_SET_TO_METADATA",

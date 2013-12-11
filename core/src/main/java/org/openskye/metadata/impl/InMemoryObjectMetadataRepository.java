@@ -131,4 +131,10 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void updateObjectSet(Optional<ObjectSet> objectSet) {
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
+    }
 }

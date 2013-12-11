@@ -1,16 +1,16 @@
 package org.openskye.domain.dao;
 
 import com.google.inject.Inject;
+import org.openskye.domain.PeriodType;
 import org.openskye.domain.RetentionPolicy;
 
 /**
- Test the RetentionPolicyDAO
+ * Test the RetentionPolicyDAO
  */
 public class RetentionPolicyDAOTest extends AbstractDAOTestBase<RetentionPolicy> {
 
     @Inject
     public RetentionPolicyDAO retentionPolicyDAO;
-
 
     @Override
     public AbstractPaginatingDAO<RetentionPolicy> getDAO() {
@@ -19,11 +19,12 @@ public class RetentionPolicyDAOTest extends AbstractDAOTestBase<RetentionPolicy>
 
     @Override
     public RetentionPolicy getNew() {
-        RetentionPolicy retentionPolicy=new RetentionPolicy();
+        RetentionPolicy retentionPolicy = new RetentionPolicy();
         retentionPolicy.setDescription("Test def ");
         retentionPolicy.setOnHold(false);
         retentionPolicy.setName("Philip Dodds");
         retentionPolicy.setRecordsCode("Records code");
+        retentionPolicy.setPeriodType(PeriodType.DAY);
         return retentionPolicy;
     }
 
