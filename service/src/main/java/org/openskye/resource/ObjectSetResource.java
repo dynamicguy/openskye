@@ -85,12 +85,14 @@ public class ObjectSetResource {
 
         checkPermission(OPERATION_GET);
 
-        Optional<ObjectSet> objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
         objectSet.get().setOnHold(true);
+        
+        repository.updateObjectSet(objectSet);
 
         return objectSet.get();
     }
@@ -112,12 +114,13 @@ public class ObjectSetResource {
 
         checkPermission(OPERATION_GET);
 
-        Optional<ObjectSet> objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
         objectSet.get().setOnHold(false);
+        repository.updateObjectSet(objectSet);
 
         return objectSet.get();
     }
@@ -139,7 +142,7 @@ public class ObjectSetResource {
 
         checkPermission(OPERATION_GET);
 
-        Optional<ObjectSet> objectSet = this.repository.getObjectSet(id);
+        Optional<ObjectSet> objectSet = repository.getObjectSet(id);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();

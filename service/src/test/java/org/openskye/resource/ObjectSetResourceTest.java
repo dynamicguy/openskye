@@ -12,7 +12,6 @@ import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import javax.ws.rs.core.MediaType;
-import java.net.URLEncoder;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,8 +40,6 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
     public void testAuthorizedCreate() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(ObjectSetResource.OPERATION_CREATE)).thenReturn(true);
-
-        String objectSetName = URLEncoder.encode(objectSetInstance.getName(), "UTF-8");
 
         ObjectSet set = resourceRule.client()
                 .resource(API_ADDRESS)
@@ -191,8 +188,8 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted(ObjectSetResource.OPERATION_GET)).thenReturn(true);
 
-        String api = API_ADDRESS + "/metadata/" +
-                objectSetInstance.getId();
+        String api = API_ADDRESS + "/" + objectSetInstance.getId() + "/metadata";
+
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
                 .resource(api)
@@ -207,8 +204,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted(ObjectSetResource.OPERATION_GET)).thenReturn(false);
 
-        String api = API_ADDRESS + "/metadata/" +
-                objectSetInstance.getId();
+        String api = API_ADDRESS + "/" + objectSetInstance.getId() + "/metadata";
 
         ClientResponse response = resourceRule.client()
                 .resource(api)

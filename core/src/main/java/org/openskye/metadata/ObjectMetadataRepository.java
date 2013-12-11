@@ -64,7 +64,7 @@ public interface ObjectMetadataRepository {
      * @param objectMetadata The {@link ObjectMetadata} for which the query is
      *                       run.
      * @return True if the {@link ObjectMetadata} is found in the
-     *         {@link ObjectSet}, or false if it is not.
+     * {@link ObjectSet}, or false if it is not.
      */
     boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
 
@@ -124,7 +124,7 @@ public interface ObjectMetadataRepository {
      * Gets a list of all {@link ObjectMetadata} instances.
      *
      * @return An {@link Iterable} collection of {@link ObjectMetadata}
-     *         instances.
+     * instances.
      */
     Iterable<ObjectMetadata> getAllObjects();
 
@@ -145,4 +145,11 @@ public interface ObjectMetadataRepository {
      * @return the archive store definition
      */
     ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock);
+
+    /**
+     * Updates the given {@link org.openskye.core.ObjectSet}
+     *
+     * @param objectSet the object set to update
+     */
+    void updateObjectSet(Optional<ObjectSet> objectSet);
 }
