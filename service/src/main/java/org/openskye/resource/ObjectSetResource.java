@@ -192,7 +192,7 @@ public class ObjectSetResource {
             notes = "Supply the ObjectSet id.  Returns a paginated structure containing all ObjectMetadata in the set",
             responseContainer = "List",
             response = ObjectMetadata.class)
-    @Path("/metadata/{id}")
+    @Path("/{id}/metadata")
     @GET
     @Transactional
     @Timed
