@@ -58,7 +58,6 @@ public class ArchiveStoreDefinitionResource extends ProjectSpecificResource<Arch
     @Timed
     @Override
     public ArchiveStoreDefinition get(@PathParam("id") String id) {
-        projectID="";
         authorize("get");
         if(archiveStoreDefinitionDAO.get(id).isPresent()){
             ArchiveStoreDefinition result = archiveStoreDefinitionDAO.get(id).get();
@@ -76,7 +75,6 @@ public class ArchiveStoreDefinitionResource extends ProjectSpecificResource<Arch
     @Timed
     @Override
     public PaginatedResult<ArchiveStoreDefinition> getAll() {
-        projectID="";
         PaginatedResult<ArchiveStoreDefinition> paginatedResult = super.getAll();
         List<ArchiveStoreDefinition> results = paginatedResult.getResults();
         for (ArchiveStoreDefinition asd : results) {

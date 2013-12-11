@@ -58,7 +58,6 @@ public class InformationStoreDefinitionResource extends ProjectSpecificResource<
     @Timed
     @Override
     public InformationStoreDefinition get(@PathParam("id") String id) {
-        projectID="";
         authorize("get");
         if(informationStoreDefinitionDAO.get(id).isPresent()){
             InformationStoreDefinition result = informationStoreDefinitionDAO.get(id).get();
@@ -75,7 +74,6 @@ public class InformationStoreDefinitionResource extends ProjectSpecificResource<
     @Timed
     @Override
     public PaginatedResult<InformationStoreDefinition> getAll() {
-        projectID="";
         PaginatedResult<InformationStoreDefinition> paginatedResult = super.getAll();
         List<InformationStoreDefinition> results = paginatedResult.getResults();
         for (InformationStoreDefinition isd : results) {

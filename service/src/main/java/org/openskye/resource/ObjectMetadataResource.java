@@ -167,6 +167,7 @@ public class ObjectMetadataResource {
     @Transactional
     @Timed
     public PaginatedResult<ObjectMetadata> getAll() {
+        checkPermission("list","*");
         List<ObjectMetadata> result = new ArrayList<>();
         for (ObjectMetadata objectMetadata : repository.getAllObjects()) {
             if (SecurityUtils.getSubject().isPermitted("objects:list:" + objectMetadata.getProject().getId())) {
@@ -249,6 +250,7 @@ public class ObjectMetadataResource {
     public PaginatedResult<ObjectMetadata> search(@ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
+        checkPermission("search","*");
         List<ObjectMetadata> results = Lists.newArrayList(search.search(query));
         for(ObjectMetadata om : results){
             if(!SecurityUtils.getSubject().isPermitted("objects:search:"+om.getProject().getId())){

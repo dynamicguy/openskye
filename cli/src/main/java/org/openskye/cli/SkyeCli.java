@@ -58,6 +58,7 @@ public class SkyeCli {
         commands.add(new ChannelsCommand());
         commands.add(new ObjectSetsCommand());
         commands.add(new ObjectsCommand());
+        commands.add(new ProjectUsersCommand());
         commands.add(new SkyeCommand());
 
         SkyeCliSettings skyeCliSettings = SkyeCliSettings.load();

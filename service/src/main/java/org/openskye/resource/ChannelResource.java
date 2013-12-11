@@ -68,7 +68,6 @@ public class ChannelResource extends ProjectSpecificResource<Channel> {
     @Timed
     @Override
     public Channel get(@PathParam("id") String id) {
-        projectID="";
         authorize("get");
         if(channelDAO.get(id).isPresent()){
             Channel result = channelDAO.get(id).get();
@@ -85,7 +84,6 @@ public class ChannelResource extends ProjectSpecificResource<Channel> {
     @Timed
     @Override
     public PaginatedResult<Channel> getAll() {
-        projectID="";
         PaginatedResult<Channel> paginatedResult = super.getAll();
         List<Channel> results = paginatedResult.getResults();
         for (Channel channel : results) {

@@ -109,7 +109,6 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Timed
     @Override
     public Task get(@PathParam("id") String id) {
-        projectID="";
         authorize("get");
         if(taskDAO.get(id).isPresent()){
             Task result = taskDAO.get(id).get();
@@ -142,7 +141,6 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Timed
     @Override
     public PaginatedResult<Task> getAll() {
-        projectID="";
         PaginatedResult<Task> paginatedResult = super.getAll();
         List<Task> results = paginatedResult.getResults();
         for (Task t : results) {

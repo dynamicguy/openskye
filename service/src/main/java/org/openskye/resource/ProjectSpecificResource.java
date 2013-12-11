@@ -14,7 +14,7 @@ import org.openskye.domain.Identifiable;
 public abstract class ProjectSpecificResource<T extends Identifiable> extends AbstractUpdatableDomainResource<T> {
 
     @Inject
-    protected String projectID;
+    protected String projectID="*";
 
     @Override
     protected void authorize(String action){

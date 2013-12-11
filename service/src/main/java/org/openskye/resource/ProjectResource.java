@@ -67,7 +67,7 @@ public class ProjectResource extends ProjectSpecificResource<Project> {
     @Timed
     @Override
     public PaginatedResult<Project> getAll() {
-        projectID="";
+        projectID="*";
         PaginatedResult<Project> projectPaginatedResult = super.getAll();
         List<Project> results = projectPaginatedResult.getResults();
         for(Project p : results){
