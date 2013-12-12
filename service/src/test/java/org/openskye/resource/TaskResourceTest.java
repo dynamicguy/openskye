@@ -12,10 +12,7 @@ import org.openskye.domain.dao.*;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
 import org.openskye.task.TaskManager;
-import org.openskye.task.step.ArchiveTaskStep;
-import org.openskye.task.step.DestroyTaskStep;
-import org.openskye.task.step.DiscoverTaskStep;
-import org.openskye.task.step.ExtractTaskStep;
+import org.openskye.task.step.*;
 
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
@@ -70,19 +67,24 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
         return expectedResult;
     }
 
+    private Project mockProject() {
+        Project project = new Project();
+        project.setName("Mock Project");
+        project.setId(UUID.randomUUID().toString());
+        return project;
+    }
+
     private Channel mockChannel() {
         Channel channel = new Channel();
-        Project project = new Project();
-        project.setId(UUID.randomUUID().toString());
-        channel.setProject(project);
+        channel.setName("Mock Channel");
+        channel.setProject(mockProject());
         return channel;
     }
 
     private InformationStoreDefinition mockStore() {
         InformationStoreDefinition store = new InformationStoreDefinition();
-        Project project = new Project();
-        project.setId(UUID.randomUUID().toString());
-        store.setProject(project);
+        store.setName("Mock Store");
+        store.setProject(mockProject());
         return store;
     }
 
@@ -93,6 +95,15 @@ public class TaskResourceTest extends AbstractResourceTest<Task> {
         ArchiveTaskStep step = new ArchiveTaskStep(mockChannel());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/archive").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
+    }
+
+    @Test
+    public void testPostCull() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
+        CullTaskStep step = new CullTaskStep(mockProject());
+        Task task = step.toTask();
+        assertThat(getResources().client().resource("/api/1/tasks/cull").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
 
     @Test

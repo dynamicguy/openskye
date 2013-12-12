@@ -62,6 +62,15 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
         return createFromStep(newStep);
     }
 
+    @ApiOperation(value = "Create new cull task", notes = "Create a new cull task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/cull")
+    @Transactional
+    @Timed
+    public Task create(CullTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
     @ApiOperation(value = "Create new destroy task", notes = "Create a new destroy task and return with its unique id", response = Task.class)
     @POST
     @Path("/destroy")

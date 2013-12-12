@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
+import org.openskye.domain.dao.ProjectDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 
 import javax.inject.Inject;
@@ -31,6 +33,8 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     protected ArchiveStoreDefinitionDAO archiveStores;
     @Inject
     protected InformationStoreDefinitionDAO informationStores;
+    @Inject
+    protected ProjectDAO projects;
     @Inject
     private Provider<EntityManager> emf;
 
@@ -200,6 +204,21 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
             listObjectMetadata.add(jpa);
 
         return listObjectMetadata;
+    }
+
+    /**
+     * Based on an {@link Project}, return a collection of
+     * {@link ObjectMetadata} which use the described
+     * {@link org.openskye.domain.Project}.
+     *
+     * @param project The {@link Project} which describes the information store.
+     * @return An {@link Iterable} collection of {@link ObjectMetadata} based
+     * on the given {@link Project}.
+     */
+    @Override
+    public Iterable<ObjectMetadata> getObjects(Project project) {
+        String queryString = "SELECT om FROM ObjectMetadata om WHERE om.project.id = '"+project.getId()+"'";
+        return getEntityManager().createQuery(queryString, ObjectMetadata.class).getResultList();
     }
 
     /**
