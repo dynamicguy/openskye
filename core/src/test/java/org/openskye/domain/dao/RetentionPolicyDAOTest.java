@@ -21,7 +21,6 @@ public class RetentionPolicyDAOTest extends AbstractDAOTestBase<RetentionPolicy>
     public RetentionPolicy getNew() {
         RetentionPolicy retentionPolicy = new RetentionPolicy();
         retentionPolicy.setDescription("Test def ");
-        retentionPolicy.setOnHold(false);
         retentionPolicy.setName("Philip Dodds");
         retentionPolicy.setRecordsCode("Records code");
         retentionPolicy.setPeriodType(PeriodType.DAY);
@@ -31,7 +30,6 @@ public class RetentionPolicyDAOTest extends AbstractDAOTestBase<RetentionPolicy>
     @Override
     public void update(RetentionPolicy instance) {
         instance.setDescription("Test Def");
-        instance.setOnHold(false);
         instance.setName("Philip Dodds");
         instance.setRecordsCode("Records code");
     }

@@ -16,7 +16,6 @@ public class RetentionPolicyTest extends AbstractDomainTest {
     public void serializeToJSON() throws Exception {
         final RetentionPolicy retentionPolicy = new RetentionPolicy();
         retentionPolicy.setId("89er-15pl-46po-10op");
-        retentionPolicy.setOnHold(false);
         assertThat("a RetentionPolicy can be serialized to JSON",
                 asJson(retentionPolicy),
                 is(equalTo(jsonFixture("fixtures/RetentionPolicy.json"))));
