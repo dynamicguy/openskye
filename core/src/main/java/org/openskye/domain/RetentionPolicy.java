@@ -35,6 +35,5 @@ public class RetentionPolicy implements Identifiable {
     private Long retentionPeriod;
     @NotNull
     private PeriodType periodType;
-    private boolean onHold = false;
 
 }
