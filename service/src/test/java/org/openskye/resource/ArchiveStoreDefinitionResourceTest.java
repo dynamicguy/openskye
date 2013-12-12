@@ -3,16 +3,16 @@ package org.openskye.resource;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
 import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
-import org.openskye.domain.dao.AttributeDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
-public class ArchiveStoreDefinitionResourceTest extends AbstractResourceTest<ArchiveStoreDefinition> {
+public class ArchiveStoreDefinitionResourceTest extends ProjectSpecificResourceTest<ArchiveStoreDefinition> {
 
     public static final ArchiveStoreDefinitionDAO dao = mock(ArchiveStoreDefinitionDAO.class);
     @ClassRule
@@ -22,8 +22,17 @@ public class ArchiveStoreDefinitionResourceTest extends AbstractResourceTest<Arc
             .addProvider(new AuthenticationExceptionMapper())
             .build();
 
-    private final ArchiveStoreDefinition archiveStoreDefinition=new ArchiveStoreDefinition();
+    private ArchiveStoreDefinition archiveStoreDefinition=new ArchiveStoreDefinition();
     private PaginatedResult<ArchiveStoreDefinition> expectedResult=new PaginatedResult<>();
+
+
+    @Override
+    public void setUp(){
+        super.setUp();
+        Project project = new Project();
+        project.setId(projectID);
+        archiveStoreDefinition.setProject(project);
+    }
 
     @Override
     public String getSingular() {

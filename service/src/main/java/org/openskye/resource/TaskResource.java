@@ -8,12 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskLog;
 import org.openskye.domain.dao.*;
+import org.openskye.exceptions.NotFoundException;
 import org.openskye.task.TaskManager;
 import org.openskye.task.step.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -22,7 +24,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/api/1/tasks")
 @Produces(MediaType.APPLICATION_JSON)
 @Slf4j
-public class TaskResource extends AbstractUpdatableDomainResource<Task> {
+public class TaskResource extends ProjectSpecificResource<Task> {
 
     private final ChannelDAO channelDAO;
     private TaskLogDAO taskLogDAO;
@@ -38,10 +40,12 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     }
 
     private Task createFromStep(TaskStep newStep) {
+        projectID=newStep.getProject().getId();
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);
         return newInstance;
+
     }
 
     @ApiOperation(value = "Create new discovery task", notes = "Create a new discovery task and return with its unique id", response = Task.class)
@@ -105,7 +109,14 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Timed
     @Override
     public Task get(@PathParam("id") String id) {
-        return super.get(id);
+        authorize("get");
+        if(taskDAO.get(id).isPresent()){
+            Task result = taskDAO.get(id).get();
+            projectID=result.getProject().getId();
+            return super.get(id);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @ApiOperation(value = "Find task logs for task by id", notes = "Return task logs for task by id", responseContainer = "List", response = TaskLog.class)
@@ -114,7 +125,14 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Transactional
     @Timed
     public PaginatedResult<TaskLog> getTaskLogs(@PathParam("id") String id) {
-        return taskLogDAO.getLogsForTask(super.get(id));
+        if(taskDAO.get(id).isPresent()){
+            Task result = taskDAO.get(id).get();
+            projectID=result.getProject().getId();
+            authorize("get");
+            return taskLogDAO.getLogsForTask(result);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @ApiOperation(value = "List all tasks", notes = "Returns all tasks in a paginated structure", responseContainer = "List", response = Task.class)
@@ -123,7 +141,15 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     @Timed
     @Override
     public PaginatedResult<Task> getAll() {
-        return super.getAll();
+        PaginatedResult<Task> paginatedResult = super.getAll();
+        List<Task> results = paginatedResult.getResults();
+        for (Task t : results) {
+            if (!isPermitted("list", t.getProject().getId())) {
+                results.remove(t);
+            }
+        }
+        paginatedResult.setResults(results);
+        return paginatedResult;
     }
 
     @Override
@@ -135,6 +161,4 @@ public class TaskResource extends AbstractUpdatableDomainResource<Task> {
     protected String getPermissionDomain() {
         return "task";
     }
-
-
 }

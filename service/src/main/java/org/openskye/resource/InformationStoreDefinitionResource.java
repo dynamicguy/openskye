@@ -8,11 +8,13 @@ import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -20,7 +22,7 @@ import javax.ws.rs.core.Response;
 @Api(value = "/api/1/informationStoreDefinitions", description = "Manage information store definitions")
 @Path("/api/1/informationStoreDefinitions")
 @Produces(MediaType.APPLICATION_JSON)
-public class InformationStoreDefinitionResource extends AbstractUpdatableDomainResource<InformationStoreDefinition> {
+public class InformationStoreDefinitionResource extends ProjectSpecificResource<InformationStoreDefinition> {
 
     protected InformationStoreDefinitionDAO informationStoreDefinitionDAO;
 
@@ -34,6 +36,7 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Transactional
     @Timed
     public InformationStoreDefinition create(InformationStoreDefinition newInstance) {
+        projectID = newInstance.getProject().getId();
         return super.create(newInstance);
     }
 
@@ -44,6 +47,7 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public InformationStoreDefinition update(@PathParam("id") String id, InformationStoreDefinition newInstance) {
+        projectID = newInstance.getProject().getId();
         return super.update(id, newInstance);
     }
 
@@ -54,7 +58,14 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public InformationStoreDefinition get(@PathParam("id") String id) {
-        return super.get(id);
+        authorize("get");
+        if(informationStoreDefinitionDAO.get(id).isPresent()){
+            InformationStoreDefinition result = informationStoreDefinitionDAO.get(id).get();
+            projectID=result.getProject().getId();
+            return result;
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @ApiOperation(value = "List all", notes = "Returns all information stores definitions in a paginated structure", responseContainer = "List", response = InformationStoreDefinition.class)
@@ -63,7 +74,15 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public PaginatedResult<InformationStoreDefinition> getAll() {
-        return super.getAll();
+        PaginatedResult<InformationStoreDefinition> paginatedResult = super.getAll();
+        List<InformationStoreDefinition> results = paginatedResult.getResults();
+        for (InformationStoreDefinition isd : results) {
+            if (!isPermitted("list", isd.getProject().getId())) {
+                results.remove(isd);
+            }
+        }
+        paginatedResult.setResults(results);
+        return paginatedResult;
     }
 
     @ApiOperation(value = "Delete information store definition instance", notes = "Deletes the information store definition instance (found by unique id)")
@@ -73,7 +92,13 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     @Timed
     @Override
     public Response delete(@PathParam("id") String id) {
-        return super.delete(id);
+        if(informationStoreDefinitionDAO.get(id).isPresent()){
+            InformationStoreDefinition result = informationStoreDefinitionDAO.get(id).get();
+            projectID=result.getProject().getId();
+            return super.delete(id);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
@@ -85,6 +110,4 @@ public class InformationStoreDefinitionResource extends AbstractUpdatableDomainR
     protected String getPermissionDomain() {
         return "informationStoreDefinition";
     }
-
-
 }

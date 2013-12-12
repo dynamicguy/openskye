@@ -11,7 +11,7 @@ import org.openskye.exceptions.AuthorizationExceptionMapper;
 
 import static org.mockito.Mockito.mock;
 
-public class ProjectResourceTest extends AbstractResourceTest<Project> {
+public class ProjectResourceTest extends ProjectSpecificResourceTest<Project> {
 
     public static final ProjectDAO dao = mock(ProjectDAO.class);
     @ClassRule

@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -37,7 +38,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedUpdate() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:update")).thenReturn(true);
+        when(subject.isPermitted("objects:update:"+metadataInstance.getProject().getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
@@ -53,7 +54,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedUpdate() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:update")).thenReturn(false);
+        when(subject.isPermitted("objects:update"+metadataInstance.getProject().getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
@@ -68,7 +69,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedGet() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:get")).thenReturn(true);
+        when(subject.isPermitted("objects:get:"+metadataInstance.getProject().getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
@@ -83,7 +84,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedGet() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:get")).thenReturn(false);
+        when(subject.isPermitted("objects:get"+metadataInstance.getProject().getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/" + metadataInstance.getId();
 
@@ -98,20 +99,19 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedList() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:list")).thenReturn(true);
+        when(subject.isPermitted("objects:list:"+anyString())).thenReturn(true);
 
         PaginatedResult<ObjectMetadata> result = resourceRule.client()
                 .resource(API_ADDRESS)
                 .type(MEDIA_TYPE)
                 .get(PaginatedResult.class);
-
         assertThat("repository lists expected results", result, equalTo(metadataResult));
     }
 
     @Test
     public void testUnauthorizedList() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:list")).thenReturn(false);
+        when(subject.isPermitted("objects:list:"+anyString())).thenReturn(false);
 
         ClientResponse response = resourceRule.client()
                 .resource(API_ADDRESS)
@@ -124,7 +124,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedGetContentBlocks() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:get")).thenReturn(true);
+        when(subject.isPermitted("objects:get:"+metadataInstance.getProject().getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/" +
                 metadataInstance.getId() +
@@ -141,7 +141,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedGetContentBlocks() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:get")).thenReturn(false);
+        when(subject.isPermitted("objects:get:"+metadataInstance.getProject().getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/" +
                 metadataInstance.getId() +
@@ -158,7 +158,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedGetByInformationStore() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:list")).thenReturn(true);
+        when(subject.isPermitted("objects:list:"+isdSearch.getProject().getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/informationStore/" + isdSearch.getId();
 
@@ -173,7 +173,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedGetByInformationStore() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:list")).thenReturn(false);
+        when(subject.isPermitted("objects:list:"+isdSearch.getProject().getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/informationStore/" + isdSearch.getId();
 
@@ -188,7 +188,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedGetByTask() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:list")).thenReturn(true);
+        when(subject.isPermitted("objects:list:"+taskSearch.getProject().getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/task/" + taskSearch.getId();
 
@@ -203,7 +203,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedGetByTask() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:list")).thenReturn(false);
+        when(subject.isPermitted("objects:list:"+taskSearch.getProject().getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/task/" + taskSearch.getId();
 
@@ -218,7 +218,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedIndex() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:index")).thenReturn(true);
+        when(subject.isPermitted("objects:index:"+metadataInstance.getProject().getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/index/" + metadataInstance.getId();
 
@@ -233,7 +233,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedIndex() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:index")).thenReturn(false);
+        when(subject.isPermitted("objects:index:"+metadataInstance.getProject().getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/index/" + metadataInstance.getId();
 
@@ -248,7 +248,8 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedSearch() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:search")).thenReturn(true);
+        when(subject.isPermitted("objects:search:"+anyString())).thenReturn(true);
+
 
         String api = API_ADDRESS + "/search/?query=" + pathSearch;
 
@@ -263,7 +264,8 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedSearch() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:search")).thenReturn(false);
+        when(subject.isPermitted("objects:search:"+metadataSearchResult.getResults().get(0).getProject().getId())).thenReturn(false);
+
 
         String api = API_ADDRESS + "/search/?query=" + pathSearch;
 
@@ -278,7 +280,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testAuthorizedSearchProject() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:search")).thenReturn(true);
+        when(subject.isPermitted("objects:search:"+projectSearch.getId())).thenReturn(true);
 
         String api = API_ADDRESS + "/search/" +
                 projectSearch.getId() +
@@ -295,7 +297,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
     @Test
     public void testUnauthorizedSearchProject() {
         ThreadContext.bind(subject);
-        when(subject.isPermitted("objects:search")).thenReturn(false);
+        when(subject.isPermitted("objects:search:"+projectSearch.getId())).thenReturn(false);
 
         String api = API_ADDRESS + "/search/" +
                 projectSearch.getId() +
