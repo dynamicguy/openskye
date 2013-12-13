@@ -43,7 +43,7 @@ public class ProjectUserDAOTest extends AbstractDAOTestBase<ProjectUser> {
         RolePermission rp = new RolePermission();
         rp.setRole(role);
         rp.setPermission(perm);
-        List<RolePermission> rolePermissions = new ArrayList<RolePermission>();
+        List<RolePermission> rolePermissions = new ArrayList<>();
         rolePermissions.add(rp);
         role.setRolePermissions(rolePermissions);
 

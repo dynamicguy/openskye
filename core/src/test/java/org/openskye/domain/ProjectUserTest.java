@@ -17,9 +17,9 @@ public class ProjectUserTest extends AbstractDomainTest {
     public void serializeToJSON() throws Exception {
         final ProjectUser projectUser = new ProjectUser();
         projectUser.setId("89er-15pl-46po-10op");
-        assertThat("a RetentionPolicy can be serialized to JSON",
+        assertThat("a ProjectUser can be serialized to JSON",
                 asJson(projectUser),
-                is(equalTo(jsonFixture("fixtures/RetentionPolicy.json"))));
+                is(equalTo(jsonFixture("fixtures/ProjectUser.json"))));
 
     }
 }
