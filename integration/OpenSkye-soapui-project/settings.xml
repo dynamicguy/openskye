@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="OpenSkye" resourceRoot="" soapui-version="4.6.1" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project activeEnvironment="Default" name="OpenSkye" resourceRoot="" soapui-version="4.6.2" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
     <con:setting id="IncludeOverview">true</con:setting>
     <con:setting id="IncludeResults">true</con:setting>
@@ -180,4 +180,2608 @@
   <con:wssContainer/>
   <con:databaseConnectionContainer/>
   <con:sensitiveInformation/>
-</con:soapui-project>
+<con:soapui-settings><con:setting id="WsdlSettings@excluded-types">&lt;con:entry xmlns:con="http://eviware.com/soapui/config">schema@http://www.w3.org/2001/XMLSchema&lt;/con:entry></con:setting><con:setting id="WebRecordingSettings@excluded-headers"><![CDATA[<xml-fragment><con:entry xmlns:con="http://eviware.com/soapui/config">Cookie</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Set-Cookie</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Referer</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Keep-Alive</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Connection</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Proxy-Connection</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Pragma</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Cache-Control</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Transfer-Encoding</con:entry><con:entry xmlns:con="http://eviware.com/soapui/config">Date</con:entry></xml-fragment>]]></con:setting><con:setting id="WsdlSettings@name-with-binding">true</con:setting><con:setting id="HttpSettings@http_version">1.1</con:setting><con:setting id="HttpSettings@max_total_connections">2000</con:setting><con:setting id="HttpSettings@response-compression">true</con:setting><con:setting id="HttpSettings@leave_mockengine">true</con:setting><con:setting id="UISettings@auto_save_projects_on_exit">true</con:setting><con:setting id="UISettings@show_descriptions">true</con:setting><con:setting id="WsdlSettings@xml-generation-always-include-optional-elements">true</con:setting><con:setting id="WsaSettings@useDefaultRelatesTo">true</con:setting><con:setting id="WsaSettings@useDefaultRelationshipType">true</con:setting><con:setting id="UISettings@show_startup_page">true</con:setting><con:setting id="UISettings@gc_interval">60</con:setting><con:setting id="WsdlSettings@cache-wsdls">true</con:setting><con:setting id="WsdlSettings@pretty-print-response-xml">true</con:setting><con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting><con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting><con:setting id="UISettings@auto_save_interval">0</con:setting><con:setting id="WsaSettings@soapActionOverridesWsaAction">true</con:setting><con:setting id="WsaSettings@overrideExistingHeaders">true</con:setting><con:setting id="WsaSettings@enableForOptional">true</con:setting><con:setting id="VersionUpdateSettings@auto-check-version-update">true</con:setting><con:setting id="ProxySettings@autoProxy">true</con:setting><con:setting id="ProxySettings@enableProxy">true</con:setting><con:setting id="WSISettings@location">/home/atcmostafavi/SmartBear/SoapUI-4.6.2/wsi-test-tools</con:setting><con:setting id="RecentProjects">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  &lt;con:entry key="/home/atcmostafavi/src/openskye/integration/OpenSkye-soapui-project/REST-API/UserRoles.xml" value="UserRoles.xml"/>
+  &lt;con:entry key="/home/atcmostafavi/src/openskye/integration/OpenSkye-soapui-project/REST-API/settings.xml" value="settings.xml"/>
+&lt;/xml-fragment></con:setting><con:setting id="GlobalPropertySettings@properties">&lt;xml-fragment/></con:setting><con:setting id="GlobalPropertySettings@security_scans_properties"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:property>
+    <con:name>~(?s).*(s|S)tack ?(t|T)race.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*STACK\s?TRACE.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*(s|S)tack:.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*(s|S)yntax (e|E)rror\s.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*((I|i)ncorrect|(I|i)nvalid) (s|S)yntax.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*Runtime (E|e)rror.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*Error in process &lt;\d+\.\d+\.\d+> with exit value:.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*at [a-zA-Z][\w\$]*(\.[a-zA-Z][\w\$]*)+\((Unknown Source|Native Method|[a-zA-Z][\w\$]*\.([a-zA-Z]{3,5}):\d+)\).*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*&lt;\w+:frame\s*class=".*"\s*line=".*"\s*method=".*"\s*/>.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*[^\s]+\.rb:\d+:in `.+'.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*at [\w\$]+(\.[\w\$&lt;>\[\],]+|\.\.ctor)+(\((([\w\$&lt;>\`\[\]]+ [\w\$&lt;>]+, )*(([\w\$&lt;>\`\[\]]+ [\w\$&lt;>]+)))\)|\(\)).*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*from [\w\$]+(\.[\w\$&lt;>]+)+:\d+:in `.+'.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*Warning: [\w]+\(\) .+ in .+ on line \d{1,6}.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*Traceback \(most recent call last\):.*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*File ".+", line [0-9]{1,6}, in .*</con:name>
+    <con:value>[Stacktrace] Can give hackers information about which software or language you are using</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*(v|V)ersion:? \d\.\d{1,2}\.{1,3}-?.*</con:name>
+    <con:value>[Version x.y.z] Exposing version numbers gives 
+			unnecessary hints on your systems vulnerabilities</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*(p|P)owered by:? ([a-zA-Z]+)( [a-zA-Z]+){0,3}( |/)\d\.\d{1,2}\.\d{1,3}.*</con:name>
+    <con:value>[Version x.y.z] Exposing version numbers gives 
+			unnecessary hints on your systems vulnerabilities</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*((A|a)pache|vBulletin|MySQL|PostgreSQL|phpBB|Internet Information Services)( |/)\d{1,2}(\.\d{1,3})+.*</con:name>
+    <con:value>[Version x.y.z] Exposing version numbers gives 
+			unnecessary hints on your systems vulnerabilities</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*\w+/\d{1,2}(\.\d{1,3})+.*</con:name>
+    <con:value>[Version x.y.z] Exposing version numbers gives 
+			unnecessary hints on your systems vulnerabilities</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*SQLSTATE: [A-Z0-9] .*</con:name>
+    <con:value>[Database error messages] Internal database information can be misused by hackers</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*Invalid column name\s.*</con:name>
+    <con:value>[Database error messages] Internal database information can be misused by hackers</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*(e|E)rror was:\s.*</con:name>
+    <con:value>[Database error messages] Internal database information can be misused by hackers</con:value>
+  </con:property>
+  <con:property>
+    <con:name>~(?s).*(ORA|EXP|IMP|KUP|UDE|UDI|DBV|LCD|QSM|OCI|RMAN|LFI|PLS|PLQ|AMD|CLSR|PROC|PROT|TNS|NNC|NLP|NNF|NMP|NCR|NZE|O2F|O2I|O2U|PCB|PCC|SQL|AUD|IMG|VID|DRG|LPX|LSX)-\d{5}\s.*</con:name>
+    <con:value>[Database error messages] Internal database information can be misused by hackers</con:value>
+  </con:property>
+</xml-fragment>]]></con:setting><con:resource name="RolePermissions" path="/api/${#Project#version}/rolePermissions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="NewRolePermission" path="${#Project#newRolePermissionId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetRolePermission" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:c62="http://localhost/api/1/rolePermissions/c62434d6-5872-4dca-bb3a-e825933c9cae">c62:Response</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:c62="http://localhost/api/1/rolePermissions/c62434d6-5872-4dca-bb3a-e825933c9cae">c62:Fault</con:element>
+      </con:representation>
+      <con:request name="GetRolePermissionRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="DeleteRolePermission" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="DeleteRolePermissionRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllRolePermissions" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/rolePermissions">rol:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllRolePermissionsRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateRolePermission" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>500</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/rolePermissions">rol:Fault</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/rolePermissions">rol:Response</con:element>
+    </con:representation>
+    <con:request name="CreateRolePermissionRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+      "role":       {
+         "id": "${#Project#newRoleId}",
+         "name": "${#Project#newUserRoleNameUpdate}"
+      },
+      "permission":       {
+         "id": "${#Project#newPermissionId}",
+         "permission": "${#Project#newPermissionNameUpdate}"
+      }
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="UserRoles" path="/api/${#Project#version}/userRoles" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="NewUserRole" path="${#Project#newUserRoleId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="DeleteUserRole" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="DeleteUserRoleRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllUserRoles" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://localhost/api/1/userRoles">user:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllUserRolesRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateUserRole" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>500</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://localhost/api/1/userRoles">user:Fault</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://localhost/api/1/userRoles">user:Response</con:element>
+    </con:representation>
+    <con:request name="CreateUserRoleRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+      "user":       {
+         "id": "${#Project#newUserId}",
+         "email": "${#Project#newUserEmail}",
+         "name": "${#Project#newUserName}",
+         "domain":          {
+            "id": "${#Project#userDomain}",
+            "name": "${#Project#userDomainName}"
+         }
+      },
+      "role":       {
+         "name": "${#Project#newUserRoleName}"
+      }
+   }</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="Users" path="/api/${#Project#version}/users" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="CurrentUser" path="${#Project#userId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetCurrentUser" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>401</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:a2f="http://atpblade04.infobelt.com/api/1/users/A2FE05E9-DE36-40E0-B0D6-19CDAB14ED21">a2f:Response</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:af4="http://atpblade04.infobelt.com/api/1/users/AF439D18-17FE-4F27-B1A3-1968AD950281">af4:Fault</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element>html</con:element>
+      </con:representation>
+      <con:request name="CurrentUserRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:resource name="NewUser" path="${#Project#newUserId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="DeleteUser" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:request name="DeleteUserRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="UpdateUser" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>500 400 404</con:status>
+        <con:params/>
+        <con:element xmlns:d2b="http://atpblade04.infobelt.com/api/1/users/0D2B1368-5029-4518-9B1E-E9A601F9C217">d2b:Fault</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>415</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/x-www-form-urlencoded</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>415</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>text/plain</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:fa3="http://localhost/api/1/users/817fa308-7ae8-4860-857e-2c353c66e90f">fa3:Response</con:element>
+      </con:representation>
+      <con:request name="UpdateUserRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+         "id": "${#Project#newUserId}",
+         "email": "${#Project#newUserEmailUpdate}",
+         "name": "${#Project#newUserNameUpdate}",
+         "domain":          {
+            "id": "${#Project#userDomain}",
+            "name": "${#Project#userDomainName}"
+         }
+	}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllUsers" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>404</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Response</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>0</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:request name="GetUsersRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateUser" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/x-www-form-urlencoded</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Response</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>500</con:status>
+      <con:params/>
+      <con:element xmlns:user="http://atpblade04.infobelt.com/api/1/users">user:Fault</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>405</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/plain</con:mediaType>
+      <con:status>400</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:request name="CreateUserRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        <con:setting id="com.eviware.soapui.support.editor.views.xml.form2.FormEditorView@ViewType">All</con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+   "email": "${#Project#newUserEmail}",
+   "name": "${#Project#newUserName}",
+   "domain":    {
+      "id": "${#Project#userDomain}",
+      "name": "${#Project#userDomainName}"
+   }
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="Project" path="/api/${#Project#version}/projects" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="newProject" path="${#Project#ProjectId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="deleteProject" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="deleteProjectRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="updateProject" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element xmlns:d65="http://localhost/api/1/projects/28d659d3-5bed-42ef-bd03-4d98087ccbd2">d65:Fault</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:request name="updateProjectRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	},
+	"id":"${#Project#ProjectId}",
+"name":"test",
+"active":"true",
+"description":"description"
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="getProject" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element>html</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:d65="http://localhost/api/1/projects/28d659d3-5bed-42ef-bd03-4d98087ccbd2">d65:Response</con:element>
+      </con:representation>
+      <con:request name="getProjectRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="getAllProjects" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:proj="http://localhost/api/1/projects">proj:Response</con:element>
+    </con:representation>
+    <con:request name="getAllProjectRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  &lt;con:entry key="" value=""/>
+  &lt;con:entry key="x-api-key" value="${#Project#userApiKey}"/>
+&lt;/xml-fragment></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="createProject" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>500 400</con:status>
+      <con:params/>
+      <con:element xmlns:proj="http://localhost/api/1/projects">proj:Fault</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:proj="http://localhost/api/1/projects">proj:Response</con:element>
+    </con:representation>
+    <con:request name="createProjectRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	},
+"name":"test",
+"active":"true",
+"description":"description"
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="AccountLogin" path="/api/${#Project#version}/account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:method name="GetAccount" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:acc="http://atpblade04.infobelt.com/api/1/account">acc:Response</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>404</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>0</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:request name="LoginRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:username>admin@openskye.org</con:username>
+        <con:password>changeme</con:password>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="Roles" path="/api/${#Project#version}/roles" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="NewRole" path="${#Project#newRoleId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetRole" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:eb6="http://localhost/api/1/roles/8eb6dc32-3c56-4252-b111-7a32d490f5e7">eb6:Response</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:ee8a="http://localhost/api/1/roles/7549ee8a-0d50-44f3-97fe-a593f59a6e93">ee8a:Fault</con:element>
+      </con:representation>
+      <con:request name="GetRoleRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="UpdateRole" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:db7="http://localhost/api/1/roles/db7a14e2-c882-42e9-8ae2-0835b3286c64">db7:Response</con:element>
+      </con:representation>
+      <con:request name="UpdateRoleRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+	"id": "${#Project#newRoleId}",
+	"name": "${#Project#newUserRoleNameUpdate}"
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="DeleteRole" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element xmlns:eb6="http://localhost/api/1/roles/8eb6dc32-3c56-4252-b111-7a32d490f5e7">eb6:Fault</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="DeleteRoleRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:resource name="AdminRolePermissions" path="${#Project#adminRoleId}/permissions">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetAdminRolePermisssions" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>401</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="GetAdminRolePermissionsRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllRoles" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/roles">rol:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllRolesRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateRole" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:rol="http://localhost/api/1/roles">rol:Response</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:request name="CreateRoleRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+	"name": "${#Project#newUserRoleName}"
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="InformationStoreDefinition" path="/api/${#Project#version}/informationStoreDefinitions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:parameters/><con:resource name="newInformationStoreDefintion" path="${#Project#InformationStoreDefinitionId}"><con:settings/><con:parameters/><con:method name="deleteInformationStoreDefinition" method="DELETE"><con:settings/><con:parameters/><con:request name="deleteInformationStoreDefinitionRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="getInformationStoreDefintion" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:inf="http://localhost/api/1/informationStoreDefinitions/">inf:Response</con:element></con:representation><con:request name="getInformationStoreDefintionRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="updateInformationStoreDefinition" method="PUT"><con:settings/><con:parameters/><con:request name="updateInformationStoreDefinitionRequest" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:method name="getAllInformationStoreDefinition" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:inf="http://localhost/api/1/informationStoreDefinitions">inf:Response</con:element></con:representation><con:request name="getAllInformationStoreDefintionRequest" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="createInformationStoreDefinition" method="POST"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>500 400</con:status><con:params/><con:element xmlns:inf="http://localhost/api/1/informationStoreDefinitions">inf:Fault</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:inf="http://localhost/api/1/informationStoreDefinitions">inf:Response</con:element></con:representation><con:request name="createInformationStoreDefinitionRequest" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint><con:request>{
+"project":{
+"id":"${#Project#ProjectId}",
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	}
+},
+"name":"test1",
+"implementation":"implementation",
+"properties":{}
+}
+</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="ArchiveStoreInstance" path="/api/${#Project#version}/archiveStoreInstances" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="newArchiveStoreInstance" path="${#Project#ArchiveStoreInstanceid}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="deleteArchiveStoreInstance" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="deleteArchiveStoreInstanceRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="getArchiveStoreInstance" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:b34="http://localhost/api/1/archiveStoreInstances/41062b34-a935-41e1-8377-fa4516dfb8c3">b34:Response</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:b34="http://localhost/api/1/archiveStoreInstances/41062b34-a935-41e1-8377-fa4516dfb8c3">b34:Fault</con:element>
+      </con:representation>
+      <con:request name="getArchiveStoreInstanceRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="updateArchiveStoreInstance" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element xmlns:b34="http://localhost/api/1/archiveStoreInstances/41062b34-a935-41e1-8377-fa4516dfb8c3">b34:Fault</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:b34="http://localhost/api/1/archiveStoreInstances/41062b34-a935-41e1-8377-fa4516dfb8c3">b34:Response</con:element>
+      </con:representation>
+      <con:request name="updateArchiveStoreInstanceRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+"id":"${#Project#ArchiveStoreInstanceid}",
+"name":"test",
+"implementation":"example",
+"properties":{}
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="getAllArchiveStoreInstance" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:arc="http://localhost/api/1/archiveStoreInstances">arc:Response</con:element>
+    </con:representation>
+    <con:request name="getAllArchiveStoreInstanceRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="createArchiveStoreInstance" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:arc="http://localhost/api/1/archiveStoreInstances">arc:Response</con:element>
+    </con:representation>
+    <con:request name="createArchiveStoreInstanceRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+"name":"test",
+"implementation":"example",
+"properties":{}
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="Permission" path="/api/${#Project#version}/permissions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="NewPermission" path="${#Project#newPermissionId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetPermission" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:ef9="http://localhost/api/1/permissions/ef906711-6808-4c5b-901d-ffe51d2f1cec">ef9:Response</con:element>
+      </con:representation>
+      <con:request name="GetPermissionRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="UpdatePermission" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element xmlns:ef9="http://localhost/api/1/permissions/ef906711-6808-4c5b-901d-ffe51d2f1cec">ef9:Fault</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:ef9="http://localhost/api/1/permissions/ef906711-6808-4c5b-901d-ffe51d2f1cec">ef9:Response</con:element>
+      </con:representation>
+      <con:request name="UpdatePermissionRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+	"id": "${#Project#newPermissionId}",
+	"permission": "${#Project#newPermissionNameUpdate}"
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="DeletePermission" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="DeletePermissionRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllPermissions" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:per="http://localhost/api/1/permissions">per:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllPermissionsRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreatePermission" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>400</con:status>
+      <con:params/>
+      <con:element xmlns:per="http://localhost/api/1/permissions">per:Fault</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:per="http://localhost/api/1/permissions">per:Response</con:element>
+    </con:representation>
+    <con:request name="CreatePermissionRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+	"permission": "${#Project#newPermissionName}"
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="ObjectMetadata" path="/api/${#Project#version}/objects" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:method name="GetAllObjectMetadata" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:obj="http://localhost/api/1/objects">obj:Response</con:element>
+    </con:representation>
+    <con:request name="GetAllObjectMetadataRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateObjectMetadata" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>400 500</con:status>
+      <con:params/>
+      <con:element xmlns:obj="http://localhost/api/1/objects">obj:Fault</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:obj="http://localhost/api/1/objects">obj:Response</con:element>
+    </con:representation>
+    <con:request name="CreateObjectMetadataRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+    "path" : "${#Project#newMetadataPath}",
+    "implementation" : "${#Project#newMetadataImplementation}",
+    "taskId" : "${#Project#newMetadataTaskId}",
+    "container" : "${#Project#newMetadataContainer}",
+    "tags" : [],
+    "metadata" : {},
+    "project" :
+    {
+		"id" : "${#Project#ProjectId}",
+		"domain" :
+		{
+			"id" : "${#Project#skyeDomain}"
+		}
+    },
+    "mimeType" : "${#Project#newMetadataMime}",
+    "checksum" : "${#Project#newMetadataChecksum}",
+    "informationStoreId" : "${#Project#newMetadataIsdId}",
+    "archiveContentBlocks" : []
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="Domains" path="/api/${#Project#version}/domains" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="SkyeDomain" path="${#Project#skyeDomain}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="GetSkyeDomain" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>404</con:status>
+        <con:params/>
+        <con:element xmlns:ad9="http://localhost/api/1/domains/ad9fa18e-8917-4013-afe4-b1453750112c">ad9:Fault</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:c00="http://localhost/api/1/domains/2c00b80f-6bfc-4365-96fb-c7330f25d140">c00:Response</con:element>
+      </con:representation>
+      <con:request name="GetSkyeDomainRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:resource name="NewDomain" path="${#Project#testDomainId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="DeleteDomain" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="DeleteDomainRequest" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="UpdateDomain" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element xmlns:ba1="http://localhost/api/1/domains/87ba17f9-eb66-4ced-b836-0891efddf913">ba1:Fault</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>500</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:request name="UpdateDomainRequest" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+	"id": "${#Project#testDomainId}",
+	"name": "${#Project#testDomainNameUpdate}"
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="GetAllDomains" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:dom="http://localhost/api/1/domains">dom:Response</con:element>
+    </con:representation>
+    <con:request name="GetDomainsRequest" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="CreateDomain" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:dom="http://localhost/api/1/domains">dom:Response</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>500</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:request name="CreateDomainRequest" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+	"name": "${#Project#testDomainName}"
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource><con:resource name="ArchiveStoreDefinition" path="/api/${#Project#version}/archiveStoreDefinitions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:settings/>
+  <con:parameters/>
+  <con:resource name="newArchiveStoreDefinitions" path="${#Project#ArchiveStoreDefinitionId}">
+    <con:settings/>
+    <con:parameters/>
+    <con:method name="deleteArchiveStoreDefinition" method="DELETE">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+      </con:representation>
+      <con:request name="deleteArchiveStoreDefinition" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="getArchiveStoreDefinition" method="GET">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>401</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:arc="http://localhost/api/1/archiveStoreDefinitions/">arc:Response</con:element>
+      </con:representation>
+      <con:request name="getArchiveStoreDefinition" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+    <con:method name="updateArchiveStoreDefinition" method="PUT">
+      <con:settings/>
+      <con:parameters/>
+      <con:representation type="FAULT">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>405</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="REQUEST">
+        <con:mediaType>application/json</con:mediaType>
+        <con:params/>
+      </con:representation>
+      <con:representation type="FAULT">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element xmlns:ae79="http://localhost/api/1/archiveStoreDefinitions/7240ae79-8cc1-46bb-be8b-0d5d6a4e79e6">ae79:Fault</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType xsi:nil="true"/>
+        <con:status>204</con:status>
+        <con:params/>
+        <con:element>data</con:element>
+      </con:representation>
+      <con:representation type="RESPONSE">
+        <con:mediaType>application/json</con:mediaType>
+        <con:status>200</con:status>
+        <con:params/>
+        <con:element xmlns:df8="http://localhost/api/1/archiveStoreDefinitions/df847b73-e56e-411b-83f9-5720c510000d">df8:Response</con:element>
+      </con:representation>
+      <con:request name="updateArchiveStoreDefinition" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+        <con:request>{
+"id":"${#Project#ArchiveStoreDefinitionId}",
+"name":"test",
+"description":"description",
+"project":{
+"id":"${#Project#ProjectId}",
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	},
+"name":"test",
+"active":"true",
+"description":"description"
+},
+"archiveStoreInstance":
+{
+"id":"${#Project#ArchiveStoreInstanceid}",
+"name":"test",
+"implementation":"example",
+"properties":{}
+},
+"properties":{}
+}</con:request>
+        <con:credentials>
+          <con:authType>Global HTTP Settings</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:parameters/>
+      </con:request>
+    </con:method>
+  </con:resource>
+  <con:method name="getAllArchiveStoreDefintion" method="GET">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:arc="http://localhost/api/1/archiveStoreDefinitions">arc:Response</con:element>
+    </con:representation>
+    <con:request name="getAllArchiveStoreDefinition" mediaType="application/json">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request/>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+  <con:method name="createArchiveStoreDefinition" method="POST">
+    <con:settings/>
+    <con:parameters/>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="REQUEST">
+      <con:mediaType>application/json</con:mediaType>
+      <con:params/>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType xsi:nil="true"/>
+      <con:status>401</con:status>
+      <con:params/>
+      <con:element>data</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>text/html; charset=ISO-8859-1</con:mediaType>
+      <con:status>404</con:status>
+      <con:params/>
+      <con:element>html</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>400 500</con:status>
+      <con:params/>
+      <con:element xmlns:arc="http://localhost/api/1/archiveStoreDefinitions">arc:Fault</con:element>
+    </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:arc="http://localhost/api/1/archiveStoreDefinitions">arc:Response</con:element>
+    </con:representation>
+    <con:request name="createArchiveStoreDefinition" mediaType="application/json" postQueryString="false">
+      <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="x-api-key" value="${#Project#userApiKey}" xmlns="http://eviware.com/soapui/config"/></con:setting>
+      </con:settings>
+      <con:endpoint>http://${#Project#apiAddress}:5000</con:endpoint>
+      <con:request>{
+"name":"test",
+"description":"description",
+"project":{
+"id":"${#Project#ProjectId}",
+"domain": {
+	"id": "${#Project#skyeDomain}"
+	},
+"name":"test",
+"active":"true",
+"description":"description"
+},
+"archiveStoreInstance":
+{
+"id":"${#Project#ArchiveStoreInstanceid}",
+"name":"test",
+"implementation":"example",
+"properties":{}
+},
+"properties":{}
+}</con:request>
+      <con:credentials>
+        <con:authType>Global HTTP Settings</con:authType>
+      </con:credentials>
+      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+      <con:jmsPropertyConfig/>
+      <con:parameters/>
+    </con:request>
+  </con:method>
+</con:resource></con:soapui-settings></con:soapui-project>

@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,7 +44,11 @@ public class ProjectUser implements Identifiable {
         )
     }
     )
-    private List<Role> projectUserRoles;
+    private List<Role> projectUserRoles = new ArrayList<>();
+
+    public void addRole(Role r){
+        projectUserRoles.add(r);
+    }
 
 
 
