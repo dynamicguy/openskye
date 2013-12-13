@@ -31,6 +31,7 @@ public class ProjectUser implements Identifiable {
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
         name = "PROJECT_USER_ROLES", joinColumns = {
         @JoinColumn(
