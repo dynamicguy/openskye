@@ -7,6 +7,7 @@ import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 import org.openskye.metadata.ObjectMetadataRepository;
 
@@ -82,6 +83,17 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
         List<ObjectMetadata> matchingObjects = new ArrayList<ObjectMetadata>();
         for (ObjectMetadata objectMetadata : objects.values()) {
             if (objectMetadata.getInformationStoreId().equals(informationStoreDefinition.getId())) {
+                matchingObjects.add(objectMetadata);
+            }
+        }
+        return matchingObjects;
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> getObjects(Project project) {
+        List<ObjectMetadata> matchingObjects = new ArrayList<ObjectMetadata>();
+        for (ObjectMetadata objectMetadata : objects.values()) {
+            if (objectMetadata.getProject().getId().equals(project.getId())) {
                 matchingObjects.add(objectMetadata);
             }
         }

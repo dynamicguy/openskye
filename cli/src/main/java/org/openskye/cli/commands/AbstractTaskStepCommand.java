@@ -4,12 +4,12 @@ import com.beust.jcommander.Parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
-import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.*;
+import org.openskye.domain.Channel;
+import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.task.step.*;
 
@@ -33,6 +33,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     protected boolean discover;
     @Parameter(names = "--archive")
     protected boolean archive;
+    @Parameter(names = "--cull")
+    protected boolean cull;
     @Parameter(names = "--verify")
     protected boolean verify;
     @Parameter(names = "--extract")
@@ -68,6 +70,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
             discover();
         } else if (archive) {
             archive();
+        } else if (cull) {
+            cull();
         } else if (verify) {
             verify();
         } else if (extract) {
@@ -106,6 +110,13 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new ArchiveTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         step = (ArchiveTaskStep)selectReferenceField(new ReferenceField(Channel.class),step);
+        create(step);
+    }
+
+    public void cull() {
+        TaskStep step = new CullTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
+        step = (CullTaskStep)selectReferenceField(new ReferenceField(Project.class),step);
         create(step);
     }
 

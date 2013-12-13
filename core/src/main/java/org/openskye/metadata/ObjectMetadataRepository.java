@@ -7,6 +7,7 @@ import org.openskye.core.ObjectSet;
 import org.openskye.core.SimpleObject;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 
 /**
@@ -83,6 +84,13 @@ public interface ObjectMetadataRepository {
      * @return The newly created instance with its id set.
      */
     ObjectMetadata put(ObjectMetadata objectMetadata);
+
+    /**
+     * Returns an iterator over all the {@link ObjectMetadata} for the given {@link org.openskye.domain.Project}
+     *
+     * @param project
+     */
+    Iterable<ObjectMetadata> getObjects(Project project);
 
     /**
      * Returns an iterator over all the {@link ObjectMetadata} for the given {@link org.openskye.domain.InformationStoreDefinition}
