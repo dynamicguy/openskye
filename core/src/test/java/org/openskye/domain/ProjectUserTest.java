@@ -19,7 +19,7 @@ public class ProjectUserTest extends AbstractDomainTest {
         projectUser.setId("89er-15pl-46po-10op");
         assertThat("a ProjectUser can be serialized to JSON",
                 asJson(projectUser),
-                is(equalTo(jsonFixture("fixtures/ProjectUser.json"))));
+                is(equalTo(jsonFixture("fixtures/projectUser.json"))));
 
     }
 }
