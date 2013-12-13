@@ -108,7 +108,7 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostCull() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create")).thenReturn(true);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
         CullTaskStep step = new CullTaskStep(mockProject());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/cull").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
