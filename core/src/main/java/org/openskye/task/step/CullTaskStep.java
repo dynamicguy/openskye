@@ -1,5 +1,6 @@
 package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import lombok.Getter;
@@ -36,6 +37,9 @@ public class CullTaskStep extends TaskStep {
     @Getter
     @Setter
     private Project project;
+    @JsonIgnore
+    @Getter
+    private ObjectSet objectSet = null;  // the set of culled objects
 
     public CullTaskStep(Project project) {
         this.project = project;
@@ -77,7 +81,7 @@ public class CullTaskStep extends TaskStep {
         beginTransaction();
 
         String setName = project.getName() + " - retention expired " + new DateTime();
-        ObjectSet set = omr.createObjectSet(setName);
+        objectSet = omr.createObjectSet(setName);
 
         for ( ObjectMetadata om : omr.getObjects(project) ) {
             //TODO: ensure recordsCode field is attached to each object during ingestion
@@ -87,7 +91,7 @@ public class CullTaskStep extends TaskStep {
             } else if ( ! policyMap.containsKey(recordsCode) ) {
                 // objects with an unrecognized record code are not culled
             } else if ( isPastRetention( om ,policyMap.get(recordsCode) ) ) {
-                omr.addObjectToSet( set, om );
+                omr.addObjectToSet( objectSet, om );
             }
         }
 

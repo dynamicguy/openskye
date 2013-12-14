@@ -11,10 +11,7 @@ import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 import org.openskye.metadata.ObjectMetadataRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An in-memory object metadata repository that can be used for testing
@@ -23,17 +20,22 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     private Map<String, ObjectMetadata> objects = new HashMap<>();
     private Map<String, List<ObjectMetadata>> taskMap = new HashMap<>();
+    private Map<String, ObjectSet> objectSets = new HashMap<>();
 
     @Override
     public ObjectSet createObjectSet(String name) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        ObjectSet set = new ObjectSet();
+        set.setId(UUID.randomUUID().toString());
+        set.setName(name);
+        set.setOnHold(false);
+        set.setObjectMetadataSet(new HashSet<ObjectMetadata>());
+        objectSets.put(set.getId(),set);
+        return set;
     }
 
     @Override
     public void deleteObjectSet(ObjectSet objectSet) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        objectSets.remove(objectSet.getId());
     }
 
     @Override
@@ -43,19 +45,17 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public void addObjectToSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        objectSet.getObjectMetadataSet().add(objectMetadata);
     }
 
     @Override
     public void removeObjectFromSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        objectSet.getObjectMetadataSet().remove(objectMetadata);
     }
 
     @Override
     public boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata) {
-        return false;
+        return objectSet.getObjectMetadataSet().contains(objectMetadata);
     }
 
     @Override
@@ -117,14 +117,17 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public Optional<ObjectSet> getObjectSet(String objectSetId) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        ObjectSet set = objectSets.get(objectSetId);
+        if ( set == null ) {
+            return Optional.absent();
+        } else {
+            return Optional.of(set);
+        }
     }
 
     @Override
     public Iterable<ObjectSet> getAllObjectSets() {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        return objectSets.values();
     }
 
     @Override
