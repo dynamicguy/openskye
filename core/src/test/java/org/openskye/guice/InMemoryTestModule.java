@@ -30,7 +30,7 @@ public class InMemoryTestModule extends AbstractModule {
         bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
         bind(TaskScheduler.class).to(InMemoryTaskScheduler.class).asEagerSingleton();
         bind(StoreRegistry.class).asEagerSingleton();
-        bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class);
+        bind(ObjectMetadataRepository.class).to(InMemoryObjectMetadataRepository.class).asEagerSingleton();
         bind(ObjectMetadataSearch.class).to(InMemoryObjectMetadataSearch.class);
 
         install(new GuiceBerryModule());
