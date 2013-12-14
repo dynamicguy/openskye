@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +31,7 @@ public class ProjectUser implements Identifiable {
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
         name = "PROJECT_USER_ROLES", joinColumns = {
         @JoinColumn(
@@ -43,7 +46,11 @@ public class ProjectUser implements Identifiable {
         )
     }
     )
-    private List<Role> projectUserRoles;
+    private List<Role> projectUserRoles = new ArrayList<>();
+
+    public void addRole(Role r){
+        projectUserRoles.add(r);
+    }
 
 
 

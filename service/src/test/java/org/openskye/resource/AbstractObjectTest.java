@@ -233,6 +233,7 @@ public class AbstractObjectTest
         acb.setArchiveStoreDefinitionId(asd.getId());
         acbList.add(acb);
         acbResult = new PaginatedResult<>(acbList);
+        metadataInstance.setProject(projectList.get(0));
         metadataInstance.setArchiveContentBlocks(acbList);
         metadataInstance.setPath(pathA);
 

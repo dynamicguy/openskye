@@ -1,6 +1,7 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -10,7 +11,6 @@ import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.ProjectUserDAO;
 
-import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -21,8 +21,12 @@ import javax.ws.rs.core.Response;
 @Path("/api/1/projectUsers")
 public class ProjectUserResource extends AbstractUpdatableDomainResource<ProjectUser> {
 
-    @Inject
     private ProjectUserDAO projectUserDAO;
+
+    @Inject
+    public ProjectUserResource(ProjectUserDAO projectUserDAO){
+        this.projectUserDAO=projectUserDAO;
+    }
 
 
     @ApiOperation(value = "List all project users", notes = "Returns all user roles in a paginated structure", responseContainer = "List", response = ProjectUser.class)
