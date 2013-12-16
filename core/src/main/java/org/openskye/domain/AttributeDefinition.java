@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Definition of an attribute for a metadata template
@@ -33,5 +34,14 @@ public class AttributeDefinition implements Identifiable {
     private String description;
     // A flag that determines is the metadata is embedded in the simple object
     private boolean embedInObject;
+    private boolean optional;
+    private AttributeType type;
+    @ElementCollection
+    @CollectionTable(
+            name="ATTRIBUTE_DEFINITION_VALUES",
+            joinColumns=@JoinColumn(name="ATTRIBUTE_DEFINITION_ID")
+    )
+    @Column(name="possibleValue")
+    private List<String> possibleValues;
 
 }
