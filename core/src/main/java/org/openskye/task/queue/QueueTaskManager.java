@@ -2,8 +2,8 @@ package org.openskye.task.queue;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Task;
@@ -27,6 +27,8 @@ public class QueueTaskManager implements TaskManager {
     TaskLogDAO taskLogDAO;
     @Inject
     TaskDAO taskDAO;
+    @Inject
+    Injector injector;
 
     @Override
     public void start() {
@@ -34,6 +36,8 @@ public class QueueTaskManager implements TaskManager {
 
     @Override
     public void submit(Task task) {
+        injector.injectMembers(task.getStep());
+        task.getStep().rehydrate();
         enqueue(task.getId());
     }
 
