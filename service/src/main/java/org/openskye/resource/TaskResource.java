@@ -40,10 +40,10 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     }
 
     private Task createFromStep(TaskStep newStep) {
-        projectID=newStep.getProject().getId();
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);
+        projectID=newStep.getProject().getId();
         return newInstance;
 
     }
