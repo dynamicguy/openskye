@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.stores.StoreRegistry;
 
@@ -91,6 +88,7 @@ public class DestroyTaskStep extends TaskStep {
                     Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
                     if (archiveStore.isPresent()) {
                         archiveStore.get().destroy(om);
+                        auditObject(om, ObjectEvent.DESTROYED);
                     } else {
                         throw new SkyeException("Unable to build archive store " + archiveStore);
                     }

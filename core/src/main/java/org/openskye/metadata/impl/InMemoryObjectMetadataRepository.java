@@ -59,6 +59,11 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
+    public boolean isObjectInOMR(ObjectMetadata objectMetadata) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public Optional<ObjectMetadata> get(String id) {
         if (objects.containsKey(id))
             return Optional.of(objects.get(id));

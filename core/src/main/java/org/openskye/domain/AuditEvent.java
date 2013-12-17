@@ -5,6 +5,6 @@ package org.openskye.domain;
  */
 public enum AuditEvent {
 
-    INSERT, UPDATE, DELETE, LOGIN, LOGOUT
+    OBJECT, INSERT, UPDATE, DELETE, LOGIN, LOGOUT
 
 }

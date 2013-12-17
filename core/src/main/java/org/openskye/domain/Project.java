@@ -48,6 +48,7 @@ public class Project implements Identifiable {
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
     private boolean active = true;
+    private boolean duplicationAllowed=false;
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore

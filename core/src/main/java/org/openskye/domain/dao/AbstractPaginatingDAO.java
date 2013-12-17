@@ -8,6 +8,7 @@ import org.openskye.core.SkyeSession;
 import org.openskye.domain.AuditEvent;
 import org.openskye.domain.AuditLog;
 import org.openskye.domain.Identifiable;
+import org.openskye.domain.User;
 import org.openskye.query.RequestQueryContext;
 import org.openskye.query.RequestQueryContextHolder;
 import org.openskye.query.SortDirection;
@@ -35,7 +36,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @Inject
     private AuditLogDAO auditLogDAO;
     @Inject
-    private SkyeSession skyeSession;
+    protected SkyeSession skyeSession;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
     // We wanted to have exceptions before commit in the DAO
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -226,6 +227,10 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      */
     public void lock(T instance, LockModeType mode) {
         currentEntityManager().lock(instance, mode);
+    }
+
+    public User getCurrentUser(){
+        return skyeSession.getUser();
     }
 }
 
