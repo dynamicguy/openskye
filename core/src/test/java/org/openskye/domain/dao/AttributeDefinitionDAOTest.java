@@ -4,10 +4,13 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import org.junit.Test;
 import org.openskye.domain.AttributeDefinition;
+import org.openskye.domain.AttributeType;
 import org.openskye.domain.Domain;
 import org.openskye.domain.MetadataTemplate;
 
 import javax.validation.ConstraintViolationException;
+
+import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,6 +41,9 @@ public class AttributeDefinitionDAOTest extends AbstractDAOTestBase<AttributeDef
         metadataTemplate.setDomain(domain);
         isd.setMetadataTemplate(metadataTemplate);
         isd.setShortLabel("Label");
+        isd.setOptional(false);
+        isd.setType(AttributeType.TEXT);
+        isd.setPossibleValues(new ArrayList<String>());
         return isd;
     }
 
@@ -54,6 +60,9 @@ public class AttributeDefinitionDAOTest extends AbstractDAOTestBase<AttributeDef
         instance.setMetadataTemplate(metadataTemplate);
         instance.setDescription("Description");
         instance.setShortLabel("Label");
+        instance.setOptional(false);
+        instance.setType(AttributeType.TEXT);
+        instance.setPossibleValues(new ArrayList<String>());
     }
 
 

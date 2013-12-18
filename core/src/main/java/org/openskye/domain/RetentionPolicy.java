@@ -35,5 +35,8 @@ public class RetentionPolicy implements Identifiable {
     private Long retentionPeriod;
     @NotNull
     private PeriodType periodType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "TEMPLATE_ID")
+    private MetadataTemplate metadataTemplate;
 
 }
