@@ -48,7 +48,13 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     public abstract void validate();
 
     @JsonIgnore
-    public abstract Project getProject();
+    protected abstract Project getStepProject();
+
+    @JsonIgnore
+    public Project getProject() {
+        rehydrate();
+        return getStepProject();
+    }
 
     protected void beginTransaction() {
         hasOuterTransaction = emf.get().getTransaction().isActive();

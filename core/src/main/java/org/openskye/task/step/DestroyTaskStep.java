@@ -34,7 +34,8 @@ public class DestroyTaskStep extends TaskStep {
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
     }
 
-    public Project getProject() {
+    @Override
+    public Project getStepProject() {
         return targetInformationStoreDefinition.getProject();
     }
 

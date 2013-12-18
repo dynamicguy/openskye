@@ -1,5 +1,6 @@
 package org.openskye.task.step;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import org.openskye.domain.TaskStatus;
 @Slf4j
 @NoArgsConstructor
 public class TestTaskStep extends TaskStep {
+    @JsonProperty
     @Getter
     @Setter
     private Project project;
@@ -33,6 +35,11 @@ public class TestTaskStep extends TaskStep {
         this.iterations = iterations;
         this.pass = pass;
         this.project = project;
+    }
+
+    @Override
+    public Project getStepProject() {
+        return this.project;
     }
 
     @Override

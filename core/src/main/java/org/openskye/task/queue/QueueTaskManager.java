@@ -36,8 +36,6 @@ public class QueueTaskManager implements TaskManager {
 
     @Override
     public void submit(Task task) {
-        injector.injectMembers(task.getStep());
-        task.getStep().rehydrate();
         enqueue(task.getId());
     }
 

@@ -46,7 +46,7 @@ public class CullTaskStep extends TaskStep {
     }
 
     @Override
-    public Project getProject() {
+    public Project getStepProject() {
         return project;
     }
 
