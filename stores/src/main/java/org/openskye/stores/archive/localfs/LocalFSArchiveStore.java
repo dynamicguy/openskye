@@ -187,10 +187,15 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
         return tmpPath;
     }
 
+    private String objectPath(ObjectMetadata om) {
+        // Remove drive prefix from Windows paths, and turn backward slashes into forward
+        return om.getPath().replaceAll("^[A-Z]:\\\\","").replaceAll("\\\\","/");
+    }
+
     public File getSimpleObjectPath(ArchiveContentBlock acb, ObjectMetadata om, boolean isNew) {
-        String fileName = getLocalPath() + "/" + acb.getId() + "/" + om.getPath() + ".csv";
+        String fileName = getLocalPath() + "/" + acb.getId() + "/" + objectPath(om) + ".csv";
         File simpleObjectDir = new File(fileName);
-        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + om.getPath() + "]");
+        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + objectPath(om) + "]");
 
         if (isNew) {
             if (simpleObjectDir.exists())
@@ -204,9 +209,9 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public File getTempSimpleObjectPath(ArchiveContentBlock acb, ObjectMetadata om, boolean isNew) {
-        String fileName = getTempPath() + "/" + acb.getId() + "/" + om.getPath() + ".csv";
+        String fileName = getTempPath() + "/" + acb.getId() + "/" + objectPath(om) + ".csv";
         File simpleObjectDir = new File(fileName);
-        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + om.getPath() + "]");
+        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + objectPath(om) + "]");
 
         if (isNew) {
             if (simpleObjectDir.exists())
