@@ -5,14 +5,17 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.domain.AttributeDefinition;
+import org.openskye.domain.AttributeType;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.BadRequestException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -85,5 +88,33 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     @Override
     public Response delete(@PathParam("id") String id) {
         return super.delete(id);
+    }
+
+    @Override
+    protected void validateUpdate(String id, AttributeDefinition newInstance)
+    {
+        if(newInstance.getType() != AttributeType.ENUMERATED)
+        {
+            if(newInstance.getPossibleValues().size() != 0)
+                throw new BadRequestException("Only Enumerated attributes may have possible values.");
+
+            return;
+        }
+
+        List<String> possibleValues = newInstance.getPossibleValues();
+
+        for(String value : possibleValues)
+        {
+            int numberOf = 0;
+
+            for(String otherValue : possibleValues)
+            {
+                if(otherValue.equals(value))
+                    numberOf++;
+            }
+
+            if(numberOf > 1)
+                throw new BadRequestException("Each possible value for an Enumerated attribute must be unique.");
+        }
     }
 }
