@@ -4,10 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
@@ -368,5 +365,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     public void updateObjectSet(Optional<ObjectSet> objectSet) {
         log.debug("Updating objectset " + objectSet);
         getEntityManager().merge(objectSet);
+    }
+
+    @Override
+    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node) {
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
     }
 }

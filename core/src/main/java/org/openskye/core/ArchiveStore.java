@@ -91,8 +91,8 @@ public interface ArchiveStore {
      * Gets the {@link ArchiveStoreDefinition} for this instance.
      *
      * @return The {@link ArchiveStoreDefinition} used to initialize this
-     *         instance, wrapped in an {@link Optional} wrapper, which will be absent
-     *         if the instance is not initialized.
+     * instance, wrapped in an {@link Optional} wrapper, which will be absent
+     * if the instance is not initialized.
      */
     Optional<ArchiveStoreDefinition> getArchiveStoreDefinition();
 
@@ -103,4 +103,20 @@ public interface ArchiveStore {
      * @param om the {@link ObjectMetadata} for the object to destroy
      */
     void destroy(ObjectMetadata om);
+
+    /**
+     * Optionally returns an {@link org.openskye.core.ArchiveContentBlock} for the given id
+     *
+     * @param id The ID of the ACB
+     * @return Optionally returned if found
+     */
+    Optional<ArchiveContentBlock> getAcb(String id);
+
+    /**
+     * Puts an ACB into the archive store
+     *
+     * @param acb The ACB to put in the store
+     * @return The ACB that has been put in the store
+     */
+    ArchiveContentBlock putAcb(ArchiveContentBlock acb);
 }

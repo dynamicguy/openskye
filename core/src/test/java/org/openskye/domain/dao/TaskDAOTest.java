@@ -32,7 +32,7 @@ public class TaskDAOTest extends AbstractDAOTestBase<Task> {
 
     @Override
     public void update(Task instance) {
-        instance.setWorkerName("Wilma Worksalot");
+        // TODO do something
     }
 
     @Test

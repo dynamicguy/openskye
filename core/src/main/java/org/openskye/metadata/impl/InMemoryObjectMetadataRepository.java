@@ -5,10 +5,7 @@ import com.google.common.collect.Lists;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.metadata.ObjectMetadataRepository;
 
 import java.util.*;
@@ -149,6 +146,12 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public void updateObjectSet(Optional<ObjectSet> objectSet) {
+        // TODO needs implementing
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }

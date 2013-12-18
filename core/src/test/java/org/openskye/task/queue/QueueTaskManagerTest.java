@@ -51,7 +51,6 @@ public class QueueTaskManagerTest {
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
         Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Skye Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
@@ -70,7 +69,6 @@ public class QueueTaskManagerTest {
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
         Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Skye Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
@@ -96,7 +94,6 @@ public class QueueTaskManagerTest {
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
         Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Some Other Worker");
         tasks.create(testTask);
         checkStatus(testTask,TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
