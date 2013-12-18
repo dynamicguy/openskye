@@ -3,6 +3,7 @@ package org.openskye.metadata.impl.jpa;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
@@ -144,6 +145,22 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         cq.where(cb.equal(objectToMetadata.get(ObjectMetadata_.id), objectMetadata.getId()));
 
         return (getEntityManager().createQuery(cq).getSingleResult() > 0);
+    }
+
+    @Override
+    public boolean isObjectInOMR(ObjectMetadata objectMetadata) {
+        String queryPath = objectMetadata.getPath();
+        String queryChecksum = objectMetadata.getChecksum();
+        DateTime queryDateCreated = objectMetadata.getCreated();
+        DateTime queryDateModified = objectMetadata.getLastModified();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
+        Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
+
+        cq.select(root);
+        cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum), cb.equal(root.get(ObjectMetadata_.created),queryDateCreated), cb.equal(root.get(ObjectMetadata_.lastModified),queryDateModified));
+
+        return (getEntityManager().createQuery(cq).getResultList().size() > 0);
     }
 
     /**

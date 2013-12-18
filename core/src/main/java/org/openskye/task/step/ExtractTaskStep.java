@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.Channel;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 
@@ -104,6 +101,7 @@ public class ExtractTaskStep extends TaskStep {
                         Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
                         if (simpleObject.isPresent()) {
                             targetInformationStore.get().put(simpleObject.get());
+                            auditObject(simpleObject.get(), ObjectEvent.INGESTED);
                         }
                     } else {
                         throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
