@@ -163,5 +163,5 @@ public interface ObjectMetadataRepository {
      *
      * @return An {@link Iterable} collection of {@link org.openskye.core.ArchiveContentBlock}
      */
-    Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node);
+    Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance);
 }

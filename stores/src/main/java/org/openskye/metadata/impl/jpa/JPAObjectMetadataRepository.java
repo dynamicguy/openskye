@@ -368,7 +368,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     }
 
     @Override
-    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node) {
+    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }

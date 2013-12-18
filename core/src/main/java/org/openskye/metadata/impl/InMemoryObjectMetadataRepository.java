@@ -24,9 +24,8 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
         ObjectSet set = new ObjectSet();
         set.setId(UUID.randomUUID().toString());
         set.setName(name);
-        set.setOnHold(false);
         set.setObjectMetadataSet(new HashSet<ObjectMetadata>());
-        objectSets.put(set.getId(),set);
+        objectSets.put(set.getId(), set);
         return set;
     }
 
@@ -115,7 +114,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     @Override
     public Optional<ObjectSet> getObjectSet(String objectSetId) {
         ObjectSet set = objectSets.get(objectSetId);
-        if ( set == null ) {
+        if (set == null) {
             return Optional.absent();
         } else {
             return Optional.of(set);
@@ -151,7 +150,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node) {
+    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }
