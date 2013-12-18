@@ -20,7 +20,7 @@ public class VerifyTaskStep extends TaskStep {
     }
 
     @Override
-    public Project getProject() {
+    public Project getStepProject() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
