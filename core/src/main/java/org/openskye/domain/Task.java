@@ -66,7 +66,7 @@ public class Task implements Identifiable {
     @Basic(fetch = FetchType.EAGER)
     @Column(name = "STEP_JSON",length=100000)
     @JsonIgnore
-    private String stepJson;
+    private String stepJson = "{}";
     @Transient
     private TaskStep step;
     @Transient

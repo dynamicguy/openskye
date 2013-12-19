@@ -42,7 +42,7 @@ public class TaskSchedule implements Identifiable {
     @Basic(fetch = FetchType.EAGER)
     @Column(name = "STEP_JSON",length=100000)
     @JsonIgnore
-    private String stepJson;
+    private String stepJson = "{}";
     @Transient
     private TaskStep step;
     // See Quartz cron field documentation for formatting of this string
