@@ -43,7 +43,7 @@ public class
     private String message;
     @Lob
     @Basic(fetch = FetchType.EAGER)
-    @Column(name = "EXCEPTION_JSON")
+    @Column(name = "EXCEPTION_JSON",length=100000)
     @JsonIgnore
     private String exceptionJson;
     @Transient
