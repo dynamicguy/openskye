@@ -45,7 +45,7 @@ public class
     @Basic(fetch = FetchType.EAGER)
     @Column(name = "EXCEPTION_JSON",length=100000)
     @JsonIgnore
-    private String exceptionJson = "{}";
+    private String exceptionJson;
     @Transient
     private Exception exception;
 
