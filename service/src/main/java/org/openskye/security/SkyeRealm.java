@@ -28,6 +28,7 @@ public class SkyeRealm extends AuthorizingRealm {
 
     public SkyeRealm() {
         super();
+        this.setAuthorizationCachingEnabled(false);
     }
 
     @Override
