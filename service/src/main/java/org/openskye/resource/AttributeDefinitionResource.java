@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,15 +94,18 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     @Override
     protected void validateUpdate(String id, AttributeDefinition newInstance)
     {
+        List<String> possibleValues = newInstance.getPossibleValues();
+
+        if(possibleValues == null)
+            possibleValues = new ArrayList<>();
+
         if(newInstance.getType() != AttributeType.ENUMERATED)
         {
-            if(newInstance.getPossibleValues().size() != 0)
+            if(possibleValues.size() != 0)
                 throw new BadRequestException("Only Enumerated attributes may have possible values.");
 
             return;
         }
-
-        List<String> possibleValues = newInstance.getPossibleValues();
 
         for(String value : possibleValues)
         {
