@@ -165,4 +165,14 @@ public class CifsInformationStore implements InformationStore {
     public void put(SimpleObject simpleObject) {
         throw new SkyeException("CIFS file system does not support put");
     }
+
+    @Override
+    public boolean isObjectInStore(SimpleObject simpleObject) {
+        try {
+            SmbFile targetFile = new SmbFile(this.informationStoreDefinition.getProperties().get(FILE_PATH) + "/" + simpleObject.getObjectMetadata().getPath());
+            return targetFile.exists();
+        } catch (Exception e) {
+            throw new SkyeException("Skye Exception", e);
+        }
+    }
 }

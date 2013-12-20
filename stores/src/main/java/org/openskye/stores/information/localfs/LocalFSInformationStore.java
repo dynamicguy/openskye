@@ -97,7 +97,7 @@ public class LocalFSInformationStore implements InformationStore {
                         log.debug("Found directory " + metadata);
                     all.add(container);
                 } else if (Files.isRegularFile(p)) {
-                    if(isCompressedFile(p)){
+                    if (isCompressedFile(p)) {
                         UnstructuredCompressedObject compressedObj = new FileSystemCompressedObject();
                         ObjectMetadata metadata = new ObjectMetadata();
                         metadata.setImplementation(FileSystemCompressedObject.class.getCanonicalName());
@@ -110,11 +110,10 @@ public class LocalFSInformationStore implements InformationStore {
                         List<SimpleObject> objects = compressedObj.getObjectsContained();
                         if (log.isDebugEnabled())
                             log.debug("Found compressed file " + metadata);
-                        for(SimpleObject obj : objects){
+                        for (SimpleObject obj : objects) {
                             all.add(obj);
                         }
-                    }
-                    else{
+                    } else {
                         UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
                         ObjectMetadata metadata = new ObjectMetadata();
                         metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
@@ -169,58 +168,64 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public void put(SimpleObject simpleObject) {
-        File targetFile = new File(this.informationStoreDefinition.getProperties().get(FILE_PATH) + "/" + simpleObject.getObjectMetadata().getPath());
-        if (targetFile.exists()) {
-            throw new SkyeException("Unable to put object " + simpleObject + " at "+targetFile.getPath()+" since it already exists in local filesystem");
-        }
-        targetFile.mkdirs();
-        targetFile.delete();
+        if (!isObjectInStore(simpleObject)) {
 
-        if (simpleObject instanceof UnstructuredObject) {
-            UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
-            try {
-                FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), targetFile);
-            } catch (Exception e) {
-                throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store");
-            }
-        } else if (simpleObject instanceof JDBCStructuredObject) {
-            // we need to store the whole table as a CSV
-            final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
-            if (log.isDebugEnabled())
-                log.debug("Writing temp structured object to " + targetFile.getAbsolutePath());
-            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(targetFile);
-            dataContext.executeUpdate(new UpdateScript() {
-                public void run(UpdateCallback callback) {
+            File targetFile = new File(this.informationStoreDefinition.getProperties().get(FILE_PATH) + "/" + simpleObject.getObjectMetadata().getPath());
+            targetFile.mkdirs();
+            targetFile.delete();
 
-                    // Create the table in a file representing the Archive Content Block
-
-                    TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
-
-                    for (Column column : structuredObject.getTable().getColumns()) {
-                        tableCreator.withColumn(column.getName()).ofType(column.getType());
-                    }
-
-                    Table table = tableCreator.execute();
-                    Iterator<Row> rows = structuredObject.getRows();
-                    while (rows.hasNext()) {
-                        Row row = rows.next();
-                        RowInsertionBuilder insert = callback.insertInto(table);
-                        int pos = 0;
-                        for (String name : structuredObject.getTable().getColumnNames()) {
-                            insert.value(name, row.getValues()[pos]);
-                            pos++;
-                        }
-                        insert.execute();
-                    }
+            if (simpleObject instanceof UnstructuredObject) {
+                UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
+                try {
+                    FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), targetFile);
+                } catch (Exception e) {
+                    throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store");
                 }
+            } else if (simpleObject instanceof JDBCStructuredObject) {
+                // we need to store the whole table as a CSV
+                final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
+                if (log.isDebugEnabled())
+                    log.debug("Writing temp structured object to " + targetFile.getAbsolutePath());
+                final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(targetFile);
+                dataContext.executeUpdate(new UpdateScript() {
+                    public void run(UpdateCallback callback) {
 
-            });
-        } else {
-            throw new SkyeException("Local filesystem information store does not support " + simpleObject + " for put");
+                        // Create the table in a file representing the Archive Content Block
+
+                        TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
+
+                        for (Column column : structuredObject.getTable().getColumns()) {
+                            tableCreator.withColumn(column.getName()).ofType(column.getType());
+                        }
+
+                        Table table = tableCreator.execute();
+                        Iterator<Row> rows = structuredObject.getRows();
+                        while (rows.hasNext()) {
+                            Row row = rows.next();
+                            RowInsertionBuilder insert = callback.insertInto(table);
+                            int pos = 0;
+                            for (String name : structuredObject.getTable().getColumnNames()) {
+                                insert.value(name, row.getValues()[pos]);
+                                pos++;
+                            }
+                            insert.execute();
+                        }
+                    }
+
+                });
+            } else {
+                throw new SkyeException("Local filesystem information store does not support " + simpleObject + " for put");
+            }
         }
     }
 
-    public boolean isCompressedFile(Path p){
+    @Override
+    public boolean isObjectInStore(SimpleObject simpleObject) {
+        File targetFile = new File(this.informationStoreDefinition.getProperties().get(FILE_PATH) + "/" + simpleObject.getObjectMetadata().getPath());
+        return targetFile.exists();
+    }
+
+    public boolean isCompressedFile(Path p) {
         File f = p.toFile();
         String[] suffixes = new String[]{".zip", ".tar", ".tar.gz"};
         SuffixFileFilter filter = new SuffixFileFilter(suffixes);

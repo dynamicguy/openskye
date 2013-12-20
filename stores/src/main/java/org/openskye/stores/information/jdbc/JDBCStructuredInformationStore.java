@@ -163,6 +163,11 @@ public class JDBCStructuredInformationStore implements InformationStore {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public boolean isObjectInStore(SimpleObject simpleObject) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public UpdateableDataContext getDataContext() {
         if (this.dataContext == null)
             this.dataContext = DataContextFactory.createJdbcDataContext(getConnection());

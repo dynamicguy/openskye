@@ -123,4 +123,6 @@ public interface InformationStore {
      * @param simpleObject the simple object that you want to put back into the {@link InformationStore}
      */
     void put(SimpleObject simpleObject);
+
+    boolean isObjectInStore(SimpleObject simpleObject);
 }

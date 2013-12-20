@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
-import org.openskye.core.ObjectMetadata;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,8 +31,7 @@ public class AuditLog implements Identifiable {
     private String auditEntity;
     private AuditEvent auditEvent;
     private ObjectEvent objectEvent;
-    @ManyToOne
-    private ObjectMetadata objectAffected;
+    private String objectAffected;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt = LocalDateTime.now();

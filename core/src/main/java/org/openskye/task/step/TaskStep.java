@@ -112,6 +112,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         auditLog.setAuditEntity(simpleObject.getClass().getSimpleName());
         auditLog.setAuditEvent(AuditEvent.OBJECT);
         auditLog.setObjectEvent(e);
+        auditLog.setObjectAffected(simpleObject.getObjectMetadata().getId());
         auditLog.setUser(auditLogDAO.getCurrentUser());
         auditLogDAO.create(auditLog);
     }
@@ -122,6 +123,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         auditLog.setAuditEntity(ObjectMetadata.class.getSimpleName());
         auditLog.setAuditEvent(AuditEvent.OBJECT);
         auditLog.setObjectEvent(e);
+        auditLog.setObjectAffected(om.getId());
         auditLog.setUser(auditLogDAO.getCurrentUser());
         auditLogDAO.create(auditLog);
     }
