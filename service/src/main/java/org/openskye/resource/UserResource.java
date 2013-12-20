@@ -54,6 +54,7 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
         User user = get(id);
         user.setEmail(userUpdate.getEmail());
         user.setName(userUpdate.getName());
+        user.setActive(userUpdate.isActive());
 
         // Check if we have a password
         if (userUpdate.getOldPassword() != null) {
