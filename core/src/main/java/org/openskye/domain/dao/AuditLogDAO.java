@@ -20,7 +20,6 @@ public class AuditLogDAO extends AbstractPaginatingDAO<AuditLog> {
     }
 
     public Optional<List<AuditLog>> findByUser(String userInfo){
-        //TODO: add to AuditLogResource
         List<AuditLog> foundActivities;
         CriteriaQuery<AuditLog> cq = createCriteriaQuery();
         Root<AuditLog> root = cq.from(AuditLog.class);

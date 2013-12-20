@@ -41,7 +41,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
         //check if the archive store already has this simple object in an ACB and if object duplication is allowed on the project
-        if (simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId()).isPresent() && simpleObject.getObjectMetadata().getProject().isDuplicationAllowed()) {
+        if (isObjectArchived(simpleObject)) {
             //This archive store has this object already
             List<ArchiveContentBlock> objectACBs = simpleObject.getObjectMetadata().getArchiveContentBlocks();
             objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId()).get());
@@ -138,5 +138,10 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     @Override
     public void close() {
         // nothing to do
+    }
+
+    @Override
+    public boolean isObjectArchived(SimpleObject simpleObject) {
+        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
