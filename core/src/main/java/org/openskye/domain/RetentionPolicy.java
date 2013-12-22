@@ -38,5 +38,8 @@ public class RetentionPolicy implements Identifiable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TEMPLATE_ID")
     private MetadataTemplate metadataTemplate;
-
+    // If not null, the following attr def overrides the default date used to calculate the retention period
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ATTRIBUTE_DEFINITION_ID")
+    private AttributeDefinition triggerDateAttributeDefinition;    
 }
