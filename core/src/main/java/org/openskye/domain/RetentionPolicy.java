@@ -42,4 +42,8 @@ public class RetentionPolicy implements Identifiable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ATTRIBUTE_DEFINITION_ID")
     private AttributeDefinition triggerDateAttributeDefinition;    
+    // metadataCriteria is a search query, in the syntax accepted by the OMS
+    private String metadataCriteria;
+    // Priority determines which policy applies, when an object meets the criteria for multiple policies
+    private Integer priority;
 }
