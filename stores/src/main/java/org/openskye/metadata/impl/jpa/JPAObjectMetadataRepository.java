@@ -4,10 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
@@ -16,10 +13,7 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.SetJoin;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,8 +229,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Project project) {
-        String queryString = "SELECT om FROM ObjectMetadata om WHERE om.project.id = '"+project.getId()+"'";
-        return getEntityManager().createQuery(queryString, ObjectMetadata.class).getResultList();
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
+        Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
+        Join<ObjectMetadata, Project> join = root.join("project");
+
+        cq.select(root);
+        cq.where(cb.equal(join.get("id"), project.getId()));
+
+        return em.createQuery(cq).getResultList();
     }
 
     /**
