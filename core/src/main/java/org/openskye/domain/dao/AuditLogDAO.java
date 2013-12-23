@@ -19,25 +19,23 @@ public class AuditLogDAO extends AbstractPaginatingDAO<AuditLog> {
         return false;
     }
 
-    public Optional<List<AuditLog>> findByUser(String userInfo){
+    public Optional<List<AuditLog>> findByUser(String userInfo) {
         List<AuditLog> foundActivities;
         CriteriaQuery<AuditLog> cq = createCriteriaQuery();
         Root<AuditLog> root = cq.from(AuditLog.class);
         Join<AuditLog, User> user = root.join("user");
 
-        if(userInfo.indexOf("@")!=0){
-            getCriteriaBuilder().equal(user.get("email"), userInfo);
-        }
-        else{
-            getCriteriaBuilder().equal(user.get("id"), userInfo);
+        if (userInfo.indexOf("@") != -1) {
+            cq.where(getCriteriaBuilder().equal(user.get("email"), userInfo));
+        } else {
+            cq.where(getCriteriaBuilder().or(getCriteriaBuilder().equal(user.get("id"), userInfo), getCriteriaBuilder().equal(user.get("name"), userInfo)));
         }
 
         foundActivities = getEntityManagerProvider().get().createQuery(cq).getResultList();
 
-        if(foundActivities.size()>0){
+        if (foundActivities.size() > 0) {
             return Optional.of(foundActivities);
-        }
-        else{
+        } else {
             return Optional.absent();
         }
     }
