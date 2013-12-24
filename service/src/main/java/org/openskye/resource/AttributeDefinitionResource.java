@@ -127,6 +127,9 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
         {
             int numberOf = 0;
 
+            if(value == null || value.isEmpty())
+                throw new BadRequestException("Possible values for Enumerated attributes may not be empty.");
+
             for(String otherValue : possibleValues)
             {
                 if(otherValue.equals(value))
