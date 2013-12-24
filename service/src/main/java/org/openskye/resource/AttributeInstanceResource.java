@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
  */
-@Api(value = "/api/1/attributeInstance", description = "Manage attributeInstances")
+@Api(value = "/api/1/attributeInstances", description = "Manage attributeInstances")
 @Path("/api/1/attributeInstances")
 @Produces(MediaType.APPLICATION_JSON)
 public class AttributeInstanceResource extends AbstractUpdatableDomainResource<AttributeInstance> {
