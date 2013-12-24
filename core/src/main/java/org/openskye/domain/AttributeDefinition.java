@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,8 +32,10 @@ public class AttributeDefinition implements Identifiable {
     @JoinColumn(name = "METADATA_TEMPLATE_ID")
     private MetadataTemplate metadataTemplate;
     @NotNull
+    @NotBlank
     private String name;
     @NotNull
+    @NotBlank
     private String shortLabel;
     private String description;
     // A flag that determines is the metadata is embedded in the simple object
