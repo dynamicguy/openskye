@@ -79,7 +79,7 @@ public class ArchiveTaskStep extends TaskStep {
             objectMetadata.setTaskId(task.getId());
             try {
                 SimpleObject simpleObject = is.materialize(objectMetadata);
-                task.getStatistics().incrementSimpleObjectsIngested();
+                task.getStatistics().incrementSimpleObjectsProcessed();
                 for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
                     channelStoreWriters.get(cas).put(simpleObject);
                 }

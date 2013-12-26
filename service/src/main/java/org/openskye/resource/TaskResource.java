@@ -69,6 +69,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
         return createFromStep(newStep);
     }
 
+    @ApiOperation(value = "Create new classify task", notes = "Create a new classify task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/classify")
+    @Transactional
+    @Timed
+    public Task classify(ClassifyTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
     @ApiOperation(value = "Create new cull task", notes = "Create a new cull task and return with its unique id", response = Task.class)
     @POST
     @Path("/cull")

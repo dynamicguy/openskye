@@ -68,7 +68,7 @@ public class CifsInformationStoreTest {
         Task discover = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discover);
 
-        long objectCount = discover.getStatistics().getSimpleObjectsDiscovered();
+        long objectCount = discover.getStatistics().getSimpleObjectsFound();
         assertThat("We have discovered " + objectCount + " simple objects", objectCount > 0);
     }
 

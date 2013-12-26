@@ -23,14 +23,22 @@ public class TaskStatistics implements Identifiable {
     private String id;
     @OneToOne (fetch = FetchType.EAGER)
     private Task task;
-    private long simpleObjectsIngested;
-    private long simpleObjectsDiscovered;
+    private long simpleObjectsProcessed;
+    private long simpleObjectsFound;
 
-    public void incrementSimpleObjectsIngested() {
-        simpleObjectsIngested++;
+    public void incrementSimpleObjectsProcessed() {
+        simpleObjectsProcessed++;
     }
 
-    public void incrementSimpleObjectsDiscovered() {
-        simpleObjectsDiscovered++;
+    public void incrementSimpleObjectsFound() {
+        simpleObjectsFound++;
+    }
+
+    public void addSimpleObjectsProcessed(long n) {
+        simpleObjectsProcessed += n;
+    }
+
+    public void addSimpleObjectsFound(long n) {
+        simpleObjectsFound += n;
     }
 }

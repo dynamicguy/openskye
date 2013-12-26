@@ -1,7 +1,6 @@
 package org.openskye.metadata.impl;
 
 import org.openskye.core.ObjectMetadata;
-import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;

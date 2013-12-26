@@ -15,8 +15,8 @@ public class TaskStatisticsTest extends AbstractDomainTest {
     public void serializeToJSON() throws Exception {
         final TaskStatistics taskStatistics = new TaskStatistics();
         taskStatistics.setId("63dd-69ow-39zx-40kl");
-        taskStatistics.setSimpleObjectsIngested(0);
-        taskStatistics.setSimpleObjectsDiscovered(0);
+        taskStatistics.setSimpleObjectsProcessed(0);
+        taskStatistics.setSimpleObjectsFound(0);
         assertThat("a TaskStatistics can be serialized to JSON",
                 asJson(taskStatistics),
                 is(equalTo(jsonFixture("fixtures/TaskStatistics.json"))));

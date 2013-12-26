@@ -117,7 +117,7 @@ public class JDBCStructuredInformationStoreTest {
         Task discover = new DiscoverTaskStep(channel).toTask();
         taskManager.submit(discover);
 
-        assertThat("We have 1 discovered simple objects", discover.getStatistics().getSimpleObjectsDiscovered() == 1);
+        assertThat("We have 1 discovered simple objects", discover.getStatistics().getSimpleObjectsFound() == 1);
     }
 
     // Note this test can't always run on the build server

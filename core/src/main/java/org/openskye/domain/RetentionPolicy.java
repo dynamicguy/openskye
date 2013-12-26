@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -30,13 +31,19 @@ public class RetentionPolicy implements Identifiable {
     private String description;
     @NotNull
     @NotBlank
+    @NaturalId
     private String recordsCode;
     @Min(1)
     private Long retentionPeriod;
+    @Min(0)
+    private Integer priority = 0;
     @NotNull
     private PeriodType periodType;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TEMPLATE_ID")
     private MetadataTemplate metadataTemplate;
-
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
+    @Column(name = "METADATA_CRITERIA",length=4096)
+    private String metadataCriteria;
 }

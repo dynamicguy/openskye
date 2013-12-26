@@ -35,6 +35,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     protected boolean archive;
     @Parameter(names = "--cull")
     protected boolean cull;
+    @Parameter(names = "--classify")
+    protected boolean classify;
     @Parameter(names = "--verify")
     protected boolean verify;
     @Parameter(names = "--extract")
@@ -72,6 +74,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
             archive();
         } else if (cull) {
             cull();
+        } else if (classify) {
+            classify();
         } else if (verify) {
             verify();
         } else if (extract) {
@@ -117,6 +121,13 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new CullTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         step = (CullTaskStep)selectReferenceField(new ReferenceField(Project.class),step);
+        create(step);
+    }
+
+    public void classify() {
+        TaskStep step = new ClassifyTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
+        step = (ClassifyTaskStep)selectReferenceField(new ReferenceField(Project.class),step);
         create(step);
     }
 

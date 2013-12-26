@@ -85,7 +85,7 @@ public class DiscoverTaskStep extends TaskStep {
                 discover(is, is.getChildren(simpleObject), task);
             else {
                 if (isIncludedByFilter(simpleObject)) {
-                    task.getStatistics().incrementSimpleObjectsDiscovered();
+                    task.getStatistics().incrementSimpleObjectsFound();
 
                     ObjectMetadata om = simpleObject.getObjectMetadata();
                     for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {

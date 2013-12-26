@@ -119,6 +119,15 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     }
 
     @Test
+    public void testPostClassify() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
+        ClassifyTaskStep step = new ClassifyTaskStep(mockProject());
+        Task task = step.toTask();
+        assertThat(getResources().client().resource("/api/1/tasks/classify").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
+    }
+
+    @Test
     public void testPostDestroy() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
