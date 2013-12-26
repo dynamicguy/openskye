@@ -3,7 +3,10 @@ package org.openskye.metadata.impl.jpa;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.core.*;
+import org.openskye.core.ArchiveContentBlock;
+import org.openskye.core.ObjectMetadata;
+import org.openskye.core.ObjectSet;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
@@ -214,7 +217,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Project project) {
-        String queryString = "SELECT om FROM ObjectMetadata om WHERE om.project.id = '"+project.getId()+"'";
+        String queryString = "SELECT om FROM ObjectMetadata om WHERE om.project.id = '" + project.getId() + "'";
         return getEntityManager().createQuery(queryString, ObjectMetadata.class).getResultList();
     }
 
@@ -288,39 +291,19 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ObjectSet> getAllObjectSets() {
-        List<ObjectSet> listJpaObjectSets;
-        List<ObjectSet> listObjectSets = new ArrayList<>();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectSet> cq = cb.createQuery(ObjectSet.class);
         Root<ObjectSet> root = cq.from(ObjectSet.class);
-
         cq.select(root);
-
-        listJpaObjectSets = getEntityManager().createQuery(cq).getResultList();
-
-        // TODO we need to make this iterable or we will load everything into
-        // memory
-        for (ObjectSet jpa : listJpaObjectSets)
-            listObjectSets.add(jpa);
-
-        return listObjectSets;
+        return getEntityManager().createQuery(cq).getResultList();
     }
 
     public Iterable<ObjectMetadata> getAllObjects() {
-        List<ObjectMetadata> listJpaObjectMetadata;
-        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
-
         cq.select(root);
-
-        listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
-
-        for (ObjectMetadata jpa : listJpaObjectMetadata)
-            listObjectMetadata.add(jpa);
-
-        return listObjectMetadata;
+        return  getEntityManager().createQuery(cq).getResultList();
     }
 
     /**
@@ -369,7 +352,17 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ArchiveContentBlock> cq = cb.createQuery(ArchiveContentBlock.class);
+        Root<ArchiveContentBlock> root = cq.from(ArchiveContentBlock.class);
+
+        cq.select(root);
+
+        // TODO we need to find ACB's that should are exist for this archive store but not on this
+        // node
+
+        List<ArchiveContentBlock> listAcbs = getEntityManager().createQuery(cq).getResultList();
+
+        return listAcbs;
     }
 }

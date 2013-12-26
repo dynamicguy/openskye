@@ -105,14 +105,6 @@ public interface ArchiveStore {
     void destroy(ObjectMetadata om);
 
     /**
-     * Optionally returns an {@link org.openskye.core.ArchiveContentBlock} for the given id
-     *
-     * @param id The ID of the ACB
-     * @return Optionally returned if found
-     */
-    Optional<ArchiveContentBlock> getAcb(String id);
-
-    /**
      * Puts an ACB into the archive store
      *
      * @param acb The ACB to put in the store

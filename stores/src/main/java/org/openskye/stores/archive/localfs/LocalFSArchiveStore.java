@@ -168,12 +168,6 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     @Override
-    public Optional<ArchiveContentBlock> getAcb(String id) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public ArchiveContentBlock putAcb(ArchiveContentBlock acb) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
