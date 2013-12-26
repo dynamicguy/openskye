@@ -6,10 +6,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.Setter;
-import org.openskye.core.ArchiveStore;
-import org.openskye.core.InformationStore;
-import org.openskye.core.SkyeException;
+import lombok.extern.slf4j.Slf4j;
+import org.openskye.core.*;
 import org.openskye.domain.*;
+import org.openskye.domain.dao.AuditLogDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 /**
  * An abstract base for the {@link TaskStep}
  */
+@Slf4j
 public abstract class TaskStep implements Callable<TaskStatus> {
 
     @JsonIgnore
@@ -40,6 +41,9 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     private Provider<EntityManager> emf;
     @JsonIgnore
     protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
+    @JsonIgnore
+    @Inject
+    protected AuditLogDAO auditLogDAO;
 
     public abstract void validate();
 
@@ -100,6 +104,28 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         if (!as.isPresent())
             throw new SkyeException("Unable to build archive store");
         return as.get();
+    }
+
+    protected void auditObject(SimpleObject simpleObject, ObjectEvent e){
+        log.debug("Auditing change to "+simpleObject);
+        AuditLog auditLog = new AuditLog();
+        auditLog.setAuditEntity(simpleObject.getClass().getSimpleName());
+        auditLog.setAuditEvent(AuditEvent.OBJECT);
+        auditLog.setObjectEvent(e);
+        auditLog.setObjectAffected(simpleObject.getObjectMetadata().getId());
+        auditLog.setUser(auditLogDAO.getCurrentUser());
+        auditLogDAO.create(auditLog);
+    }
+
+    protected void auditObject(ObjectMetadata om, ObjectEvent e){
+        log.debug("Auditing change to "+om);
+        AuditLog auditLog = new AuditLog();
+        auditLog.setAuditEntity(ObjectMetadata.class.getSimpleName());
+        auditLog.setAuditEvent(AuditEvent.OBJECT);
+        auditLog.setObjectEvent(e);
+        auditLog.setObjectAffected(om.getId());
+        auditLog.setUser(auditLogDAO.getCurrentUser());
+        auditLogDAO.create(auditLog);
     }
 
     @JsonIgnore

@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.openskye.domain.Project;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -25,13 +26,24 @@ public class ObjectMetadata {
 
     @Id
     @Column(unique = true)
+    @NotNull
     private String id = UUID.randomUUID().toString();
     private String path;
     private String implementation;
     private String taskId;
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name="OBJECT_METADATA_TAGS",
+            joinColumns=@JoinColumn(name="OBJECT_METADATA_ID")
+    )
+    @Column(name="tag")
     private Set<Tag> tags = new HashSet<>();
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name="OBJECT_METADATA_DATA",
+            joinColumns=@JoinColumn(name="OBJECT_METADATA_ID")
+    )
+    @Column(name="metadata")
     private Map<String, String> metadata = new HashMap<>();
     private boolean container = false;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -48,6 +60,11 @@ public class ObjectMetadata {
     private String checksum;
     private String informationStoreId;
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name="ARCHIVE_CONTENT_BLOCKS",
+            joinColumns=@JoinColumn(name="OBJECT_METADATA_ID")
+    )
+    @Column(name="archiveContentBlock")
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
     /**

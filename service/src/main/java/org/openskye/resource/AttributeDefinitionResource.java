@@ -63,7 +63,7 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     }
 
     @Override
-    protected AbstractPaginatingDAO<AttributeDefinition> getDAO() {
+    protected AttributeDefinitionDAO getDAO() {
         return attributeDefinitionDAO;
     }
 
@@ -91,6 +91,22 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
         return super.delete(id);
     }
 
+    @ApiOperation(value = "Indicates if an attribute definition is in use",
+                  notes = "Given a valid attribute definition id, returns true if at least one attribute instance is defined, or false if it is not.",
+                  response = Boolean.class)
+    @Path("/inUse/{id}")
+    @GET
+    @Transactional
+    @Timed
+    public Boolean isInUse(@PathParam("id") String id)
+    {
+        AttributeDefinition definition = new AttributeDefinition();
+
+        definition.setId(id);
+
+        return Boolean.valueOf(getDAO().isInUse(definition));
+    }
+
     @Override
     protected void validateUpdate(String id, AttributeDefinition newInstance)
     {
@@ -110,6 +126,9 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
         for(String value : possibleValues)
         {
             int numberOf = 0;
+
+            if(value == null || value.isEmpty())
+                throw new BadRequestException("Possible values for Enumerated attributes may not be empty.");
 
             for(String otherValue : possibleValues)
             {

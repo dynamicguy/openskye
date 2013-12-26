@@ -1,7 +1,7 @@
 package org.openskye.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -29,7 +29,7 @@ public class MetadataTemplate implements Identifiable {
     @JoinColumn(name = "DOMAIN_ID")
     private Domain domain;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "metadataTemplate")
-    @JsonIgnore
+    @JsonManagedReference
     private List<AttributeDefinition> attributeDefinitions = new ArrayList<>();
 
 }

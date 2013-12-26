@@ -16,6 +16,7 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -146,6 +147,24 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         return (getEntityManager().createQuery(cq).getSingleResult() > 0);
     }
 
+    @Override
+    public boolean isObjectInOMR(ObjectMetadata objectMetadata) {
+        String queryPath = objectMetadata.getPath();
+        String queryChecksum = objectMetadata.getChecksum();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
+        Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
+
+        cq.select(root);
+        if(queryChecksum!=null) {
+            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath), cb.equal(root.get(ObjectMetadata_.checksum),queryChecksum));
+        } else{
+            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath));
+        }
+
+        return (getEntityManager().createQuery(cq).getResultList().size() > 0);
+    }
+
     /**
      * Gets the {@link @ObjectMetadata} associated with the given id.
      *
@@ -217,8 +236,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Project project) {
-        String queryString = "SELECT om FROM ObjectMetadata om WHERE om.project.id = '"+project.getId()+"'";
-        return getEntityManager().createQuery(queryString, ObjectMetadata.class).getResultList();
+        TypedQuery<ObjectMetadata> query = getEntityManager().createQuery("SELECT om FROM ObjectMetadata om " +
+                "JOIN om.project p " +
+                "where p = :project", ObjectMetadata.class);
+
+        return query.setParameter("project", project).getResultList();
     }
 
     /**
