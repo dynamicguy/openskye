@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.PersistService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ObjectMetadata;
@@ -74,13 +73,12 @@ public class InMemoryClassifyTest {
         return retentionPolicyDAO.create(policy);
     }
 
-    private ObjectMetadata mockObject(Project project, String path, long originalSize, RetentionPolicy policy) {
+    private ObjectMetadata mockObject(Project project, String path, RetentionPolicy policy) {
         ObjectMetadata om = new ObjectMetadata();
         om.setId(UUID.randomUUID().toString());
         om.setProject(project);
         om.setPath(path);
-        om.setOriginalSize(originalSize);
-        Map<String,String> metadata = new HashMap<String,String>();
+        Map<String,String> metadata = new HashMap<>();
         if ( policy != null ) {
             metadata.put("recordsCode",policy.getRecordsCode());
         }
@@ -95,28 +93,23 @@ public class InMemoryClassifyTest {
     }
 
     @Test
-    @Ignore
     public void testBasicClassification() throws Exception {
-        final long KB = 1024;
-        final long MB = KB*KB;
 
         emf.get().getTransaction().begin();
         Project project = mockProject();
         RetentionPolicy r0 = mockPolicy("CL_BASE", "Classify Test Base", 0, null);
-        RetentionPolicy r1MB = mockPolicy("CL_SIZE_1MB","Classify Test Size 1 MB+",1,"originalSize:>="+1*MB);
-        RetentionPolicy rA = mockPolicy("CL_PATH_A","Classify Test Path A",2,"path:*A");
-        RetentionPolicy r1kB = mockPolicy("CL_SIZE_1kB","Classify Test Size 1 kB-",2,"originalSize:<"+1*KB);
-        RetentionPolicy rMed = mockPolicy("CL_MED_PRI","Classify Test Medium Priority",2,null);
-        RetentionPolicy rHi = mockPolicy("CL_HI_PRI","Classify Test High Priority",3,null);
-        ObjectMetadata s12MrXpA = mockObject(project,"s12MrXpA",12*MB,null);
-        ObjectMetadata s05KrXpA = mockObject(project,"s05KrXpA",5*KB,null);
-        ObjectMetadata s07KrXpB = mockObject(project,"s07KrXpB",7*KB,null);
-        ObjectMetadata s25MrXpB = mockObject(project,"s25MrXpB",25*MB,null);
-        ObjectMetadata s10Mr0pA = mockObject(project,"s10Mr0pA",10*MB,r0);
-        ObjectMetadata s16Kr0pA = mockObject(project,"s16Kr0pA",16*KB,r0);
-        ObjectMetadata s128r0pA = mockObject(project,"s128r0pA",128,r0);
-        ObjectMetadata s02MrMpA = mockObject(project,"s02MrMpA",2*MB,rMed);
-        ObjectMetadata s02MrHpA = mockObject(project,"s02MrHpA",2*MB,rHi);
+        RetentionPolicy rA = mockPolicy("CL_PATH_A","Classify Test Path A",2,"*A*");
+        RetentionPolicy rB = mockPolicy("CL_PATH_B","Classify Test Path B",2,"*B*");
+        RetentionPolicy rC = mockPolicy("CL_PATH_C","Classify Test Path C",3,"*C*");
+        RetentionPolicy rH = mockPolicy("CL_HI_PRI","Classify Test High Priority",4,null);
+        ObjectMetadata pArNull = mockObject(project,"pA",null);
+        ObjectMetadata p0r0 = mockObject(project,"p0",r0);
+        ObjectMetadata pCr0 = mockObject(project,"pC",r0);
+        ObjectMetadata pBCr0 = mockObject(project,"pBC",r0);
+        ObjectMetadata pABr0 = mockObject(project,"pAB",r0);
+        ObjectMetadata pBrA = mockObject(project,"pB",rA);
+        ObjectMetadata pBrB = mockObject(project,"pB",rB);
+        ObjectMetadata pCrH = mockObject(project,"pC",rH);
         emf.get().getTransaction().commit();
 
         int nIndexed = 0;
@@ -126,24 +119,23 @@ public class InMemoryClassifyTest {
                 nIndexed++;
             }
         }
-        assertThat("Mock objects inserted and indexed", nIndexed, is(equalTo(9)));
+        assertThat("Mock objects inserted and indexed", nIndexed, is(equalTo(8)));
 
         ClassifyTaskStep classifyStep = new ClassifyTaskStep(project);
         Task classify = classifyStep.toTask();
         taskManager.submit(classify);
         assertThat("Classify task completed", classify.getStatus(), is(equalTo(TaskStatus.COMPLETED)));
-        assertThat("All mock objects found", classify.getStatistics().getSimpleObjectsFound(), is(equalTo(9L)));
-        assertThat("Eligible objects changed", classify.getStatistics().getSimpleObjectsProcessed(), is(equalTo(5L)));
+        assertThat("Mock objects found", classify.getStatistics().getSimpleObjectsFound(), is(equalTo(7L)));
+        assertThat("Eligible objects changed", classify.getStatistics().getSimpleObjectsProcessed(), is(equalTo(3L)));
 
-        assertThat("Higher priority policy takes precedence", getRecordsCode(s12MrXpA), is(equalTo("CL_PATH_A")));
-        assertThat("Path based policy criteria used", getRecordsCode(s05KrXpA), is(equalTo("CL_PATH_A")));
-        assertThat("No effect if no criteria matched", getRecordsCode(s07KrXpB), is(equalTo(null)));
-        assertThat("Size based policy criteria used", getRecordsCode(s25MrXpB), is(equalTo("CL_SIZE_1MB")));
-        assertThat("Low priority policy overridden", getRecordsCode(s10Mr0pA), is(equalTo("CL_PATH_A")));
-        assertThat("Low priority policy overridden", getRecordsCode(s16Kr0pA), is(equalTo("CL_PATH_A")));
-        assertThat("Tie between new policies means no change", getRecordsCode(s128r0pA), is(equalTo("CL_BASE")));
-        assertThat("Tie with existing policy means no change", getRecordsCode(s02MrMpA), is(equalTo("CL_MED_PRI")));
-        assertThat("Existing high priority policy means no change",getRecordsCode(s02MrHpA), is(equalTo("CL_HI_PRI")));
+        assertThat("Null policy replaced", getRecordsCode(pArNull), is(equalTo("CL_PATH_A")));
+        assertThat("No effect if no criteria matched", getRecordsCode(p0r0), is(equalTo("CL_BASE")));
+        assertThat("Low priority policy replaced", getRecordsCode(pCr0), is(equalTo("CL_PATH_C")));
+        assertThat("Highest priority policy used", getRecordsCode(pBCr0), is(equalTo("CL_PATH_C")));
+        assertThat("Tie between new policies means no change", getRecordsCode(pABr0), is(equalTo("CL_BASE")));
+        assertThat("Tie with existing policy means no change", getRecordsCode(pBrA), is(equalTo("CL_PATH_A")));
+        assertThat("Already has same policy means no change", getRecordsCode(pBrB), is(equalTo("CL_PATH_B")));
+        assertThat("Existing high priority policy means no change",getRecordsCode(pCrH), is(equalTo("CL_HI_PRI")));
     }
 
 }

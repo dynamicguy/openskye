@@ -99,7 +99,7 @@ public class ClassifyTaskStep extends TaskStep {
         Map<String,String> classifyMap = new HashMap<>();
         Comparator<RetentionPolicy> descendingPriority = new Comparator<RetentionPolicy>() {
             public int compare(RetentionPolicy policy1, RetentionPolicy policy2) {
-                return policy1.getPriority() - policy2.getPriority();
+                return policy2.getPriority() - policy1.getPriority();
             }
         };
         for ( String objectId : criteriaMatch.keySet() ) {
@@ -107,7 +107,9 @@ public class ClassifyTaskStep extends TaskStep {
             List<RetentionPolicy> matchingPolicies = criteriaMatch.get(objectId);
             RetentionPolicy currentPolicy = policyMap.get(omr.get(objectId).get().getMetadata().get("recordsCode"));
             Collections.sort(matchingPolicies, descendingPriority);
-            if ( matchingPolicies.get(0).getPriority() <= currentPolicy.getPriority() ) {
+            if ( matchingPolicies.size() == 0 ) {
+                // no matching policies
+            } else if ( currentPolicy != null && matchingPolicies.get(0).getPriority() <= currentPolicy.getPriority() ) {
                 // the object's current retention policy is higher or equal priority, so don't reclassify
             } else if ( matchingPolicies.size() > 1 &&
                     ( matchingPolicies.get(0).getPriority() == matchingPolicies.get(1).getPriority() ) ) {
