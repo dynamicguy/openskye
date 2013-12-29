@@ -45,6 +45,8 @@ public class JPAObjectMetadataRepositoryTest {
     @Inject
     public TaskDAO tasks;
     @Inject
+    public NodeDAO nodeDAO;
+    @Inject
     public ProjectDAO projects;
     @Inject
     public TaskStatisticsDAO taskStatisticsDAO;
@@ -99,6 +101,7 @@ public class JPAObjectMetadataRepositoryTest {
         Project newProject = projects.create(project);
 
         Node node = new Node();
+        nodeDAO.create(node);
 
 
         TestTaskStep step = new TestTaskStep(newProject, node, 2, 1, true);
@@ -126,7 +129,7 @@ public class JPAObjectMetadataRepositoryTest {
 
         assertThat("information store associated with object is found", outputIsd.isPresent());
 
-        Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asd.getId());
+        Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asi.getId());
 
         // Test that the persisted ACB is present, and that it
         // matches the input.

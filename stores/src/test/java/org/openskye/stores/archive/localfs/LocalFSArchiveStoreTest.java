@@ -148,6 +148,7 @@ public class LocalFSArchiveStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setId(UUID.randomUUID().toString());
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test2");
