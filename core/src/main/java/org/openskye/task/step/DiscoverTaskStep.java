@@ -20,6 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 public class DiscoverTaskStep extends TaskStep {
 
+    @Getter
+    private Node node;
     @Inject
     private ChannelDAO channelDAO;
     @Getter
@@ -28,8 +30,9 @@ public class DiscoverTaskStep extends TaskStep {
     @JsonIgnore
     private List<ChannelFilter> filters = new ArrayList<>();
 
-    public DiscoverTaskStep(Channel channel) {
+    public DiscoverTaskStep(Channel channel, Node node) {
         this.channel = channel;
+        this.node = node;
     }
 
     public Project getProject() {
@@ -43,7 +46,7 @@ public class DiscoverTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if ( channel.getInformationStoreDefinition() == null ) {
+        if (channel.getInformationStoreDefinition() == null) {
             channel = channelDAO.get(channel.getId()).get();
         }
     }

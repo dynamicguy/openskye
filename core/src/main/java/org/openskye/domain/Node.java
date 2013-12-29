@@ -28,10 +28,9 @@ public class Node implements Identifiable {
     @Column(unique = true, length = 36)
     private String id;
     @ManyToOne
-    @NotNull
     private ArchiveStoreInstance archiveStoreInstance;
     @NotNull
-    private NodeRole nodeRole;
+    private NodeRole nodeRole = NodeRole.PRIMARY;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "LAST_CONNECTED")
     private LocalDateTime lastConnected;

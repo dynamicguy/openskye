@@ -32,29 +32,32 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @Inject
     protected ObjectMetadataSearch oms;
     @JsonIgnore
+    protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
+    @JsonIgnore
     @Getter
     @Setter
     Task task;
     @JsonIgnore
     @Inject
     private Provider<EntityManager> emf;
-    @JsonIgnore
-    protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
 
     public abstract void validate();
 
     @JsonIgnore
     public abstract Project getProject();
 
+    @JsonIgnore
+    public abstract Node getNode();
+
     protected void beginTransaction() {
         hasOuterTransaction = emf.get().getTransaction().isActive();
-        if ( !hasOuterTransaction ) {
+        if (!hasOuterTransaction) {
             emf.get().getTransaction().begin();
         }
     }
 
     protected void commitTransaction() {
-        if ( !hasOuterTransaction ) {
+        if (!hasOuterTransaction) {
             emf.get().getTransaction().commit();
         }
     }
@@ -63,7 +66,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         // Create a new Task object from this step
         task = new Task();
         task.setProject(getProject());
-        //TODO: use default worker name for now
+        task.setAssignedNode(getNode());
         task.setStep(this);
         task.setStepClassName(this.getClass().getName());
         task.setStepLabel(this.getLabel());

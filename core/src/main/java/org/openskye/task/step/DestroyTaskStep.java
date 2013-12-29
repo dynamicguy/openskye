@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreInstance;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.stores.StoreRegistry;
 
@@ -31,10 +28,14 @@ public class DestroyTaskStep extends TaskStep {
     @JsonIgnore
     @Inject
     private StoreRegistry storeRegistry;
+    @Getter
+    @Setter
+    private Node node;
 
-    public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition) {
+    public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.node = node;
     }
 
     public Project getProject() {

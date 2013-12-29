@@ -4,10 +4,7 @@ import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.openskye.domain.Channel;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.*;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
@@ -38,7 +35,7 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     private PaginatedResult<Task> expectedResult = new PaginatedResult<>();
 
     @Override
-    public void setUp(){
+    public void setUp() {
         super.setUp();
         Project project = new Project();
         project.setId(projectID);
@@ -89,6 +86,12 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
         return channel;
     }
 
+    private Node mockNode() {
+        Node node = new Node();
+        node.setId(UUID.randomUUID().toString());
+        return node;
+    }
+
     private InformationStoreDefinition mockStore() {
         InformationStoreDefinition store = new InformationStoreDefinition();
         store.setName("Mock Store");
@@ -99,8 +102,8 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostArchive() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
-        ArchiveTaskStep step = new ArchiveTaskStep(mockChannel());
+        when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
+        ArchiveTaskStep step = new ArchiveTaskStep(mockChannel(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/archive").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
@@ -108,8 +111,8 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostCull() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
-        CullTaskStep step = new CullTaskStep(mockProject());
+        when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
+        CullTaskStep step = new CullTaskStep(mockProject(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/cull").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
@@ -117,8 +120,8 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostDestroy() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
-        DestroyTaskStep step = new DestroyTaskStep(UUID.randomUUID().toString(), mockStore());
+        when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
+        DestroyTaskStep step = new DestroyTaskStep(UUID.randomUUID().toString(), mockStore(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/destroy").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
@@ -126,8 +129,8 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostDiscover() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
-        DiscoverTaskStep step = new DiscoverTaskStep(mockChannel());
+        when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
+        DiscoverTaskStep step = new DiscoverTaskStep(mockChannel(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/discover").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
@@ -135,8 +138,8 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostExtract() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
-        ExtractTaskStep step = new ExtractTaskStep(UUID.randomUUID().toString(), mockStore());
+        when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
+        ExtractTaskStep step = new ExtractTaskStep(UUID.randomUUID().toString(), mockStore(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/extract").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }

@@ -18,19 +18,27 @@ import java.util.Map;
 @NoArgsConstructor
 @Slf4j
 public class ArchiveTaskStep extends TaskStep {
-
+    @Getter
+    @Setter
+    private Node node;
     @Inject
     private ChannelDAO channelDAO;
     @Getter
     @Setter
     private Channel channel;
 
-    public ArchiveTaskStep(Channel channel) {
+    public ArchiveTaskStep(Channel channel, Node node) {
         this.channel = channel;
+        this.node = node;
     }
 
     public Project getProject() {
         return channel.getProject();
+    }
+
+    @Override
+    public Node getNode() {
+        return node;
     }
 
     @Override
@@ -42,7 +50,7 @@ public class ArchiveTaskStep extends TaskStep {
     public void rehydrate() {
         // When we come back form JSON we have the id
         // but we need the entity
-        if ( channel.getInformationStoreDefinition() == null ) {
+        if (channel.getInformationStoreDefinition() == null) {
             setChannel(channelDAO.get(channel.getId()).get());
         }
     }

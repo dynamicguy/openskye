@@ -97,7 +97,11 @@ public class JPAObjectMetadataRepositoryTest {
         Project project = new Project();
         project.setName("Test Project");
         Project newProject = projects.create(project);
-        TestTaskStep step = new TestTaskStep(newProject, 2, 1, true);
+
+        Node node = new Node();
+
+
+        TestTaskStep step = new TestTaskStep(newProject, node, 2, 1, true);
         Task task = step.toTask();
         task.setStatistics(taskStatistics);
         tasks.create(task);

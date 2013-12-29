@@ -80,7 +80,10 @@ public class LocalFSInformationStoreTest {
         project.setId(UUID.randomUUID().toString());
         channel.setProject(project);
 
-        Task discover = new DiscoverTaskStep(channel).toTask();
+        Node node = new Node();
+
+
+        Task discover = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discover);
 
         long objectCount = discover.getStatistics().getSimpleObjectsDiscovered();
@@ -103,11 +106,13 @@ public class LocalFSInformationStoreTest {
         Project project = new Project();
         project.setId(UUID.randomUUID().toString());
         channel.setProject(project);
+        Node node = new Node();
 
-        Task discover = new DiscoverTaskStep(channel).toTask();
+
+        Task discover = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discover);
 
-        Task archive = new ArchiveTaskStep(channel).toTask();
+        Task archive = new ArchiveTaskStep(channel, node).toTask();
         taskManager.submit(archive);
 
     }

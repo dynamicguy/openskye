@@ -2,15 +2,14 @@ package org.openskye.task.step;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ArchiveStore;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.TaskStatistics;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.node.NodeManager;
@@ -27,6 +26,9 @@ public class ReplicateTaskStep extends TaskStep {
     private ObjectMetadataRepository omr;
     @Inject
     private StoreRegistry storeRegistry;
+    @Getter
+    @Setter
+    private Node node;
     @Inject
     private ArchiveStoreDefinitionDAO archiveStoreDefinitionDAO;
     private ArchiveStoreDefinition archiveStoreDefinition;

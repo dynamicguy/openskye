@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.Channel;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 
@@ -32,19 +29,23 @@ public class ExtractTaskStep extends TaskStep {
     @Setter
     private Channel channel;
     @Getter
+    private Node node;
+    @Getter
     @Setter
     private InformationStoreDefinition targetInformationStoreDefinition;
 
-    public ExtractTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition) {
+    public ExtractTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = objectSetId;
         this.channel = null;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.node = node;
     }
 
-    public ExtractTaskStep(Channel channel, InformationStoreDefinition targetInformationStoreDefinition) {
+    public ExtractTaskStep(Channel channel, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = null;
         this.channel = channel;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.node = node;
     }
 
     @Override
