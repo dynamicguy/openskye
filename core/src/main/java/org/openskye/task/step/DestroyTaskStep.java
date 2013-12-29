@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
@@ -48,7 +48,7 @@ public class DestroyTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if ( targetInformationStoreDefinition.getImplementation() == null ) {
+        if (targetInformationStoreDefinition.getImplementation() == null) {
             targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
         }
     }
@@ -87,8 +87,8 @@ public class DestroyTaskStep extends TaskStep {
                 for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
                     // TODO do we need to check if this ACB is in use by another
                     // object metadata
-                    ArchiveStoreDefinition asd = omr.getArchiveStoreDefinition(acb);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
+                    ArchiveStoreInstance asi = omr.getArchiveStoreInstance(acb);
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(asi);
                     if (archiveStore.isPresent()) {
                         archiveStore.get().destroy(om);
                     } else {

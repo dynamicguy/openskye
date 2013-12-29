@@ -89,7 +89,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     }
 
     protected ArchiveStore buildArchiveStore(ArchiveStoreDefinition archiveStoreDefinition) {
-        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreDefinition);
+        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreDefinition.getArchiveStoreInstance());
         if (!as.isPresent())
             throw new SkyeException("Unable to build archive store");
         return as.get();

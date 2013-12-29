@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ArchiveStore;
 import org.openskye.core.InformationStore;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.InformationStoreDefinition;
 import org.reflections.Reflections;
 
@@ -44,7 +44,7 @@ public class StoreRegistry {
             try {
                 ArchiveStore archiveStore = archiveStoreClass.newInstance();
                 RegisteredArchiveStore registeredArchiveStore = new RegisteredArchiveStore(archiveStore);
-                log.info("Adding archive store "+archiveStoreClass.getSimpleName());
+                log.info("Adding archive store " + archiveStoreClass.getSimpleName());
                 storeRegistryMetadata.getArchiveStores().add(registeredArchiveStore);
                 archiveStores.add(archiveStore);
             } catch (Exception e) {
@@ -57,7 +57,7 @@ public class StoreRegistry {
                 InformationStore informationStore = informationStoreClass.newInstance();
                 RegisteredInformationStore registeredInformationStore = new RegisteredInformationStore(informationStore);
                 storeRegistryMetadata.getInformationStores().add(registeredInformationStore);
-                log.info("Adding information store "+informationStoreClass.getSimpleName());
+                log.info("Adding information store " + informationStoreClass.getSimpleName());
                 informationStores.add(informationStore);
             } catch (Exception e) {
                 log.error("Unable to create an instance of " + informationStoreClass.getName(), e);
@@ -92,27 +92,27 @@ public class StoreRegistry {
     }
 
     /**
-     * Given a {@link org.openskye.domain.ArchiveStoreDefinition} it is resolve the implementation and then
+     * Given a {@link org.openskye.domain.ArchiveStoreInstance} it is resolve the implementation and then
      * return an instance of the {@link ArchiveStore}
      *
-     * @param das The DomainArchiveStore
+     * @param asi The ArchiveStoreInstance
      * @return A new instance of the relevant ArchiveStore
      */
-    public Optional<ArchiveStore> build(ArchiveStoreDefinition das) {
-        log.debug("Creating new archive store for " + das);
+    public Optional<ArchiveStore> build(ArchiveStoreInstance asi) {
+        log.debug("Creating new archive store for " + asi);
         for (ArchiveStore as : archiveStores) {
-            if (as.isImplementing(das.getArchiveStoreInstance().getImplementation())) {
+            if (as.isImplementing(asi.getImplementation())) {
                 // Spin up a new instance of the InformationStore
                 try {
                     ArchiveStore newInstance = injector.getInstance(as.getClass());
-                    newInstance.initialize(das);
+                    newInstance.initialize(asi);
                     return Optional.of(newInstance);
                 } catch (Exception e) {
                     throw new SkyeException("Unable to build a new instance of the archive store " + as.getName(), e);
                 }
             }
         }
-        log.debug("Unable to find archive store for " + das);
+        log.debug("Unable to find archive store for " + asi);
 
         return Optional.absent();
     }

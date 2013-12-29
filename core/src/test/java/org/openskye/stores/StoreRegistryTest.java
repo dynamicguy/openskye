@@ -49,8 +49,8 @@ public class StoreRegistryTest {
         asi.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
         das.setArchiveStoreInstance(asi);
 
-        assertThat("We can create an in-memory archive store and we get something", registry.build(das).isPresent());
-        assertThat("We can create an in-memory archive store and we get an in-memory one", registry.build(das).get().getClass().equals(InMemoryArchiveStore.class));
+        assertThat("We can create an in-memory archive store and we get something", registry.build(asi).isPresent());
+        assertThat("We can create an in-memory archive store and we get an in-memory one", registry.build(asi).get().getClass().equals(InMemoryArchiveStore.class));
 
     }
 

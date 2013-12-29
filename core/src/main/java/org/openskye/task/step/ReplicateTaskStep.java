@@ -65,7 +65,7 @@ public class ReplicateTaskStep extends TaskStep {
         if (task.getStatistics() == null)
             task.setStatistics(new TaskStatistics());
 
-        Optional<ArchiveStore> optionalArchiveStore = storeRegistry.build(archiveStoreDefinition);
+        Optional<ArchiveStore> optionalArchiveStore = storeRegistry.build(archiveStoreDefinition.getArchiveStoreInstance());
         if (!optionalArchiveStore.isPresent())
             throw new SkyeException("Unable to get archive store for " + archiveStoreDefinition);
 
@@ -75,7 +75,7 @@ public class ReplicateTaskStep extends TaskStep {
 
         // Get the ACB's that are missing for this node
         for (ArchiveContentBlock acb : omr.getMissingAcbsForNode(NodeManager.getNode(), archiveStoreDefinition)) {
-            if (acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinition.getId())) {
+            if (acb.getArchiveStoreInstanceId().equals(archiveStoreDefinition.getArchiveStoreInstance().getId())) {
                 archiveStore.putAcb(acb);
             }
         }

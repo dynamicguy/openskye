@@ -59,10 +59,10 @@ public class ExtractTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if ( channel.getInformationStoreDefinition() == null ) {
+        if (channel.getInformationStoreDefinition() == null) {
             channel = channelDAO.get(channel.getId()).get();
         }
-        if ( targetInformationStoreDefinition.getImplementation() == null ) {
+        if (targetInformationStoreDefinition.getImplementation() == null) {
             targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
         }
     }
@@ -99,14 +99,14 @@ public class ExtractTaskStep extends TaskStep {
                 if (om.getArchiveContentBlocks().size() > 0) {
                     // Lets just get the first ACB
                     ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreDefinition(acb));
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreInstance(acb));
                     if (archiveStore.isPresent()) {
                         Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
                         if (simpleObject.isPresent()) {
                             targetInformationStore.get().put(simpleObject.get());
                         }
                     } else {
-                        throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreDefinition(acb));
+                        throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreInstance(acb));
                     }
 
                 } else {

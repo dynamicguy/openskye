@@ -47,7 +47,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         ArchiveContentBlock acb = new ArchiveContentBlock();
 
         ObjectMetadata om = simpleObject.getObjectMetadata();
-        acb.setArchiveStoreDefinitionId(this.localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId());
+        acb.setArchiveStoreInstanceId(this.localFilesystemArchiveStore.getArchiveStoreInstance().getId());
 
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV

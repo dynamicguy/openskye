@@ -8,7 +8,7 @@ import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.DataContextFactory;
 import org.eobjects.metamodel.UpdateableDataContext;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Task;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
@@ -32,7 +32,6 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     public final static String IMPLEMENTATION = "localFS";
     public static final String LOCALFS_PATH = "localFsPath";
     public static final String LOCALFS_TMP_PATH = "localFsTmpPath";
-    private ArchiveStoreDefinition archiveStoreDefinition;
     @Inject
     private ObjectMetadataRepository omr;
     @Inject
@@ -42,19 +41,25 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     private Injector injector;
     private String tmpPath;
     private boolean initialized = false;
+    private ArchiveStoreInstance archiveStoreInstance;
 
     @Override
-    public void initialize(ArchiveStoreDefinition das) {
-        initialized = true;
-        this.archiveStoreDefinition = das;
-        this.localPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_PATH);
+    public ArchiveStoreInstance getArchiveStoreInstance() {
+        return archiveStoreInstance;
+    }
 
-        this.tmpPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_TMP_PATH);
+    @Override
+    public void initialize(ArchiveStoreInstance asi) {
+        initialized = true;
+        this.archiveStoreInstance = asi;
+        this.localPath = archiveStoreInstance.getProperties().get(LOCALFS_PATH);
+
+        this.tmpPath = archiveStoreInstance.getProperties().get(LOCALFS_TMP_PATH);
 
         if (this.localPath == null)
-            this.localPath = "/tmp/" + das.getId() + "/archives";
+            this.localPath = "/tmp/" + archiveStoreInstance.getId() + "/archives";
         if (this.tmpPath == null)
-            this.tmpPath = "/tmp/" + das.getId() + "/tmp";
+            this.tmpPath = "/tmp/" + archiveStoreInstance.getId() + "/tmp";
 
         log.info("Creating instance of " + this.getName());
 
@@ -78,7 +83,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public String getUrl() {
-        return "localFS://" + archiveStoreDefinition.getId();
+        return "localFS://" + archiveStoreInstance.getId();
     }
 
     @Override
@@ -103,8 +108,8 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
-            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-                InputStream is = new FileInputStream(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
+            if (metadata.getArchiveContentBlock(this.getArchiveStoreInstance().getId()).isPresent()) {
+                InputStream is = new FileInputStream(getSimpleObjectPath(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), metadata, false));
                 return Optional.of(is);
             } else return Optional.absent();
         } catch (FileNotFoundException e) {
@@ -117,11 +122,11 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
         try {
             Class<?> impl = Class.forName(metadata.getImplementation());
 
-            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) { //is there an ACB?
-                if (isObjectArchived(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata)) { //is the object currently archived?
+            if (metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) { //is there an ACB?
+                if (isObjectArchived(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), metadata)) { //is the object currently archived?
                     if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
                         if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
-                            UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
+                            UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), metadata, false));
                             SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
                             simpleObject.setObjectMetadata(metadata);
                             return Optional.of(simpleObject);
@@ -137,7 +142,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
                     }
                 }
             } else {
-                log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                log.debug("Unable to find ACB for archive store " + getArchiveStoreInstance());
                 return Optional.absent();
             }
         } catch (Exception e) {
@@ -153,17 +158,9 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     @Override
-    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
-        if (this.archiveStoreDefinition == null)
-            return Optional.absent();
-
-        return Optional.of(this.archiveStoreDefinition);
-    }
-
-    @Override
     public void destroy(ObjectMetadata om) {
-        if (om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-            getSimpleObjectPath(om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), om, false).delete();
+        if (om.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) {
+            getSimpleObjectPath(om.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), om, false).delete();
         }
     }
 
@@ -183,7 +180,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     private String objectPath(ObjectMetadata om) {
         // Remove drive prefix from Windows paths, and turn backward slashes into forward
-        return om.getPath().replaceAll("^[A-Z]:\\\\","").replaceAll("\\\\","/");
+        return om.getPath().replaceAll("^[A-Z]:\\\\", "").replaceAll("\\\\", "/");
     }
 
     public File getSimpleObjectPath(ArchiveContentBlock acb, ObjectMetadata om, boolean isNew) {

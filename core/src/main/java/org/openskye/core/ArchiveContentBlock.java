@@ -19,7 +19,7 @@ import java.util.UUID;
 public class ArchiveContentBlock {
 
     private String id = UUID.randomUUID().toString();
-    private String archiveStoreDefinitionId;
+    private String archiveStoreInstanceId;
     private String nodeId;
     private String checksum;
     private long originalSize;

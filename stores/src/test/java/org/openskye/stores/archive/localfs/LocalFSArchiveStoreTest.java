@@ -172,7 +172,7 @@ public class LocalFSArchiveStoreTest {
         long ingested = archive.getStatistics().getSimpleObjectsIngested();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 
-        Optional<ArchiveStore> archiveStore = registry.build(das);
+        Optional<ArchiveStore> archiveStore = registry.build(asi);
 
         assertThat("We got the archive store", archiveStore.isPresent());
 

@@ -3,12 +3,9 @@ package org.openskye.metadata.impl.jpa;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.core.ArchiveContentBlock;
-import org.openskye.core.ObjectMetadata;
-import org.openskye.core.ObjectSet;
-import org.openskye.core.SkyeException;
+import org.openskye.core.*;
 import org.openskye.domain.*;
-import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
+import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
@@ -30,7 +27,7 @@ import java.util.List;
 @Slf4j
 public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Inject
-    protected ArchiveStoreDefinitionDAO archiveStores;
+    protected ArchiveStoreInstanceDAO archiveStores;
     @Inject
     protected InformationStoreDefinitionDAO informationStores;
     @Inject
@@ -303,7 +300,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
         cq.select(root);
-        return  getEntityManager().createQuery(cq).getResultList();
+        return getEntityManager().createQuery(cq).getResultList();
     }
 
     /**
@@ -326,20 +323,20 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     }
 
     /**
-     * Gets the {@link ArchiveStoreDefinition} related to the
+     * Gets the {@link ArchiveStoreInstance} related to the
      * {@link ArchiveContentBlock}.
      *
-     * @param archiveContentBlock The {@link ArchiveContentBlock} for which the
+     * @param archiveContentBlock The {@link org.openskye.core.ArchiveContentBlock} for which the
      *                            query will be run.
-     * @return The {@link ArchiveStoreDefinition} related to the given
+     * @return The {@link org.openskye.domain.ArchiveStoreInstance} related to the given
      * {@link ArchiveContentBlock}.
      */
     @Override
-    public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
-        Optional<ArchiveStoreDefinition> asd = archiveStores.get(archiveContentBlock.getArchiveStoreDefinitionId());
+    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
+        Optional<ArchiveStoreInstance> asd = archiveStores.get(archiveContentBlock.getArchiveStoreInstanceId());
 
         if (!asd.isPresent())
-            throw new SkyeException("The ArchiveStoreDefinition Id is invalid.");
+            throw new SkyeException("The Archive Store Instance Id is invalid on ACB " + archiveContentBlock.getId());
 
         return asd.get();
     }

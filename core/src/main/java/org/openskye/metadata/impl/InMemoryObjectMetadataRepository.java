@@ -138,7 +138,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
+    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }

@@ -2,7 +2,7 @@ package org.openskye.stores.inmemory;
 
 import com.google.common.base.Optional;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Task;
 
 import java.io.InputStream;
@@ -17,11 +17,11 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     public static final String IMPLEMENTATION = "In-memory";
     private Map<String, SimpleObject> objects = new HashMap<>();
-    private ArchiveStoreDefinition archiveStoreDefinition;
+    private ArchiveStoreInstance archiveStoreInstance;
 
     @Override
-    public void initialize(ArchiveStoreDefinition das) {
-        this.archiveStoreDefinition = das;
+    public void initialize(ArchiveStoreInstance asi) {
+        this.archiveStoreInstance = asi;
     }
 
     @Override
@@ -88,11 +88,8 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
-        if (this.archiveStoreDefinition == null)
-            return Optional.absent();
-
-        return Optional.of(this.archiveStoreDefinition);
+    public ArchiveStoreInstance getArchiveStoreInstance() {
+        return archiveStoreInstance;
     }
 
     @Override
