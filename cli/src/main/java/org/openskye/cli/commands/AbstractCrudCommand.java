@@ -1,13 +1,11 @@
 package org.openskye.cli.commands;
 
-import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.google.common.base.CaseFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.openskye.cli.CliException;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
@@ -15,8 +13,9 @@ import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
-import java.io.Console;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An Abstract Base for Crud-like commands which are in
@@ -146,7 +145,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             }
         }
         Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
-
+        saveAlias(result.getId());
         output.success("Created " + getCollectionSingular() + " with id " + result.getId());
     }
 

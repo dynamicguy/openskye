@@ -4,17 +4,12 @@ import com.beust.jcommander.Parameters;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.openskye.cli.commands.fields.*;
-import org.openskye.core.ObjectSet;
-import org.openskye.core.SkyeException;
-import org.openskye.domain.*;
-import org.openskye.domain.dao.PaginatedResult;
-import org.openskye.task.step.*;
+import org.openskye.cli.commands.fields.Field;
+import org.openskye.cli.commands.fields.FieldBuilder;
+import org.openskye.cli.commands.fields.TextField;
+import org.openskye.domain.Task;
+import org.openskye.task.step.TaskStep;
 
-import java.io.Console;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -42,6 +37,7 @@ public class TasksCommand extends AbstractTaskStepCommand {
         output.message("Creating a new " + step.getLabel() + " task:\n");
         String apiDirect = "/"+step.getLabel().toLowerCase();
         Task result = (Task) getResource(getCollectionPlural()+apiDirect).post(getClazz(), step);
+        saveAlias(result.getId());
         output.success(step.getLabel() + " task started at " + result.getStarted());
     }
 
