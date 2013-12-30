@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -36,6 +37,7 @@ public class Channel implements Identifiable {
     @JsonManagedReference("channelArchiveStores")
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     @NotNull
+    @NotBlank
     private String name;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")

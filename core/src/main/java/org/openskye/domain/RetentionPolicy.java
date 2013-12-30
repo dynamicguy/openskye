@@ -38,6 +38,7 @@ public class RetentionPolicy implements Identifiable {
     @Min(0)
     private Integer priority = 0;
     @NotNull
+    @NotBlank
     private PeriodType periodType;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TEMPLATE_ID")
