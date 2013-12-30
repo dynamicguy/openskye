@@ -7,6 +7,8 @@ import org.openskye.core.SkyeException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A very simple handling storing settings for the Skye CLI
@@ -16,6 +18,7 @@ public class SkyeCliSettings {
 
     private String apiKey = null;
     private String url = "http://localhost:5000/api/1/";
+    private Map<String,String> idMap = new HashMap<>();
 
     public static SkyeCliSettings load() {
         // Load the settings from the user's home directory
