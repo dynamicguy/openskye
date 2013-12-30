@@ -1,1 +1,1 @@
-{"project":{"id":"2093e8ab-6aab-4421-970d-1c79bc3be427","active":true},"assignedNode":{"nodeRole":"PRIMARY"},"status":"CREATED","statistics":{"simpleObjectsIngested":0,"simpleObjectsDiscovered":0},"step":{"sleepSeconds":2,"iterations":1,"pass":true},"stepLabel":"TEST"}
+{"project":{"id":"2093e8ab-6aab-4421-970d-1c79bc3be427","active":true},"assignedNode":{},"status":"CREATED","statistics":{"simpleObjectsIngested":0,"simpleObjectsDiscovered":0},"step":{"sleepSeconds":2,"iterations":1,"pass":true},"stepLabel":"TEST"}
