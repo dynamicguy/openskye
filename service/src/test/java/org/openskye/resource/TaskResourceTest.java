@@ -1,6 +1,5 @@
 package org.openskye.resource;
 
-import com.google.inject.Injector;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
@@ -26,10 +25,9 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     public static final ChannelDAO channelDAO = mock(ChannelDAO.class);
     public static final TaskLogDAO taskLogDAO = mock(TaskLogDAO.class);
     public static final TaskManager taskManager = mock(TaskManager.class);
-    public static final Injector injector = mock(Injector.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TaskResource(dao, channelDAO, taskManager, taskLogDAO, injector))
+            .addResource(new TaskResource(dao, channelDAO, taskManager, taskLogDAO))
             .addProvider(new AuthorizationExceptionMapper())
             .addProvider(new AuthenticationExceptionMapper())
             .build();
@@ -125,8 +123,8 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     @Test
     public void testPostClassify() throws Exception {
         ThreadContext.bind(subject);
-        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
-        ClassifyTaskStep step = new ClassifyTaskStep(mockProject());
+        when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
+        ClassifyTaskStep step = new ClassifyTaskStep(mockProject(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/classify").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }

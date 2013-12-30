@@ -13,6 +13,7 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -143,6 +144,24 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         return (getEntityManager().createQuery(cq).getSingleResult() > 0);
     }
 
+    @Override
+    public boolean isObjectInOMR(ObjectMetadata objectMetadata) {
+        String queryPath = objectMetadata.getPath();
+        String queryChecksum = objectMetadata.getChecksum();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
+        Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
+
+        cq.select(root);
+        if(queryChecksum!=null) {
+            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath), cb.equal(root.get(ObjectMetadata_.checksum),queryChecksum));
+        } else{
+            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath));
+        }
+
+        return (getEntityManager().createQuery(cq).getResultList().size() > 0);
+    }
+
     /**
      * Gets the {@link @ObjectMetadata} associated with the given id.
      *
@@ -214,8 +233,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Project project) {
-        String queryString = "SELECT om FROM ObjectMetadata om WHERE om.project.id = '" + project.getId() + "'";
-        return getEntityManager().createQuery(queryString, ObjectMetadata.class).getResultList();
+        TypedQuery<ObjectMetadata> query = getEntityManager().createQuery("SELECT om FROM ObjectMetadata om " +
+                "JOIN om.project p " +
+                "where p = :project", ObjectMetadata.class);
+
+        return query.setParameter("project", project).getResultList();
     }
 
     /**
@@ -288,19 +310,39 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ObjectSet> getAllObjectSets() {
+        List<ObjectSet> listJpaObjectSets;
+        List<ObjectSet> listObjectSets = new ArrayList<>();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectSet> cq = cb.createQuery(ObjectSet.class);
         Root<ObjectSet> root = cq.from(ObjectSet.class);
+
         cq.select(root);
-        return getEntityManager().createQuery(cq).getResultList();
+
+        listJpaObjectSets = getEntityManager().createQuery(cq).getResultList();
+
+        // TODO we need to make this iterable or we will load everything into
+        // memory
+        for (ObjectSet jpa : listJpaObjectSets)
+            listObjectSets.add(jpa);
+
+        return listObjectSets;
     }
 
     public Iterable<ObjectMetadata> getAllObjects() {
+        List<ObjectMetadata> listJpaObjectMetadata;
+        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
+
         cq.select(root);
-        return getEntityManager().createQuery(cq).getResultList();
+
+        listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
+
+        for (ObjectMetadata jpa : listJpaObjectMetadata)
+            listObjectMetadata.add(jpa);
+
+        return listObjectMetadata;
     }
 
     /**
@@ -323,12 +365,12 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     }
 
     /**
-     * Gets the {@link ArchiveStoreInstance} related to the
+     * Gets the {@link ArchiveStoreDefinition} related to the
      * {@link ArchiveContentBlock}.
      *
-     * @param archiveContentBlock The {@link org.openskye.core.ArchiveContentBlock} for which the
+     * @param archiveContentBlock The {@link ArchiveContentBlock} for which the
      *                            query will be run.
-     * @return The {@link org.openskye.domain.ArchiveStoreInstance} related to the given
+     * @return The {@link ArchiveStoreDefinition} related to the given
      * {@link ArchiveContentBlock}.
      */
     @Override
@@ -336,30 +378,19 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         Optional<ArchiveStoreInstance> asd = archiveStores.get(archiveContentBlock.getArchiveStoreInstanceId());
 
         if (!asd.isPresent())
-            throw new SkyeException("The Archive Store Instance Id is invalid on ACB " + archiveContentBlock.getId());
+            throw new SkyeException("The archive store instance id is invalid.");
 
         return asd.get();
     }
 
     @Override
     public void updateObjectSet(Optional<ObjectSet> objectSet) {
-        log.debug("Updating objectset " + objectSet);
+        log.debug("Updating object set " + objectSet);
         getEntityManager().merge(objectSet);
     }
 
     @Override
     public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<ArchiveContentBlock> cq = cb.createQuery(ArchiveContentBlock.class);
-        Root<ArchiveContentBlock> root = cq.from(ArchiveContentBlock.class);
-
-        cq.select(root);
-
-        // TODO we need to find ACB's that should are exist for this archive store but not on this
-        // node
-
-        List<ArchiveContentBlock> listAcbs = getEntityManager().createQuery(cq).getResultList();
-
-        return listAcbs;
+        return null;
     }
 }
