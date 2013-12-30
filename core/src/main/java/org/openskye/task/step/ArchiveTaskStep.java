@@ -78,7 +78,7 @@ public class ArchiveTaskStep extends TaskStep {
         Map<ChannelArchiveStore, ArchiveStoreWriter> channelStoreWriters = new HashMap<>();
         for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
             log.debug("Adding archive store writer for " + cas);
-            channelStoreWriters.put(cas, buildArchiveStore(cas.getArchiveStoreDefinition()).getWriter(task));
+            channelStoreWriters.put(cas, buildArchiveStore(cas.getArchiveStoreDefinition().getArchiveStoreInstance()).getWriter(task));
         }
 
         // Based on the fact that we have done discovery then we will

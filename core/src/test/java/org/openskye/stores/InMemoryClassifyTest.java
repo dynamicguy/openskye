@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.domain.*;
+import org.openskye.domain.dao.NodeDAO;
 import org.openskye.domain.dao.ProjectDAO;
 import org.openskye.domain.dao.RetentionPolicyDAO;
 import org.openskye.guice.InMemoryTestModule;
@@ -46,6 +47,8 @@ public class InMemoryClassifyTest {
     @Inject
     private ProjectDAO projectDAO;
     @Inject
+    private NodeDAO nodeDAO;
+    @Inject
     private Provider<EntityManager> emf;
 
     @Before
@@ -63,6 +66,11 @@ public class InMemoryClassifyTest {
         return projectDAO.create(project);
     }
 
+    private Node mockNode() {
+        Node node = new Node();
+        return nodeDAO.create(node);
+    }
+
     private RetentionPolicy mockPolicy(String recordsCode, String name, int priority, String criteria) {
         RetentionPolicy policy = new RetentionPolicy();
         policy.setRecordsCode(recordsCode);
@@ -78,9 +86,9 @@ public class InMemoryClassifyTest {
         om.setId(UUID.randomUUID().toString());
         om.setProject(project);
         om.setPath(path);
-        Map<String,String> metadata = new HashMap<>();
-        if ( policy != null ) {
-            metadata.put("recordsCode",policy.getRecordsCode());
+        Map<String, String> metadata = new HashMap<>();
+        if (policy != null) {
+            metadata.put("recordsCode", policy.getRecordsCode());
         }
         om.setMetadata(metadata);
         ObjectMetadata omInserted = omr.put(om);
@@ -98,30 +106,30 @@ public class InMemoryClassifyTest {
         emf.get().getTransaction().begin();
         Project project = mockProject();
         RetentionPolicy r0 = mockPolicy("CL_BASE", "Classify Test Base", 0, null);
-        RetentionPolicy rA = mockPolicy("CL_PATH_A","Classify Test Path A",2,"*A*");
-        RetentionPolicy rB = mockPolicy("CL_PATH_B","Classify Test Path B",2,"*B*");
-        RetentionPolicy rC = mockPolicy("CL_PATH_C","Classify Test Path C",3,"*C*");
-        RetentionPolicy rH = mockPolicy("CL_HI_PRI","Classify Test High Priority",4,null);
-        ObjectMetadata pArNull = mockObject(project,"pA",null);
-        ObjectMetadata p0r0 = mockObject(project,"p0",r0);
-        ObjectMetadata pCr0 = mockObject(project,"pC",r0);
-        ObjectMetadata pBCr0 = mockObject(project,"pBC",r0);
-        ObjectMetadata pABr0 = mockObject(project,"pAB",r0);
-        ObjectMetadata pBrA = mockObject(project,"pB",rA);
-        ObjectMetadata pBrB = mockObject(project,"pB",rB);
-        ObjectMetadata pCrH = mockObject(project,"pC",rH);
+        RetentionPolicy rA = mockPolicy("CL_PATH_A", "Classify Test Path A", 2, "*A*");
+        RetentionPolicy rB = mockPolicy("CL_PATH_B", "Classify Test Path B", 2, "*B*");
+        RetentionPolicy rC = mockPolicy("CL_PATH_C", "Classify Test Path C", 3, "*C*");
+        RetentionPolicy rH = mockPolicy("CL_HI_PRI", "Classify Test High Priority", 4, null);
+        ObjectMetadata pArNull = mockObject(project, "pA", null);
+        ObjectMetadata p0r0 = mockObject(project, "p0", r0);
+        ObjectMetadata pCr0 = mockObject(project, "pC", r0);
+        ObjectMetadata pBCr0 = mockObject(project, "pBC", r0);
+        ObjectMetadata pABr0 = mockObject(project, "pAB", r0);
+        ObjectMetadata pBrA = mockObject(project, "pB", rA);
+        ObjectMetadata pBrB = mockObject(project, "pB", rB);
+        ObjectMetadata pCrH = mockObject(project, "pC", rH);
         emf.get().getTransaction().commit();
 
         int nIndexed = 0;
-        Iterable<ObjectMetadata> hits = oms.search(project,"*");
-        if ( hits != null ) {
-            for ( ObjectMetadata hit : hits ) {
+        Iterable<ObjectMetadata> hits = oms.search(project, "*");
+        if (hits != null) {
+            for (ObjectMetadata hit : hits) {
                 nIndexed++;
             }
         }
         assertThat("Mock objects inserted and indexed", nIndexed, is(equalTo(8)));
 
-        ClassifyTaskStep classifyStep = new ClassifyTaskStep(project);
+        ClassifyTaskStep classifyStep = new ClassifyTaskStep(project, mockNode());
         Task classify = classifyStep.toTask();
         taskManager.submit(classify);
         assertThat("Classify task completed", classify.getStatus(), is(equalTo(TaskStatus.COMPLETED)));
@@ -135,7 +143,7 @@ public class InMemoryClassifyTest {
         assertThat("Tie between new policies means no change", getRecordsCode(pABr0), is(equalTo("CL_BASE")));
         assertThat("Tie with existing policy means no change", getRecordsCode(pBrA), is(equalTo("CL_PATH_A")));
         assertThat("Already has same policy means no change", getRecordsCode(pBrB), is(equalTo("CL_PATH_B")));
-        assertThat("Existing high priority policy means no change",getRecordsCode(pCrH), is(equalTo("CL_HI_PRI")));
+        assertThat("Existing high priority policy means no change", getRecordsCode(pCrH), is(equalTo("CL_HI_PRI")));
     }
 
 }

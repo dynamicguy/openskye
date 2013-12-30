@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.RetentionPolicy;
 import org.openskye.domain.TaskStatus;
@@ -26,6 +27,7 @@ import java.util.*;
 @Slf4j
 public class ClassifyTaskStep extends TaskStep {
 
+    private Node node;
     @Inject
     private ProjectDAO projectDAO;
     @Inject
@@ -35,8 +37,9 @@ public class ClassifyTaskStep extends TaskStep {
     @Setter
     private Project project;
 
-    public ClassifyTaskStep(Project project) {
+    public ClassifyTaskStep(Project project, Node node) {
         this.project = project;
+        this.node = node;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class ClassifyTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if ( project.getName() == null ) {
+        if (project.getName() == null) {
             project = projectDAO.get(project.getId()).get();
         }
     }
@@ -64,25 +67,30 @@ public class ClassifyTaskStep extends TaskStep {
     }
 
     @Override
+    protected Node getNode() {
+        return node;
+    }
+
+    @Override
     public TaskStatus call() throws Exception {
 
         // Load retention policy information up front, to avoid a database query on every object
-        Map<String,RetentionPolicy> policyMap = new HashMap<>();
-        for ( RetentionPolicy policy : retentionPolicyDAO.list().getResults() ) {
-            policyMap.put(policy.getRecordsCode(),policy);
+        Map<String, RetentionPolicy> policyMap = new HashMap<>();
+        for (RetentionPolicy policy : retentionPolicyDAO.list().getResults()) {
+            policyMap.put(policy.getRecordsCode(), policy);
         }
 
         // Build a map from object IDs to the set of policies with criteria that the object matches
-        Map<String,List<RetentionPolicy>> criteriaMatch = new HashMap<>();
-        for ( RetentionPolicy policy : retentionPolicyDAO.list().getResults() ) {
+        Map<String, List<RetentionPolicy>> criteriaMatch = new HashMap<>();
+        for (RetentionPolicy policy : retentionPolicyDAO.list().getResults()) {
             Iterable<ObjectMetadata> hits = null;
-            if ( policy.getMetadataCriteria() != null ) {
-                hits = oms.search(project,policy.getMetadataCriteria());
+            if (policy.getMetadataCriteria() != null) {
+                hits = oms.search(project, policy.getMetadataCriteria());
             }
-            if ( hits != null ) {
-                for ( ObjectMetadata om : hits ) {
+            if (hits != null) {
+                for (ObjectMetadata om : hits) {
                     List<RetentionPolicy> policyList;
-                    if ( criteriaMatch.containsKey(om.getId()) ) {
+                    if (criteriaMatch.containsKey(om.getId())) {
                         policyList = criteriaMatch.get(om.getId());
                     } else {
                         policyList = new ArrayList<>();
@@ -96,23 +104,23 @@ public class ClassifyTaskStep extends TaskStep {
         // For each object, select the new retention policy
         long objectsFound = 0;
         long objectsProcessed = 0;
-        Map<String,String> classifyMap = new HashMap<>();
+        Map<String, String> classifyMap = new HashMap<>();
         Comparator<RetentionPolicy> descendingPriority = new Comparator<RetentionPolicy>() {
             public int compare(RetentionPolicy policy1, RetentionPolicy policy2) {
                 return policy2.getPriority() - policy1.getPriority();
             }
         };
-        for ( String objectId : criteriaMatch.keySet() ) {
+        for (String objectId : criteriaMatch.keySet()) {
             objectsFound++;
             List<RetentionPolicy> matchingPolicies = criteriaMatch.get(objectId);
             RetentionPolicy currentPolicy = policyMap.get(omr.get(objectId).get().getMetadata().get("recordsCode"));
             Collections.sort(matchingPolicies, descendingPriority);
-            if ( matchingPolicies.size() == 0 ) {
+            if (matchingPolicies.size() == 0) {
                 // no matching policies
-            } else if ( currentPolicy != null && matchingPolicies.get(0).getPriority() <= currentPolicy.getPriority() ) {
+            } else if (currentPolicy != null && matchingPolicies.get(0).getPriority() <= currentPolicy.getPriority()) {
                 // the object's current retention policy is higher or equal priority, so don't reclassify
-            } else if ( matchingPolicies.size() > 1 &&
-                    ( matchingPolicies.get(0).getPriority() == matchingPolicies.get(1).getPriority() ) ) {
+            } else if (matchingPolicies.size() > 1 &&
+                    (matchingPolicies.get(0).getPriority() == matchingPolicies.get(1).getPriority())) {
                 // tie for highest priority, so don't reclassify the object
             } else {
                 // reclassify to the highest priority policy
@@ -123,9 +131,9 @@ public class ClassifyTaskStep extends TaskStep {
 
         // update the objects in the OMR
         beginTransaction();
-        for ( String objectId : classifyMap.keySet() ) {
+        for (String objectId : classifyMap.keySet()) {
             ObjectMetadata om = omr.get(objectId).get();
-            om.getMetadata().put("recordsCode",classifyMap.get(objectId));
+            om.getMetadata().put("recordsCode", classifyMap.get(objectId));
             omr.put(om);
         }
         task.getStatistics().addSimpleObjectsFound(objectsFound);

@@ -86,4 +86,8 @@ public class ReplicateTaskStep extends TaskStep {
         return TaskStatus.COMPLETED;
     }
 
+    @Override
+    protected Project getStepProject() {
+        return getProject();
+    }
 }

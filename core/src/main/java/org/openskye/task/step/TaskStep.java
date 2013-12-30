@@ -6,10 +6,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.Setter;
-import org.openskye.core.ArchiveStore;
-import org.openskye.core.InformationStore;
-import org.openskye.core.SkyeException;
+import lombok.extern.slf4j.Slf4j;
+import org.openskye.core.*;
 import org.openskye.domain.*;
+import org.openskye.domain.dao.AuditLogDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 /**
  * An abstract base for the {@link TaskStep}
  */
+@Slf4j
 public abstract class TaskStep implements Callable<TaskStatus> {
 
     @JsonIgnore
@@ -32,32 +33,41 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @Inject
     protected ObjectMetadataSearch oms;
     @JsonIgnore
-    protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
-    @JsonIgnore
     @Getter
     @Setter
     Task task;
     @JsonIgnore
     @Inject
     private Provider<EntityManager> emf;
+    @JsonIgnore
+    protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
+    @JsonIgnore
+    @Inject
+    protected AuditLogDAO auditLogDAO;
 
     public abstract void validate();
 
     @JsonIgnore
-    public abstract Project getStepProject();
+    protected abstract Node getNode();
 
     @JsonIgnore
-    public abstract Node getNode();
+    protected abstract Project getStepProject();
+
+    @JsonIgnore
+    public Project getProject() {
+        rehydrate();
+        return getStepProject();
+    }
 
     protected void beginTransaction() {
         hasOuterTransaction = emf.get().getTransaction().isActive();
-        if (!hasOuterTransaction) {
+        if ( !hasOuterTransaction ) {
             emf.get().getTransaction().begin();
         }
     }
 
     protected void commitTransaction() {
-        if (!hasOuterTransaction) {
+        if ( !hasOuterTransaction ) {
             emf.get().getTransaction().commit();
         }
     }
@@ -66,6 +76,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         // Create a new Task object from this step
         task = new Task();
         task.setProject(getProject());
+        //TODO: use default worker name for now
         task.setAssignedNode(getNode());
         task.setStep(this);
         task.setStepClassName(this.getClass().getName());
@@ -91,11 +102,33 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         return is.get();
     }
 
-    protected ArchiveStore buildArchiveStore(ArchiveStoreDefinition archiveStoreDefinition) {
-        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreDefinition.getArchiveStoreInstance());
+    protected ArchiveStore buildArchiveStore(ArchiveStoreInstance archiveStoreInstance) {
+        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreInstance);
         if (!as.isPresent())
             throw new SkyeException("Unable to build archive store");
         return as.get();
+    }
+
+    protected void auditObject(SimpleObject simpleObject, ObjectEvent e){
+        log.debug("Auditing change to "+simpleObject);
+        AuditLog auditLog = new AuditLog();
+        auditLog.setAuditEntity(simpleObject.getClass().getSimpleName());
+        auditLog.setAuditEvent(AuditEvent.OBJECT);
+        auditLog.setObjectEvent(e);
+        auditLog.setObjectAffected(simpleObject.getObjectMetadata().getId());
+        auditLog.setUser(auditLogDAO.getCurrentUser());
+        auditLogDAO.create(auditLog);
+    }
+
+    protected void auditObject(ObjectMetadata om, ObjectEvent e){
+        log.debug("Auditing change to "+om);
+        AuditLog auditLog = new AuditLog();
+        auditLog.setAuditEntity(ObjectMetadata.class.getSimpleName());
+        auditLog.setAuditEvent(AuditEvent.OBJECT);
+        auditLog.setObjectEvent(e);
+        auditLog.setObjectAffected(om.getId());
+        auditLog.setUser(auditLogDAO.getCurrentUser());
+        auditLogDAO.create(auditLog);
     }
 
     @JsonIgnore
