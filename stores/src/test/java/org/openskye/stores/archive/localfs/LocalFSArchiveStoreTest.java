@@ -135,9 +135,9 @@ public class LocalFSArchiveStoreTest {
         Task archive = new ArchiveTaskStep(channel, node).toTask();
         taskManager.submit(archive);
 
-        long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
+        long discovered = discovery.getStatistics().getSimpleObjectsFound();
         assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
-        long ingested = archive.getStatistics().getSimpleObjectsIngested();
+        long ingested = archive.getStatistics().getSimpleObjectsProcessed();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 
     }
@@ -171,9 +171,9 @@ public class LocalFSArchiveStoreTest {
         Task archive = new ArchiveTaskStep(channel, node).toTask();
         taskManager.submit(archive);
 
-        long discovered = discovery.getStatistics().getSimpleObjectsDiscovered();
+        long discovered = discovery.getStatistics().getSimpleObjectsFound();
         assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
-        long ingested = archive.getStatistics().getSimpleObjectsIngested();
+        long ingested = archive.getStatistics().getSimpleObjectsProcessed();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 
         Optional<ArchiveStore> archiveStore = registry.build(asi);

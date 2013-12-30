@@ -67,6 +67,17 @@ public interface ObjectMetadataRepository {
     boolean isObjectInSet(ObjectSet objectSet, ObjectMetadata objectMetadata);
 
     /**
+     * Determines if the {@link ObjectMetadata} is already included in the
+     * {@link ObjectMetadataRepository}.
+     *
+     * @param objectMetadata The {@link ObjectMetadata} for which the query is
+     *                       run.
+     * @return True if the {@link ObjectMetadata} is found in the
+     * {@link ObjectMeta}, or false if it is not.
+     */
+    boolean isObjectInOMR(ObjectMetadata objectMetadata);
+
+    /**
      * Gets the details of a single object's metadata
      *
      * @param id The identifier of the object

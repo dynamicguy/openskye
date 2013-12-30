@@ -65,7 +65,7 @@ public class Task implements Identifiable {
     private String stepClassName;
     @Lob
     @Basic(fetch = FetchType.EAGER)
-    @Column(name = "STEP_JSON")
+    @Column(name = "STEP_JSON",length=100000)
     @JsonIgnore
     private String stepJson;
     @Transient

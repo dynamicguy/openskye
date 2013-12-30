@@ -37,8 +37,8 @@ public class TaskStatisticsDAOTest extends AbstractDAOTestBase<TaskStatistics> {
         taskStatistics.setTask(task);
         task.setStatistics(taskStatistics);
         taskStatistics.setTask(task);
-        taskStatistics.setSimpleObjectsIngested(3453324);
-        taskStatistics.setSimpleObjectsDiscovered(543345);
+        taskStatistics.setSimpleObjectsProcessed(3453324);
+        taskStatistics.setSimpleObjectsFound(543345);
         return taskStatistics;
     }
 
@@ -62,7 +62,7 @@ public class TaskStatisticsDAOTest extends AbstractDAOTestBase<TaskStatistics> {
         taskStatistics.setTask(task);
         task.setStatistics(taskStatistics);
         instance.setTask(task);
-        instance.setSimpleObjectsDiscovered(243324);
-        instance.setSimpleObjectsIngested(233342);
+        instance.setSimpleObjectsFound(243324);
+        instance.setSimpleObjectsProcessed(233342);
     }
 }

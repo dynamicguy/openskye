@@ -32,7 +32,8 @@ public class ArchiveTaskStep extends TaskStep {
         this.node = node;
     }
 
-    public Project getProject() {
+    @Override
+    public Project getStepProject() {
         return channel.getProject();
     }
 
@@ -86,9 +87,10 @@ public class ArchiveTaskStep extends TaskStep {
             objectMetadata.setTaskId(task.getId());
             try {
                 SimpleObject simpleObject = is.materialize(objectMetadata);
-                task.getStatistics().incrementSimpleObjectsIngested();
+                task.getStatistics().incrementSimpleObjectsProcessed();
                 for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
                     channelStoreWriters.get(cas).put(simpleObject);
+                    auditObject(simpleObject, ObjectEvent.ARCHIVED);
                 }
                 // After we have ingested we need to update the
                 // object metadata again

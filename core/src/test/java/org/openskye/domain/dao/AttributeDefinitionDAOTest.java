@@ -20,7 +20,7 @@ Test the  AttributeDefinitionDAO
  */
 public class AttributeDefinitionDAOTest extends AbstractDAOTestBase<AttributeDefinition> {
 
-           @Inject
+    @Inject
     public AttributeDefinitionDAO attributeDefinitionDAO;
 
     @Override

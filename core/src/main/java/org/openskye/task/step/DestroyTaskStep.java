@@ -38,7 +38,8 @@ public class DestroyTaskStep extends TaskStep {
         this.node = node;
     }
 
-    public Project getProject() {
+    @Override
+    public Project getStepProject() {
         return targetInformationStoreDefinition.getProject();
     }
 
@@ -92,6 +93,7 @@ public class DestroyTaskStep extends TaskStep {
                     Optional<ArchiveStore> archiveStore = storeRegistry.build(asi);
                     if (archiveStore.isPresent()) {
                         archiveStore.get().destroy(om);
+                        auditObject(om, ObjectEvent.DESTROYED);
                     } else {
                         throw new SkyeException("Unable to build archive store " + archiveStore);
                     }

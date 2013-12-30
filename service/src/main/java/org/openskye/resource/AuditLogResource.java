@@ -96,5 +96,18 @@ public class AuditLogResource extends AbstractUpdatableDomainResource<AuditLog> 
 
     }
 
+    @Path("/user/{user}")
+    @GET
+    @ApiOperation(value = "Return the audit log entries associated with the user. Param can be id or email")
+    public PaginatedResult<AuditLog> getUserActivities(@PathParam("user") String user) {
+        PaginatedResult<AuditLog> logs = new PaginatedResult<>();
+        if(auditLogDAO.findByUser(user).isPresent()){
+            logs= logs.paginate(auditLogDAO.findByUser(user).get());
+        }
+        return logs;
+    }
+
+
+
 
 }

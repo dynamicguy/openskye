@@ -30,6 +30,8 @@ public class AuditLog implements Identifiable {
     private User user;
     private String auditEntity;
     private AuditEvent auditEvent;
+    private ObjectEvent objectEvent;
+    private String objectAffected;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt = LocalDateTime.now();

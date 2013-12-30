@@ -5,14 +5,18 @@ import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.domain.AttributeDefinition;
+import org.openskye.domain.AttributeType;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.BadRequestException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The REST endpoint for {@link org.openskye.domain.Domain}
@@ -59,7 +63,7 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     }
 
     @Override
-    protected AbstractPaginatingDAO<AttributeDefinition> getDAO() {
+    protected AttributeDefinitionDAO getDAO() {
         return attributeDefinitionDAO;
     }
 
@@ -85,5 +89,55 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     @Override
     public Response delete(@PathParam("id") String id) {
         return super.delete(id);
+    }
+
+    @ApiOperation(value = "Indicates if an attribute definition is in use",
+                  notes = "Given a valid attribute definition id, returns true if at least one attribute instance is defined, or false if it is not.",
+                  response = Boolean.class)
+    @Path("/inUse/{id}")
+    @GET
+    @Transactional
+    @Timed
+    public Boolean isInUse(@PathParam("id") String id)
+    {
+        AttributeDefinition definition = new AttributeDefinition();
+
+        definition.setId(id);
+
+        return Boolean.valueOf(getDAO().isInUse(definition));
+    }
+
+    @Override
+    protected void validateUpdate(String id, AttributeDefinition newInstance)
+    {
+        List<String> possibleValues = newInstance.getPossibleValues();
+
+        if(possibleValues == null)
+            possibleValues = new ArrayList<>();
+
+        if(newInstance.getType() != AttributeType.ENUMERATED)
+        {
+            if(possibleValues.size() != 0)
+                throw new BadRequestException("Only Enumerated attributes may have possible values.");
+
+            return;
+        }
+
+        for(String value : possibleValues)
+        {
+            int numberOf = 0;
+
+            if(value == null || value.isEmpty())
+                throw new BadRequestException("Possible values for Enumerated attributes may not be empty.");
+
+            for(String otherValue : possibleValues)
+            {
+                if(otherValue.equals(value))
+                    numberOf++;
+            }
+
+            if(numberOf > 1)
+                throw new BadRequestException("Each possible value for an Enumerated attribute must be unique.");
+        }
     }
 }

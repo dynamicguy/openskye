@@ -47,6 +47,17 @@ public class ProjectUserResource extends AbstractUpdatableDomainResource<Project
         return super.create(newInstance);
     }
 
+    @ApiOperation(value = "Add a role to project user", response = ProjectUser.class)
+    @Path("/{id}/roles")
+    @PUT
+    @Transactional
+    @Timed
+    public ProjectUser addRole(@PathParam("id") String projectUserId, Role newRole){
+        ProjectUser pu = get(projectUserId);
+        pu.addRole(newRole);
+        return super.update(projectUserId,pu);
+    }
+
     @ApiOperation(value = "Delete project user", notes = "Delete project user")
     @Path("/{id}")
     @DELETE

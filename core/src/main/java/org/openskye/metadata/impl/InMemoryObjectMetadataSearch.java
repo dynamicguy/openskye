@@ -1,29 +1,46 @@
 package org.openskye.metadata.impl;
 
 import org.openskye.core.ObjectMetadata;
-import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
-import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * An implementation of the {@link ObjectMetadataRepository} that is backed by ElasticSearch
+ * A basic, in memory implementation of the {@link ObjectMetadataSearch} with path search only
  */
 public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
 
+    private Set<ObjectMetadata> objects = new HashSet<>();
+
     @Override
     public Iterable<ObjectMetadata> search(String query) {
-        return null;
+        Set<ObjectMetadata> hits = new HashSet<>();
+        String pattern = query.replaceAll("\\*",".*");
+        for ( ObjectMetadata om : objects ) {
+            if ( om.getPath().matches(pattern) ) {
+                hits.add(om);
+            }
+        }
+        return hits;
     }
 
     @Override
     public Iterable<ObjectMetadata> search(Project project, String query) {
-        return null;
+        Set<ObjectMetadata> hits = new HashSet<>();
+        String pattern = query.replaceAll("\\*",".*");
+        for ( ObjectMetadata om : objects ) {
+            if ( om.getPath().matches(pattern) && om.getProject().getId().equals(project.getId())) {
+                hits.add(om);
+            }
+        }
+        return hits;
     }
 
     @Override
     public void index(ObjectMetadata objectMetadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        objects.add(objectMetadata);
     }
 
     /**
@@ -33,6 +50,7 @@ public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
      */
     @Override
     public void clear() {
+        objects = new HashSet<>();
     }
 
     /**
@@ -42,5 +60,6 @@ public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
      */
     @Override
     public void flush() {
+        // No effect because this implementation is in memory only
     }
 }

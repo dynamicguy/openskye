@@ -28,6 +28,7 @@ public class SkyeRealm extends AuthorizingRealm {
 
     public SkyeRealm() {
         super();
+        this.setAuthorizationCachingEnabled(false);
     }
 
     @Override
@@ -62,13 +63,18 @@ public class SkyeRealm extends AuthorizingRealm {
             UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
             Optional<User> user = userDao.findByEmail(token.getUsername());
             if (user.isPresent()) { //user is found
-                String pwd = new String(token.getPassword());
-                Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
-                if (passwordsMatch) { //user has correct password
-                    SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
-                    return simpleAuthInfo;
-                } else {
-                    throw new AuthenticationException();
+                if (user.get().isActive()) {
+                    String pwd = new String(token.getPassword());
+                    Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
+                    if (passwordsMatch) { //user has correct password
+                        SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
+                        return simpleAuthInfo;
+                    } else {
+                        throw new AuthenticationException();
+                    }
+                }
+                else {
+                    throw new DisabledAccountException();
                 }
             } else {
                 throw new AuthenticationException();

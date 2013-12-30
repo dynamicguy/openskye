@@ -35,7 +35,8 @@ public class DiscoverTaskStep extends TaskStep {
         this.node = node;
     }
 
-    public Project getProject() {
+    @Override
+    public Project getStepProject() {
         return channel.getProject();
     }
 
@@ -82,20 +83,22 @@ public class DiscoverTaskStep extends TaskStep {
             task.setStatistics(new TaskStatistics());
 
         for (SimpleObject simpleObject : simpleObjects) {
+            if(!omr.isObjectInOMR(simpleObject.getObjectMetadata()) || task.getProject().isDuplicationAllowed()){  //is the object in the OMR already?
+                if (simpleObject instanceof ContainerObject)
+                    discover(is, is.getChildren(simpleObject), task);
+                else {
+                    if (isIncludedByFilter(simpleObject)) {
+                        task.getStatistics().incrementSimpleObjectsFound();
 
-            if (simpleObject instanceof ContainerObject)
-                discover(is, is.getChildren(simpleObject), task);
-            else {
-                if (isIncludedByFilter(simpleObject)) {
-                    task.getStatistics().incrementSimpleObjectsDiscovered();
-
-                    ObjectMetadata om = simpleObject.getObjectMetadata();
-                    for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {
-                        om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
+                        ObjectMetadata om = simpleObject.getObjectMetadata();
+                        for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {
+                            om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
+                        }
+                        om.setTaskId(task.getId());
+                        omr.put(om);
+                        oms.index(om);
+                        auditObject(simpleObject, ObjectEvent.DISCOVERED);
                     }
-                    om.setTaskId(task.getId());
-                    omr.put(om);
-                    oms.index(om);
                 }
             }
 
@@ -119,5 +122,6 @@ public class DiscoverTaskStep extends TaskStep {
         }
         return true;
     }
+
 
 }

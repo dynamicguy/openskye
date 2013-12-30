@@ -14,5 +14,24 @@ public class DatabaseConfiguration {
     private String dialect;
     @NotNull
     private String url;
+    
+    private String connectionProviderClass;
+    
+    // hibernate.c3p0.max_size
+    private Integer poolMaxSize;
+    // hibernate.c3p0.min_size
+    private Integer poolMinSize;
+    // hibernate.c3p0.timeout
+    private Integer poolTimeOut;
+    // hibernate.c3p0.max_statements
+    private Integer poolMaxStatements;
+    // hibernate.c3p0.idle_test_period
+    private Integer poolIdleTestPeriod;
+    // hibernate.connection.pool_size
+    private Integer connectionPoolSize;
+    // hibernate.c3p0.preferredTestQuery
+    private String poolPreferredTestQuery;
+    // hibernate.c3p0.testConnectionOnCheckout
+    private String poolTestConnectionOnCheckout;
 
 }

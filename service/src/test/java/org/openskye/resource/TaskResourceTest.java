@@ -1,5 +1,6 @@
 package org.openskye.resource;
 
+import com.google.inject.Injector;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
@@ -25,9 +26,10 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
     public static final ChannelDAO channelDAO = mock(ChannelDAO.class);
     public static final TaskLogDAO taskLogDAO = mock(TaskLogDAO.class);
     public static final TaskManager taskManager = mock(TaskManager.class);
+    public static final Injector injector = mock(Injector.class);
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TaskResource(dao, channelDAO, taskManager, taskLogDAO))
+            .addResource(new TaskResource(dao, channelDAO, taskManager, taskLogDAO, injector))
             .addProvider(new AuthorizationExceptionMapper())
             .addProvider(new AuthenticationExceptionMapper())
             .build();
@@ -83,6 +85,7 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
         Channel channel = new Channel();
         channel.setName("Mock Channel");
         channel.setProject(mockProject());
+        channel.setInformationStoreDefinition(mockStore());
         return channel;
     }
 
@@ -96,6 +99,7 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
         InformationStoreDefinition store = new InformationStoreDefinition();
         store.setName("Mock Store");
         store.setProject(mockProject());
+        store.setImplementation("LocalFS");
         return store;
     }
 
@@ -116,6 +120,15 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
         CullTaskStep step = new CullTaskStep(mockProject(), mockNode());
         Task task = step.toTask();
         assertThat(getResources().client().resource("/api/1/tasks/cull").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
+    }
+
+    @Test
+    public void testPostClassify() throws Exception {
+        ThreadContext.bind(subject);
+        when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(true);
+        ClassifyTaskStep step = new ClassifyTaskStep(mockProject());
+        Task task = step.toTask();
+        assertThat(getResources().client().resource("/api/1/tasks/classify").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
 
     @Test

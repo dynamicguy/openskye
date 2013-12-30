@@ -50,6 +50,7 @@ public class User implements Identifiable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     private List<UserRole> userRoles = new ArrayList<>();
+    private boolean active = true;
 
     @PrePersist
     public void setKeys() {

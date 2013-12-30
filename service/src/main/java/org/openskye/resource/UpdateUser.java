@@ -21,5 +21,6 @@ public class UpdateUser {
     private String apiKey;
     private String oldPassword;
     private String newPassword;
+    private boolean active;
 
 }
