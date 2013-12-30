@@ -49,7 +49,7 @@ public class ExtractTaskStep extends TaskStep {
     }
 
     @Override
-    public Project getProject() {
+    public Project getStepProject() {
         return targetInformationStoreDefinition.getProject();
     }
 
