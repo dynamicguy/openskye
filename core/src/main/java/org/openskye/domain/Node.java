@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,6 +10,8 @@ import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A node is the representation of a node is the storage deployment
@@ -27,13 +30,14 @@ public class Node implements Identifiable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @ManyToOne
-    private ArchiveStoreInstance archiveStoreInstance;
-    @NotNull
-    private NodeRole nodeRole = NodeRole.PRIMARY;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "LAST_CONNECTED")
     private LocalDateTime lastConnected;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "node")
+    @JsonIgnore
+    private List<NodeArchiveStoreInstance> nodeArchiveStoreInstances = new ArrayList<>();
+    @JsonIgnore
     private String lastHostName;
+    @JsonIgnore
     private String lastIpAddress;
 }

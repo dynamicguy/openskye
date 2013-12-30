@@ -42,6 +42,6 @@ public class ArchiveStoreInstance implements Identifiable {
     private Map<String, String> properties = new HashMap<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "archiveStoreInstance")
     @JsonIgnore
-    private List<Node> nodes = new ArrayList<>();
+    private List<NodeArchiveStoreInstance> nodes = new ArrayList<>();
 
 }

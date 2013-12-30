@@ -105,6 +105,7 @@ public class TaskResourceTest extends ProjectSpecificResourceTest<Task> {
         when(subject.isPermitted(getSingular() + ":create:" + projectID)).thenReturn(true);
         ArchiveTaskStep step = new ArchiveTaskStep(mockChannel(), mockNode());
         Task task = step.toTask();
+
         assertThat(getResources().client().resource("/api/1/tasks/archive").type(MediaType.APPLICATION_JSON_TYPE).post(Task.class, step), equalTo(task));
     }
 

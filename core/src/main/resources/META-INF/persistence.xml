@@ -33,6 +33,8 @@
         <class>org.openskye.core.Tag</class>
         <class>org.openskye.core.ArchiveContentBlock</class>
         <class>org.openskye.domain.ProjectUser</class>
+        <class>org.openskye.domain.Node</class>
+        <class>org.openskye.domain.NodeArchiveStoreInstance</class>
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
