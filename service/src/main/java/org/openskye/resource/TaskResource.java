@@ -1,6 +1,7 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.Injector;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -30,22 +31,24 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     private TaskLogDAO taskLogDAO;
     private TaskDAO taskDAO;
     private TaskManager taskManager;
+    private Injector injector;
 
     @Inject
-    public TaskResource(TaskDAO dao, ChannelDAO channelDAO, TaskManager taskManager, TaskLogDAO taskLogDAO) {
+    public TaskResource(TaskDAO dao, ChannelDAO channelDAO, TaskManager taskManager, TaskLogDAO taskLogDAO, Injector injector) {
         this.taskDAO = dao;
         this.channelDAO = channelDAO;
         this.taskLogDAO = taskLogDAO;
         this.taskManager = taskManager;
+        this.injector = injector;
     }
 
     private Task createFromStep(TaskStep newStep) {
+        injector.injectMembers(newStep);
         projectID=newStep.getProject().getId();
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);
         return newInstance;
-
     }
 
     @ApiOperation(value = "Create new discovery task", notes = "Create a new discovery task and return with its unique id", response = Task.class)
@@ -63,6 +66,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Transactional
     @Timed
     public Task create(ArchiveTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
+    @ApiOperation(value = "Create new classify task", notes = "Create a new classify task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/classify")
+    @Transactional
+    @Timed
+    public Task classify(ClassifyTaskStep newStep) {
         return createFromStep(newStep);
     }
 
