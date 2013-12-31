@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class TaskDAO extends AbstractPaginatingDAO<Task> {
 
-    public Optional<Task> findOldestQueued(String workerName) {
+    public Optional<Task> findOldestQueued(String nodeId) {
         Task nextTask = null;
         try {
             CriteriaBuilder builder = getCriteriaBuilder();
@@ -26,7 +26,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
             criteria.select(taskRoot);
             criteria.where(builder.and(
                     builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
-                    builder.equal(taskRoot.get("workerName"), workerName)
+                    builder.equal(taskRoot.get("nodeId"), nodeId)
             ).orderBy(builder.asc(taskRoot.get("queued")));
             List<Task> taskList = currentEntityManager().createQuery(criteria).getResultList();
             if (taskList.size() > 0) {

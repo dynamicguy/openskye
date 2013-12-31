@@ -59,7 +59,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     }
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("workerName")).add(new TextField("projectId")).build();
+        return FieldBuilder.start().add(new TextField("projectId")).build();
     }
 
     protected abstract void create(TaskStep step);
@@ -181,7 +181,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void test() {
         TaskStep step = new TestTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);=
+        selectReferenceField(new ReferenceField(Node.class), step);
         selectReferenceField(new ReferenceField(Project.class), step);
         enterNumber(new NumberField("sleepSeconds"), step);
         enterNumber(new NumberField("iterations"), step);

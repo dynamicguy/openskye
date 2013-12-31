@@ -6,8 +6,11 @@ import com.google.inject.Injector;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.config.WorkerConfiguration;
+import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
+import org.openskye.domain.dao.NodeDAO;
 import org.openskye.domain.dao.TaskDAO;
 import org.openskye.task.step.TaskStep;
 
@@ -33,6 +36,8 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     @Inject
     TaskDAO taskDAO;
     @Inject
+    NodeDAO nodeDAO;
+    @Inject
     Injector injector;
     @Inject
     private Provider<EntityManager> emf;
@@ -50,6 +55,15 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Override
     public void start() {
+
+        // We need to ensure that the node is properly set-up
+        if (workerConfig.getNodeId() == null || workerConfig.getNodeId().isEmpty())
+            throw new SkyeException("You have not set-up the nodeId in your configuration,  create a node on the server and then configure this worker with its node id.");
+
+        Optional<Node> node = nodeDAO.get(workerConfig.getNodeId());
+        if (!node.isPresent())
+            throw new SkyeException("Node id " + workerConfig.getNodeId() + " is not registered,  worker WILL NOT function!");
+
         monitor = Executors.newSingleThreadScheduledExecutor();
         workers = Executors.newFixedThreadPool(workerConfig.getThreadCount());
         monitor.scheduleAtFixedRate(this, 0, workerConfig.getPollPeriodSec(), TimeUnit.SECONDS);
@@ -57,7 +71,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Override
     public void run() {
-        log.debug(workerConfig.getName() + ": monitor wakes up ..");
+        log.debug(workerConfig.getNodeId() + ": monitor wakes up ..");
 
         // Look for tasks that have ended
         Set<String> taskIds = futures.keySet();
@@ -95,7 +109,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     emf.get().getTransaction().commit();
                 } catch (Exception e) {
                     log.error("Error while recording end of task " + taskId, e);
-                    log.debug(workerConfig.getName() + ": end task " + taskId);
+                    log.debug(workerConfig.getNodeId() + ": end task " + taskId);
                 }
             }
         }
@@ -107,7 +121,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         boolean queuedTasks = true;
         while (tries < maxThreads && futures.size() < maxThreads && queuedTasks) {
             try {
-                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getName());
+                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getNodeId());
                 if (task == null || !task.isPresent()) {
                     queuedTasks = false;
                 } else {
@@ -119,11 +133,11 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     step.rehydrate();
 
                     emf.get().getTransaction().begin();
-                    accept(taskId, workerConfig.getName());
+                    accept(taskId, workerConfig.getNodeId());
                     emf.get().getTransaction().commit();
 
                     futures.put(taskId, workers.submit(step));
-                    log.debug(workerConfig.getName() + ": begin task " + taskId);
+                    log.debug(workerConfig.getNodeId() + ": begin task " + taskId);
                 }
             } catch (Exception e) {
                 log.error("Exception while accepting task", e);

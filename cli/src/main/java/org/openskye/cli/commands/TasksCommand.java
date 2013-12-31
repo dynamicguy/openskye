@@ -24,7 +24,7 @@ public class TasksCommand extends AbstractTaskStepCommand {
     private final String commandName = "tasks";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("workerName")).add(new TextField("projectId")).build();
+        return FieldBuilder.start().add(new TextField("projectId")).build();
     }
 
     @Override

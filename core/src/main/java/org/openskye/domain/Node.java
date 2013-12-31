@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,9 +27,6 @@ public class Node implements Identifiable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-    @Column(name = "LAST_CONNECTED")
-    private LocalDateTime lastConnected;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "node")
     @JsonIgnore
     private List<NodeArchiveStoreInstance> nodeArchiveStoreInstances = new ArrayList<>();
