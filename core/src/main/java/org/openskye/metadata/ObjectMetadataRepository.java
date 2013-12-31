@@ -157,7 +157,6 @@ public interface ObjectMetadataRepository {
      * Returns the instance of the {@link ArchiveStoreDefinition} that is linked to this
      * {@link ArchiveContentBlock}
      *
-     *
      * @param archiveContentBlock The archive content block to find the archive store definition for
      * @return the archive store definition
      */
@@ -175,5 +174,5 @@ public interface ObjectMetadataRepository {
      *
      * @return An {@link Iterable} collection of {@link org.openskye.core.ArchiveContentBlock}
      */
-    Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance);
+    Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance);
 }

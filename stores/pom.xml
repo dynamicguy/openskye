@@ -54,6 +54,12 @@
             <version>1.4</version>
         </dependency>
 
+        <!-- SSH2 for Replication -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.50</version>
+        </dependency>
 
         <!-- Testing -->
         <dependency>

@@ -155,8 +155,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance) {
-        // TODO needs implementing
+    public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
         throw new UnsupportedOperationException();
     }
 }

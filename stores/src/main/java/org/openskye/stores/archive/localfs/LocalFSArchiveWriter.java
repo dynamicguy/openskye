@@ -55,7 +55,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
-                final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb, om, true);
+                final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
                 final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
                 if (log.isDebugEnabled())
                     log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
@@ -92,7 +92,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             } else if (simpleObject instanceof UnstructuredObject) {
                 // we can just store this as a file
                 UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
-                final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb, om, true);
+                final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
 
                 try {
                     FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), tempStoragePath);
@@ -119,7 +119,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     private void postProcess(ArchiveContentBlock acb, File tempStoragePath, SimpleObject simpleObject) {
         try {
             simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
-            File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb, simpleObject.getObjectMetadata(), true);
+            File targetPath = localFilesystemArchiveStore.getAcbPath(acb, true);
             FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
 
             FileInputStream fis = new FileInputStream(targetPath);

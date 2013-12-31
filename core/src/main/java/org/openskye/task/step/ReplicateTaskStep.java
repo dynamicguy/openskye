@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ArchiveStore;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
+import org.openskye.domain.dao.NodeDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
-import org.openskye.node.NodeManager;
+import org.openskye.replicate.Replicator;
 import org.openskye.stores.StoreRegistry;
 
 /**
@@ -26,19 +26,25 @@ public class ReplicateTaskStep extends TaskStep {
     private ObjectMetadataRepository omr;
     @Inject
     private StoreRegistry storeRegistry;
+    @Inject
+    private NodeDAO nodeDAO;
     @Getter
     @Setter
     private Node node;
+    @Getter
+    @Setter
+    private Project project;
     @Inject
     private ArchiveStoreDefinitionDAO archiveStoreDefinitionDAO;
     private ArchiveStoreDefinition archiveStoreDefinition;
 
-    public ArchiveStoreDefinition getArchiveStoreDefinition() {
-        return archiveStoreDefinition;
+    public ReplicateTaskStep(Project project, Node node) {
+        this.node = node;
+        this.project = project;
     }
 
-    public Project getProject() {
-        return null;
+    public ArchiveStoreDefinition getArchiveStoreDefinition() {
+        return archiveStoreDefinition;
     }
 
     @Override
@@ -73,17 +79,18 @@ public class ReplicateTaskStep extends TaskStep {
 
         ArchiveStore archiveStore = optionalArchiveStore.get();
 
-        beginTransaction();
+        Optional<Replicator> replicator = archiveStore.getReplicator();
 
-        // Get the ACB's that are missing for this node
-        for (ArchiveContentBlock acb : omr.getMissingAcbsForNode(NodeManager.getNode(), archiveStoreDefinition)) {
-            if (acb.getArchiveStoreInstanceId().equals(archiveStoreDefinition.getArchiveStoreInstance().getId())) {
-                archiveStore.putAcb(acb);
-            }
+        if (replicator.isPresent()) {
+            beginTransaction();
+
+            replicator.get().replicate(node, getProject());
+
+            commitTransaction();
+            return TaskStatus.COMPLETED;
+        } else {
+            return TaskStatus.FAILED;
         }
-
-        commitTransaction();
-        return TaskStatus.COMPLETED;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import org.openskye.core.*;
 import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Task;
+import org.openskye.replicate.Replicator;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -98,8 +99,8 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public ArchiveContentBlock putAcb(ArchiveContentBlock acb) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
+    public Optional<Replicator> getReplicator() {
+        return Optional.absent();
     }
+
 }

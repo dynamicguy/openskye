@@ -9,7 +9,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class Node implements Identifiable {
     @JsonIgnore
     private List<NodeArchiveStoreInstance> nodeArchiveStoreInstances = new ArrayList<>();
     @JsonIgnore
-    private String lastHostName;
+    private String hostname;
     @JsonIgnore
-    private String lastIpAddress;
+    private String serviceAccount;
 }

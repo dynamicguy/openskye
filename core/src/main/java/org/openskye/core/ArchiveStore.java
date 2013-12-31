@@ -3,6 +3,7 @@ package org.openskye.core;
 import com.google.common.base.Optional;
 import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Task;
+import org.openskye.replicate.Replicator;
 
 /**
  * Represents the interface for an <code>ArchiveStore</code>.
@@ -104,10 +105,13 @@ public interface ArchiveStore {
     void destroy(ObjectMetadata om);
 
     /**
-     * Puts an ACB into the archive store
+     * Returns an instance of a replicator that is designed for this type
+     * of archive store
+     * <p/>
+     * Note: if the store doesn't support replication then it will return
+     * an Optional.absent()
      *
-     * @param acb The ACB to put in the store
-     * @return The ACB that has been put in the store
+     * @return Optionally return the replicator for this archive store
      */
-    ArchiveContentBlock putAcb(ArchiveContentBlock acb);
+    Optional<Replicator> getReplicator();
 }

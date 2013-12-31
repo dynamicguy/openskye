@@ -153,10 +153,10 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
-        if(queryChecksum!=null) {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath), cb.equal(root.get(ObjectMetadata_.checksum),queryChecksum));
-        } else{
-            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath));
+        if (queryChecksum != null) {
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum));
+        } else {
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath));
         }
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);
@@ -390,7 +390,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     }
 
     @Override
-    public Iterable<ArchiveContentBlock> getMissingAcbsForNode(Node node, ArchiveStoreDefinition archiveStoreInstance) {
+    public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
         return null;
     }
 }
