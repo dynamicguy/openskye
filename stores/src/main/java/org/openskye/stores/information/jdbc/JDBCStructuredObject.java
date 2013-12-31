@@ -3,7 +3,6 @@ package org.openskye.stores.information.jdbc;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.eobjects.metamodel.DataContext;
-import org.eobjects.metamodel.UpdateableDataContext;
 import org.eobjects.metamodel.schema.Column;
 import org.eobjects.metamodel.schema.Table;
 import org.openskye.core.StructuredObject;
@@ -18,7 +17,7 @@ import java.util.List;
  * The implementation of a {@link StructuredObject}
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class JDBCStructuredObject extends StructuredObject {
 
     private final DataContext dataContext;
@@ -29,7 +28,7 @@ public class JDBCStructuredObject extends StructuredObject {
         this.dataContext = dataContext;
     }
 
-    public JDBCStructuredObject(UpdateableDataContext dataContext) {
+    public JDBCStructuredObject(DataContext dataContext) {
         this.dataContext = dataContext;
         this.table = dataContext.getDefaultSchema().getTable(0);
     }

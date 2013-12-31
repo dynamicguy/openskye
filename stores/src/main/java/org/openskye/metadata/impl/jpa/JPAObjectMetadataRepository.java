@@ -391,6 +391,9 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
-        return null;
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createNamedQuery("ArchiveContentBlock.findACBsForReplication", ArchiveContentBlock.class);
+        query.setParameter("primaryNodeId", primary.getId());
+        query.setParameter("targetNodeId", target.getId());
+        return query.getResultList();
     }
 }

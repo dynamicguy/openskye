@@ -9,6 +9,7 @@ import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Channel;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.task.step.*;
@@ -36,6 +37,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     @Parameter(names = "--cull")
     protected boolean cull;
     @Parameter(names = "--classify")
+    protected boolean replicate;
+    @Parameter(names = "--replicate")
     protected boolean classify;
     @Parameter(names = "--verify")
     protected boolean verify;
@@ -78,6 +81,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
             classify();
         } else if (verify) {
             verify();
+        } else if (replicate) {
+            replicate();
         } else if (extract) {
             extract();
         } else if (destroy) {
@@ -121,6 +126,14 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new CullTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         step = (CullTaskStep)selectReferenceField(new ReferenceField(Project.class),step);
+        create(step);
+    }
+
+    public void replicate() {
+        TaskStep step = new ReplicateTaskStep();
+        output.message("Creating a new " + step.getLabel() + " task:\n");
+        step = (ReplicateTaskStep)selectReferenceField(new ReferenceField(Project.class),step);
+        step = (ReplicateTaskStep)selectReferenceField(new ReferenceField(Node.class),step);
         create(step);
     }
 

@@ -44,7 +44,7 @@ public class TaskResource extends ProjectSpecificResource<Task> {
 
     private Task createFromStep(TaskStep newStep) {
         injector.injectMembers(newStep);
-        projectID=newStep.getProject().getId();
+        projectID = newStep.getProject().getId();
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);
@@ -57,6 +57,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Transactional
     @Timed
     public Task create(DiscoverTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
+    @ApiOperation(value = "Create new replication task", notes = "Create a new replication task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/replicate")
+    @Transactional
+    @Timed
+    public Task create(ReplicateTaskStep newStep) {
         return createFromStep(newStep);
     }
 
@@ -131,9 +140,9 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Override
     public Task get(@PathParam("id") String id) {
         authorize("get");
-        if(taskDAO.get(id).isPresent()){
+        if (taskDAO.get(id).isPresent()) {
             Task result = taskDAO.get(id).get();
-            projectID=result.getProject().getId();
+            projectID = result.getProject().getId();
             return super.get(id);
         } else {
             throw new NotFoundException();
@@ -146,9 +155,9 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Transactional
     @Timed
     public PaginatedResult<TaskLog> getTaskLogs(@PathParam("id") String id) {
-        if(taskDAO.get(id).isPresent()){
+        if (taskDAO.get(id).isPresent()) {
             Task result = taskDAO.get(id).get();
-            projectID=result.getProject().getId();
+            projectID = result.getProject().getId();
             authorize("get");
             return taskLogDAO.getLogsForTask(result);
         } else {

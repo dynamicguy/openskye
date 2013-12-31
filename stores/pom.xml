@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.eobjects.metamodel</groupId>
             <artifactId>MetaModel-full</artifactId>
-            <version>3.4.4</version>
+            <version>3.4.7</version>
         </dependency>
 
         <!-- Helpers for filesystems -->
