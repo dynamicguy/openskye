@@ -67,9 +67,20 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-c3p0</artifactId>
-			<version>4.1.12.Final</version>
+			<version>4.2.7.SP1</version>
+			<exclusions>
+		        <exclusion>
+		        	<!--  excluding because we want a version that supports JDBC4 -->
+		            <groupId>com.mchange</groupId>
+		            <artifactId>c3p0</artifactId>
+		        </exclusion>
+    		</exclusions>
 		</dependency>
-
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5-pre6</version>
+        </dependency>
         <!-- Setup basic logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -123,8 +134,14 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>2.1.5</version>
+            <exclusions>
+		        <exclusion>
+		        	<!--  excluding because we want a version that supports JDBC4 -->
+		            <groupId>c3p0</groupId>
+		            <artifactId>c3p0</artifactId>
+		        </exclusion>
+    		</exclusions>
         </dependency>
-
 
         <dependency>
             <groupId>commons-io</groupId>
