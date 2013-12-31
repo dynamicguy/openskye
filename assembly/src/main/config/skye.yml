@@ -14,6 +14,34 @@ database:
   # Hibernate dialect
   dialect: "org.hibernate.dialect.H2Dialect"
 
+  # hibernate.connection.provider_class
+  connectionProviderClass: org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider
+
+  # hibernate.c3p0.max_size
+  poolMaxSize: 100
+
+  # hibernate.c3p0.min_size
+  poolMinSize: 1
+
+  # hibernate.c3p0.timeout
+  poolTimeOut: 3600
+
+  # hibernate.c3p0.max_statements
+  poolMaxStatements: 100
+
+  # hibernate.c3p0.idle_test_period in seconds
+  poolIdleTestPeriod: 60
+
+  # hibernate.connection.pool_size
+  connectionPoolSize: 5
+
+  # hibernate.c3p0.preferredTestQuery
+  poolPreferredTestQuery: SELECT 1
+
+  # hibernate.c3p0.testConnectionOnCheckout
+  poolTestConnectionOnCheckout: false
+
+
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
   oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch

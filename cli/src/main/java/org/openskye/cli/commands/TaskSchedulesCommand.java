@@ -57,6 +57,7 @@ public class TaskSchedulesCommand extends AbstractTaskStepCommand {
         output.message("Creating a new " + step.getLabel() + " task schedule:\n");
         TaskSchedule taskSchedule = step.toTaskSchedule(cronExpression);
         Identifiable result = (Identifiable) getResource("taskSchedules").post(TaskSchedule.class, taskSchedule);
+        saveAlias(result.getId());
         output.success("Created task schedule with id " + result.getId());
     }
 

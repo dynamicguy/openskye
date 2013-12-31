@@ -1,6 +1,7 @@
 package org.openskye.cli.commands;
 
 import com.beust.jcommander.DynamicParameter;
+import com.beust.jcommander.Parameter;
 import com.google.common.base.CaseFormat;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -21,6 +22,8 @@ public abstract class ExecutableCommand {
 
     @DynamicParameter(names = {"-P"}, description = "Additional parameters")
     public Map<String, String> dynamicParams = new HashMap<>();
+    @Parameter(names = "-A")
+    protected String alias;
     protected SkyeCliSettings settings;
     protected Client client = Client.create();
     protected ConsoleLogger output;
@@ -122,6 +125,14 @@ public abstract class ExecutableCommand {
 
     protected Object selectReferenceField(ReferenceField field, Object newObject) {
         String id = dynamicParams.get(field.getName());
+
+        // If the user supplied id is a known alias, replace it with the actual id
+        String aliasMatch = settings.getIdMap().get(id);
+        if ( aliasMatch != null ) {
+            output.message("Alias "+id+" resolved to "+aliasMatch);
+            id = aliasMatch;
+        }
+
         try {
             Object result = getResource(field.getResource() + "/" + id).get(field.getClazz());
             output.raw(result.toString());
@@ -161,6 +172,15 @@ public abstract class ExecutableCommand {
 
     protected String toCamel(String name) {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    protected void saveAlias(String id) {
+        // If an alias was given with the -A option, store the created Id with that alias in settings
+        if ( alias != null ) {
+            output.message("Id "+id+" saved to alias "+alias);
+            settings.getIdMap().put(alias, id);
+            settings.save();
+        }
     }
 
 }

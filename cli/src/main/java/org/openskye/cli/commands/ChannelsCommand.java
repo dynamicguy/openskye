@@ -86,7 +86,7 @@ public class ChannelsCommand extends AbstractCrudCommand {
             }
         }
         Channel result = (Channel) getResource(getCollectionPlural()).post(getClazz(), newObject);
-
+        saveAlias(result.getId());
         output.success("Created " + getCollectionSingular() + " with id " + result.getId());
     }
 

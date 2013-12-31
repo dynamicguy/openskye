@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ public class InformationStoreDefinition implements Identifiable {
     @Column(unique = true, length = 36)
     private String id;
     @NotNull
+    @NotBlank
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
