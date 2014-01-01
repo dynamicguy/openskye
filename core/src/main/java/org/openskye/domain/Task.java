@@ -73,7 +73,6 @@ public class Task implements Identifiable {
     @JsonIgnore
     private String stepJson;
     @Transient
-    @JsonIgnore
     private TaskStep step;
     @Transient
     private String stepLabel;
