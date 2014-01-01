@@ -3,6 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.joda.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,12 +49,15 @@ public class Task implements Identifiable {
     private TaskStatus status = TaskStatus.CREATED;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "QUEUED")
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
     private LocalDateTime queued;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "STARTED")
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
     private LocalDateTime started;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "ENDED")
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
     private LocalDateTime ended;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
@@ -68,6 +73,7 @@ public class Task implements Identifiable {
     @JsonIgnore
     private String stepJson;
     @Transient
+    @JsonIgnore
     private TaskStep step;
     @Transient
     private String stepLabel;
