@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.AttributeDefinition;
 import org.openskye.domain.Project;
 import org.openskye.domain.RetentionPolicy;
 import org.openskye.domain.TaskStatus;
@@ -84,7 +86,6 @@ public class CullTaskStep extends TaskStep {
         objectSet = omr.createObjectSet(setName);
 
         for ( ObjectMetadata om : omr.getObjects(project) ) {
-            //TODO: ensure recordsCode field is attached to each object during ingestion
             String recordsCode = om.getMetadata().get("recordsCode");
             if ( recordsCode == null ) {
                 // objects without a retention policy are not culled
@@ -103,7 +104,15 @@ public class CullTaskStep extends TaskStep {
     }
 
     private boolean isPastRetention( ObjectMetadata om, RetentionPolicy policy ) {
-        DateTime triggerDate = om.getLastModified(); //TODO: trigger date may be something else
+        DateTime triggerDate;
+        AttributeDefinition triggerDefinition = policy.getTriggerDateAttributeDefinition();
+        if ( triggerDefinition == null ) {
+            // The retention period is triggered by the last modification of the object
+            triggerDate = om.getLastModified();
+        } else {
+            // The retention period is triggered by an event, the date/time of which is stored in metadata
+            triggerDate = DateTime.parse(om.getMetadata().get(triggerDefinition.getShortLabel()), DateTimeFormat.fullDateTime());
+        }
         int retentionDays = 0;
         switch ( policy.getPeriodType() ) {
             case PERM:
