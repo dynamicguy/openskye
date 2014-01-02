@@ -3,6 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,10 +75,21 @@ public class Task implements Identifiable {
     @JsonIgnore
     private String stepJson;
     @Transient
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "stepClassName")
+    @JsonSubTypes({
+        @JsonSubTypes.Type(value=org.openskye.task.step.ArchiveTaskStep.class, name="ArchiveTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.ClassifyTaskStep.class, name="ClassifyTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.CullTaskStep.class, name="CullTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.DestroyTaskStep.class, name="DestroyTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.DiscoverTaskStep.class, name="DiscoverTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.ExtractTaskStep.class, name="ExtractTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.TestTaskStep.class, name="TestTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.VerifyTaskStep.class, name="VerifyTaskStep")
+    })
     private TaskStep step;
     @Transient
     private String stepLabel;
-
+    
     @PostLoad
     public void deserialize() {
         try {
