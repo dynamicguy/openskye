@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,14 @@ public class Role implements Identifiable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
     @JsonIgnore
     private List<RolePermission> rolePermissions = new ArrayList<>();
+
+    @NotNull
+    @NotBlank
+    @Column(unique=true)
     private String name;
 
 }

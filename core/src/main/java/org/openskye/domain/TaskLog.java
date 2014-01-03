@@ -23,8 +23,7 @@ import java.io.IOException;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "id")
-public class
-        TaskLog implements Identifiable {
+public class TaskLog implements Identifiable {
     @Transient
     private final static ObjectMapper MAPPER = new ObjectMapper();
     @Id

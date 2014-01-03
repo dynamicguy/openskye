@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
@@ -19,6 +20,7 @@ public class Tag {
 
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
 
 }

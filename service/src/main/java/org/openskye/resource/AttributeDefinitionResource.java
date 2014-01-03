@@ -1,6 +1,7 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -10,6 +11,7 @@ import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.BadRequestException;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -100,11 +102,14 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     @Timed
     public Boolean isInUse(@PathParam("id") String id)
     {
-        AttributeDefinition definition = new AttributeDefinition();
+        Optional<AttributeDefinition> definition = getDAO().get(id);
 
-        definition.setId(id);
+        if(!definition.isPresent())
+        {
+            throw new NotFoundException();
+        }
 
-        return Boolean.valueOf(getDAO().isInUse(definition));
+        return Boolean.valueOf(getDAO().isInUse(definition.get()));
     }
 
     @Override

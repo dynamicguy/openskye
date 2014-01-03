@@ -33,6 +33,7 @@ public class AttributeDefinition implements Identifiable {
     private MetadataTemplate metadataTemplate;
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     @NotNull
     @NotBlank

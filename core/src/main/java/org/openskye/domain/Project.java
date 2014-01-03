@@ -43,6 +43,7 @@ public class Project implements Identifiable {
     private List<Channel> channels = new ArrayList<>();
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore

@@ -27,6 +27,7 @@ public class RetentionPolicy implements Identifiable {
     private String id;
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     private String description;
     @NotNull
