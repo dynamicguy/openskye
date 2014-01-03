@@ -63,7 +63,7 @@ public class ChannelsCommand extends AbstractCrudCommand {
             for(String id : storeIds) {
 
             try {
-                    ArchiveStoreDefinition chosenDef = getResource("archiveStores/" + BeanUtils.getProperty(id, "id")).get(ArchiveStoreDefinition.class);
+                    ArchiveStoreDefinition chosenDef = getResource("archiveStoreDefinitions/" + resolveAlias(id)).get(ArchiveStoreDefinition.class);
                     ChannelArchiveStore cas = new ChannelArchiveStore();
                     cas.setArchiveStoreDefinition(chosenDef);
                     newObject.getChannelArchiveStores().add(cas);
