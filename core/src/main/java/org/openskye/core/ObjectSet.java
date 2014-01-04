@@ -29,6 +29,7 @@ public class ObjectSet {
     private String id;
     @NotBlank
     @NotNull
+    @Column(unique=true)
     private String name;
     private boolean onHold;
     @ManyToMany

@@ -29,6 +29,7 @@ public class InformationStoreDefinition implements Identifiable {
     private String id;
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")

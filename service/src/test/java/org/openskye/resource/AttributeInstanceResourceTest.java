@@ -5,6 +5,7 @@ import org.junit.ClassRule;
 import org.openskye.domain.AttributeInstance;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeInstanceDAO;
+import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
@@ -15,9 +16,11 @@ public class AttributeInstanceResourceTest extends AbstractResourceTest<Attribut
 
     public static final AttributeInstanceDAO dao = mock(AttributeInstanceDAO.class);
 
+    public static final ChannelDAO channelDAO = mock(ChannelDAO.class);
+
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new AttributeInstanceResource(dao))
+            .addResource(new AttributeInstanceResource(dao, channelDAO))
             .addProvider(new AuthorizationExceptionMapper())
             .addProvider(new AuthenticationExceptionMapper())
             .build();

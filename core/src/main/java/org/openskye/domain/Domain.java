@@ -30,6 +30,7 @@ public class Domain implements Identifiable {
     private String id;
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "domain")
     @JsonIgnore

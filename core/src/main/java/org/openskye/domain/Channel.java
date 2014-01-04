@@ -38,6 +38,7 @@ public class Channel implements Identifiable {
     private List<ChannelArchiveStore> channelArchiveStores = new ArrayList<>();
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")

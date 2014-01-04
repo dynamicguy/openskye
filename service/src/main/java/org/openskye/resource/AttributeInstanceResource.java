@@ -1,13 +1,17 @@
 package org.openskye.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.google.inject.persist.Transactional;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.domain.AttributeInstance;
+import org.openskye.domain.Channel;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeInstanceDAO;
+import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.PaginatedResult;
+import org.openskye.exceptions.NotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -24,9 +28,12 @@ public class AttributeInstanceResource extends AbstractUpdatableDomainResource<A
 
     protected AttributeInstanceDAO attributeInstanceDAO;
 
+    protected ChannelDAO channelDAO;
+
     @Inject
-    public AttributeInstanceResource(AttributeInstanceDAO dao) {
+    public AttributeInstanceResource(AttributeInstanceDAO dao, ChannelDAO injectedChannelDAO) {
         this.attributeInstanceDAO = dao;
+        this.channelDAO = injectedChannelDAO;
     }
 
     @ApiOperation(value = "Create new attribute", notes = "Create a new attribute and return with its unique id", response = AttributeInstance.class)
@@ -74,6 +81,28 @@ public class AttributeInstanceResource extends AbstractUpdatableDomainResource<A
     @Override
     public Response delete(@PathParam("id") String id) {
         return super.delete(id);
+    }
+
+    @ApiOperation(value = "Get instances for a channel",
+                  notes = "Given a channel, returns a paginated structure containing all defined attribute instances",
+                  responseContainer = "List",
+                  response = AttributeInstance.class)
+    @Path("/channel/{channelId}")
+    @GET
+    @Transactional
+    @Timed
+    public PaginatedResult<AttributeInstance> getInstances(@PathParam("channelId") String channelId)
+    {
+        Optional<Channel> channel = channelDAO.get(channelId);
+
+        if(!channel.isPresent())
+        {
+            throw new NotFoundException();
+        }
+
+        Iterable<AttributeInstance> attributeInstances = attributeInstanceDAO.getInstances(channel.get());
+
+        return new PaginatedResult<>(attributeInstances);
     }
 
     @Override
