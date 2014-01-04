@@ -53,9 +53,7 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         props.put("hibernate.c3p0.max_size", configuration.getDatabaseConfiguration().getPoolMaxSize());
         props.put("hibernate.c3p0.min_size", configuration.getDatabaseConfiguration().getPoolMinSize());
         props.put("hibernate.c3p0.timeout", configuration.getDatabaseConfiguration().getPoolTimeOut());
-        props.put("hibernate.c3p0.max_statements", configuration.getDatabaseConfiguration().getPoolMaxStatements());
         props.put("hibernate.c3p0.idle_test_period", configuration.getDatabaseConfiguration().getPoolIdleTestPeriod());
-        props.put("hibernate.connection.pool_size", configuration.getDatabaseConfiguration().getConnectionPoolSize());
         props.put("hibernate.c3p0.preferredTestQuery", configuration.getDatabaseConfiguration().getPoolPreferredTestQuery());
         props.put("hibernate.c3p0.testConnectionOnCheckout", configuration.getDatabaseConfiguration().getPoolTestConnectionOnCheckout());
 
