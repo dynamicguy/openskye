@@ -91,6 +91,9 @@ public class DiscoverTaskStep extends TaskStep {
                         for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {
                             om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
                         }
+                        if (getChannel().getRetentionPolicy() != null) {
+                            om.getMetadata().put(MetadataConstants.RETENTION_POLICY_ID, channel.getRetentionPolicy().getId());
+                        }
                         om.setTaskId(task.getId());
                         omr.put(om);
                         oms.index(om);

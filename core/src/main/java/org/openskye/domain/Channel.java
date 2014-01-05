@@ -3,6 +3,7 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
@@ -46,5 +47,9 @@ public class Channel implements Identifiable {
     @JsonManagedReference("channelFilters")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     private List<ChannelFilterDefinition> channelFilters = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "RETENTION_POLICY_ID")
+    @JsonIgnoreProperties({"metadata", "description"})
+    private RetentionPolicy retentionPolicy;
 
 }
