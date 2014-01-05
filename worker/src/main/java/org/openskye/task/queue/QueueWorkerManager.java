@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
+import org.openskye.bootstrap.CreateNode;
 import org.openskye.config.WorkerConfiguration;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Node;
@@ -40,6 +41,8 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     @Inject
     Injector injector;
     @Inject
+    CreateNode createNode;
+    @Inject
     private Provider<EntityManager> emf;
     // keep a map from task id's to futures for submitted task steps
     private Map<String, Future<TaskStatus>> futures;
@@ -57,12 +60,14 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     public void start() {
 
         // We need to ensure that the node is properly set-up
-        if (workerConfig.getNodeId() == null || workerConfig.getNodeId().isEmpty())
-            throw new SkyeException("You have not set-up the nodeId in your configuration,  create a node on the server and then configure this worker with its node id.");
+        if (workerConfig.getHostname() == null || workerConfig.getHostname().isEmpty())
+            throw new SkyeException("You have not set-up the hostname in your configuration");
 
-        Optional<Node> node = nodeDAO.get(workerConfig.getNodeId());
-        if (!node.isPresent())
-            throw new SkyeException("Node id " + workerConfig.getNodeId() + " is not registered,  worker WILL NOT function!");
+        Optional<Node> node = nodeDAO.findByHostname(workerConfig.getHostname());
+        if (!node.isPresent()) {
+            log.info("Creating node for hostname " + workerConfig.getHostname());
+            createNode.createNode(workerConfig.getHostname());
+        }
 
         monitor = Executors.newSingleThreadScheduledExecutor();
         workers = Executors.newFixedThreadPool(workerConfig.getThreadCount());
@@ -71,7 +76,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Override
     public void run() {
-        log.debug(workerConfig.getNodeId() + ": monitor wakes up ..");
+        log.debug(workerConfig.getHostname() + ": monitor wakes up ..");
 
         // Look for tasks that have ended
         Set<String> taskIds = futures.keySet();
@@ -109,7 +114,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     emf.get().getTransaction().commit();
                 } catch (Exception e) {
                     log.error("Error while recording end of task " + taskId, e);
-                    log.debug(workerConfig.getNodeId() + ": end task " + taskId);
+                    log.debug(workerConfig.getHostname() + ": end task " + taskId);
                 }
             }
         }
@@ -121,7 +126,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         boolean queuedTasks = true;
         while (tries < maxThreads && futures.size() < maxThreads && queuedTasks) {
             try {
-                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getNodeId());
+                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getHostname());
                 if (task == null || !task.isPresent()) {
                     queuedTasks = false;
                 } else {
@@ -133,11 +138,11 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     step.rehydrate();
 
                     emf.get().getTransaction().begin();
-                    accept(taskId, workerConfig.getNodeId());
+                    accept(taskId, workerConfig.getHostname());
                     emf.get().getTransaction().commit();
 
                     futures.put(taskId, workers.submit(step));
-                    log.debug(workerConfig.getNodeId() + ": begin task " + taskId);
+                    log.debug(workerConfig.getHostname() + ": begin task " + taskId);
                 }
             } catch (Exception e) {
                 log.error("Exception while accepting task", e);

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,8 +31,7 @@ public class Node implements Identifiable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "node")
     @JsonIgnore
     private List<NodeArchiveStoreInstance> nodeArchiveStoreInstances = new ArrayList<>();
-    @JsonIgnore
+    @NaturalId
     private String hostname;
-    @JsonIgnore
     private String serviceAccount;
 }
