@@ -1,6 +1,5 @@
 package org.openskye.bootstrap;
 
-import com.google.inject.persist.PersistService;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.domain.Node;
 import org.openskye.domain.dao.NodeDAO;
@@ -15,15 +14,6 @@ public class CreateNode {
 
     @Inject
     private NodeDAO nodeDAO;
-
-    @Inject
-    CreateNode(PersistService service) {
-
-        service.start();
-
-        // At this point JPA is started and ready.
-
-    }
 
     public Node createNode(String hostname) {
         nodeDAO.getEntityManagerProvider().get().getTransaction().begin();

@@ -16,6 +16,8 @@ import org.openskye.domain.dao.TaskDAO;
 import org.openskye.task.step.TaskStep;
 
 import javax.persistence.EntityManager;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -46,6 +48,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     private Provider<EntityManager> emf;
     // keep a map from task id's to futures for submitted task steps
     private Map<String, Future<TaskStatus>> futures;
+    private Node currentNode;
 
     public QueueWorkerManager() {
         // Concurrent map so that REST status requests are in sync with monitor
@@ -61,12 +64,18 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
         // We need to ensure that the node is properly set-up
         if (workerConfig.getHostname() == null || workerConfig.getHostname().isEmpty())
-            throw new SkyeException("You have not set-up the hostname in your configuration");
+            try {
+                workerConfig.setHostname(InetAddress.getLocalHost().getHostName());
+            } catch (UnknownHostException e) {
+                throw new SkyeException("Unable to get the hostname for this worker,  therefore we can not identify which node we are on", e);
+            }
 
         Optional<Node> node = nodeDAO.findByHostname(workerConfig.getHostname());
         if (!node.isPresent()) {
             log.info("Creating node for hostname " + workerConfig.getHostname());
-            createNode.createNode(workerConfig.getHostname());
+            currentNode = createNode.createNode(workerConfig.getHostname());
+        } else {
+            currentNode = node.get();
         }
 
         monitor = Executors.newSingleThreadScheduledExecutor();
@@ -126,7 +135,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         boolean queuedTasks = true;
         while (tries < maxThreads && futures.size() < maxThreads && queuedTasks) {
             try {
-                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getHostname());
+                Optional<Task> task = taskDAO.findOldestQueued(currentNode);
                 if (task == null || !task.isPresent()) {
                     queuedTasks = false;
                 } else {

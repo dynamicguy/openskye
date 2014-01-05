@@ -2,6 +2,7 @@ package org.openskye.domain.dao;
 
 
 import com.google.common.base.Optional;
+import org.openskye.domain.Node;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskSchedule;
 import org.openskye.domain.TaskStatus;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public class TaskDAO extends AbstractPaginatingDAO<Task> {
 
-    public Optional<Task> findOldestQueued(String nodeId) {
+    public Optional<Task> findOldestQueued(Node node) {
         Task nextTask = null;
         try {
             CriteriaBuilder builder = getCriteriaBuilder();
@@ -26,7 +27,7 @@ public class TaskDAO extends AbstractPaginatingDAO<Task> {
             criteria.select(taskRoot);
             criteria.where(builder.and(
                     builder.equal(taskRoot.get("status"), TaskStatus.QUEUED)),
-                    builder.equal(taskRoot.get("nodeId"), nodeId)
+                    builder.equal(taskRoot.get("assignedNode"), node)
             ).orderBy(builder.asc(taskRoot.get("queued")));
             List<Task> taskList = currentEntityManager().createQuery(criteria).getResultList();
             if (taskList.size() > 0) {
