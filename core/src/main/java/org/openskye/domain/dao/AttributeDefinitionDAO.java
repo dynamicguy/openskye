@@ -11,7 +11,9 @@ public class AttributeDefinitionDAO extends AbstractPaginatingDAO<AttributeDefin
 
     public boolean isInUse(AttributeDefinition definition)
     {
-        Query query = currentEntityManager().createQuery("SELECT count(*) FROM AttributeInstance ai " +
+        Query query = currentEntityManager().createQuery(
+                "SELECT count(*) " +
+                "FROM AttributeInstance ai " +
                 "JOIN ai.attributeDefinition ad " +
                 "where ad = :attributeDefinition");
 

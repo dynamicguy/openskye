@@ -3,6 +3,10 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.joda.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,12 +52,15 @@ public class Task implements Identifiable {
     private TaskStatus status = TaskStatus.CREATED;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "QUEUED")
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
     private LocalDateTime queued;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "STARTED")
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
     private LocalDateTime started;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     @Column(name = "ENDED")
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
     private LocalDateTime ended;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "task")
     private TaskStatistics statistics = new TaskStatistics();
@@ -69,10 +76,21 @@ public class Task implements Identifiable {
     @JsonIgnore
     private String stepJson;
     @Transient
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "stepClassName")
+    @JsonSubTypes({
+        @JsonSubTypes.Type(value=org.openskye.task.step.ArchiveTaskStep.class, name="ArchiveTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.ClassifyTaskStep.class, name="ClassifyTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.CullTaskStep.class, name="CullTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.DestroyTaskStep.class, name="DestroyTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.DiscoverTaskStep.class, name="DiscoverTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.ExtractTaskStep.class, name="ExtractTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.TestTaskStep.class, name="TestTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.VerifyTaskStep.class, name="VerifyTaskStep")
+    })
     private TaskStep step;
     @Transient
     private String stepLabel;
-
+    
     @PostLoad
     public void deserialize() {
         try {

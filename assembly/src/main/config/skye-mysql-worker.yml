@@ -14,33 +14,37 @@ database:
   # Hibernate dialect
   dialect: "org.hibernate.dialect.MySQLDialect"
   
-    # C3PO connection pool settings below
+  # C3PO connection pool settings below
   # hibernate.connection.provider_class
   connectionProviderClass: org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider 
   
   # hibernate.c3p0.max_size
-  poolMaxSize: 100
+  poolMaxSize: 120
   
   # hibernate.c3p0.min_size
-  poolMinSize: 1
+  poolMinSize: 10
   
   # hibernate.c3p0.timeout
   poolTimeOut: 3600
   
-  # hibernate.c3p0.max_statements
-  poolMaxStatements: 100
-  
   # hibernate.c3p0.idle_test_period in seconds
   poolIdleTestPeriod: 60
   
-  # hibernate.connection.pool_size
-  connectionPoolSize: 5
-
   # hibernate.c3p0.preferredTestQuery
   poolPreferredTestQuery: SELECT 1
 
   # hibernate.c3p0.testConnectionOnCheckout
   poolTestConnectionOnCheckout: false
+  
+  # poolConnectionMaxIdleTime
+  poolConnectionMaxIdleTime: 3600
+  
+  # maxIdleTimeExcessConnections
+  maxIdleTimeExcessConnections: 900
+  
+  # unreturnedConnectionTimeout
+  unreturnedConnectionTimeout: 3600
+  
 
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository

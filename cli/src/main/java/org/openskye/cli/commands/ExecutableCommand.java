@@ -123,15 +123,19 @@ public abstract class ExecutableCommand {
         return newObject;
     }
 
-    protected Object selectReferenceField(ReferenceField field, Object newObject) {
-        String id = dynamicParams.get(field.getName());
-
-        // If the user supplied id is a known alias, replace it with the actual id
-        String aliasMatch = settings.getIdMap().get(id);
+    protected String resolveAlias(String s) {
+        String aliasMatch = settings.getIdMap().get(s);
         if ( aliasMatch != null ) {
-            output.message("Alias "+id+" resolved to "+aliasMatch);
-            id = aliasMatch;
+            output.message("Alias "+s+" resolved to "+aliasMatch);
+            return aliasMatch;
+        } else {
+            return s;
         }
+    }
+
+    protected Object selectReferenceField(ReferenceField field, Object newObject) {
+        // If the user supplied id is a known alias, replace it with the actual id
+        String id = resolveAlias(dynamicParams.get(field.getName()));
 
         try {
             Object result = getResource(field.getResource() + "/" + id).get(field.getClazz());

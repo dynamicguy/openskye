@@ -33,6 +33,7 @@ public class ArchiveStoreInstance implements Identifiable {
     private String id;
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     // The name of the {@link ArchiveStore} implementation
     @NotNull

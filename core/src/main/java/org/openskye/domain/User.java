@@ -37,6 +37,7 @@ public class User implements Identifiable {
     private String email;
     @NotNull
     @NotBlank
+    @Column(unique=true)
     private String name;
     @JsonIgnore
     private String passwordHash;

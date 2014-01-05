@@ -23,15 +23,17 @@ public class DatabaseConfiguration {
     private Integer poolMinSize;
     // hibernate.c3p0.timeout
     private Integer poolTimeOut;
-    // hibernate.c3p0.max_statements
-    private Integer poolMaxStatements;
     // hibernate.c3p0.idle_test_period
     private Integer poolIdleTestPeriod;
-    // hibernate.connection.pool_size
-    private Integer connectionPoolSize;
     // hibernate.c3p0.preferredTestQuery
     private String poolPreferredTestQuery;
     // hibernate.c3p0.testConnectionOnCheckout
     private String poolTestConnectionOnCheckout;
+    
+    private Integer poolConnectionMaxIdleTime;
+    
+    private Integer maxIdleTimeExcessConnections;
+    
+    private Integer unreturnedConnectionTimeout;
 
 }
