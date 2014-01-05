@@ -43,7 +43,7 @@ database:
   maxIdleTimeExcessConnections: 900
   
   # unreturnedConnectionTimeout
-  unreturnedConnectionTimeout: 3600
+  unreturnedConnectionTimeout: 0
   
 
 services:

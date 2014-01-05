@@ -33,7 +33,7 @@ database:
   poolPreferredTestQuery: SELECT 1
 
   # hibernate.c3p0.testConnectionOnCheckout
-  poolTestConnectionOnCheckout: false
+  poolTestConnectionOnCheckout: true
   
   # poolConnectionMaxIdleTime
   poolConnectionMaxIdleTime: 3600
@@ -42,7 +42,7 @@ database:
   maxIdleTimeExcessConnections: 900
   
   # unreturnedConnectionTimeout
-  unreturnedConnectionTimeout: 3600
+  unreturnedConnectionTimeout: 0
 
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
