@@ -7,14 +7,16 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 /**
- * An instance of an attribute defined by an {@link AttributeDefinition}
+ * An instance of an attribute defined by an {@link AttributeDefinition}.
  */
 @Entity
 @Table(name = "ATTRIBUTE_INSTANCE")
 @Data
 @EqualsAndHashCode(of = "id")
 public class AttributeInstance implements Identifiable {
-
+    /**
+     * The id for this attribute.
+     */
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

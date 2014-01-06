@@ -14,7 +14,7 @@ import org.openskye.domain.Project;
 import java.util.List;
 
 /**
- * Managing the Projects
+ * A command to manage {@link Project}s
  */
 @Parameters(commandDescription = "Manage projects")
 @Data
@@ -25,7 +25,7 @@ public class ProjectsCommand extends AbstractCrudCommand {
     private final String commandName = "projects";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).add(new ReferenceField(Domain.class)).build();
     }
 
     @Override

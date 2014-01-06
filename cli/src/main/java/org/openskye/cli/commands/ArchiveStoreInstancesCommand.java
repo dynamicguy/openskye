@@ -12,7 +12,7 @@ import org.openskye.domain.ArchiveStoreInstance;
 import java.util.List;
 
 /**
- * Managing the Archive Store Instances
+ * A command to manage the {@link ArchiveStoreInstance}s.
  */
 @Parameters(commandDescription = "Manage archive store instances")
 @Data

@@ -14,7 +14,7 @@ public interface QueryableStore {
      *
      * @param context
      * @param query
-     * @return
+     * @return a structured object that contains the results of the query
      */
     StructuredObject executeQuery(QueryContext context, String query);
 }

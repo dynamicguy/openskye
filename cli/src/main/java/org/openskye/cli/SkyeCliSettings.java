@@ -11,15 +11,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A very simple handling storing settings for the Skye CLI
+ * A very simple handling storing settings for the Skye CLI, namely apiKey and URL
  */
 @Data
 public class SkyeCliSettings {
 
+    /**
+     * The principal user's API key
+     */
     private String apiKey = null;
+    /**
+     * The Skye API URL
+     */
     private String url = "http://localhost:5000/api/1/";
-    private Map<String,String> idMap = new HashMap<>();
+    /**
+     * A current list of aliases created by the user
+     */
+    private Map<String, String> idMap = new HashMap<>();
 
+    /**
+     * Loads the command line interface settings. The settings can be found in a file titled "settings.json" or the
+     * default settings
+     *
+     * @return a SkyeCliSettings instance that is based on either the user's settings file or the default settings if
+     *         there is no settings file.
+     */
     public static SkyeCliSettings load() {
         // Load the settings from the user's home directory
         if (getSettingsFile().exists()) {
@@ -33,6 +49,11 @@ public class SkyeCliSettings {
             return new SkyeCliSettings();
     }
 
+    /**
+     * Finds the user's settings file. Returns an empty file if there is none.
+     *
+     * @return the user's settings file, or a blank file if there is none
+     */
     private static File getSettingsFile() {
         try {
             File settingFile = new File(SystemUtils.getUserHome().getCanonicalPath() + "/.openskye/settings.json");
@@ -46,6 +67,9 @@ public class SkyeCliSettings {
         }
     }
 
+    /**
+     * Save the user's settings back to their home directory.
+     */
     public void save() {
         // Save the settings back to the user's home directory
         ObjectMapper om = new ObjectMapper();
@@ -56,6 +80,10 @@ public class SkyeCliSettings {
         }
     }
 
+    /**
+     * Checks the apiKey, throws an exception if it is null. This is a check to make sure whoever is running commands
+     * has logged in first.
+     */
     public void mustHaveApiKey() {
         if (apiKey == null)
             throw new SkyeException("API key not available, please login first");

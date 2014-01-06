@@ -26,6 +26,11 @@ public class CreateDefaultAccount {
     @Inject
     private PermissionDAO permissionDAO;
 
+    /**
+     * Starts the persistence service
+     *
+     * @param service the Java Persistence Service
+     */
     @Inject
     CreateDefaultAccount(PersistService service) {
 
@@ -35,6 +40,18 @@ public class CreateDefaultAccount {
 
     }
 
+    /**
+     * <P>Checks for the default administrator user and the default read-only user in the skye database, creates them if
+     * they don't exist.
+     * <p/>
+     * Once complete, the following users exist in the Skye database: </P> <p> <B>Default Admin:</B> a default account
+     * with full administrator privileges for all objects - <BR /> Name: Skye Admin <BR /> Domain: Skye <BR /> Role:
+     * administrator <br /> Email: admin@openskye.org <br /> Password: changeme <br /> API Key: 123 <br /> </p>
+     * <p/>
+     * <p> <B>Default Read-only User:</B> a default account with read-only privileges for all objects - <br /> Name:
+     * Skye Read-Only User <br /> Domain: Skye <br /> Role: readonly <br /> Email: reader@openskye.org <br /> Password:
+     * changeme <br /> API Key: 456 <br /> </p>
+     */
     @Inject
     public void init() {
         CreateDefaultAccount.log.info("Checking for default admin account");
@@ -132,6 +149,11 @@ public class CreateDefaultAccount {
         userDAO.getEntityManagerProvider().get().close();
     }
 
+    /**
+     * Creates the default Skye domain
+     *
+     * @return the created domain
+     */
     Domain createDomain() {
         Domain domain = new Domain();
         domain.setName("Skye");

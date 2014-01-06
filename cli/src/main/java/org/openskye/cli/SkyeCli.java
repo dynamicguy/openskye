@@ -16,11 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The CLI for Skye
+ * The Skye command line interface
  */
 @Slf4j
 public class SkyeCli {
 
+    /**
+     * The Skye CLI main class. The logger is initialized, and the command sent to the CLI is run.
+     *
+     * @param args the command entered into the CLI
+     *
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
 
         Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
@@ -29,6 +36,11 @@ public class SkyeCli {
         new SkyeCli().run(args);
     }
 
+    /**
+     * Parses and runs the given command.
+     *
+     * @param args the command entered into the CLI
+     */
     private void run(String[] args) {
 
         // Lets turn off logging - we can turn it back on if they have
@@ -81,12 +93,11 @@ public class SkyeCli {
             // Resolve which command we have
             for (ExecutableCommand command : commands) {
                 if (command.getCommandName() == null) {
-                    consoleLogger.error("Missing command name for "+command.getClass().getSimpleName());
+                    consoleLogger.error("Missing command name for " + command.getClass().getSimpleName());
                 } else if (command.getCommandName().equals(jc.getParsedCommand())) {
-                    if(command.getCommandName().equals("help")){
+                    if (command.getCommandName().equals("help")) {
                         jc.usage();
-                    }
-                    else{
+                    } else {
                         command.execute();
                     }
                 }
@@ -108,12 +119,12 @@ public class SkyeCli {
                 consoleLogger.error(e.getLocalizedMessage());
                 try {
                     ExceptionMessage message = e.getResponse().getEntity(ExceptionMessage.class);
-                    if ( message.getErrorCode() > 0 ) {
-                        consoleLogger.error("  error code: "+message.getErrorCode());
-                        consoleLogger.error("  message: "+message.getMessage());
-                        consoleLogger.error("  detail: "+message.getDetail());
+                    if (message.getErrorCode() > 0) {
+                        consoleLogger.error("  error code: " + message.getErrorCode());
+                        consoleLogger.error("  message: " + message.getMessage());
+                        consoleLogger.error("  detail: " + message.getDetail());
                     }
-                } catch(Exception ee) {
+                } catch (Exception ee) {
                     // Don't even try to handle exceptions within catch block .. ignore
                 }
             }

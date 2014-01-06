@@ -14,7 +14,7 @@ import org.openskye.domain.MetadataTemplate;
 import java.util.List;
 
 /**
- * Managing the Metadata Templates
+ * A command to manage the {@link MetadataTemplate}s
  */
 @Parameters(commandDescription = "Manage metadata templates")
 @Data

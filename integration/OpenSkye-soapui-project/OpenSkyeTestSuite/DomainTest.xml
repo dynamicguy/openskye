@@ -7,8 +7,8 @@
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>SkyeDomain</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>GetAllDomains</con:sourceStep>
+        <con:sourceType>skyeDomain</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/domains';
 //ns1:Response[1]/ns1:results[1]/ns1:e[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>skyeDomain</con:targetType>

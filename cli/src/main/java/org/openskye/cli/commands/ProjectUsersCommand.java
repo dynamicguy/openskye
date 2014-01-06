@@ -14,10 +14,7 @@ import org.openskye.domain.User;
 import java.util.List;
 
 /**
- * User: atcmostafavi
- * Date: 12/11/13
- * Time: 10:26 AM
- * Project: platform
+ * A command to manage {@link ProjectUser}s
  */
 @Parameters(commandDescription = "Manage users on a project")
 @Data
@@ -34,11 +31,11 @@ public class ProjectUsersCommand extends AbstractCrudCommand {
 
     @Override
     public String getCommandName() {
-        return commandName;  //To change body of implemented methods use File | Settings | File Templates.
+        return commandName;
     }
 
     @Override
     public Class getClazz() {
-        return ProjectUser.class;  //To change body of implemented methods use File | Settings | File Templates.
+        return ProjectUser.class;
     }
 }

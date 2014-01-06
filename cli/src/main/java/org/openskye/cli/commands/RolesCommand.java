@@ -4,17 +4,15 @@ import com.beust.jcommander.Parameters;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.cli.commands.AbstractCrudCommand;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.TextField;
-import org.openskye.domain.Domain;
 import org.openskye.domain.Role;
 
 import java.util.List;
 
 /**
- * Managing the Roles
+ * A command to manage {@link Role}s
  */
 @Parameters(commandDescription = "Manage roles")
 @Data

@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.*;
-import org.openskye.domain.ArchiveStoreDefinition;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 
 import java.util.List;
 
 /**
- * Managing the Information Store Definitions
+ * A command to manage the {@link InformationStoreDefinition}s
  */
 @Parameters(commandDescription = "Manage information store definitions")
 @Data
