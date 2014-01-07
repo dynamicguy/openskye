@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -79,14 +80,25 @@ public class CifsInformationStore implements InformationStore {
     public Iterable<SimpleObject> getRoot() {
         try {
             String host = informationStoreDefinition.getProperties().get(HOST);
+            if ( host == null ) {
+                host = "localhost";
+            }
             String port = informationStoreDefinition.getProperties().get(PORT);
+            if ( port == null ) {
+                port = "445"; // default port for Microsoft CIFS
+            }
             String share = informationStoreDefinition.getProperties().get(SHARE);
+            if ( share == null ) {
+                throw new SkyeException("Property (share) missing for information store "+informationStoreDefinition.getId());
+            }
             CifsContainerObject root = new CifsContainerObject();
             root.smbFile = new SmbFile(String.format("smb://%s:%s/%s/", host, port, share), credential);
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setImplementation(CifsContainerObject.class.getCanonicalName());
             metadata.setPath(root.smbFile.getPath());
             metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+            metadata.setLastModified(new DateTime(root.smbFile.getLastModified()));
+            metadata.setProject(informationStoreDefinition.getProject());
             root.setObjectMetadata(metadata);
             return getChildren(root);
         } catch (Exception e) {
@@ -109,6 +121,8 @@ public class CifsInformationStore implements InformationStore {
                         metadata.setImplementation(CifsContainerObject.class.getCanonicalName());
                         metadata.setPath(child.getCanonicalPath());
                         metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+                        metadata.setProject(informationStoreDefinition.getProject());
+                        metadata.setLastModified(new DateTime(child.getLastModified()));
                         container.setObjectMetadata(metadata);
                         all.add(container);
                     } else if (child.isFile()) {
@@ -118,6 +132,11 @@ public class CifsInformationStore implements InformationStore {
                         metadata.setImplementation(CifsUnstructuredObject.class.getCanonicalName());
                         metadata.setPath(child.getCanonicalPath());
                         metadata.setInformationStoreId(this.getInformationStoreDefinition().get().getId());
+                        metadata.setImplementation(LocalFileUnstructuredObject.class.getCanonicalName());
+                        metadata.setProject(informationStoreDefinition.getProject());
+                        metadata.setLastModified(new DateTime(child.getLastModified()));
+                        metadata.setOriginalSize(child.getContentLength());
+                        //TODO set mime type from file name?
                         unstructObj.setObjectMetadata(metadata);
                         all.add(unstructObj);
                     }

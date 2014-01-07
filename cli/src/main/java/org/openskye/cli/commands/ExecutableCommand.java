@@ -199,24 +199,22 @@ public abstract class ExecutableCommand {
      * @see EnumerationField
      */
     protected Object selectEnum(EnumerationField field, Object newObject) {
-        List<?> choices = field.getAllEnumOptions();
-
-        int i = 1;
-        output.message("Please select a " + field.getName() + " from the choices below");
-        for (Object option : choices) {
-            output.raw(" " + i + "/ " + option.toString());
-            i++;
-        }
-        while (true) {
-            String option = getConsole().readLine("Enter choice:");
-            int position = Integer.parseInt(option);
+        List<String> choices = field.getAllEnumOptions();
+        String choice = dynamicParams.get(field.getName());
+        if(choices.contains(choice)){
             try {
-                BeanUtils.setProperty(newObject, field.getName(), field.getEnum(position - 1));
-                break;
+                BeanUtils.setProperty(newObject, field.getName(), choice);
             } catch (Exception e) {
-                throw new SkyeException("Unable to assign enum value to this object", e);
+                throw new SkyeException("Unable to set Enum field", e);
             }
-
+        }
+        else{
+            output.error("Value not allowed for field: "+field.getName());
+            output.message("The following values are allowed for this field: ");
+            for(Object o : choices){
+                output.raw(o.toString());
+                throw new SkyeException("Unable to set Enum field");
+            }
         }
         return newObject;
     }
