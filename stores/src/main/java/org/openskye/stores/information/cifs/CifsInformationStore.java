@@ -79,8 +79,17 @@ public class CifsInformationStore implements InformationStore {
     public Iterable<SimpleObject> getRoot() {
         try {
             String host = informationStoreDefinition.getProperties().get(HOST);
+            if ( host == null ) {
+                host = "localhost";
+            }
             String port = informationStoreDefinition.getProperties().get(PORT);
+            if ( port == null ) {
+                port = "445"; // default port for Microsoft CIFS
+            }
             String share = informationStoreDefinition.getProperties().get(SHARE);
+            if ( share == null ) {
+                throw new SkyeException("Property (share) missing for information store "+informationStoreDefinition.getId());
+            }
             CifsContainerObject root = new CifsContainerObject();
             root.smbFile = new SmbFile(String.format("smb://%s:%s/%s/", host, port, share), credential);
             ObjectMetadata metadata = new ObjectMetadata();
