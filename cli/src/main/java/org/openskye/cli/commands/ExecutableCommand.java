@@ -213,6 +213,7 @@ public abstract class ExecutableCommand {
             output.message("The following values are allowed for this field: ");
             for(Object o : choices){
                 output.raw(o.toString());
+                throw new SkyeException("Unable to set Enum field");
             }
         }
         return newObject;
