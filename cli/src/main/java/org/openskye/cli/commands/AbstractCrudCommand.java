@@ -16,6 +16,7 @@ import org.openskye.domain.dao.PaginatedResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An Abstract Base for Crud-like commands which are in place for setting up the metadata for Skye processing. Each
@@ -122,6 +123,16 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         fieldsWithId.addAll(getFieldNames());
 
         if (paginatedResult.getResults().size() > 0) {
+            // If an alias was specified on the command line, and the listed objects are identifiable
+            // save the id of the first listed result to the alias
+            Object firstResult = paginatedResult.getResults().get(0);
+            if ( firstResult instanceof Map ) {
+                Map<String,String> firstMap = (Map<String,String>) firstResult;
+                if ( firstMap.containsKey("id") ) {
+                  saveAlias(firstMap.get("id"));
+                }
+            }
+
             output.message("Listing " + getCollectionPlural());
 
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
