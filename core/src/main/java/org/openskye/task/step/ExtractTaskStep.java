@@ -30,23 +30,20 @@ public class ExtractTaskStep extends TaskStep {
     private Channel channel;
     @Getter
     @Setter
-    private Node node;
-    @Getter
-    @Setter
     private InformationStoreDefinition targetInformationStoreDefinition;
 
     public ExtractTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = objectSetId;
         this.channel = null;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
-        this.node = node;
+        setNode(node);
     }
 
     public ExtractTaskStep(Channel channel, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = null;
         this.channel = channel;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
-        this.node = node;
+        setNode(node);
     }
 
     @Override

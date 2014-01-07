@@ -20,8 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class DiscoverTaskStep extends TaskStep {
 
-    @Getter
-    private Node node;
     @Inject
     private ChannelDAO channelDAO;
     @Getter
@@ -32,7 +30,7 @@ public class DiscoverTaskStep extends TaskStep {
 
     public DiscoverTaskStep(Channel channel, Node node) {
         this.channel = channel;
-        this.node = node;
+        setNode(node);
     }
 
     @Override

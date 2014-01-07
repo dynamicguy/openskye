@@ -27,7 +27,6 @@ import java.util.*;
 @Slf4j
 public class ClassifyTaskStep extends TaskStep {
 
-    private Node node;
     @Inject
     private ProjectDAO projectDAO;
     @Inject
@@ -39,7 +38,7 @@ public class ClassifyTaskStep extends TaskStep {
 
     public ClassifyTaskStep(Project project, Node node) {
         this.project = project;
-        this.node = node;
+        setNode(node);
     }
 
     @Override
@@ -64,11 +63,6 @@ public class ClassifyTaskStep extends TaskStep {
         if (project == null) {
             throw new SkyeException("Task " + task.getId() + " is missing a project and so can not classify");
         }
-    }
-
-    @Override
-    protected Node getNode() {
-        return node;
     }
 
     @Override

@@ -30,9 +30,6 @@ import java.util.Map;
 @Slf4j
 public class CullTaskStep extends TaskStep {
 
-    @Getter
-    @Setter
-    private Node node;
     @Inject
     private ProjectDAO projectDAO;
     @Inject
@@ -47,7 +44,7 @@ public class CullTaskStep extends TaskStep {
 
     public CullTaskStep(Project project, Node node) {
         this.project = project;
-        this.node = node;
+        setNode(node);
     }
 
     @Override

@@ -33,22 +33,22 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @Inject
     protected ObjectMetadataSearch oms;
     @JsonIgnore
-    @Getter
-    @Setter
-    Task task;
-    @JsonIgnore
-    @Inject
-    private Provider<EntityManager> emf;
-    @JsonIgnore
     protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
     @JsonIgnore
     @Inject
     protected AuditLogDAO auditLogDAO;
+    @JsonIgnore
+    @Getter
+    @Setter
+    Task task;
+    @Getter
+    @Setter
+    private Node node;
+    @JsonIgnore
+    @Inject
+    private Provider<EntityManager> emf;
 
     public abstract void validate();
-
-    @JsonIgnore
-    protected abstract Node getNode();
 
     @JsonIgnore
     protected abstract Project getStepProject();
@@ -61,13 +61,13 @@ public abstract class TaskStep implements Callable<TaskStatus> {
 
     protected void beginTransaction() {
         hasOuterTransaction = emf.get().getTransaction().isActive();
-        if ( !hasOuterTransaction ) {
+        if (!hasOuterTransaction) {
             emf.get().getTransaction().begin();
         }
     }
 
     protected void commitTransaction() {
-        if ( !hasOuterTransaction ) {
+        if (!hasOuterTransaction) {
             emf.get().getTransaction().commit();
         }
     }
@@ -109,8 +109,8 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         return as.get();
     }
 
-    protected void auditObject(SimpleObject simpleObject, ObjectEvent e){
-        log.debug("Auditing change to "+simpleObject);
+    protected void auditObject(SimpleObject simpleObject, ObjectEvent e) {
+        log.debug("Auditing change to " + simpleObject);
         AuditLog auditLog = new AuditLog();
         auditLog.setAuditEntity(simpleObject.getClass().getSimpleName());
         auditLog.setAuditEvent(AuditEvent.OBJECT);
@@ -120,8 +120,8 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         auditLogDAO.create(auditLog);
     }
 
-    protected void auditObject(ObjectMetadata om, ObjectEvent e){
-        log.debug("Auditing change to "+om);
+    protected void auditObject(ObjectMetadata om, ObjectEvent e) {
+        log.debug("Auditing change to " + om);
         AuditLog auditLog = new AuditLog();
         auditLog.setAuditEntity(ObjectMetadata.class.getSimpleName());
         auditLog.setAuditEvent(AuditEvent.OBJECT);

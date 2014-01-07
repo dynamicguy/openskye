@@ -28,14 +28,11 @@ public class DestroyTaskStep extends TaskStep {
     @JsonIgnore
     @Inject
     private StoreRegistry storeRegistry;
-    @Getter
-    @Setter
-    private Node node;
 
     public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
-        this.node = node;
+        setNode(node);
     }
 
     @Override

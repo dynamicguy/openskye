@@ -30,16 +30,13 @@ public class ReplicateTaskStep extends TaskStep {
     private NodeDAO nodeDAO;
     @Getter
     @Setter
-    private Node node;
-    @Getter
-    @Setter
     private Project project;
     @Inject
     private ArchiveStoreDefinitionDAO archiveStoreDefinitionDAO;
     private ArchiveStoreDefinition archiveStoreDefinition;
 
     public ReplicateTaskStep(Project project, Node node) {
-        this.node = node;
+        setNode(node);
         this.project = project;
     }
 
@@ -84,7 +81,7 @@ public class ReplicateTaskStep extends TaskStep {
         if (replicator.isPresent()) {
             beginTransaction();
 
-            replicator.get().replicate(node, getProject());
+            replicator.get().replicate(getNode(), getProject());
 
             commitTransaction();
             return TaskStatus.COMPLETED;

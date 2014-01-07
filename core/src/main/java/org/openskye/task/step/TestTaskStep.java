@@ -17,10 +17,6 @@ import org.openskye.domain.TaskStatus;
 @Slf4j
 @NoArgsConstructor
 public class TestTaskStep extends TaskStep {
-    @JsonProperty
-    @Getter
-    @Setter
-    private Node node;
     @Getter
     @Setter
     private Project project;
@@ -39,7 +35,7 @@ public class TestTaskStep extends TaskStep {
         this.iterations = iterations;
         this.pass = pass;
         this.project = project;
-        this.node = node;
+        setNode(node);
     }
 
     @Override

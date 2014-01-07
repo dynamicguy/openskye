@@ -18,9 +18,6 @@ import java.util.Map;
 @NoArgsConstructor
 @Slf4j
 public class ArchiveTaskStep extends TaskStep {
-    @Getter
-    @Setter
-    private Node node;
     @Inject
     private ChannelDAO channelDAO;
     @Getter
@@ -29,17 +26,12 @@ public class ArchiveTaskStep extends TaskStep {
 
     public ArchiveTaskStep(Channel channel, Node node) {
         this.channel = channel;
-        this.node = node;
+        setNode(node);
     }
 
     @Override
     public Project getStepProject() {
         return channel.getProject();
-    }
-
-    @Override
-    public Node getNode() {
-        return node;
     }
 
     @Override
