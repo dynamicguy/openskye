@@ -1,6 +1,7 @@
 package org.openskye.cli.commands.fields;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -8,22 +9,20 @@ import java.util.List;
  */
 public class EnumerationField extends Field{
 
-    private final Class<?> anEnum;
+    private final EnumSet<? extends Enum> anEnum;
     private final String name;
 
     public EnumerationField(String name, Class newEnum) {
         this.name = name;
-        this.anEnum=newEnum;
+        this.anEnum=EnumSet.allOf(newEnum);
     }
 
-    public List<?> getAllEnumOptions(){
-        List<?> results = Arrays.asList(anEnum.getEnumConstants());
-        return results;
-    }
-
-    public Object getEnum(int select){
-        List<?> enums = getAllEnumOptions();
-        return enums.get(select);
+    public List<String> getAllEnumOptions(){
+        List<String> enumOptions = new ArrayList<>(this.anEnum.size());
+        for(Enum e : anEnum){
+            enumOptions.add(e.toString());
+        }
+        return enumOptions;
     }
 
     @Override

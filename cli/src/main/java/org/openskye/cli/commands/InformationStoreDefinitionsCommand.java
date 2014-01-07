@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.*;
+import org.openskye.cli.util.InformationStoreImplementation;
 import org.openskye.domain.InformationStoreDefinition;
 import org.openskye.domain.Project;
 
@@ -22,7 +23,7 @@ public class InformationStoreDefinitionsCommand extends AbstractCrudCommand {
     private final String commandName = "informationStores";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField(Project.class)).add(new TextField("implementation")).add(new PropertiesField("properties")).build();
+        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField(Project.class)).add(new EnumerationField("implementation", InformationStoreImplementation.class)).add(new PropertiesField("properties")).build();
     }
 
     @Override
