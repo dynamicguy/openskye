@@ -14,7 +14,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The representation of a user
@@ -63,7 +62,7 @@ public class User implements Identifiable {
             setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
         } else {
             // Generate a UUID as a password
-            setPasswordHash(BCrypt.hashpw(UUID.randomUUID().toString(), BCrypt.gensalt()));
+            setPasswordHash(BCrypt.hashpw("changemenow", BCrypt.gensalt()));
         }
     }
 

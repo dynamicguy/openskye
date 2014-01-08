@@ -15,6 +15,7 @@ import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -152,13 +153,20 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      * result is returned.
      */
     private void get() {
-        String id = dynamicParams.get("id");
+        String id = resolveAlias(dynamicParams.get("id"));
         if (id == null) {
             output.error("You must enter an id");
         } else {
             Object result = getResource(getCollectionPlural() + "/" + id).get(getClazz());
-            //TODO: Print this result in a nicer way
-            output.raw(result.toString());
+            PaginatedResult paginatedResult = new PaginatedResult(Arrays.asList(result));
+            List<String> fieldsWithId = new ArrayList<>();
+            fieldsWithId.add("id");
+            fieldsWithId.addAll(getFieldNames());
+            ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
+            output.insertLines(1);
+            tableView.draw(output);
+            output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
+            saveAlias(id);
         }
     }
 
@@ -210,7 +218,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      * Deletes an instance of this endpoint object
      */
     public void delete() {
-        String id = dynamicParams.get("id");
+        String id = resolveAlias(dynamicParams.get("id"));
         if (id == null)
             throw new CliException("You must provide an id to delete a " + getCollectionSingular());
 

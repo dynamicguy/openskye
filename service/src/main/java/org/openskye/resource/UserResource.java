@@ -37,7 +37,9 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @Timed
     @Override
     public User create(User newInstance) {
-        return super.create(newInstance);
+        newInstance = super.create(newInstance);
+        userDAO.setNewUserRole(newInstance);
+        return newInstance;
     }
 
     @ApiOperation(value = "Update instance", notes = "Find the user to update by id and enter the new information. Returns updated user information", response = User.class)

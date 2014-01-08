@@ -57,7 +57,7 @@ public class ChannelsCommand extends AbstractCrudCommand {
             }
         }
 
-        if(dynamicParams.get("archiveStores")!=null){
+        if(dynamicParams.get("archiveStoreDefinitions")!=null){
             String archiveStores = dynamicParams.get("archiveStores");
             String[] storeIds = archiveStores.split(",");
             for(String id : storeIds) {

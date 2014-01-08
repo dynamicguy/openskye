@@ -1,7 +1,9 @@
 package org.openskye.domain.dao;
 
 import com.google.common.base.Optional;
+import org.openskye.domain.Role;
 import org.openskye.domain.User;
+import org.openskye.domain.UserRole;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -39,5 +41,18 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
         } else {
             return Optional.of(users.get(0));
         }
+    }
+
+    public void setNewUserRole(User newUser){
+        CriteriaQuery<Role> criteriaQuery = getCriteriaBuilder().createQuery(Role.class);
+        Root<Role> roleRoot = criteriaQuery.from(Role.class);
+        criteriaQuery.select(roleRoot);
+        criteriaQuery.where(getCriteriaBuilder().equal(roleRoot.get("name"),"readonly"));
+        Role reader = currentEntityManager().createQuery(criteriaQuery).getSingleResult();
+        UserRole userRole = new UserRole();
+        userRole.setUser(newUser);
+        userRole.setRole(reader);
+        newUser.getUserRoles().add(userRole);
+        update(newUser.getId(),newUser);
     }
 }
