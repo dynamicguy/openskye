@@ -4,7 +4,6 @@ package org.openskye.guice;
 import com.google.common.base.Preconditions;
 import com.google.inject.Injector;
 import com.sun.jersey.spi.inject.InjectableProvider;
-import io.dropwizard.Bundle;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.servlets.tasks.Task;
 import io.dropwizard.setup.Bootstrap;
@@ -43,19 +42,14 @@ public class AutoConfig {
     }
 
     public void run(Environment environment, Injector injector) {
-        addHealthChecks(environment, injector);
-        addProviders(environment, injector);
-        addInjectableProviders(environment, injector);
-        addResources(environment, injector);
+        addProviders(environment);
+        addInjectableProviders(environment);
+        addResources(environment);
         addTasks(environment, injector);
         addManaged(environment, injector);
     }
 
-    public void initialize(Bootstrap<?> bootstrap, Injector injector) {
-        addBundles(bootstrap, injector);
-    }
-
-    private void addManaged(Environment environment, Injector injector) {
+    public void addManaged(Environment environment, Injector injector) {
         Set<Class<? extends Managed>> managedClasses = reflections
                 .getSubTypesOf(Managed.class);
         for (Class<? extends Managed> managed : managedClasses) {
@@ -64,7 +58,7 @@ public class AutoConfig {
         }
     }
 
-    private void addTasks(Environment environment, Injector injector) {
+    public void addTasks(Environment environment, Injector injector) {
         Set<Class<? extends Task>> taskClasses = reflections
                 .getSubTypesOf(Task.class);
         for (Class<? extends Task> task : taskClasses) {
@@ -73,19 +67,8 @@ public class AutoConfig {
         }
     }
 
-    private void addHealthChecks(Environment environment, Injector injector) {
-        Set<Class<? extends InjectableHealthCheck>> healthCheckClasses = reflections
-                .getSubTypesOf(InjectableHealthCheck.class);
-        for (Class<? extends InjectableHealthCheck> healthCheck : healthCheckClasses) {
-            InjectableHealthCheck instance = injector.getInstance(healthCheck);
-            environment.healthChecks().register(instance.getName(), instance);
-            logger.info("Added injectableHealthCheck: {}", healthCheck);
-        }
-    }
-
     @SuppressWarnings("rawtypes")
-    private void addInjectableProviders(Environment environment,
-                                        Injector injector) {
+    public void addInjectableProviders(Environment environment) {
         Set<Class<? extends InjectableProvider>> injectableProviders = reflections
                 .getSubTypesOf(InjectableProvider.class);
         for (Class<? extends InjectableProvider> injectableProvider : injectableProviders) {
@@ -94,7 +77,7 @@ public class AutoConfig {
         }
     }
 
-    private void addProviders(Environment environment, Injector injector) {
+    public void addProviders(Environment environment) {
         Set<Class<?>> providerClasses = reflections
                 .getTypesAnnotatedWith(Provider.class);
         for (Class<?> provider : providerClasses) {
@@ -103,7 +86,7 @@ public class AutoConfig {
         }
     }
 
-    private void addResources(Environment environment, Injector injector) {
+    public void addResources(Environment environment) {
         Set<Class<?>> resourceClasses = reflections
                 .getTypesAnnotatedWith(Path.class);
         for (Class<?> resource : resourceClasses) {
@@ -112,13 +95,5 @@ public class AutoConfig {
         }
     }
 
-    private void addBundles(Bootstrap<?> bootstrap, Injector injector) {
-        Set<Class<? extends Bundle>> bundleClasses = reflections
-                .getSubTypesOf(Bundle.class);
-        for (Class<? extends Bundle> bundle : bundleClasses) {
-            bootstrap.addBundle(injector.getInstance(bundle));
-            logger.info("Added bundle class {} during bootstrap", bundle);
-        }
-    }
 }
 

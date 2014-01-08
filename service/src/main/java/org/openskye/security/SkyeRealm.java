@@ -1,7 +1,8 @@
 package org.openskye.security;
 
 import com.google.common.base.Optional;
-import com.google.inject.persist.UnitOfWork;
+import com.google.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -19,6 +20,8 @@ import java.util.List;
 /**
  * SkyeRealm: a realm specific to Skye with basic auth and/or API key security
  */
+@Slf4j
+@Singleton
 public class SkyeRealm extends AuthorizingRealm {
 
     @Inject
@@ -34,72 +37,68 @@ public class SkyeRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
-        try {
+        log.debug("Getting authorization information for principles " + principals);
 
-            User u = (User) getAvailablePrincipal(principals);
-            Optional<List<ProjectUser>> pu = projectUserDAO.findByUser(u.getId());
-            SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
-            for (UserRole role : u.getUserRoles()) {
-                authInfo.addRole((role.getRole().getName()));
-                for (RolePermission rp : role.getRole().getRolePermissions()) {
-                    authInfo.addStringPermission(rp.getPermission().getPermission());
-                }
+        User u = (User) getAvailablePrincipal(principals);
+        Optional<List<ProjectUser>> pu = projectUserDAO.findByUser(u.getId());
+        SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
+        for (UserRole role : u.getUserRoles()) {
+            authInfo.addRole((role.getRole().getName()));
+            for (RolePermission rp : role.getRole().getRolePermissions()) {
+                authInfo.addStringPermission(rp.getPermission().getPermission());
             }
-            if (pu.isPresent()) {
-                for (ProjectUser pUser : pu.get()) {
-                    for (Role pRole : pUser.getProjectUserRoles()) {
-                        authInfo.addRole(pRole.getName());
-                        for (RolePermission rp : pRole.getRolePermissions()) {
-                            authInfo.addStringPermission(rp.getPermission().getPermission() + ":" + pUser.getProject().getId());
-                        }
+        }
+        if (pu.isPresent()) {
+            for (ProjectUser pUser : pu.get()) {
+                for (Role pRole : pUser.getProjectUserRoles()) {
+                    authInfo.addRole(pRole.getName());
+                    for (RolePermission rp : pRole.getRolePermissions()) {
+                        authInfo.addStringPermission(rp.getPermission().getPermission() + ":" + pUser.getProject().getId());
                     }
                 }
-
             }
 
-            return authInfo;
-        } finally {
-            projectUserDAO.getEntityManagerProvider().get().close();
         }
 
+        return authInfo;
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        try {
-            if (authenticationToken instanceof UsernamePasswordToken) {
-                UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-                Optional<User> user = userDao.findByEmail(token.getUsername());
-                if (user.isPresent()) { //user is found
-                    if (user.get().isActive()) {
-                        String pwd = new String(token.getPassword());
-                        Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
-                        if (passwordsMatch) { //user has correct password
-                            SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
-                            return simpleAuthInfo;
-                        } else {
-                            throw new AuthenticationException();
-                        }
+        log.debug("Getting authorization information for authentication token " + authenticationToken);
+
+        if (authenticationToken instanceof UsernamePasswordToken) {
+            UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+            Optional<User> user = userDao.findByEmail(token.getUsername());
+            if (user.isPresent()) { //user is found
+                if (user.get().isActive()) {
+                    String pwd = new String(token.getPassword());
+                    Boolean passwordsMatch = BCrypt.checkpw(pwd, user.get().getPasswordHash());
+                    if (passwordsMatch) { //user has correct password
+                        SimpleAuthenticationInfo simpleAuthInfo = new SimpleAuthenticationInfo(user.get(), token.getPassword(), this.getName());
+                        return simpleAuthInfo;
                     } else {
-                        throw new DisabledAccountException();
+                        throw new AuthenticationException();
                     }
                 } else {
-                    throw new AuthenticationException();
-                }
-            } else if (authenticationToken instanceof ApiKeyToken) {
-                ApiKeyToken token = (ApiKeyToken) authenticationToken;
-                Optional<User> user = userDao.findByApiKey(token.getKey());
-                if (user.isPresent()) { //user is found
-                    return new SimpleAuthenticationInfo(user.get(), token.getKey(), this.getName());
-                } else {
-                    throw new AuthenticationException();
+                    throw new DisabledAccountException();
                 }
             } else {
                 throw new AuthenticationException();
             }
-        } finally {
-            userDao.getEntityManagerProvider().get().close();
+        } else if (authenticationToken instanceof ApiKeyToken) {
+            ApiKeyToken token = (ApiKeyToken) authenticationToken;
+            Optional<User> user = userDao.findByApiKey(token.getKey());
+            log.debug("Using entity manager "+userDao.getEntityManagerProvider().get());
+            if (user.isPresent()) { //user is found
+                return new SimpleAuthenticationInfo(user.get(), token.getKey(), this.getName());
+            } else {
+                throw new AuthenticationException();
+            }
+        } else {
+            throw new AuthenticationException();
         }
+
     }
 
     @Override

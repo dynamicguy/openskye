@@ -15,17 +15,19 @@ import javax.servlet.ServletContext;
 public class SkyeShiroModule extends ShiroWebModule {
 
     public static final Key<SkyeAuthenticatingFilter> SKYE_AUTHENTICATING_FILTER_KEY = Key.get(SkyeAuthenticatingFilter.class);
+    private final JerseyContainerModule servletModule;
 
-    public SkyeShiroModule(ServletContext sc) {
+    public SkyeShiroModule(ServletContext sc, JerseyContainerModule jerseyContainerModule) {
         super(sc);
+        this.servletModule = jerseyContainerModule;
     }
 
     @Override
     protected void configureShiroWeb() {
-        bindRealm().to(SkyeRealm.class).asEagerSingleton();
+        bindRealm().to(SkyeRealm.class);
         bind(CreateDefaultAccount.class).asEagerSingleton();
         addFilterChain("/api/**", NO_SESSION_CREATION, SKYE_AUTHENTICATING_FILTER_KEY);
-        ShiroWebModule.bindGuiceFilter(binder());
-    }
 
+        binder().install(servletModule);
+    }
 }
