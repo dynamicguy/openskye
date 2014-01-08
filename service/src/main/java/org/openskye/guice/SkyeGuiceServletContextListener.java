@@ -20,14 +20,14 @@ import javax.servlet.ServletContextEvent;
 public class SkyeGuiceServletContextListener extends GuiceServletContextListener {
     private final JpaPersistModule jpaPersistModule;
     private final Environment environment;
-    private final Bootstrap<SkyeConfiguration> bootstrap;
+    private final Bootstrap bootstrap;
     private final JerseyContainerModule jerseyContainerModule;
     private final DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnviroment;
     private final SkyeModule skyeModule;
     private ServletContext servletContext;
     private Injector injector;
 
-    public SkyeGuiceServletContextListener(JpaPersistModule jpaPersistModule, Environment environment, Bootstrap<SkyeConfiguration> bootstrap, JerseyContainerModule jerseyContainerModule, DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule, SkyeModule skyeModule) {
+    public SkyeGuiceServletContextListener(JpaPersistModule jpaPersistModule, Environment environment, Bootstrap bootstrap, JerseyContainerModule jerseyContainerModule, DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule, SkyeModule skyeModule) {
         this.jpaPersistModule = jpaPersistModule;
         this.environment = environment;
         this.bootstrap = bootstrap;

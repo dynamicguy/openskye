@@ -12,11 +12,18 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
+import org.openskye.config.SkyeConfiguration;
 import org.openskye.config.SkyeWorkerConfiguration;
+import org.openskye.exceptions.ConstraintViolationExceptionMapper;
 import org.openskye.guice.*;
+import org.openskye.util.RequestQueryContextFilter;
 
 import javax.annotation.Nullable;
+import javax.ws.rs.ext.ExceptionMapper;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * The main java file run in order to start a Skye Worker instance
@@ -72,6 +79,25 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
     public void run(SkyeWorkerConfiguration configuration,
                     Environment environment) throws Exception {
 
+        // Remove all of Dropwizard's custom ExceptionMappers
+        ResourceConfig jrConfig = environment.jersey().getResourceConfig();
+        Set<Object> dwSingletons = jrConfig.getSingletons();
+        List<Object> singletonsToRemove = new ArrayList<Object>();
+
+        for (Object s : dwSingletons) {
+            if (s instanceof ExceptionMapper && s.getClass().getName().startsWith("io.dropwizard.jersey.")) {
+                singletonsToRemove.add(s);
+            }
+        }
+
+        for (Object s : singletonsToRemove) {
+            jrConfig.getSingletons().remove(s);
+        }
+
+        // Adding in the exception mappers
+        environment.jersey().register(new ConstraintViolationExceptionMapper());
+
+
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
 
@@ -90,16 +116,20 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         props.put("hibernate.c3p0.idle_test_period", configuration.getDatabaseConfiguration().getPoolIdleTestPeriod());
         props.put("hibernate.c3p0.preferredTestQuery", configuration.getDatabaseConfiguration().getPoolPreferredTestQuery());
         props.put("hibernate.c3p0.testConnectionOnCheckout", configuration.getDatabaseConfiguration().getPoolTestConnectionOnCheckout());
+        props.put("hibernate.c3p0.poolConnectionMaxIdleTime", configuration.getDatabaseConfiguration().getPoolConnectionMaxIdleTime());
+        props.put("hibernate.c3p0.maxIdleTimeExcessConnections", configuration.getDatabaseConfiguration().getMaxIdleTimeExcessConnections());
+        props.put("hibernate.c3p0.unreturnedConnectionTimeout", configuration.getDatabaseConfiguration().getUnreturnedConnectionTimeout());
+        props.put("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
+
         jpaPersistModule.properties(props);
 
-        DropwizardEnvironmentModule<SkyeWorkerConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeWorkerConfiguration.class);
+        DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
 
-        SkyeWorkerModule skyeWorkerModule = new SkyeWorkerModule(configuration);
+        SkyeModule skyeModule = new SkyeModule(configuration);
+        // Set-up the filters
 
-        Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule, skyeWorkerModule);
-
-        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
-        autoConfig.initialize(bootstrap, injector);
+        environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
         container.setResourceConfig(environment.jersey().getResourceConfig());
         environment.jersey().replace(new Function<ResourceConfig, ServletContainer>() {
@@ -109,20 +139,13 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
                 return container;
             }
         });
-        environment.servlets().addFilter("Guice Filter", GuiceFilter.class)
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
-        // Complete the autoconfig
-        autoConfig.run(environment, injector);
+        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
+        autoConfig.addResources(environment);
 
-        environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
-
-        // Add a listener for us to be able to wire in Shiro
-        environment.servlets().addServletListeners(new SkyeWorkerContextListener(jpaPersistModule));
-
-        // Add a listener to start the task manager
-        environment.lifecycle().addServerLifecycleListener(new SkyeServerLifecycleListener(injector));
+        // Add a listener for us to be able to wire in Shiro and then bootstrap all the modules off this
+        // so we only have one guice injector
+        environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule, environment, bootstrap, jerseyContainerModule, dropwizardEnvironmentModule, skyeModule));
     }
 
 }
