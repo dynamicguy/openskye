@@ -233,7 +233,7 @@ public class TasksCommand extends ExecutableCommand {
         TaskStep step = new ExtractTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         if (dynamicParams.get("objectSetId") != null) {
-            ((ExtractTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
+            ((ExtractTaskStep) step).setObjectSetId(resolveAlias(dynamicParams.get("objectSetId")));
         } else {
             step = (ExtractTaskStep) selectReferenceField(new ReferenceField(Channel.class), step);
         }
@@ -248,7 +248,7 @@ public class TasksCommand extends ExecutableCommand {
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        ((DestroyTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
+        ((DestroyTaskStep) step).setObjectSetId(resolveAlias(dynamicParams.get("objectSetId")));
         step = setTargetInformationStore(step);
         create(step);
     }
@@ -276,7 +276,7 @@ public class TasksCommand extends ExecutableCommand {
     public TaskStep setTargetInformationStore(TaskStep step) {
 
         try {
-            InformationStoreDefinition chosenDef = getResource("informationStores/" + dynamicParams.get("targetInformationStoreDefinition")).get(InformationStoreDefinition.class);
+            InformationStoreDefinition chosenDef = getResource("informationStoreDefinitions/" + resolveAlias(dynamicParams.get("targetInformationStoreDefinition"))).get(InformationStoreDefinition.class);
             if (step instanceof ExtractTaskStep) {
                 ((ExtractTaskStep) step).setTargetInformationStoreDefinition(chosenDef);
             } else {

@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.openskye.cli.CliException;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
+import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
@@ -192,9 +193,17 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                 selectEnum((EnumerationField) field, newObject);
             }
         }
-        Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
-        saveAlias(result.getId());
-        output.success("Created " + getCollectionSingular() + " with id " + result.getId());
+        Object result = getResource(getCollectionPlural()).post(getClazz(), newObject);
+        String id;
+        if ( result instanceof Identifiable ) {
+            id = ((Identifiable) result).getId();
+        } else if ( result instanceof ObjectSet ) {
+            id = ((ObjectSet) result).getId();
+        } else {
+            throw new SkyeException("Cannot resolve id for "+result.getClass().getName());
+        }
+        saveAlias(id);
+        output.success("Created " + getCollectionSingular() + " with id " + id);
     }
 
     /**

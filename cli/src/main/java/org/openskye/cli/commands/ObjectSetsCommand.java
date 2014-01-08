@@ -68,7 +68,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
      * and the result is printed in tabular form in the console.
      */
     private void listObjects() {
-        String objectSetID = dynamicParams.get("objectSetId");
+        String objectSetID = resolveAlias(dynamicParams.get("objectSetId"));
 
         PaginatedResult paginatedResult = getResource(getCollectionPlural() + objectSetID + "/metadata/").get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
@@ -108,7 +108,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
      * to {@link org.openskye.resource.ObjectSetResource#addFromSearch(String, String)}.
      */
     public void addFromSearch() {
-        String objectSetID = dynamicParams.get("objectSetId");
+        String objectSetID = resolveAlias(dynamicParams.get("objectSetId"));
         String query = dynamicParams.get("query");
 
 
@@ -127,8 +127,8 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
      * as the id of object set to add the object to. Those ids are passed to a cal to {@link org.openskye.resource.ObjectSetResource#addObject(String, String)}.
      */
     public void add() {
-        String objectSetID = dynamicParams.get("objectSetId");
-        String objectMetadataId = dynamicParams.get("objectId");
+        String objectSetID = resolveAlias(dynamicParams.get("objectSetId"));
+        String objectMetadataId = resolveAlias(dynamicParams.get("objectId"));
 
         getResource(getCollectionPlural() + "/" + objectSetID + "/" + objectMetadataId).put();
     }
