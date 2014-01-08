@@ -9,11 +9,13 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.openskye.cli.CliException;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
+import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -151,13 +153,20 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      * result is returned.
      */
     private void get() {
-        String id = dynamicParams.get("id");
+        String id = resolveAlias(dynamicParams.get("id"));
         if (id == null) {
             output.error("You must enter an id");
         } else {
             Object result = getResource(getCollectionPlural() + "/" + id).get(getClazz());
-            //TODO: Print this result in a nicer way
-            output.raw(result.toString());
+            PaginatedResult paginatedResult = new PaginatedResult(Arrays.asList(result));
+            List<String> fieldsWithId = new ArrayList<>();
+            fieldsWithId.add("id");
+            fieldsWithId.addAll(getFieldNames());
+            ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
+            output.insertLines(1);
+            tableView.draw(output);
+            output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
+            saveAlias(id);
         }
     }
 
@@ -192,16 +201,24 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                 selectEnum((EnumerationField) field, newObject);
             }
         }
-        Identifiable result = (Identifiable) getResource(getCollectionPlural()).post(getClazz(), newObject);
-        saveAlias(result.getId());
-        output.success("Created " + getCollectionSingular() + " with id " + result.getId());
+        Object result = getResource(getCollectionPlural()).post(getClazz(), newObject);
+        String id;
+        if ( result instanceof Identifiable ) {
+            id = ((Identifiable) result).getId();
+        } else if ( result instanceof ObjectSet ) {
+            id = ((ObjectSet) result).getId();
+        } else {
+            throw new SkyeException("Cannot resolve id for "+result.getClass().getName());
+        }
+        saveAlias(id);
+        output.success("Created " + getCollectionSingular() + " with id " + id);
     }
 
     /**
      * Deletes an instance of this endpoint object
      */
     public void delete() {
-        String id = dynamicParams.get("id");
+        String id = resolveAlias(dynamicParams.get("id"));
         if (id == null)
             throw new CliException("You must provide an id to delete a " + getCollectionSingular());
 
