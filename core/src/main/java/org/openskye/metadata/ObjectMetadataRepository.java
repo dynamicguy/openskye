@@ -73,7 +73,7 @@ public interface ObjectMetadataRepository {
      * @param objectMetadata The {@link ObjectMetadata} for which the query is
      *                       run.
      * @return True if the {@link ObjectMetadata} is found in the
-     * {@link ObjectMeta}, or false if it is not.
+     * {@link ObjectMetadata}, or false if it is not.
      */
     boolean isObjectInOMR(ObjectMetadata objectMetadata);
 

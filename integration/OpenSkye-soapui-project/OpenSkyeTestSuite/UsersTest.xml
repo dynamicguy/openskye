@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="UsersTest" searchProperties="true" id="f682f969-1839-435e-b7f2-da6b57ba6933" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="UsersTest" searchProperties="true" id="92cfb071-5ac3-40da-963b-487c577ff111" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
   
   
   
   
-  <con:testStep type="transfer" name="SaveUserDomain" id="21e6f437-1f8a-49f5-9316-c1605ce1ef83">
+  <con:testStep type="transfer" name="SaveUserDomain" id="53d7b314-1a8b-4435-8dbd-1b995eb5d496">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>UserDomain</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>GetCurrentUser</con:sourceStep>
+        <con:sourceType>userId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/users/${#Project#userId}';
 //ns1:Response[1]/ns1:domain[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>userDomain</con:targetType>
@@ -19,8 +19,8 @@
       </con:transfers>
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" entitize="false" ignoreEmpty="false" useXQuery="false" transferChildNodes="false">
         <con:name>UserDomainName</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>GetCurrentUser</con:sourceStep>
+        <con:sourceType>userId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/users/${#Project#userId}';
 //ns1:Response[1]/ns1:domain[1]/ns1:name[1]</con:sourcePath>
         <con:targetType>userDomainName</con:targetType>
@@ -29,13 +29,13 @@
     </con:config>
   </con:testStep>
   
-  <con:testStep type="transfer" name="SaveAdminRoleId">
+  <con:testStep type="transfer" name="SaveAdminRoleId" id="cea9a079-4ee0-4faf-8122-236715f5a3f8">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>AdminRoleId</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>GetAllRoles</con:sourceStep>
+        <con:sourceType>adminRoleId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/roles';
 //ns1:Response[1]/ns1:results[1]/ns1:e[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>adminRoleId</con:targetType>
@@ -45,13 +45,13 @@
   </con:testStep>
   
   
-  <con:testStep type="transfer" name="SaveRoleId">
+  <con:testStep type="transfer" name="SaveRoleId" id="ad398cd2-49eb-490e-a7d4-9a62ecb7a841">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>RoleId</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>CreateRole</con:sourceStep>
+        <con:sourceType>newUserId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://localhost/api/1/roles';
 //ns1:Response[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>newRoleId</con:targetType>
@@ -62,13 +62,13 @@
   
   
   
-  <con:testStep type="transfer" name="SavePermissionId">
+  <con:testStep type="transfer" name="SavePermissionId" id="e73b6a8f-2ec4-4708-8dac-337f95348fe0">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>PermissionId</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>CreatePermission</con:sourceStep>
+        <con:sourceType>newPermissionId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/permissions';
 //ns1:Response[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>newPermissionId</con:targetType>
@@ -79,13 +79,13 @@
   
   
   
-  <con:testStep type="transfer" name="SaveNewUserInfo">
+  <con:testStep type="transfer" name="SaveNewUserInfo" id="87b8f033-542c-42ce-bcb3-7956b2066b59">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>UserId</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>CreateUser</con:sourceStep>
+        <con:sourceType>newUserId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/users';
 //ns1:Response[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>newUserId</con:targetType>
@@ -94,13 +94,13 @@
     </con:config>
   </con:testStep>
   
-  <con:testStep type="transfer" name="SaveUserRoleId">
+  <con:testStep type="transfer" name="SaveUserRoleId" id="3a1ad4e3-395b-4090-8aef-e9cbcf2af92e">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false" disabled="true">
         <con:name>UserRoleId</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>CreateUserRole</con:sourceStep>
+        <con:sourceType>newUserRoleId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/userRoles';
 //ns1:Response[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>newUserRoleId</con:targetType>
@@ -112,13 +112,13 @@
   
   
   
-  <con:testStep type="transfer" name="SaveRolePermissionId">
+  <con:testStep type="transfer" name="SaveRolePermissionId" id="369d6640-6b74-40e2-bf6c-0b75a356facb">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false">
         <con:name>RolePermissionId</con:name>
-        <con:sourceType>ResponseAsXml</con:sourceType>
-        <con:sourceStep>CreateRolePermission</con:sourceStep>
+        <con:sourceType>newRolePermissionId</con:sourceType>
+        <con:sourceStep>#Project#</con:sourceStep>
         <con:sourcePath>declare namespace ns1='http://${#Project#apiAddress}/api/${#Project#version}/rolePermissions';
 //ns1:Response[1]/ns1:id[1]</con:sourcePath>
         <con:targetType>newRolePermissionId</con:targetType>

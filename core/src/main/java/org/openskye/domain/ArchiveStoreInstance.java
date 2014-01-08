@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An instance of an {@link org.openskye.core.ArchiveStore} definition
+ * An instance of an {@link org.openskye.core.ArchiveStore}.
  */
 @Entity
 @Table(name = "ARCHIVE_STORE")
@@ -25,20 +25,33 @@ import java.util.Map;
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "properties")
 public class ArchiveStoreInstance implements Identifiable {
-
+    /**
+     * The {@link org.openskye.core.ArchiveStore}
+     */
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
+    /**
+     * The {@link org.openskye.core.ArchiveStore} name
+     */
     @NotNull
     @NotBlank
     @Column(unique=true)
     private String name;
-    // The name of the {@link ArchiveStore} implementation
+    /**
+     * The {@link org.openskye.core.ArchiveStore} instance implementation (for example: LocalFileSystem, JDBC, CIFS).
+     */
     @NotNull
     @NotBlank
     private String implementation;
+    /**
+     * The {@link org.openskye.core.ArchiveStore} configuration properties. These properties will vary depending on the
+     * type of {@link org.openskye.core.ArchiveStore} this is. For example, an {@link org.openskye.core.ArchiveStore} on
+     * a local filesystem would have filesystem based properties, such as file paths, while one on a JDBC database would
+     * have configuration properties, such as database name and address.
+     */
     @ElementCollection
     @MapKeyColumn(name = "NAME")
     @Column(name = "VALUE")

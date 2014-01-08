@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * The logout command
+ * The command to log out of the server.
  */
 @Parameters(commandDescription = "Logout of this server")
 @Data

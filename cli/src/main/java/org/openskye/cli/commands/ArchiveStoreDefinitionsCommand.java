@@ -12,9 +12,9 @@ import org.openskye.domain.Project;
 import java.util.List;
 
 /**
- * Managing the Archive Store Definitions
+ * A command to manage the {@link ArchiveStoreDefinition}s.
  */
-@Parameters(commandDescription = "Manage archive store definition")
+@Parameters(commandDescription = "Manage archive store definitions")
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)

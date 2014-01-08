@@ -11,4 +11,6 @@ public class MetadataConstants {
     public final static String PRODUCT_NAME = "productName";
     public final static String PRODUCT_VERSION = "productVersion";
     public static final String DRIVER_VERSION = "driverVersion";
+
+    public static final String RETENTION_POLICY_ID = "retentionPolicyId";
 }

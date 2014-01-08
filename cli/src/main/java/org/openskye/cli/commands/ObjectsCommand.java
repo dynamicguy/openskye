@@ -11,6 +11,11 @@ import org.openskye.domain.Project;
 
 import java.util.List;
 
+/**
+ * A command to manage {@link ObjectMetadata}. <br /> <b>Note:</b> ObjectMetadata cannot be directly created, so a call
+ * to {@link #create} will result in an error message.
+ */
+
 @Parameters(commandDescription = "Manage Object Metadata")
 @Data
 @Slf4j
@@ -36,7 +41,7 @@ public class ObjectsCommand extends AbstractCrudCommand {
     }
 
     @Override
-    public void create(){
+    public void create() {
         output.error("You cannot directly create object metadata");
     }
 

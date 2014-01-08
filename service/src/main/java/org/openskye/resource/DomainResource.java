@@ -57,7 +57,7 @@ public class DomainResource extends AbstractUpdatableDomainResource<Domain> {
         return super.get(id);
     }
 
-    @ApiOperation(value = "List all audit logs", notes = "Returns all audit logs in a paginated structure", responseContainer = "List", response = Domain.class)
+    @ApiOperation(value = "List all domains", notes = "Returns all domains in a paginated structure", responseContainer = "List", response = Domain.class)
     @GET
     @Transactional
     @Timed

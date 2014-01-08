@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
-import org.openskye.domain.Domain;
 import org.openskye.domain.Role;
 import org.openskye.domain.User;
 import org.openskye.domain.UserRole;
@@ -15,7 +14,7 @@ import org.openskye.domain.UserRole;
 import java.util.List;
 
 /**
- * Managing the User Roles
+ * A command to manage {@link UserRole}s
  */
 @Parameters(commandDescription = "Manage user/roles")
 @Data

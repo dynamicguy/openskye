@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The representation of an information store owned by a {@link Domain}
+ * The representation of an information store associated with a {@link Project}
  */
 @Entity
 @Table(name = "INFORMATION_STORE_DEFINITION")
@@ -22,19 +22,30 @@ import java.util.Map;
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "properties")
 public class InformationStoreDefinition implements Identifiable {
+    /**
+     * The <code>InformationStore</code>'s unique id.
+     */
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
+    /**
+     * The name of this <code>InformationStore</code>
+     */
     @NotNull
     @NotBlank
     @Column(unique=true)
     private String name;
+    /**
+     * The <code>Project</code> that owns this {@link org.openskye.core.InformationStore}
+     */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    // The name of the {@link InformationStore} implementation
+    /**
+     * The type of {@link org.openskye.core.InformationStore}. For example a JDBC database,or  a local file system.
+     */
     private String implementation;
     @ElementCollection
     @MapKeyColumn(name = "NAME")

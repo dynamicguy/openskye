@@ -28,16 +28,44 @@ import java.util.Set;
 
 /**
  * The Skye Application
+ * <p/>
+ * This is the main java file run whenever Skye starts. It reads information from the yml provided by the user when
+ * calling the software
  */
 @Slf4j
 public class SkyeApplication extends Application<SkyeConfiguration> {
 
+    /**
+     * The pre-start application environment, used to start Dropwizard
+     *
+     * @see io.dropwizard.setup.Bootstrap
+     */
     private Bootstrap<SkyeConfiguration> bootstrap;
 
+    /**
+     * The main method for Skye. Parameters are taken from the command line in the form of:
+     * <p/>
+     * skye server skye.<!-- -->yml
+     * <p/>
+     * This file contains relevant configuration information for Skye (database configuration, url location)
+     *
+     * @param args - The yml file passed from the command line call
+     *
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         new SkyeApplication().run(args);
     }
 
+    /**
+     * Initializes the Skye application by adding the api documents to the bootstrap, as well as a newly initiallized
+     * swagger bundle. The Swagger API for Skye is created here (implementation of io.dropwizard.Application
+     * initialize(Bootstrap<T> bootstrap))
+     *
+     * @param bootstrap - The Dropwizard application environment
+     *
+     * @see io.dropwizard.Application
+     */
     @Override
     public void initialize(Bootstrap<SkyeConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
@@ -46,6 +74,15 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         this.bootstrap = bootstrap;
     }
 
+    /**
+     * Runs the setup required for Skye by replacing Dropwizard ExceptionMappers with Skye ExceptionMappers, sets up the
+     * JPA module, wire in Shiro, and perform Guice injections
+     *
+     * @param configuration - The configuration file (yml) passed when calling skye server
+     * @param environment   - The environment for the Skye application
+     *
+     * @throws Exception
+     */
     @Override
     public void run(SkyeConfiguration configuration,
                     Environment environment) throws Exception {

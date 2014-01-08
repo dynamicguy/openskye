@@ -22,7 +22,7 @@ public abstract class StructuredObject extends SimpleObject {
     /**
      * Returns an iterator to the rows in the database
      *
-     * @return
+     * @return an iterator to the rows in the database
      */
     public abstract Iterator<Row> getRows();
 

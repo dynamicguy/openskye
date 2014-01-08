@@ -7,13 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.TextField;
-import org.openskye.domain.Domain;
 import org.openskye.domain.User;
 
 import java.util.List;
 
 /**
- * Managing the Users
+ * A command to manage {@link User}s
  */
 @Parameters(commandDescription = "Manage users")
 @Data

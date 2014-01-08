@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 /**
- * The representation of a relationship that exists between a channel and an archive store
+ * The representation of a relationship that exists between a channel and an archive store.
  */
 @Entity
 @Table(name = "CHANNEL_ARCHIVE_STORE")

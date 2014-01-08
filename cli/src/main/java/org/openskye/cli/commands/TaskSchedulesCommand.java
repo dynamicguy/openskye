@@ -15,13 +15,13 @@ import org.openskye.task.step.TaskStep;
 import java.util.List;
 
 /**
- * Managing the TaskSchedules
+ * A command to manage {@link TaskSchedule}s
  */
 @Parameters(commandDescription = "Manage task schedules")
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
-public class TaskSchedulesCommand extends AbstractTaskStepCommand {
+public class TaskSchedulesCommand extends TasksCommand {
 
     private final String commandName = "taskSchedules";
 

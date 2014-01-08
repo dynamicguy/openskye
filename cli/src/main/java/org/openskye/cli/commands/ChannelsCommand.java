@@ -13,7 +13,7 @@ import org.openskye.filters.PathRegExFilter;
 import java.util.List;
 
 /**
- * Managing the Archive Store Instances
+ * A command to manage {@link Channel}s
  */
 @Parameters(commandDescription = "Manage Channels")
 @Data

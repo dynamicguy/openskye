@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Managing the Archive Store Instances
+ * A command to manage {@link ObjectSet}s.
  */
 @Parameters(commandDescription = "Manage Object Sets")
 @Data
@@ -27,8 +27,18 @@ import java.util.List;
 public class ObjectSetsCommand extends AbstractCrudCommand {
 
     private final String commandName = "objectSets";
+    /**
+     * A JCommand parameter which represents a request to add to an {@link ObjectSet}. {@link #add()} or {@link
+     * #addFromSearch()} is called if this parameter is set to true (set by the user by adding --add to the end of their
+     * command).
+     */
     @Parameter(names = "--add")
     private boolean add;
+    /**
+     * A JCommand parameter which represents a request to list the objects in an {@link ObjectSet}. {@link
+     * #listObjects()} is called if this parameter is set to true (set by the user by adding --objects to the end of
+     * their command).
+     */
     @Parameter(names = "--objects")
     private boolean objects;
 
@@ -36,7 +46,7 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
     public void execute() {
 
         if (add) {
-            if (dynamicParams.get("query") != null) { //did the user add -P query=...
+            if (dynamicParams.get("query") != null) { //did the user add -P query=
                 addFromSearch();
             } else {
                 add();
@@ -52,10 +62,15 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         }
     }
 
+    /**
+     * Lists all the objects in an object set. The object set is specified by the objectSetId (provided by the user
+     * through the dynamic parameters). This id is sent to {@link org.openskye.resource.ObjectSetResource#getObjects(String)},
+     * and the result is printed in tabular form in the console.
+     */
     private void listObjects() {
         String objectSetID = dynamicParams.get("objectSetId");
 
-        PaginatedResult paginatedResult = getResource(getCollectionPlural() + objectSetID   + "/metadata/").get(PaginatedResult.class);
+        PaginatedResult paginatedResult = getResource(getCollectionPlural() + objectSetID + "/metadata/").get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
         fieldsWithId.addAll(new ObjectsCommand().getFieldNames());
@@ -88,6 +103,10 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         return commandName;
     }
 
+    /**
+     * Adds objects to a given object set based on a user-provided query. The objectSetId and query are passed to a call
+     * to {@link org.openskye.resource.ObjectSetResource#addFromSearch(String, String)}.
+     */
     public void addFromSearch() {
         String objectSetID = dynamicParams.get("objectSetId");
         String query = dynamicParams.get("query");
@@ -103,6 +122,10 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         output.success("Successfully added objects to the Object Set with id: " + result.getId());
     }
 
+    /**
+     * Adds a specific object to an object set. The metadata id of the object to add is provided in the command, as well
+     * as the id of object set to add the object to. Those ids are passed to a cal to {@link org.openskye.resource.ObjectSetResource#addObject(String, String)}.
+     */
     public void add() {
         String objectSetID = dynamicParams.get("objectSetId");
         String objectMetadataId = dynamicParams.get("objectId");

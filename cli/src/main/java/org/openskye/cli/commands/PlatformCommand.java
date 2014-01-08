@@ -9,7 +9,7 @@ import org.openskye.core.SkyePlatform;
 import org.openskye.stores.StoreRegistryMetadata;
 
 /**
- * Get the platform details
+ * Get the platform details for this Skye instance.
  */
 @Parameters(commandDescription = "Get the platform details for the Skye instance")
 @Data
