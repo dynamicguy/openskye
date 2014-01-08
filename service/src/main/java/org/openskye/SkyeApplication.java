@@ -105,6 +105,8 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         // Adding in the exception mappers
         environment.jersey().register(new ConstraintViolationExceptionMapper());
 
+
+
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
 
@@ -136,6 +138,15 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
 
         Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule, skyeModule);
 
+        // Set-up the filters
+        environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+        environment.servlets().addFilter("Guice Filter", GuiceFilter.class)
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+
+        environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+
         AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
         autoConfig.initialize(bootstrap, injector);
 
@@ -148,13 +159,8 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
             }
         });
 
-        // Set-up the filters
-        environment.servlets().addFilter("Guice Filter", GuiceFilter.class)
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
-        environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
-        environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+
+
 
         // Complete the autoconfig
         autoConfig.run(environment, injector);
