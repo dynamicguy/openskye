@@ -26,6 +26,7 @@ import java.util.List;
 @Table(name = "CHANNEL")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @ToString(exclude = {"channelArchiveStores", "attributeInstances", "channelFilters"})
 public class Channel implements Identifiable {
     /**

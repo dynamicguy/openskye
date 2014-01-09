@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Table(name = "ATTRIBUTE_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
 public class AttributeDefinition implements Identifiable {
 

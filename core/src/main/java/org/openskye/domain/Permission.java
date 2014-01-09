@@ -1,6 +1,7 @@
 package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,8 +19,8 @@ import java.util.List;
 @Table(name = "PERMISSION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
-
 public class Permission implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")

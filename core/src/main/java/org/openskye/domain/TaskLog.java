@@ -1,6 +1,7 @@
 package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,6 +23,7 @@ import java.io.IOException;
 @Table(name = "TASK_LOG")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
 public class TaskLog implements Identifiable {
     @Transient

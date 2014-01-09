@@ -1,6 +1,7 @@
 package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -22,6 +23,7 @@ import java.io.IOException;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskSchedule implements Identifiable {
     @Transient
     private final static ObjectMapper MAPPER = new ObjectMapper();

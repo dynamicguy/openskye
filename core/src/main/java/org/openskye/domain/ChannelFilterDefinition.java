@@ -1,6 +1,7 @@
 package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @Table(name = "CHANNEL_FILTER_DEFINITION")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
 public class ChannelFilterDefinition implements Identifiable {
     /**
