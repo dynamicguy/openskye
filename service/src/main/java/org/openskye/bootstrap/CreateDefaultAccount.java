@@ -54,11 +54,11 @@ public class CreateDefaultAccount {
      */
     @Inject
     public void init() {
-        CreateDefaultAccount.log.info("Checking for default admin account");
+        log.info("Checking for default admin account");
 
         if (!userDAO.findByEmail("admin@openskye.org").isPresent()) {
             userDAO.getEntityManagerProvider().get().getTransaction().begin();
-            CreateDefaultAccount.log.info("Creating default admin account");
+            log.info("Creating default admin account");
             Domain domain = new Domain();
             domain.setName("Skye");
             domainDAO.create(domain);
@@ -95,11 +95,11 @@ public class CreateDefaultAccount {
             userDAO.getEntityManagerProvider().get().getTransaction().commit();
         }
 
-        CreateDefaultAccount.log.info("Checking for default readonly account");
+        log.info("Checking for default readonly account");
 
         if (!userDAO.findByEmail("reader@openskye.org").isPresent()) {
             userDAO.getEntityManagerProvider().get().getTransaction().begin();
-            CreateDefaultAccount.log.info("Creating default readonly account");
+            log.info("Creating default readonly account");
 
             Domain domain = domainDAO.findByName("Skye").get();
 

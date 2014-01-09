@@ -1,11 +1,7 @@
 package org.openskye;
 
 import com.google.common.base.Function;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import io.dropwizard.Application;
@@ -50,7 +46,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      * This file contains relevant configuration information for Skye (database configuration, url location)
      *
      * @param args - The yml file passed from the command line call
-     *
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
@@ -63,7 +58,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      * initialize(Bootstrap<T> bootstrap))
      *
      * @param bootstrap - The Dropwizard application environment
-     *
      * @see io.dropwizard.Application
      */
     @Override
@@ -80,7 +74,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      *
      * @param configuration - The configuration file (yml) passed when calling skye server
      * @param environment   - The environment for the Skye application
-     *
      * @throws Exception
      */
     @Override
@@ -105,6 +98,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         // Adding in the exception mappers
         environment.jersey().register(new ConstraintViolationExceptionMapper());
 
+
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
 
@@ -127,17 +121,16 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         props.put("hibernate.c3p0.maxIdleTimeExcessConnections", configuration.getDatabaseConfiguration().getMaxIdleTimeExcessConnections());
         props.put("hibernate.c3p0.unreturnedConnectionTimeout", configuration.getDatabaseConfiguration().getUnreturnedConnectionTimeout());
         props.put("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
-        
+
         jpaPersistModule.properties(props);
 
         DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
 
         SkyeModule skyeModule = new SkyeModule(configuration);
+        // Set-up the filters
 
-        Injector injector = Guice.createInjector(jerseyContainerModule, dropwizardEnvironmentModule, jpaPersistModule, skyeModule);
-
-        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
-        autoConfig.initialize(bootstrap, injector);
+        environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
+                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
         container.setResourceConfig(environment.jersey().getResourceConfig());
         environment.jersey().replace(new Function<ResourceConfig, ServletContainer>() {
@@ -148,22 +141,13 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
             }
         });
 
-        // Set-up the filters
-        environment.servlets().addFilter("Guice Filter", GuiceFilter.class)
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
-        environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
-        environment.servlets().addFilter("Guice Persist Filter", injector.getInstance(PersistFilter.class))
-                .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
+        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
+        autoConfig.addResources(environment);
 
-        // Complete the autoconfig
-        autoConfig.run(environment, injector);
+        // Add a listener for us to be able to wire in Shiro and then bootstrap all the modules off this
+        // so we only have one guice injector
+        environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule, environment, bootstrap, jerseyContainerModule, dropwizardEnvironmentModule, skyeModule));
 
-        // Add a listener for us to be able to wire in Shiro
-        environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule));
-
-        // Add a listener to start the task manager
-        environment.lifecycle().addServerLifecycleListener(new SkyeServerLifecycleListener(injector));
     }
 
 }
