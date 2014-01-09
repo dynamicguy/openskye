@@ -12,7 +12,6 @@ import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.*;
-import org.openskye.guice.InMemoryTestModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.stores.inmemory.InMemoryInformationStore;
@@ -132,11 +131,13 @@ public class JPAObjectMetadataRepositoryTest {
                 acbOutput.get().getArchiveStoreDefinitionId(),
                 is(equalTo(asd.getId())));
 
+        boolean isFound = false;
+        Iterable<ObjectMetadata> metadataList;
+
         // Test that the persisted metadata can be retrieved by information
         // store definition.
-        Iterable<ObjectMetadata> metadataList = omr.getObjects(isd);
+        metadataList = omr.getObjects(isd);
 
-        boolean isFound = false;
         for (ObjectMetadata metadata : metadataList) {
             if (metadata.getId().equals(objectMetadata.getId()))
                 isFound = true;

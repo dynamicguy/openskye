@@ -129,5 +129,12 @@
             <artifactId>h2</artifactId>
             <version>1.3.172</version>
         </dependency>
+
+        <!-- Allows injection into Bean Validators -->
+        <dependency>
+            <groupId>org.apache.bval</groupId>
+            <artifactId>bval-guice</artifactId>
+            <version>0.3-incubating</version>
+        </dependency>
     </dependencies>
 </project>

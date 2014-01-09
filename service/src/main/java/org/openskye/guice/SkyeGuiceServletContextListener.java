@@ -6,11 +6,13 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.apache.bval.guice.ValidationModule;
 import org.apache.shiro.guice.web.GuiceShiroFilter;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.util.PersistFilter;
 
+import javax.persistence.ValidationMode;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -40,7 +42,8 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
     protected Injector getInjector() {
         if (injector == null) {
             ShiroWebModule shiroWebModule = new SkyeShiroModule(servletContext, jerseyContainerModule);
-            injector = Guice.createInjector(jpaPersistModule, shiroWebModule, dropwizardEnviroment, skyeModule);
+            ValidationModule validationModule = new ValidationModule();
+            injector = Guice.createInjector(jpaPersistModule, shiroWebModule, validationModule, dropwizardEnviroment, skyeModule);
         }
 
         return injector;

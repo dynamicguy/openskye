@@ -212,6 +212,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Package that allows injection into Bean Validators -->
+        <dependency>
+            <groupId>org.apache.bval</groupId>
+            <artifactId>bval-guice</artifactId>
+            <version>0.3-incubating</version>
+        </dependency>
+
     </dependencies>
 
     <build>

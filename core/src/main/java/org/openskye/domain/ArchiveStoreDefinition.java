@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
+import org.openskye.validator.Unique;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,6 +40,7 @@ public class ArchiveStoreDefinition implements Identifiable {
     @NotNull
     @NotBlank
     @Column(unique=true)
+    @Unique(fieldName = "name", entity = ArchiveStoreDefinition.class)
     private String name;
     /**
      * Description of the <code>ArchiveStoreDefinition</code>.
@@ -55,6 +57,7 @@ public class ArchiveStoreDefinition implements Identifiable {
      */
     @ManyToOne
     @JoinColumn(name = "ARCHIVE_STORE_ID")
+    @NotNull
     private ArchiveStoreInstance archiveStoreInstance;
     /**
      * Various configuration properties

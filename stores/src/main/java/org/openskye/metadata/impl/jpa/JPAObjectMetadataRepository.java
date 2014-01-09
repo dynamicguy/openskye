@@ -208,8 +208,9 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
+        EntityManager manager = getEntityManager();
         List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
@@ -217,7 +218,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
         cq.where(cb.equal(root.get(ObjectMetadata_.informationStoreId), informationStoreDefinition.getId()));
 
-        List<ObjectMetadata> listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
+        List<ObjectMetadata> listJpaObjectMetadata = manager.createQuery(cq).getResultList();
 
         for (ObjectMetadata jpa : listJpaObjectMetadata)
             listObjectMetadata.add(jpa);
@@ -253,16 +254,17 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Task task) {
+        EntityManager manager = getEntityManager();
         List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
         List<ObjectMetadata> listJpaObjectMetadata = null;
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
         cq.where(cb.equal(root.get(ObjectMetadata_.taskId), task.getId()));
 
-        listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
+        listJpaObjectMetadata = manager.createQuery(cq).getResultList();
 
         // TODO we need to make this iterable
         for (ObjectMetadata jpa : listJpaObjectMetadata)

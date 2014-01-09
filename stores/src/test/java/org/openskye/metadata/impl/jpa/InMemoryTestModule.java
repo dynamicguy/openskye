@@ -1,12 +1,12 @@
-package org.openskye.guice;
+package org.openskye.metadata.impl.jpa;
 
 import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import org.apache.bval.guice.ValidationModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.metadata.impl.InMemoryObjectMetadataSearch;
-import org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.TaskScheduler;
@@ -26,6 +26,8 @@ public class InMemoryTestModule extends AbstractModule {
         props.put("javax.persistence.jdbc.driver", "org.h2.Driver");
         jpaPersistModule.properties(props);
         install(jpaPersistModule);
+
+        install(new ValidationModule());
 
         bind(TaskManager.class).to(InMemoryTaskManager.class).asEagerSingleton();
         bind(TaskScheduler.class).to(InMemoryTaskScheduler.class).asEagerSingleton();

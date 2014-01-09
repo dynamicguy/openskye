@@ -16,6 +16,9 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.TaskScheduler;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 /**
  * The Guice module for Skye
  */

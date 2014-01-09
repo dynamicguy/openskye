@@ -39,7 +39,10 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     protected SkyeSession skyeSession;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
     // We wanted to have exceptions before commit in the DAO
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    //private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+    @Inject
+    private Validator validator;
 
     public Provider<EntityManager> getEntityManagerProvider() {
         return emf;

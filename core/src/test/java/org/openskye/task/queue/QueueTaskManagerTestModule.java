@@ -3,6 +3,7 @@ package org.openskye.task.queue;
 import com.google.guiceberry.GuiceBerryModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import org.apache.bval.guice.ValidationModule;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.metadata.impl.InMemoryObjectMetadataRepository;
@@ -25,6 +26,8 @@ public class QueueTaskManagerTestModule extends AbstractModule {
         props.put("javax.persistence.jdbc.driver", "org.h2.Driver");
         jpaPersistModule.properties(props);
         install(jpaPersistModule);
+
+        install(new ValidationModule());
 
         bind(TaskManager.class).to(QueueTaskManager.class).asEagerSingleton();
         bind(TaskScheduler.class).to(QuartzTaskScheduler.class).asEagerSingleton();

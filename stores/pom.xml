@@ -94,6 +94,14 @@
             <version>1.3.172</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Guice support for Bean Validation -->
+        <dependency>
+            <groupId>org.apache.bval</groupId>
+            <artifactId>bval-guice</artifactId>
+            <version>0.3-incubating</version>
+        </dependency>
+
     </dependencies>
 
 </project>
