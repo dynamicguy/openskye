@@ -193,7 +193,16 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                 } catch (Exception e) {
                     throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
                 }
-            } else if (field instanceof ReferenceField) {
+            } else if(field instanceof NumberField){
+                long newValue = Long.parseLong(attributeVal);
+                try {
+                    BeanUtils.setProperty(newObject, attributeName, newValue);
+                    output.raw(newObject.toString());
+                } catch (Exception e) {
+                    throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
+                }
+            }
+            else if (field instanceof ReferenceField) {
                 newObject = selectReferenceField((ReferenceField) field, newObject);
             } else if (field instanceof PropertiesField) {
                 newObject = setPropertiesField((PropertiesField) field, newObject);
