@@ -93,7 +93,7 @@ public class QueueTaskManager implements TaskManager {
      */
     protected void accept(String taskId, String nodeId) {
         Task task = getTask(taskId);
-        if (!nodeId.equals(task.getAssignedNode().getId())) {
+        if (!nodeId.equals(task.getAssignedNode().getHostname())) {
             throw new SkyeException("Node " + nodeId + " cannot accept task assigned to " + task.getAssignedNode());
         }
         switch (task.getStatus()) {
