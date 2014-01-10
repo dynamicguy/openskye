@@ -1,6 +1,6 @@
 package org.openskye.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +22,7 @@ import java.util.Map;
 @Table(name = "ARCHIVE_STORE")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "properties")
 public class ArchiveStoreInstance implements Identifiable {

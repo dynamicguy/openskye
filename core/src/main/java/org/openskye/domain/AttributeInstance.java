@@ -1,5 +1,7 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ATTRIBUTE_INSTANCE")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
 public class AttributeInstance implements Identifiable {
     /**

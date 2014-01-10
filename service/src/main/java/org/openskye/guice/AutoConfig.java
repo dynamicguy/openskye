@@ -6,7 +6,6 @@ import com.google.inject.Injector;
 import com.sun.jersey.spi.inject.InjectableProvider;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.servlets.tasks.Task;
-import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;

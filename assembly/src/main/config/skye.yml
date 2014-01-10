@@ -18,20 +18,20 @@ database:
   connectionProviderClass: org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider
 
   # hibernate.c3p0.max_size
-  poolMaxSize: 100
+  poolMaxSize: 10
 
   # hibernate.c3p0.min_size
   poolMinSize: 1
 
   # hibernate.c3p0.timeout
-  poolTimeOut: 3600
+  poolTimeOut: 0
 
   # hibernate.c3p0.idle_test_period in seconds
   poolIdleTestPeriod: 60
 
   # http://javatech.org/2007/11/c3p0-connectionpool-configuration-rules-of-thumb/
   poolConnectionMaxIdleTime: 3600
-  unreturnedConnectionTimeout: 0
+  unreturnedConnectionTimeout: 60
   maxIdleTimeExcessConnections: 300
 
   # hibernate.c3p0.preferredTestQuery

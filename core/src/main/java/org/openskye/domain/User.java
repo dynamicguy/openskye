@@ -1,6 +1,7 @@
 package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The representation of a user
@@ -22,6 +24,7 @@ import java.util.List;
 @Table(name = "USER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
 public class User implements Identifiable {
     @Id
@@ -36,7 +39,7 @@ public class User implements Identifiable {
     private String email;
     @NotNull
     @NotBlank
-    @Column(unique=true)
+    @Column(unique = true)
     private String name;
     @JsonIgnore
     private String passwordHash;
@@ -54,6 +57,9 @@ public class User implements Identifiable {
 
     @PrePersist
     public void setKeys() {
+        //set API key
+        //TODO: The API key may need to be set using a more secure scheme, but UUID should work for the moment at least
+        setApiKey(UUID.randomUUID().toString());
         encryptPassword();
     }
 

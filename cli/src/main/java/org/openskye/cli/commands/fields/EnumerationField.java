@@ -1,6 +1,7 @@
 package org.openskye.cli.commands.fields;
 
-import java.util.ArrayList;
+import scala.actors.threadpool.Arrays;
+
 import java.util.EnumSet;
 import java.util.List;
 
@@ -11,22 +12,27 @@ public class EnumerationField extends Field{
 
     private final EnumSet<? extends Enum> anEnum;
     private final String name;
+    private final Class clazz;
 
     public EnumerationField(String name, Class newEnum) {
         this.name = name;
+        this.clazz=newEnum;
         this.anEnum=EnumSet.allOf(newEnum);
     }
 
-    public List<String> getAllEnumOptions(){
-        List<String> enumOptions = new ArrayList<>(this.anEnum.size());
-        for(Enum e : anEnum){
-            enumOptions.add(e.toString());
-        }
-        return enumOptions;
+    public List<? extends Enum> getAllEnumOptions(){
+
+        return Arrays.asList(anEnum.toArray());
     }
 
     @Override
     public String getName() {
         return name;
     }
+
+    public Class getClazz(){
+        return clazz;
+    }
+
+
 }

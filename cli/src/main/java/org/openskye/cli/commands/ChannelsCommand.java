@@ -57,6 +57,14 @@ public class ChannelsCommand extends AbstractCrudCommand {
             }
         }
 
+        // if a retention policy was provided as parameter (optional)
+        if (dynamicParams.get("retentionPolicy") != null) {
+            String id = dynamicParams.get("retentionPolicy");
+            RetentionPolicy retentionPolicy = getResource("retentionPolicies/" + resolveAlias(id)).get(RetentionPolicy.class);
+            output.raw(retentionPolicy.toString());
+            newObject.setRetentionPolicy(retentionPolicy);
+        }
+
         if(dynamicParams.get("archiveStoreDefinitions")!=null){
             String archiveStores = dynamicParams.get("archiveStores");
             String[] storeIds = archiveStores.split(",");

@@ -1,11 +1,7 @@
 package org.openskye;
 
 import com.google.common.base.Function;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import io.dropwizard.Application;
@@ -46,7 +42,6 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
      * This file contains relevant configuration information for the skye worker (database configuration, url location)
      *
      * @param args - The yml file passed from the command line call
-     *
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
@@ -59,7 +54,6 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
      * initialize(Bootstrap<T> bootstrap))
      *
      * @param bootstrap - The Dropwizard application environment
-     *
      * @see io.dropwizard.Application
      */
     @Override
@@ -73,7 +67,6 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
      *
      * @param configuration - The configuration file (yml) passed when calling skye server
      * @param environment   - The environment for the Skye application
-     *
      * @throws Exception
      */
     public void run(SkyeWorkerConfiguration configuration,
