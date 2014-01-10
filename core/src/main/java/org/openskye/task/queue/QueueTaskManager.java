@@ -89,7 +89,7 @@ public class QueueTaskManager implements TaskManager {
      * Record the acceptance of a queued {@link Task} for execution
      *
      * @param taskId id of task to accept
-     * @param nodeId nodeId identifying the node that accepts the task
+     * @param nodeHostname nodeId identifying the node that accepts the task
      */
     protected void accept(String taskId, String nodeHostname) {
         Task task = getTask(taskId);
