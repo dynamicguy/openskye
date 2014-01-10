@@ -31,7 +31,9 @@ public class ObjectSet {
     @NotNull
     @Column(unique=true)
     private String name;
-    private boolean onHold;
+    private ObjectSetType type;
+    private String query;
+    private boolean onHold = false;
     @ManyToMany
     @JoinTable(
             name = "OBJECT_SET_TO_METADATA",

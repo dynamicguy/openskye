@@ -68,8 +68,8 @@ public class QueueTaskManager implements TaskManager {
      */
     protected void enqueue(String taskId) {
         Task task = getTask(taskId);
-        if (task.getWorkerName() == null) {
-            throw new SkyeException("Must set worker name before submitting task " + taskId);
+        if (task.getAssignedNode() == null) {
+            throw new SkyeException("Assigned Node must be set before submitting a task, check " + taskId);
         }
         switch (task.getStatus()) {
             case CREATED:
@@ -88,18 +88,17 @@ public class QueueTaskManager implements TaskManager {
     /**
      * Record the acceptance of a queued {@link Task} for execution
      *
-     * @param taskId     id of task to accept
-     * @param workerName name identifying the thread that accepts the task
+     * @param taskId id of task to accept
+     * @param nodeHostname nodeId identifying the node that accepts the task
      */
-    protected void accept(String taskId, String workerName) {
+    protected void accept(String taskId, String nodeHostname) {
         Task task = getTask(taskId);
-        if (!task.getWorkerName().equals(workerName)) {
-            throw new SkyeException("Worker " + workerName + " cannot accept task meant for " + task.getWorkerName());
+        if (!nodeHostname.equals(task.getAssignedNode().getHostname())) {
+            throw new SkyeException("Node " + nodeHostname + " cannot accept task assigned to " + task.getAssignedNode());
         }
         switch (task.getStatus()) {
             case QUEUED:
                 task.setStatus(TaskStatus.STARTED);
-                task.setWorkerName(workerName);
                 task.setStarted(LocalDateTime.now());
                 taskDAO.update(taskId, task);
                 toLog(task, "Task Accepted");

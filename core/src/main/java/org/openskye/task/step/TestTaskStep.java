@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 
@@ -16,7 +17,6 @@ import org.openskye.domain.TaskStatus;
 @Slf4j
 @NoArgsConstructor
 public class TestTaskStep extends TaskStep {
-    @JsonProperty
     @Getter
     @Setter
     private Project project;
@@ -30,11 +30,12 @@ public class TestTaskStep extends TaskStep {
     @Setter
     private Boolean pass;
 
-    public TestTaskStep(Project project, Integer sleepSeconds, Integer iterations, Boolean pass) {
+    public TestTaskStep(Project project, Node node, Integer sleepSeconds, Integer iterations, Boolean pass) {
         this.sleepSeconds = sleepSeconds;
         this.iterations = iterations;
         this.pass = pass;
         this.project = project;
+        setNode(node);
     }
 
     @Override

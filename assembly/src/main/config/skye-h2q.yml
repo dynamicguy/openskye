@@ -15,7 +15,8 @@ services:
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
 worker:
-  name: "Skye Worker"
+  # TODO you will need to specify a nodeID once you have created one
+  # nodeId:
   threadCount: 5
   pollPeriodSec: 30
 

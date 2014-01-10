@@ -117,7 +117,8 @@ public abstract class ExecutableCommand {
     }
 
     /**
-     * Assigns a number to a <code>NumberField</code> for the given object. Used if one of the creation parameters is a numeric type
+     * Assigns a number to a <code>NumberField</code> for the given object. Used if one of the creation parameters is a
+     * numeric type
      *
      * @param field     the <code>NumberField</code> that requires a value
      * @param newObject the object to be modified or created
@@ -188,8 +189,8 @@ public abstract class ExecutableCommand {
     }
 
     /**
-     * Selects a value for an <code>EnumerationField</code>. All possible values of the enumeration field are retrieved, and the user
-     * selects the appropriate value.
+     * Selects a value for an <code>EnumerationField</code>. All possible values of the enumeration field are retrieved,
+     * and the user selects the appropriate value.
      *
      * @param field     the <code>EnumerationField</code>, a field for Enumeration type parameters
      * @param newObject the object to be modified
@@ -199,39 +200,43 @@ public abstract class ExecutableCommand {
      * @see EnumerationField
      */
     protected Object selectEnum(EnumerationField field, Object newObject) {
-        List<String> choices = field.getAllEnumOptions();
-        String choice = dynamicParams.get(field.getName());
-        if(choices.contains(choice)){
-            try {
-                BeanUtils.setProperty(newObject, field.getName(), choice);
-            } catch (Exception e) {
-                throw new SkyeException("Unable to set Enum field", e);
+        List<? extends Enum> choices = field.getAllEnumOptions();
+        try {
+            String choice = dynamicParams.get(field.getName());
+            Enum enumChoice = Enum.valueOf(field.getClazz(), choice);
+
+            if (choices.contains(enumChoice)) {
+
+                BeanUtils.setProperty(newObject, field.getName(), enumChoice);
+
+            } else {
+                output.error("Value not allowed for field: " + field.getName());
+                output.message("The following values are allowed for this field: ");
+                for (Object o : choices) {
+                    output.raw(o.toString());
+                    throw new SkyeException("Unable to set Enum field");
+                }
             }
-        }
-        else{
-            output.error("Value not allowed for field: "+field.getName());
-            output.message("The following values are allowed for this field: ");
-            for(Object o : choices){
-                output.raw(o.toString());
-                throw new SkyeException("Unable to set Enum field");
-            }
+        } catch (Exception e) {
+            throw new SkyeException("Unable to set Enum field", e);
         }
         return newObject;
     }
 
     protected String resolveAlias(String s) {
         String aliasMatch = settings.getIdMap().get(s);
-        if ( aliasMatch != null ) {
-            output.message("Alias "+s+" resolved to "+aliasMatch);
+        if (aliasMatch != null) {
+            output.message("Alias " + s + " resolved to " + aliasMatch);
             return aliasMatch;
         } else {
             return s;
         }
     }
+
     /**
-     * Assigns a value to a <code>ReferenceField</code>. The user enters either an id or a known alias as part of the create command.
-     * The supplied id is then used to search for the required object, which is then assigned to the object to be
-     * created/modified.
+     * Assigns a value to a <code>ReferenceField</code>. The user enters either an id or a known alias as part of the
+     * create command. The supplied id is then used to search for the required object, which is then assigned to the
+     * object to be created/modified.
      *
      * @param field     the <code>ReferenceField</code> for the object
      * @param newObject the object being created/modified

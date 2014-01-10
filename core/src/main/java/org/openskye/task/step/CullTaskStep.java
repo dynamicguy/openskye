@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.AttributeDefinition;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.RetentionPolicy;
 import org.openskye.domain.TaskStatus;
@@ -43,8 +42,9 @@ public class CullTaskStep extends TaskStep {
     @Getter
     private ObjectSet objectSet = null;  // the set of culled objects
 
-    public CullTaskStep(Project project) {
+    public CullTaskStep(Project project, Node node) {
         this.project = project;
+        setNode(node);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CullTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if ( project.getName() == null ) {
+        if (project.getName() == null) {
             project = projectDAO.get(project.getId()).get();
         }
     }
@@ -75,9 +75,9 @@ public class CullTaskStep extends TaskStep {
     public TaskStatus call() throws Exception {
 
         // Load retention policy information up front, to avoid a database query on every object
-        Map<String,RetentionPolicy> policyMap = new HashMap<String,RetentionPolicy>();
-        for ( RetentionPolicy policy : retentionPolicyDAO.list().getResults() ) {
-            policyMap.put(policy.getRecordsCode(),policy);
+        Map<String, RetentionPolicy> policyMap = new HashMap<String, RetentionPolicy>();
+        for (RetentionPolicy policy : retentionPolicyDAO.list().getResults()) {
+            policyMap.put(policy.getRecordsCode(), policy);
         }
 
         beginTransaction();
@@ -85,14 +85,15 @@ public class CullTaskStep extends TaskStep {
         String setName = project.getName() + " - retention expired " + new DateTime();
         objectSet = omr.createObjectSet(setName);
 
-        for ( ObjectMetadata om : omr.getObjects(project) ) {
+        for (ObjectMetadata om : omr.getObjects(project)) {
+            //TODO: ensure recordsCode field is attached to each object during ingestion
             String recordsCode = om.getMetadata().get("recordsCode");
-            if ( recordsCode == null ) {
+            if (recordsCode == null) {
                 // objects without a retention policy are not culled
-            } else if ( ! policyMap.containsKey(recordsCode) ) {
+            } else if (!policyMap.containsKey(recordsCode)) {
                 // objects with an unrecognized record code are not culled
-            } else if ( isPastRetention( om ,policyMap.get(recordsCode) ) ) {
-                omr.addObjectToSet( objectSet, om );
+            } else if (isPastRetention(om, policyMap.get(recordsCode))) {
+                omr.addObjectToSet(objectSet, om);
             }
         }
 
@@ -103,18 +104,10 @@ public class CullTaskStep extends TaskStep {
         return TaskStatus.COMPLETED;
     }
 
-    private boolean isPastRetention( ObjectMetadata om, RetentionPolicy policy ) {
-        DateTime triggerDate;
-        AttributeDefinition triggerDefinition = policy.getTriggerDateAttributeDefinition();
-        if ( triggerDefinition == null ) {
-            // The retention period is triggered by the last modification of the object
-            triggerDate = om.getLastModified();
-        } else {
-            // The retention period is triggered by an event, the date/time of which is stored in metadata
-            triggerDate = DateTime.parse(om.getMetadata().get(triggerDefinition.getShortLabel()), DateTimeFormat.fullDateTime());
-        }
+    private boolean isPastRetention(ObjectMetadata om, RetentionPolicy policy) {
+        DateTime triggerDate = om.getLastModified(); //TODO: trigger date may be something else
         int retentionDays = 0;
-        switch ( policy.getPeriodType() ) {
+        switch (policy.getPeriodType()) {
             case PERM:
                 return false;
             case YEAR:

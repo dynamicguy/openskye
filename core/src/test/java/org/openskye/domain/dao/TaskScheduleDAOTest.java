@@ -1,6 +1,7 @@
 package org.openskye.domain.dao;
 
 import org.junit.Test;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskSchedule;
 import org.openskye.task.step.TestTaskStep;
@@ -28,8 +29,9 @@ public class TaskScheduleDAOTest extends AbstractDAOTestBase<TaskSchedule> {
     @Override
     public TaskSchedule getNew() {
         Project project = new Project();
+        Node node = new Node();
         project.setId("2093e8ab-6aab-4421-970d-1c79bc3be427");
-        TestTaskStep step = new TestTaskStep(project,2,1,true);
+        TestTaskStep step = new TestTaskStep(project, node, 2, 1, true);
         return step.toTaskSchedule("0 0 2 * * ?");
     }
 

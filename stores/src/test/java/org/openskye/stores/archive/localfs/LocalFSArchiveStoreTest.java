@@ -126,11 +126,13 @@ public class LocalFSArchiveStoreTest {
         Project project = new Project();
         project.setId(UUID.randomUUID().toString());
         channel.setProject(project);
+        Node node = new Node();
+        node.setId(UUID.randomUUID().toString());
 
-        Task discovery = new DiscoverTaskStep(channel).toTask();
+        Task discovery = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discovery);
 
-        Task archive = new ArchiveTaskStep(channel).toTask();
+        Task archive = new ArchiveTaskStep(channel, node).toTask();
         taskManager.submit(archive);
 
         long discovered = discovery.getStatistics().getSimpleObjectsFound();
@@ -146,6 +148,7 @@ public class LocalFSArchiveStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setId(UUID.randomUUID().toString());
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
         asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test2");
@@ -160,11 +163,12 @@ public class LocalFSArchiveStoreTest {
         Project project = new Project();
         project.setId(UUID.randomUUID().toString());
         channel.setProject(project);
-
-        Task discovery = new DiscoverTaskStep(channel).toTask();
+        Node node = new Node();
+        node.setId(UUID.randomUUID().toString());
+        Task discovery = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discovery);
 
-        Task archive = new ArchiveTaskStep(channel).toTask();
+        Task archive = new ArchiveTaskStep(channel, node).toTask();
         taskManager.submit(archive);
 
         long discovered = discovery.getStatistics().getSimpleObjectsFound();
@@ -172,7 +176,7 @@ public class LocalFSArchiveStoreTest {
         long ingested = archive.getStatistics().getSimpleObjectsProcessed();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 
-        Optional<ArchiveStore> archiveStore = registry.build(das);
+        Optional<ArchiveStore> archiveStore = registry.build(asi);
 
         assertThat("We got the archive store", archiveStore.isPresent());
 

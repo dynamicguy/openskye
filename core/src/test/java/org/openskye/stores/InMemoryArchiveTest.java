@@ -53,7 +53,8 @@ public class InMemoryArchiveTest {
         project.setId("f86c8b63-fd3b-4c7b-ae96-5f87ff53a187");
         channel.setProject(project);
 
-        Task discover = new DiscoverTaskStep(channel).toTask();
+        Node node = new Node();
+        Task discover = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discover);
     }
 

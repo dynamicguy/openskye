@@ -2,16 +2,20 @@ package org.openskye.stores.archive.localfs;
 
 import com.google.common.base.Optional;
 import com.google.inject.Injector;
+import com.jcraft.jsch.*;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.DataContextFactory;
-import org.eobjects.metamodel.UpdateableDataContext;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.ArchiveStoreInstance;
+import org.openskye.domain.Node;
 import org.openskye.domain.Task;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
+import org.openskye.replicate.Replicator;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 
@@ -19,6 +23,7 @@ import javax.inject.Inject;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
 
@@ -32,29 +37,33 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     public final static String IMPLEMENTATION = "localFS";
     public static final String LOCALFS_PATH = "localFsPath";
     public static final String LOCALFS_TMP_PATH = "localFsTmpPath";
-    private ArchiveStoreDefinition archiveStoreDefinition;
-    @Inject
-    private ObjectMetadataRepository omr;
     @Inject
     private ObjectMetadataSearch oms;
+    @Getter
+    @Inject
+    private ObjectMetadataRepository omr;
     private String localPath;
     @Inject
     private Injector injector;
     private String tmpPath;
-    private boolean initialized = false;
+    private ArchiveStoreInstance archiveStoreInstance;
 
     @Override
-    public void initialize(ArchiveStoreDefinition das) {
-        initialized = true;
-        this.archiveStoreDefinition = das;
-        this.localPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_PATH);
+    public ArchiveStoreInstance getArchiveStoreInstance() {
+        return archiveStoreInstance;
+    }
 
-        this.tmpPath = das.getArchiveStoreInstance().getProperties().get(LOCALFS_TMP_PATH);
+    @Override
+    public void initialize(ArchiveStoreInstance asi) {
+        this.archiveStoreInstance = asi;
+        this.localPath = archiveStoreInstance.getProperties().get(LOCALFS_PATH);
+
+        this.tmpPath = archiveStoreInstance.getProperties().get(LOCALFS_TMP_PATH);
 
         if (this.localPath == null)
-            this.localPath = "/tmp/" + das.getId() + "/archives";
+            this.localPath = "/tmp/" + archiveStoreInstance.getId() + "/archives";
         if (this.tmpPath == null)
-            this.tmpPath = "/tmp/" + das.getId() + "/tmp";
+            this.tmpPath = "/tmp/" + archiveStoreInstance.getId() + "/tmp";
 
         log.info("Creating instance of " + this.getName());
 
@@ -78,7 +87,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public String getUrl() {
-        return "localFS://" + archiveStoreDefinition.getId();
+        return "localFS://" + archiveStoreInstance.getId();
     }
 
     @Override
@@ -103,8 +112,8 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
-            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-                InputStream is = new FileInputStream(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
+            if (metadata.getArchiveContentBlock(this.getArchiveStoreInstance().getId()).isPresent()) {
+                InputStream is = new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), false));
                 return Optional.of(is);
             } else return Optional.absent();
         } catch (FileNotFoundException e) {
@@ -117,17 +126,30 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
         try {
             Class<?> impl = Class.forName(metadata.getImplementation());
 
-            if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) { //is there an ACB?
-                if (isObjectArchived(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata)) { //is the object currently archived?
+            log.debug("Looking for implementation " + impl);
+            if (metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) { //is there an ACB?
+                if (isObjectArchived(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), metadata)) { //is the object currently archived?
                     if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
                         if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
-                            UpdateableDataContext dataContext = createCsvDataContext(getSimpleObjectPath(metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), metadata, false));
+                            log.debug("Found an structured object, returning");
+                            File tableFile = new File(getTempPath() + UUID.randomUUID().toString() + "/" + metadata.getPath().substring(metadata.getPath().lastIndexOf("/")) + ".csv");
+                            mkParentDir(tableFile);
+                            tableFile.deleteOnExit();
+                            IOUtils.copy(new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), false)), new FileOutputStream(tableFile));
+                            DataContext dataContext = createCsvDataContext(tableFile);
+                            // We need to make sure that the table name is correct
+
+                            log.debug("Loaded structured object with table " + dataContext.getDefaultSchema().getTableNames()[0]);
+
                             SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
                             simpleObject.setObjectMetadata(metadata);
                             return Optional.of(simpleObject);
+                        } else {
+                            log.debug("Found a structured object, but implementation not known?");
+                            return Optional.absent();
                         }
                     } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
-
+                        log.debug("Found an unstructured object, returning");
                         SimpleObject simpleObject = new LocalFileUnstructuredObject();
                         simpleObject.setObjectMetadata(metadata);
                         return Optional.of(simpleObject);
@@ -135,15 +157,18 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
                         log.debug("Simple object type not supported!");
                         return Optional.absent();
                     }
+                } else {
+                    log.debug("Unable to find ACB for " + metadata + ", maybe it hasn't been archived?");
+                    return Optional.absent();
                 }
             } else {
-                log.debug("Unable to find ACB for archive store " + this.getArchiveStoreDefinition());
+                log.debug("Unable to find ACB for " + metadata + " for archive store " + getArchiveStoreInstance());
                 return Optional.absent();
             }
         } catch (Exception e) {
             throw new SkyeException("Unable to create object for metadata " + metadata, e);
         }
-        return Optional.absent();
+
     }
 
     @Override
@@ -153,18 +178,16 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     @Override
-    public Optional<ArchiveStoreDefinition> getArchiveStoreDefinition() {
-        if (this.archiveStoreDefinition == null)
-            return Optional.absent();
-
-        return Optional.of(this.archiveStoreDefinition);
+    public void destroy(ObjectMetadata om) {
+        if (om.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) {
+            getAcbPath(om.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), false).delete();
+        }
     }
 
     @Override
-    public void destroy(ObjectMetadata om) {
-        if (om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
-            getSimpleObjectPath(om.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).get(), om, false).delete();
-        }
+    public Optional<Replicator> getReplicator() {
+        Replicator replicator = new LocalFSReplicator(this);
+        return Optional.of(replicator);
     }
 
     public String getLocalPath() {
@@ -175,41 +198,38 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
         return tmpPath;
     }
 
-    private String objectPath(ObjectMetadata om) {
-        // Remove drive prefix from Windows paths, and turn backward slashes into forward
-        return om.getPath().replaceAll("^[A-Z]:\\\\","").replaceAll("\\\\","/");
-    }
-
-    public File getSimpleObjectPath(ArchiveContentBlock acb, ObjectMetadata om, boolean isNew) {
-        String fileName = getLocalPath() + "/" + acb.getId() + "/" + objectPath(om) + ".csv";
+    public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
+        String fileName = getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + ".csv";
         File simpleObjectDir = new File(fileName);
-        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + objectPath(om) + "]");
+        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
 
         if (isNew) {
-            if (simpleObjectDir.exists())
-                throw new SkyeException("Simple object already archived? " + acb);
-            simpleObjectDir.mkdirs();
-            simpleObjectDir.delete();
+            mkParentDir(simpleObjectDir);
         } else if (!simpleObjectDir.exists()) {
             throw new SkyeException("Unable to find simple object for acb " + acb);
         }
         return simpleObjectDir;
     }
 
-    public File getTempSimpleObjectPath(ArchiveContentBlock acb, ObjectMetadata om, boolean isNew) {
-        String fileName = getTempPath() + "/" + acb.getId() + "/" + objectPath(om) + ".csv";
+    public File getTempACBPath(ArchiveContentBlock acb, boolean isNew) {
+        String fileName = getTempPath() + "/" + acb.getId() + "/" + acb.getId() + ".csv";
         File simpleObjectDir = new File(fileName);
-        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + objectPath(om) + "]");
+        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
 
         if (isNew) {
-            if (simpleObjectDir.exists())
-                throw new SkyeException("Simple object already in temp? " + acb);
-            simpleObjectDir.mkdirs();
-            simpleObjectDir.delete();
+            mkParentDir(simpleObjectDir);
+
         } else if (!simpleObjectDir.exists()) {
             throw new SkyeException("Unable to find simple object for acb " + acb);
         }
         return simpleObjectDir;
+    }
+
+    private void mkParentDir(File file) {
+        if (file.exists())
+            throw new SkyeException("File already exists? " + file.getPath());
+        file.mkdirs();
+        file.delete();
     }
 
     @Override
@@ -228,12 +248,142 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public boolean isObjectArchived(ArchiveContentBlock acb, ObjectMetadata om) {
-        String fileName = getLocalPath() + "/" + acb.getId() + "/" + om.getPath() + ".csv";
-        File simpleObjectDir = new File(fileName);
-        if (simpleObjectDir.exists()) {
-            return true;
-        } else {
-            return false;
+        return getAcbPath(acb, false).exists();
+    }
+
+    /**
+     * An ACB copy from the primary to another node,  used in the replication
+     *
+     * @param acb         The ACB you wish to copy
+     * @param primaryNode The node we are copying from
+     * @param node        The node we are copying to (should we were we are)
+     */
+    protected void copyACB(ArchiveContentBlock acb, Node primaryNode, Node node) {
+
+        // Get the paths
+
+        String sourceAcbPath = getAcbPath(acb, false).getPath();
+        String targetAcbPath = getAcbPath(acb, false).getPath();
+
+        JSch jsch = new JSch();
+
+        try {
+            Session session = jsch.getSession(primaryNode.getServiceAccount(), primaryNode.getHostname(), 22);
+
+            // exec 'scp -f rfile' remotely
+            String command = "scp -f " + sourceAcbPath;
+            Channel channel = session.openChannel("exec");
+            ((ChannelExec) channel).setCommand(command);
+
+            // get I/O streams for remote scp
+            OutputStream out = channel.getOutputStream();
+            InputStream in = channel.getInputStream();
+
+            channel.connect();
+
+            byte[] buf = new byte[1024];
+
+            // send '\0'
+            buf[0] = 0;
+            out.write(buf, 0, 1);
+            out.flush();
+
+            while (true) {
+                int c = checkAck(in);
+                if (c != 'C') {
+                    break;
+                }
+
+                // read '0644 '
+                in.read(buf, 0, 5);
+
+                long filesize = 0L;
+                while (true) {
+                    if (in.read(buf, 0, 1) < 0) {
+                        // error
+                        break;
+                    }
+                    if (buf[0] == ' ') break;
+                    filesize = filesize * 10L + (long) (buf[0] - '0');
+                }
+
+                String file = null;
+                for (int i = 0; ; i++) {
+                    in.read(buf, i, 1);
+                    if (buf[i] == (byte) 0x0a) {
+                        file = new String(buf, 0, i);
+                        break;
+                    }
+                }
+
+                //System.out.println("filesize="+filesize+", file="+file);
+
+                // send '\0'
+                buf[0] = 0;
+                out.write(buf, 0, 1);
+                out.flush();
+
+                // read a content of lfile
+                FileOutputStream fos = new FileOutputStream(targetAcbPath);
+                int foo;
+                while (true) {
+                    if (buf.length < filesize) foo = buf.length;
+                    else foo = (int) filesize;
+                    foo = in.read(buf, 0, foo);
+                    if (foo < 0) {
+                        // error
+                        break;
+                    }
+                    fos.write(buf, 0, foo);
+                    filesize -= foo;
+                    if (filesize == 0L) break;
+                }
+                fos.close();
+
+                if (checkAck(in) != 0) {
+                    System.exit(0);
+                }
+
+                // send '\0'
+                buf[0] = 0;
+                out.write(buf, 0, 1);
+                out.flush();
+            }
+
+            session.disconnect();
+        } catch (JSchException e) {
+            throw new SkyeException("Unable to connect to " + node.getHostname() + " as " + node.getServiceAccount(), e);
+        } catch (FileNotFoundException e) {
+            throw new SkyeException("Unable to find ACB " + acb + " on " + node.getHostname(), e);
+        } catch (IOException e) {
+            throw new SkyeException("Unable to copy to find ACB " + acb + " from " + node.getHostname(), e);
         }
+    }
+
+    private int checkAck(InputStream in) throws IOException {
+        int b = in.read();
+        // b may be 0 for success,
+        //          1 for error,
+        //          2 for fatal error,
+        //          -1
+        if (b == 0) return b;
+        if (b == -1) return b;
+
+        if (b == 1 || b == 2) {
+            StringBuffer sb = new StringBuffer();
+            int c;
+            do {
+                c = in.read();
+                sb.append((char) c);
+            }
+            while (c != '\n');
+            if (b == 1) { // error
+                System.out.print(sb.toString());
+            }
+            if (b == 2) { // fatal error
+                System.out.print(sb.toString());
+            }
+        }
+        return b;
     }
 }

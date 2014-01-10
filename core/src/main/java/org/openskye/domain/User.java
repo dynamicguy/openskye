@@ -75,4 +75,12 @@ public class User implements Identifiable {
     public boolean isPassword(String passwordToTest) {
         return BCrypt.checkpw(passwordToTest, passwordHash);
     }
+
+    public void addRole(UserRole userRole){
+        userRoles.add(userRole);
+    }
+
+    public void removeRole(UserRole userRole){
+        userRoles.remove(userRole);
+    }
 }

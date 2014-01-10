@@ -6,9 +6,11 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.guice.web.GuiceShiroFilter;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.openskye.config.SkyeConfiguration;
+import org.openskye.task.TaskManager;
 import org.openskye.util.PersistFilter;
 
 import javax.servlet.ServletContext;
@@ -17,6 +19,7 @@ import javax.servlet.ServletContextEvent;
 /**
  * This takes care of wiring up the Guice/Shiro/Dropwizard world at the last minute
  */
+@Slf4j
 public class SkyeGuiceServletContextListener extends GuiceServletContextListener {
     private final JpaPersistModule jpaPersistModule;
     private final Environment environment;
@@ -58,6 +61,8 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
 
         AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
         autoConfig.addTasks(environment, injector);
-        environment.lifecycle().addServerLifecycleListener(new SkyeServerLifecycleListener(injector));
+        log.info("Starting the task manager");
+        TaskManager taskManager = injector.getInstance(TaskManager.class);
+        taskManager.start();
     }
 }

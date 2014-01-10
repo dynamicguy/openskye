@@ -33,17 +33,20 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @Inject
     protected ObjectMetadataSearch oms;
     @JsonIgnore
-    @Getter
-    @Setter
-    Task task;
-    @JsonIgnore
-    @Inject
-    private Provider<EntityManager> emf;
-    @JsonIgnore
     protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
     @JsonIgnore
     @Inject
     protected AuditLogDAO auditLogDAO;
+    @JsonIgnore
+    @Getter
+    @Setter
+    Task task;
+    @Getter
+    @Setter
+    private Node node;
+    @JsonIgnore
+    @Inject
+    private Provider<EntityManager> emf;
 
     public abstract void validate();
 
@@ -58,13 +61,13 @@ public abstract class TaskStep implements Callable<TaskStatus> {
 
     protected void beginTransaction() {
         hasOuterTransaction = emf.get().getTransaction().isActive();
-        if ( !hasOuterTransaction ) {
+        if (!hasOuterTransaction) {
             emf.get().getTransaction().begin();
         }
     }
 
     protected void commitTransaction() {
-        if ( !hasOuterTransaction ) {
+        if (!hasOuterTransaction) {
             emf.get().getTransaction().commit();
         }
     }
@@ -74,7 +77,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         task = new Task();
         task.setProject(getProject());
         //TODO: use default worker name for now
-        task.setWorkerName("Skye Worker");
+        task.setAssignedNode(getNode());
         task.setStep(this);
         task.setStepClassName(this.getClass().getName());
         task.setStepLabel(this.getLabel());
@@ -99,15 +102,15 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         return is.get();
     }
 
-    protected ArchiveStore buildArchiveStore(ArchiveStoreDefinition archiveStoreDefinition) {
-        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreDefinition);
+    protected ArchiveStore buildArchiveStore(ArchiveStoreInstance archiveStoreInstance) {
+        Optional<ArchiveStore> as = storeRegistry.build(archiveStoreInstance);
         if (!as.isPresent())
             throw new SkyeException("Unable to build archive store");
         return as.get();
     }
 
-    protected void auditObject(SimpleObject simpleObject, ObjectEvent e){
-        log.debug("Auditing change to "+simpleObject);
+    protected void auditObject(SimpleObject simpleObject, ObjectEvent e) {
+        log.debug("Auditing change to " + simpleObject);
         AuditLog auditLog = new AuditLog();
         auditLog.setAuditEntity(simpleObject.getClass().getSimpleName());
         auditLog.setAuditEvent(AuditEvent.OBJECT);
@@ -117,8 +120,8 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         auditLogDAO.create(auditLog);
     }
 
-    protected void auditObject(ObjectMetadata om, ObjectEvent e){
-        log.debug("Auditing change to "+om);
+    protected void auditObject(ObjectMetadata om, ObjectEvent e) {
+        log.debug("Auditing change to " + om);
         AuditLog auditLog = new AuditLog();
         auditLog.setAuditEntity(ObjectMetadata.class.getSimpleName());
         auditLog.setAuditEvent(AuditEvent.OBJECT);

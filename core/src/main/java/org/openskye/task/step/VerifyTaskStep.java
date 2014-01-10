@@ -1,6 +1,7 @@
 package org.openskye.task.step;
 
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.TaskStatus;
 
@@ -21,6 +22,11 @@ public class VerifyTaskStep extends TaskStep {
 
     @Override
     public Project getStepProject() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Node getNode() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

@@ -5,9 +5,9 @@ import org.openskye.domain.*;
 import org.openskye.task.step.ArchiveTaskStep;
 
 /**
- Test the TaskLogDAO
+ * Test the TaskLogDAO
  */
-public class TaskLogDAOTest extends AbstractDAOTestBase<TaskLog>{
+public class TaskLogDAOTest extends AbstractDAOTestBase<TaskLog> {
 
 
     @Inject
@@ -20,21 +20,22 @@ public class TaskLogDAOTest extends AbstractDAOTestBase<TaskLog>{
 
     @Override
     public TaskLog getNew() {
-        TaskLog taskLog=new TaskLog();
+        TaskLog taskLog = new TaskLog();
         taskLog.setMessage("Task set");
-        Domain domain=new Domain();
+        Domain domain = new Domain();
         domain.setName("Fishstick");
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test Def");
         Project project = new Project();
         project.setName("Starship 1");
         project.setDomain(domain);
-        Channel channel=new Channel();
+        Channel channel = new Channel();
         channel.setName("Demo Channel");
         channel.setInformationStoreDefinition(isd);
         channel.setProject(project);
-        TaskStatistics taskStatistics=new TaskStatistics();
-        Task task=new ArchiveTaskStep(channel).toTask();
+        Node node = new Node();
+        TaskStatistics taskStatistics = new TaskStatistics();
+        Task task = new ArchiveTaskStep(channel, node).toTask();
         taskStatistics.setTask(task);
         task.setStatistics(taskStatistics);
         taskLog.setTaskId(task.getId());
@@ -43,19 +44,21 @@ public class TaskLogDAOTest extends AbstractDAOTestBase<TaskLog>{
 
     @Override
     public void update(TaskLog instance) {
-        Domain domain=new Domain();
+        Domain domain = new Domain();
         domain.setName("Fishstick");
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test Def");
         Project project = new Project();
         project.setName("Starship 1");
         project.setDomain(domain);
-        Channel channel=new Channel();
+        Node node = new Node();
+
+        Channel channel = new Channel();
         channel.setName("Demo Channel");
         channel.setInformationStoreDefinition(isd);
         channel.setProject(project);
-        TaskStatistics taskStatistics=new TaskStatistics();
-        Task task=new ArchiveTaskStep(channel).toTask();
+        TaskStatistics taskStatistics = new TaskStatistics();
+        Task task = new ArchiveTaskStep(channel, node).toTask();
         taskStatistics.setTask(task);
         task.setStatistics(taskStatistics);
 

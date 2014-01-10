@@ -64,8 +64,9 @@ public class CifsInformationStoreTest {
         Channel channel = new Channel();
         channel.getChannelArchiveStores().add(cas);
         channel.setInformationStoreDefinition(dis);
+        Node node = new Node();
 
-        Task discover = new DiscoverTaskStep(channel).toTask();
+        Task discover = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discover);
 
         long objectCount = discover.getStatistics().getSimpleObjectsFound();

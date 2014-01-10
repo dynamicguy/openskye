@@ -45,6 +45,8 @@ public class JPAObjectMetadataRepositoryTest {
     @Inject
     public TaskDAO tasks;
     @Inject
+    public NodeDAO nodeDAO;
+    @Inject
     public ProjectDAO projects;
     @Inject
     public TaskStatisticsDAO taskStatisticsDAO;
@@ -86,7 +88,7 @@ public class JPAObjectMetadataRepositoryTest {
         archiveStoreInstanceDAO.create(asi);
         asd.setArchiveStoreInstance(asi);
         archiveStores.create(asd);
-        acb.setArchiveStoreDefinitionId(asd.getId());
+        acb.setArchiveStoreInstanceId(asi.getId());
         objectMetadata.getArchiveContentBlocks().add(acb);
 
         isd.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
@@ -97,7 +99,12 @@ public class JPAObjectMetadataRepositoryTest {
         Project project = new Project();
         project.setName("Test Project");
         Project newProject = projects.create(project);
-        TestTaskStep step = new TestTaskStep(newProject, 2, 1, true);
+
+        Node node = new Node();
+        nodeDAO.create(node);
+
+
+        TestTaskStep step = new TestTaskStep(newProject, node, 2, 1, true);
         Task task = step.toTask();
         task.setStatistics(taskStatistics);
         tasks.create(task);
@@ -122,15 +129,15 @@ public class JPAObjectMetadataRepositoryTest {
 
         assertThat("information store associated with object is found", outputIsd.isPresent());
 
-        Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asd.getId());
+        Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asi.getId());
 
         // Test that the persisted ACB is present, and that it
         // matches the input.
         assertThat("object should have the correct archive content block",
                 acbOutput.isPresent());
-        assertThat("object should have the correct archive store definition",
-                acbOutput.get().getArchiveStoreDefinitionId(),
-                is(equalTo(asd.getId())));
+        assertThat("object should have the correct archive store instance",
+                acbOutput.get().getArchiveStoreInstanceId(),
+                is(equalTo(asi.getId())));
 
         // Test that the persisted metadata can be retrieved by information
         // store definition.

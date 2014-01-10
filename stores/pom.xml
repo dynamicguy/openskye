@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.eobjects.metamodel</groupId>
             <artifactId>MetaModel-full</artifactId>
-            <version>3.4.4</version>
+            <version>3.4.7</version>
         </dependency>
 
         <!-- Helpers for filesystems -->
@@ -54,6 +54,12 @@
             <version>1.4</version>
         </dependency>
 
+        <!-- SSH2 for Replication -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.50</version>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
