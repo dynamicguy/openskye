@@ -1,5 +1,6 @@
 package org.openskye.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,6 +31,7 @@ public class NodeArchiveStoreInstance implements Identifiable {
     private Node node;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ARCHIVE_STORE_INSTANCE_ID")
+    @JsonBackReference("nodes")
     private ArchiveStoreInstance archiveStoreInstance;
     @NotNull
     private NodeRole nodeRole = NodeRole.PRIMARY;

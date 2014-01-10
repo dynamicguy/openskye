@@ -1,8 +1,8 @@
 package org.openskye.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -25,7 +25,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = "properties")
+@ToString(exclude = {"properties","nodes"})
 public class ArchiveStoreInstance implements Identifiable {
     /**
      * The {@link org.openskye.core.ArchiveStore}
@@ -60,7 +60,7 @@ public class ArchiveStoreInstance implements Identifiable {
     @CollectionTable(name = "ARCHIVE_STORE_PROPERTIES", joinColumns = @JoinColumn(name = "ARCHIVE_STORE_ID"))
     private Map<String, String> properties = new HashMap<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "archiveStoreInstance")
-    @JsonIgnore
+    @JsonManagedReference("nodes")
     private List<NodeArchiveStoreInstance> nodes = new ArrayList<>();
 
 }
