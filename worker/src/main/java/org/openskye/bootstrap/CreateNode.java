@@ -16,15 +16,10 @@ public class CreateNode {
     private NodeDAO nodeDAO;
 
     public Node createNode(String hostname) {
-        nodeDAO.getEntityManagerProvider().get().getTransaction().begin();
-
         Node node = new Node();
         node.setHostname(hostname);
         node.setServiceAccount(System.getProperty("user.name"));
         nodeDAO.create(node);
-
-        nodeDAO.getEntityManagerProvider().get().getTransaction().commit();
-
         return node;
     }
 }

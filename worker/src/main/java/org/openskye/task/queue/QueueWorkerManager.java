@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
+import com.google.inject.persist.UnitOfWork;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.bootstrap.CreateNode;
 import org.openskye.config.WorkerConfiguration;
@@ -70,13 +71,18 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                 throw new SkyeException("Unable to get the hostname for this worker,  therefore we can not identify which node we are on", e);
             }
 
+        emf.get().getTransaction().begin();
         Optional<Node> node = nodeDAO.findByHostname(workerConfig.getHostname());
         if (!node.isPresent()) {
             log.info("Creating node for hostname " + workerConfig.getHostname());
             currentNode = createNode.createNode(workerConfig.getHostname());
+            emf.get().getTransaction().commit();
         } else {
             currentNode = node.get();
+            log.info("Got node " + node);
+            emf.get().getTransaction().rollback();
         }
+
 
         monitor = Executors.newSingleThreadScheduledExecutor();
         workers = Executors.newFixedThreadPool(workerConfig.getThreadCount());
