@@ -2,6 +2,7 @@ package org.openskye.domain.dao;
 
 import com.google.common.base.Optional;
 import org.junit.Test;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.Domain;
 import org.openskye.domain.User;
 
@@ -18,7 +19,7 @@ public class UserDAOTest extends AbstractDAOTestBase<User> {
     public UserDAO userDAO;
 
     @Override
-    public AbstractPaginatingDAO getDAO() {
+    public UserDAO getDAO() {
         return userDAO;
     }
 
@@ -38,5 +39,4 @@ public class UserDAOTest extends AbstractDAOTestBase<User> {
     public void update(User instance) {
         instance.setName("Philly D");
     }
-
 }

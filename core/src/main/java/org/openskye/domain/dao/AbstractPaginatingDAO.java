@@ -45,6 +45,11 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return emf;
     }
 
+    protected Validator getValidator()
+    {
+        return validator;
+    }
+
     public PaginatedResult<T> list() {
         CriteriaQuery<T> criteria = createCriteriaQuery();
         Root<T> selectEntity = criteria.from(entityClass);
@@ -135,9 +140,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      *                               would be a duplicate record.
      */
     public T create(T newInstance) {
-        if (newInstance == null)
-            throw new ValidationException();
-        validate(newInstance);
+        validateCreate(newInstance);
 
         this.currentEntityManager().persist(newInstance);
         audit(newInstance, AuditEvent.INSERT);
@@ -145,7 +148,14 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return newInstance;
     }
 
-    private void validate(T newInstance) {
+    protected void validateCreate(T newInstance)
+    {
+        if (newInstance == null)
+            throw new ValidationException();
+        validate(newInstance);
+    }
+
+    protected void validate(T newInstance) {
         Set<ConstraintViolation<T>> violations = validator.validate(newInstance);
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
@@ -164,6 +174,16 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      *                                 was not found, and should be created first.
      */
     public T update(String id, T updatedInstance) {
+        validateUpdate(id, updatedInstance);
+
+        updatedInstance = this.currentEntityManager().merge(updatedInstance);
+        audit(updatedInstance, AuditEvent.UPDATE);
+
+        return updatedInstance;
+    }
+
+    protected void validateUpdate(String id, T updatedInstance)
+    {
         if (updatedInstance == null)
             throw new ValidationException();
 
@@ -173,11 +193,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (!id.equals(updatedInstance.getId()))
             throw new ValidationException();
         validate(updatedInstance);
-
-        updatedInstance = this.currentEntityManager().merge(updatedInstance);
-        audit(updatedInstance, AuditEvent.UPDATE);
-
-        return updatedInstance;
     }
 
     @SuppressWarnings("unchecked")

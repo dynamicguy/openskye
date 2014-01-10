@@ -85,7 +85,7 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     }
 
     @Override
-    protected AbstractPaginatingDAO<User> getDAO() {
+    protected UserDAO getDAO() {
         return userDAO;
     }
 
