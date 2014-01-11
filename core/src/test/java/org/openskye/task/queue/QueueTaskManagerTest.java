@@ -53,6 +53,7 @@ public class QueueTaskManagerTest {
         Project mockProject = new Project();
         Node testNode = new Node();
         testNode.setId(UUID.randomUUID().toString());
+        testNode.setHostname("Test Host Pass");
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
         Task testTask = new TestTaskStep(mockProject, testNode, 0, 0, pass).toTask();
@@ -60,7 +61,7 @@ public class QueueTaskManagerTest {
         checkStatus(testTask, TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(), testNode.getId());
+        queueTaskManager.accept(testTask.getId(), testNode.getHostname());
         checkStatus(testTask, TaskStatus.STARTED);
         TaskStatus finalStatus = testTask.getStep().call();
         queueTaskManager.end(testTask.getId(), finalStatus, null);
@@ -72,6 +73,7 @@ public class QueueTaskManagerTest {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
         Project mockProject = new Project();
         Node testNode = new Node();
+        testNode.setHostname("Test Host Fail");
         testNode.setId(UUID.randomUUID().toString());
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
@@ -80,7 +82,7 @@ public class QueueTaskManagerTest {
         checkStatus(testTask, TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(), testNode.getId());
+        queueTaskManager.accept(testTask.getId(), testNode.getHostname());
         checkStatus(testTask, TaskStatus.STARTED);
         TaskStatus finalStatus;
         Exception exception = null;
@@ -107,7 +109,7 @@ public class QueueTaskManagerTest {
         checkStatus(testTask, TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(), testNode.getId() + "a");
+        queueTaskManager.accept(testTask.getId(), testNode.getHostname() + "a");
     }
 }
 
