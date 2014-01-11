@@ -146,7 +146,6 @@ public class CreateDefaultAccount {
 
             userDAO.getEntityManagerProvider().get().getTransaction().commit();
         }
-        userDAO.getEntityManagerProvider().get().close();
     }
 
     /**

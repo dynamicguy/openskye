@@ -45,8 +45,9 @@ public class Task implements Identifiable {
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
-    @Column(name = "WORKER_NAME")
-    private String workerName;
+    @ManyToOne
+    @JoinColumn(name = "NODE_ID")
+    private Node assignedNode;
     @Column(name = "STATUS")
     private TaskStatus status = TaskStatus.CREATED;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")

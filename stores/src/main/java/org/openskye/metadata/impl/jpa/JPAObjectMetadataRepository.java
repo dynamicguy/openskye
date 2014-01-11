@@ -4,11 +4,8 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
-import org.openskye.domain.dao.ArchiveStoreDefinitionDAO;
+import org.openskye.domain.*;
+import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
@@ -31,7 +28,7 @@ import java.util.List;
 @Slf4j
 public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Inject
-    protected ArchiveStoreDefinitionDAO archiveStores;
+    protected ArchiveStoreInstanceDAO archiveStores;
     @Inject
     protected InformationStoreDefinitionDAO informationStores;
     @Inject
@@ -156,10 +153,10 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
-        if(queryChecksum!=null) {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath), cb.equal(root.get(ObjectMetadata_.checksum),queryChecksum));
-        } else{
-            cq.where(cb.equal(root.get(ObjectMetadata_.path),queryPath));
+        if (queryChecksum != null) {
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum));
+        } else {
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath));
         }
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);
@@ -377,18 +374,26 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      * {@link ArchiveContentBlock}.
      */
     @Override
-    public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
-        Optional<ArchiveStoreDefinition> asd = archiveStores.get(archiveContentBlock.getArchiveStoreDefinitionId());
+    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
+        Optional<ArchiveStoreInstance> asd = archiveStores.get(archiveContentBlock.getArchiveStoreInstanceId());
 
         if (!asd.isPresent())
-            throw new SkyeException("The ArchiveStoreDefinition Id is invalid.");
+            throw new SkyeException("The archive store instance id is invalid.");
 
         return asd.get();
     }
 
     @Override
     public void updateObjectSet(Optional<ObjectSet> objectSet) {
-        log.debug("Updating objectset " + objectSet);
+        log.debug("Updating object set " + objectSet);
         getEntityManager().merge(objectSet);
+    }
+
+    @Override
+    public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createNamedQuery("ArchiveContentBlock.findACBsForReplication", ArchiveContentBlock.class);
+        query.setParameter("primaryNodeId", primary.getId());
+        query.setParameter("targetNodeId", target.getId());
+        return query.getResultList();
     }
 }

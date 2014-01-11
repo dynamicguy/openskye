@@ -42,7 +42,7 @@ database:
   maxIdleTimeExcessConnections: 900
   
   # unreturnedConnectionTimeout
-  unreturnedConnectionTimeout: 0
+  unreturnedConnectionTimeout: 5
 
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository

@@ -5,10 +5,7 @@ import com.google.inject.Provider;
 import io.dropwizard.util.Generics;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeSession;
-import org.openskye.domain.AuditEvent;
-import org.openskye.domain.AuditLog;
-import org.openskye.domain.Identifiable;
-import org.openskye.domain.User;
+import org.openskye.domain.*;
 import org.openskye.query.RequestQueryContext;
 import org.openskye.query.RequestQueryContextHolder;
 import org.openskye.query.SortDirection;
@@ -20,6 +17,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.validation.*;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,17 +30,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 public abstract class AbstractPaginatingDAO<T extends Identifiable> {
     @Inject
+    protected SkyeSession skyeSession;
+    @Inject
     private Provider<EntityManager> emf;
     @Inject
     private AuditLogDAO auditLogDAO;
-    @Inject
-    protected SkyeSession skyeSession;
     private Class<T> entityClass = (Class<T>) Generics.getTypeParameter(getClass());
     // We wanted to have exceptions before commit in the DAO
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     public Provider<EntityManager> getEntityManagerProvider() {
         return emf;
+    }
+
+    protected Validator getValidator()
+    {
+        return validator;
     }
 
     public PaginatedResult<T> list() {
@@ -104,7 +107,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      */
     private T audit(T newInstance, AuditEvent event) {
         if (isAudited()) {
-            log.debug("Auditing change to "+newInstance);
+            log.debug("Auditing change to " + newInstance);
             AuditLog auditLog = new AuditLog();
             auditLog.setAuditEntity(entityClass.getSimpleName());
             auditLog.setAuditEvent(event);
@@ -135,9 +138,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      *                               would be a duplicate record.
      */
     public T create(T newInstance) {
-        if (newInstance == null)
-            throw new ValidationException();
-        validate(newInstance);
+        validateCreate(newInstance);
 
         this.currentEntityManager().persist(newInstance);
         audit(newInstance, AuditEvent.INSERT);
@@ -145,7 +146,14 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         return newInstance;
     }
 
-    private void validate(T newInstance) {
+    protected void validateCreate(T newInstance)
+    {
+        if (newInstance == null)
+            throw new ValidationException();
+        validate(newInstance);
+    }
+
+    protected void validate(T newInstance) {
         Set<ConstraintViolation<T>> violations = validator.validate(newInstance);
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
@@ -164,6 +172,16 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
      *                                 was not found, and should be created first.
      */
     public T update(String id, T updatedInstance) {
+        validateUpdate(id, updatedInstance);
+
+        updatedInstance = this.currentEntityManager().merge(updatedInstance);
+        audit(updatedInstance, AuditEvent.UPDATE);
+
+        return updatedInstance;
+    }
+
+    protected void validateUpdate(String id, T updatedInstance)
+    {
         if (updatedInstance == null)
             throw new ValidationException();
 
@@ -173,11 +191,6 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         if (!id.equals(updatedInstance.getId()))
             throw new ValidationException();
         validate(updatedInstance);
-
-        updatedInstance = this.currentEntityManager().merge(updatedInstance);
-        audit(updatedInstance, AuditEvent.UPDATE);
-
-        return updatedInstance;
     }
 
     @SuppressWarnings("unchecked")
@@ -229,7 +242,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         currentEntityManager().lock(instance, mode);
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         return skyeSession.getUser();
     }
 }

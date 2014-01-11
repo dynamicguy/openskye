@@ -9,6 +9,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.guice.web.GuiceShiroFilter;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.exceptions.ConstraintViolationExceptionMapper;
 import org.openskye.guice.*;

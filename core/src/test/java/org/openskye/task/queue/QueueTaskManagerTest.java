@@ -2,8 +2,11 @@ package org.openskye.task.queue;
 
 import com.google.guiceberry.junit4.GuiceBerryRule;
 import com.google.inject.persist.PersistService;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
@@ -29,8 +32,8 @@ public class QueueTaskManagerTest {
     @Inject
     PersistService persistService;
 
-    private void checkStatus(Task task,TaskStatus status) throws Exception {
-        assertThat("Task status should be "+status+", was "+task.getStatus(),
+    private void checkStatus(Task task, TaskStatus status) throws Exception {
+        assertThat("Task status should be " + status + ", was " + task.getStatus(),
                 task.getStatus() == status);
     }
 
@@ -38,7 +41,7 @@ public class QueueTaskManagerTest {
     public void checkStarted() {
         try {
             persistService.start();
-        } catch( IllegalStateException ie ) {
+        } catch (IllegalStateException ie) {
             // not a problem -- just tries to initialize JPA twice
         }
         taskManager.start();
@@ -48,60 +51,63 @@ public class QueueTaskManagerTest {
     public void doTestTaskPass() throws Exception {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
         Project mockProject = new Project();
+        Node testNode = new Node();
+        testNode.setId(UUID.randomUUID().toString());
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
-        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Skye Worker");
+        Task testTask = new TestTaskStep(mockProject, testNode, 0, 0, pass).toTask();
         tasks.create(testTask);
-        checkStatus(testTask,TaskStatus.CREATED);
+        checkStatus(testTask, TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Skye Worker");
-        checkStatus(testTask,TaskStatus.STARTED);
+        queueTaskManager.accept(testTask.getId(), testNode.getId());
+        checkStatus(testTask, TaskStatus.STARTED);
         TaskStatus finalStatus = testTask.getStep().call();
-        queueTaskManager.end(testTask.getId(),finalStatus,null);
-        checkStatus(testTask,TaskStatus.COMPLETED);
+        queueTaskManager.end(testTask.getId(), finalStatus, null);
+        checkStatus(testTask, TaskStatus.COMPLETED);
     }
 
     @Test
     public void doTestTaskFail() throws Exception {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
         Project mockProject = new Project();
+        Node testNode = new Node();
+        testNode.setId(UUID.randomUUID().toString());
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
-        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Skye Worker");
+        Task testTask = new TestTaskStep(mockProject, testNode, 0, 0, pass).toTask();
         tasks.create(testTask);
-        checkStatus(testTask,TaskStatus.CREATED);
+        checkStatus(testTask, TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
-        checkStatus(testTask,TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Skye Worker");
-        checkStatus(testTask,TaskStatus.STARTED);
+        checkStatus(testTask, TaskStatus.QUEUED);
+        queueTaskManager.accept(testTask.getId(), testNode.getId());
+        checkStatus(testTask, TaskStatus.STARTED);
         TaskStatus finalStatus;
         Exception exception = null;
         try {
             finalStatus = testTask.getStep().call();
-        } catch( SkyeException e ) {
+        } catch (SkyeException e) {
             finalStatus = TaskStatus.FAILED;
             exception = e;
         }
-        queueTaskManager.end(testTask.getId(),finalStatus,exception);
-        checkStatus(testTask,TaskStatus.FAILED);
+        queueTaskManager.end(testTask.getId(), finalStatus, exception);
+        checkStatus(testTask, TaskStatus.FAILED);
     }
 
     @Test(expected = SkyeException.class)
     public void doWrongWorker() throws Exception {
         QueueTaskManager queueTaskManager = (QueueTaskManager) taskManager;
         Project mockProject = new Project();
+        Node testNode = new Node();
+        testNode.setId(UUID.randomUUID().toString());
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = true;
-        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        testTask.setWorkerName("Some Other Worker");
+        Task testTask = new TestTaskStep(mockProject, testNode, 0, 0, pass).toTask();
         tasks.create(testTask);
-        checkStatus(testTask,TaskStatus.CREATED);
+        checkStatus(testTask, TaskStatus.CREATED);
         queueTaskManager.submit(testTask);
         checkStatus(testTask, TaskStatus.QUEUED);
-        queueTaskManager.accept(testTask.getId(),"Skye Worker");
+        queueTaskManager.accept(testTask.getId(), testNode.getId() + "a");
     }
 }
 

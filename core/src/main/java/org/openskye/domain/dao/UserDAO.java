@@ -7,7 +7,10 @@ import org.openskye.domain.UserRole;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.validation.Path;
+import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -54,5 +57,56 @@ public class UserDAO extends AbstractPaginatingDAO<User> {
         userRole.setRole(reader);
         newUser.getUserRoles().add(userRole);
         update(newUser.getId(),newUser);
+    }
+
+    @Override
+    protected void validateCreate(User newInstance)
+    {
+        super.validateCreate(newInstance);
+
+        validateEmail(newInstance);
+    }
+
+    @Override
+    protected void validateUpdate(String id, User newInstance)
+    {
+        super.validateUpdate(id, newInstance);
+
+        validateEmail(newInstance);
+
+    }
+
+    private void validateEmail(User newInstance)
+    {
+        if(!isEmailUnique(newInstance))
+        {
+            throw new ValidationException("The email must be unique");
+        }
+    }
+
+    protected boolean isEmailUnique(User newInstance)
+    {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+
+        query.select(root);
+
+        Predicate emailPredicate = builder.equal(root.get("email"), newInstance.getEmail());
+
+        if(newInstance.getId() != null && !newInstance.getId().isEmpty())
+        {
+            Predicate idNotFoundPredicate = builder.notEqual(root.get("id"), newInstance.getId());
+
+            query.where(emailPredicate, idNotFoundPredicate);
+        }
+        else
+        {
+            query.where(emailPredicate);
+        }
+
+        List<User> result = getEntityManagerProvider().get().createQuery(query).getResultList();
+
+        return (result.size() == 0);
     }
 }

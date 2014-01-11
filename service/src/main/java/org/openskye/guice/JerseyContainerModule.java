@@ -2,6 +2,7 @@ package org.openskye.guice;
 
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.spi.container.WebApplication;
+import org.apache.shiro.guice.web.GuiceShiroFilter;
 
 public class JerseyContainerModule extends JerseyServletModule {
     private final GuiceContainer container;

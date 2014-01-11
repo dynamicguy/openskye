@@ -5,10 +5,7 @@ import com.google.common.collect.Lists;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.metadata.ObjectMetadataRepository;
 
 import java.util.*;
@@ -27,9 +24,8 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
         ObjectSet set = new ObjectSet();
         set.setId(UUID.randomUUID().toString());
         set.setName(name);
-        set.setOnHold(false);
         set.setObjectMetadataSet(new HashSet<ObjectMetadata>());
-        objectSets.put(set.getId(),set);
+        objectSets.put(set.getId(), set);
         return set;
     }
 
@@ -123,7 +119,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     @Override
     public Optional<ObjectSet> getObjectSet(String objectSetId) {
         ObjectSet set = objectSets.get(objectSetId);
-        if ( set == null ) {
+        if (set == null) {
             return Optional.absent();
         } else {
             return Optional.of(set);
@@ -147,7 +143,7 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     }
 
     @Override
-    public ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock) {
+    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }
@@ -155,6 +151,11 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     @Override
     public void updateObjectSet(Optional<ObjectSet> objectSet) {
         // TODO needs implementing
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
         throw new UnsupportedOperationException();
     }
 }

@@ -11,7 +11,7 @@ import javax.ws.rs.ext.Provider;
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
     @Override
     public Response toResponse(ConstraintViolationException exception) {
-        ExceptionMessage em = new ExceptionMessage(23000, "Constrain violation", exception.getMessage());
+        ExceptionMessage em = new ExceptionMessage(23000, "Constraint violation", exception.getMessage());
         for(ConstraintViolation violation : exception.getConstraintViolations()) {
             ExceptionMessageDetail detail = new ExceptionMessageDetail();
             detail.setPath(violation.getPropertyPath().toString());

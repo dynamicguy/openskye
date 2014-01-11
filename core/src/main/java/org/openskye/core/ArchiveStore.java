@@ -1,8 +1,9 @@
 package org.openskye.core;
 
 import com.google.common.base.Optional;
-import org.openskye.domain.ArchiveStoreDefinition;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Task;
+import org.openskye.replicate.Replicator;
 
 /**
  * Represents the interface for an <code>ArchiveStore</code>.
@@ -10,11 +11,19 @@ import org.openskye.domain.Task;
 public interface ArchiveStore {
 
     /**
+     * Gets the {@link ArchiveStoreInstance} for this instance.
+     *
+     * @return The {@link ArchiveStoreInstance} used to initialize this
+     * instance
+     */
+    ArchiveStoreInstance getArchiveStoreInstance();
+
+    /**
      * Used to initialize the archive store
      *
-     * @param das the domain archive store
+     * @param das the archive store instance
      */
-    void initialize(ArchiveStoreDefinition das);
+    void initialize(ArchiveStoreInstance das);
 
     /**
      * Returns the name of the store
@@ -88,19 +97,21 @@ public interface ArchiveStore {
     Iterable<ObjectStreamFilter> getFilters();
 
     /**
-     * Gets the {@link ArchiveStoreDefinition} for this instance.
-     *
-     * @return The {@link ArchiveStoreDefinition} used to initialize this
-     *         instance, wrapped in an {@link Optional} wrapper, which will be absent
-     *         if the instance is not initialized.
-     */
-    Optional<ArchiveStoreDefinition> getArchiveStoreDefinition();
-
-    /**
      * Destroys the object associated to this {@link ObjectMetadata} from this
      * {@link ArchiveStore}
      *
      * @param om the {@link ObjectMetadata} for the object to destroy
      */
     void destroy(ObjectMetadata om);
+
+    /**
+     * Returns an instance of a replicator that is designed for this type
+     * of archive store
+     * <p/>
+     * Note: if the store doesn't support replication then it will return
+     * an Optional.absent()
+     *
+     * @return Optionally return the replicator for this archive store
+     */
+    Optional<Replicator> getReplicator();
 }

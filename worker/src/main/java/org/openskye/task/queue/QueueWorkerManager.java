@@ -4,14 +4,21 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
+import com.google.inject.persist.UnitOfWork;
 import lombok.extern.slf4j.Slf4j;
+import org.openskye.bootstrap.CreateNode;
 import org.openskye.config.WorkerConfiguration;
+import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
+import org.openskye.domain.dao.NodeDAO;
 import org.openskye.domain.dao.TaskDAO;
 import org.openskye.task.step.TaskStep;
 
 import javax.persistence.EntityManager;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -33,11 +40,16 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     @Inject
     TaskDAO taskDAO;
     @Inject
+    NodeDAO nodeDAO;
+    @Inject
     Injector injector;
+    @Inject
+    CreateNode createNode;
     @Inject
     private Provider<EntityManager> emf;
     // keep a map from task id's to futures for submitted task steps
     private Map<String, Future<TaskStatus>> futures;
+    private Node currentNode;
 
     public QueueWorkerManager() {
         // Concurrent map so that REST status requests are in sync with monitor
@@ -50,6 +62,28 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Override
     public void start() {
+
+        // We need to ensure that the node is properly set-up
+        if (workerConfig.getHostname() == null || workerConfig.getHostname().isEmpty())
+            try {
+                workerConfig.setHostname(InetAddress.getLocalHost().getHostName());
+            } catch (UnknownHostException e) {
+                throw new SkyeException("Unable to get the hostname for this worker,  therefore we can not identify which node we are on", e);
+            }
+
+        emf.get().getTransaction().begin();
+        Optional<Node> node = nodeDAO.findByHostname(workerConfig.getHostname());
+        if (!node.isPresent()) {
+            log.info("Creating node for hostname " + workerConfig.getHostname());
+            currentNode = createNode.createNode(workerConfig.getHostname());
+            emf.get().getTransaction().commit();
+        } else {
+            currentNode = node.get();
+            log.info("Got node " + node);
+            emf.get().getTransaction().rollback();
+        }
+
+
         monitor = Executors.newSingleThreadScheduledExecutor();
         workers = Executors.newFixedThreadPool(workerConfig.getThreadCount());
         monitor.scheduleAtFixedRate(this, 0, workerConfig.getPollPeriodSec(), TimeUnit.SECONDS);
@@ -57,7 +91,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
 
     @Override
     public void run() {
-        log.debug(workerConfig.getName() + ": monitor wakes up ..");
+        log.debug(workerConfig.getHostname() + ": monitor wakes up ..");
 
         // Look for tasks that have ended
         Set<String> taskIds = futures.keySet();
@@ -95,7 +129,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     emf.get().getTransaction().commit();
                 } catch (Exception e) {
                     log.error("Error while recording end of task " + taskId, e);
-                    log.debug(workerConfig.getName() + ": end task " + taskId);
+                    log.debug(workerConfig.getHostname() + ": end task " + taskId);
                 }
             }
         }
@@ -107,7 +141,7 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
         boolean queuedTasks = true;
         while (tries < maxThreads && futures.size() < maxThreads && queuedTasks) {
             try {
-                Optional<Task> task = taskDAO.findOldestQueued(workerConfig.getName());
+                Optional<Task> task = taskDAO.findOldestQueued(currentNode);
                 if (task == null || !task.isPresent()) {
                     queuedTasks = false;
                 } else {
@@ -119,11 +153,11 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
                     step.rehydrate();
 
                     emf.get().getTransaction().begin();
-                    accept(taskId, workerConfig.getName());
+                    accept(taskId, workerConfig.getHostname());
                     emf.get().getTransaction().commit();
 
                     futures.put(taskId, workers.submit(step));
-                    log.debug(workerConfig.getName() + ": begin task " + taskId);
+                    log.debug(workerConfig.getHostname() + ": begin task " + taskId);
                 }
             } catch (Exception e) {
                 log.error("Exception while accepting task", e);

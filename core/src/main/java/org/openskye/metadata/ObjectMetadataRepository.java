@@ -5,10 +5,7 @@ import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SimpleObject;
-import org.openskye.domain.ArchiveStoreDefinition;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 
 /**
  * This is the standard interface to allow the storage of {@link SimpleObject} instances
@@ -163,7 +160,7 @@ public interface ObjectMetadataRepository {
      * @param archiveContentBlock The archive content block to find the archive store definition for
      * @return the archive store definition
      */
-    ArchiveStoreDefinition getArchiveStoreDefinition(ArchiveContentBlock archiveContentBlock);
+    ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock);
 
     /**
      * Updates the given {@link org.openskye.core.ObjectSet}
@@ -171,4 +168,11 @@ public interface ObjectMetadataRepository {
      * @param objectSet the object set to update
      */
     void updateObjectSet(Optional<ObjectSet> objectSet);
+
+    /**
+     * Returns an iterator to the {@link org.openskye.core.ArchiveContentBlock}s that are missing for that {@link Node}
+     *
+     * @return An {@link Iterable} collection of {@link org.openskye.core.ArchiveContentBlock}
+     */
+    Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance);
 }

@@ -15,8 +15,8 @@ import org.openskye.stores.inmemory.InMemoryInformationStore;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,36 +31,25 @@ import static org.mockito.Mockito.*;
  * Time: 12:22 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AbstractObjectTest
-{
+public class AbstractObjectTest {
+    public static ObjectMetadataRepository repository = mock(ObjectMetadataRepository.class);
+    public static ObjectMetadataSearch search = mock(ObjectMetadataSearch.class);
+    public static InformationStoreDefinitionDAO informationStores = mock(InformationStoreDefinitionDAO.class);
+    public static TaskDAO tasks = mock(TaskDAO.class);
+    public static ProjectDAO projects = mock(ProjectDAO.class);
+    public static DomainDAO domains = mock(DomainDAO.class);
+    public static StoreRegistry registry = mock(StoreRegistry.class);
+    public static ArchiveStore archiveStore = mock(ArchiveStore.class);
     @Rule
     public final GuiceBerryRule guiceBerryRule = new GuiceBerryRule(ObjectMetadataModule.class);
-
-    public static ObjectMetadataRepository repository = mock(ObjectMetadataRepository.class);
-
-    public static ObjectMetadataSearch search = mock(ObjectMetadataSearch.class);
-
-    public static InformationStoreDefinitionDAO informationStores = mock(InformationStoreDefinitionDAO.class);
-
-    public static TaskDAO tasks = mock(TaskDAO.class);
-
-    public static ProjectDAO projects = mock(ProjectDAO.class);
-
-    public static DomainDAO domains = mock(DomainDAO.class);
-
-    public static StoreRegistry registry = mock(StoreRegistry.class);
-
-    public static ArchiveStore archiveStore = mock(ArchiveStore.class);
-
+    protected final String pathA = "/tmp/sourceA/";
+    protected final String pathB = "/tmp/sourceB/";
     @Inject
     protected SkyeSession session;
-
     protected Subject subject = mock(Subject.class);
-
     protected ObjectMetadata metadataInstance = new ObjectMetadata();
     protected ObjectSet objectSetInstance = new ObjectSet();
     protected String setName = "Test Set";
-
     protected List<ObjectMetadata> metadataList = new ArrayList<>();
     protected List<InformationStoreDefinition> isdList = new ArrayList<>();
     protected List<Task> taskList = new ArrayList<>();
@@ -75,26 +64,19 @@ public class AbstractObjectTest
     protected Task taskSearch;
     protected ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
     protected InputStream inputStream;
-
-    protected final String pathA = "/tmp/sourceA/";
-    protected final String pathB = "/tmp/sourceB/";
-
     protected String pathSearch;
-
     protected Project projectSearch;
-
     protected PaginatedResult<ObjectMetadata> metadataResult = new PaginatedResult<>();
     protected PaginatedResult<ObjectMetadata> metadataByIsdResult = new PaginatedResult<>();
     protected PaginatedResult<ObjectMetadata> metadataByTaskResult = new PaginatedResult<>();
     protected PaginatedResult<ObjectMetadata> metadataSearchResult = new PaginatedResult<>();
     protected PaginatedResult<ArchiveContentBlock> acbResult = new PaginatedResult<>();
     protected PaginatedResult<ObjectSet> objectSetResult = new PaginatedResult<>();
-
     protected Response expectedResponse = Response.ok().build();
+    private ArchiveStoreInstance asi;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         Project project;
         InformationStoreDefinition isd;
         List<InformationStoreDefinition> projectIsdList;
@@ -178,8 +160,7 @@ public class AbstractObjectTest
         taskList.add(task);
 
         // Now we create some objects.
-        for(int i = 0; i < numberOfObjects; i++)
-        {
+        for (int i = 0; i < numberOfObjects; i++) {
             ObjectMetadata metadata = new ObjectMetadata();
             int isdIndex = i % 2;
             int taskIndex = i % 4;
@@ -197,13 +178,12 @@ public class AbstractObjectTest
             when(repository.get(metadata.getId())).thenReturn(Optional.of(metadata));
             metadataList.add(metadata);
 
-            if(isdIndex == 0)
-            {
+            if (isdIndex == 0) {
                 metadataByIsdList.add(metadata);
                 metadataSearchList.add(metadata);
             }
 
-            if(taskIndex == 0)
+            if (taskIndex == 0)
                 metadataByTaskList.add(metadata);
         }
 
@@ -225,12 +205,15 @@ public class AbstractObjectTest
 
         when(domains.get(session.getDomain().getId())).thenReturn(Optional.of(domain));
 
+        asi = new ArchiveStoreInstance();
+        asi.setId(UUID.randomUUID().toString());
+
         asd = new ArchiveStoreDefinition();
         asd.setId(UUID.randomUUID().toString());
 
         acb = new ArchiveContentBlock();
         acb.setId(UUID.randomUUID().toString());
-        acb.setArchiveStoreDefinitionId(asd.getId());
+        acb.setArchiveStoreInstanceId(asi.getId());
         acbList.add(acb);
         acbResult = new PaginatedResult<>(acbList);
         metadataInstance.setProject(projectList.get(0));
@@ -242,8 +225,8 @@ public class AbstractObjectTest
         when(repository.get(metadataInstance.getId())).thenReturn(Optional.of(metadataInstance));
         metadataList.add(metadataInstance);
 
-        when(repository.getArchiveStoreDefinition(any(ArchiveContentBlock.class))).thenReturn(asd);
-        when(registry.build(any(ArchiveStoreDefinition.class))).thenReturn(Optional.of(archiveStore));
+        when(repository.getArchiveStoreInstance(any(ArchiveContentBlock.class))).thenReturn(asi);
+        when(registry.build(any(ArchiveStoreInstance.class))).thenReturn(Optional.of(archiveStore));
 
         String hello = "Hello World";
         inputStream = new ByteArrayInputStream(hello.getBytes("UTF-8"));

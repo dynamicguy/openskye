@@ -29,9 +29,10 @@ public class DestroyTaskStep extends TaskStep {
     @Inject
     private StoreRegistry storeRegistry;
 
-    public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition) {
+    public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = objectSetId;
         this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        setNode(node);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class DestroyTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if ( targetInformationStoreDefinition.getImplementation() == null ) {
+        if (targetInformationStoreDefinition.getImplementation() == null) {
             targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
         }
     }
@@ -85,8 +86,8 @@ public class DestroyTaskStep extends TaskStep {
                 for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
                     // TODO do we need to check if this ACB is in use by another
                     // object metadata
-                    ArchiveStoreDefinition asd = omr.getArchiveStoreDefinition(acb);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(asd);
+                    ArchiveStoreInstance asi = omr.getArchiveStoreInstance(acb);
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(asi);
                     if (archiveStore.isPresent()) {
                         archiveStore.get().destroy(om);
                         auditObject(om, ObjectEvent.DESTROYED);

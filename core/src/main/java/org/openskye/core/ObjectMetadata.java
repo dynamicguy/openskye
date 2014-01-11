@@ -71,18 +71,18 @@ public class ObjectMetadata {
      * A mechanism to find it there is an {@link ArchiveContentBlock} for a given
      * {@link org.openskye.domain.ArchiveStoreDefinition} by id
      *
-     * @param archiveStoreDefinitionId The id of the {@link org.openskye.domain.ArchiveStoreDefinition}
+     * @param archiveStoreInstanceId The id of the {@link org.openskye.domain.ArchiveStoreInstance}
      * @return return an instance of the {@link ArchiveContentBlock} if one is found for the archive store
      */
-    public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreDefinitionId) {
-        log.debug("Resolving ACB for " + archiveStoreDefinitionId);
+    public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreInstanceId) {
+        log.debug("Resolving ACB for " + archiveStoreInstanceId);
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
-            if (acb.getArchiveStoreDefinitionId() != null && acb.getArchiveStoreDefinitionId().equals(archiveStoreDefinitionId)) {
+            if (acb.getArchiveStoreInstanceId() != null && acb.getArchiveStoreInstanceId().equals(archiveStoreInstanceId)) {
                 log.debug("Found ACB " + acb);
                 return Optional.of(acb);
             }
         }
-        log.debug("No ACB found for " + archiveStoreDefinitionId);
+        log.debug("No ACB found for " + archiveStoreInstanceId);
         return Optional.absent();
     }
 }

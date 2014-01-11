@@ -4,12 +4,17 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openskye.domain.*;
-import org.openskye.domain.dao.*;
+import org.openskye.domain.Node;
+import org.openskye.domain.Project;
+import org.openskye.domain.Task;
+import org.openskye.domain.TaskStatus;
+import org.openskye.domain.dao.TaskDAO;
 import org.openskye.guice.InMemoryTestModule;
 import org.openskye.task.step.TestTaskStep;
+
 import javax.inject.Inject;
 import java.util.UUID;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -31,27 +36,29 @@ public class TaskManagerTest {
     @Test
     public void doTestTaskPass() throws Exception {
         Project mockProject = new Project();
+        Node testNode = new Node();
         mockProject.setId(UUID.randomUUID().toString());
-        String mockProjectId = UUID.randomUUID().toString();
         boolean pass = true;
-        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        assertThat("Task status should be CREATED, was "+testTask.getStatus(),
+        Task testTask = new TestTaskStep(mockProject, testNode, 0, 0, pass).toTask();
+        assertThat("Task status should be CREATED, was " + testTask.getStatus(),
                 testTask.getStatus() == TaskStatus.CREATED);
         taskManager.submit(testTask);
-        assertThat("Task status should be COMPLETED, was "+testTask.getStatus(),
+        assertThat("Task status should be COMPLETED, was " + testTask.getStatus(),
                 testTask.getStatus() == TaskStatus.COMPLETED);
     }
 
     @Test
     public void doTestTaskFail() throws Exception {
         Project mockProject = new Project();
+        Node testNode = new Node();
+
         mockProject.setId(UUID.randomUUID().toString());
         boolean pass = false;
-        Task testTask = new TestTaskStep(mockProject,0,0,pass).toTask();
-        assertThat("Task status should be CREATED, was "+testTask.getStatus(),
+        Task testTask = new TestTaskStep(mockProject, testNode, 0, 0, pass).toTask();
+        assertThat("Task status should be CREATED, was " + testTask.getStatus(),
                 testTask.getStatus() == TaskStatus.CREATED);
         taskManager.submit(testTask);
-        assertThat("Task status should be FAILED, was "+testTask.getStatus(),
+        assertThat("Task status should be FAILED, was " + testTask.getStatus(),
                 testTask.getStatus() == TaskStatus.FAILED);
     }
 }

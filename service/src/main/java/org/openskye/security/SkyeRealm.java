@@ -89,7 +89,7 @@ public class SkyeRealm extends AuthorizingRealm {
         } else if (authenticationToken instanceof ApiKeyToken) {
             ApiKeyToken token = (ApiKeyToken) authenticationToken;
             Optional<User> user = userDao.findByApiKey(token.getKey());
-            log.debug("Using entity manager " + userDao.getEntityManagerProvider().get());
+            log.debug("Using entity manager "+userDao.getEntityManagerProvider().get());
             if (user.isPresent()) { //user is found
                 return new SimpleAuthenticationInfo(user.get(), token.getKey(), this.getName());
             } else {

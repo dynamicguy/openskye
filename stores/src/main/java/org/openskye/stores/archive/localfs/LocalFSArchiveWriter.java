@@ -44,18 +44,18 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         if (isObjectArchived(simpleObject)) {
             //This archive store has this object already
             List<ArchiveContentBlock> objectACBs = simpleObject.getObjectMetadata().getArchiveContentBlocks();
-            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId()).get());
+            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance().getId()).get());
             simpleObject.getObjectMetadata().setArchiveContentBlocks(objectACBs);
         } else {
 
             ArchiveContentBlock acb = new ArchiveContentBlock();
 
             ObjectMetadata om = simpleObject.getObjectMetadata();
-            acb.setArchiveStoreDefinitionId(this.localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId());
+            acb.setArchiveStoreInstanceId(this.localFilesystemArchiveStore.getArchiveStoreInstance().getId());
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
-                final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb, om, true);
+                final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
                 final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
                 if (log.isDebugEnabled())
                     log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
@@ -92,7 +92,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             } else if (simpleObject instanceof UnstructuredObject) {
                 // we can just store this as a file
                 UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
-                final File tempStoragePath = localFilesystemArchiveStore.getTempSimpleObjectPath(acb, om, true);
+                final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
 
                 try {
                     FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), tempStoragePath);
@@ -119,7 +119,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
     private void postProcess(ArchiveContentBlock acb, File tempStoragePath, SimpleObject simpleObject) {
         try {
             simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
-            File targetPath = localFilesystemArchiveStore.getSimpleObjectPath(acb, simpleObject.getObjectMetadata(), true);
+            File targetPath = localFilesystemArchiveStore.getAcbPath(acb, true);
             FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
 
             FileInputStream fis = new FileInputStream(targetPath);
@@ -142,6 +142,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public boolean isObjectArchived(SimpleObject simpleObject) {
-        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreDefinition().get().getId()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();  //To change body of implemented methods use File | Settings | File Templates.
+        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance().getId()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
     }
 }
