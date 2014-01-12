@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.openskye.core.ArchiveContentBlock;
@@ -23,6 +24,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = {"archiveContentBlocks","nodes"})
 public class Node implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
