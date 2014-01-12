@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.NotBlank;
 import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Node;
 
@@ -36,12 +35,9 @@ public class ArchiveContentBlock {
     @NotNull
     @ManyToOne
     private ArchiveStoreInstance archiveStoreInstance;
-    @NotBlank
-    @NotNull
+    // TODO we need to validate these
     private String checksum;
-    @NotNull
     private long originalSize;
-    @NotNull
     private long compressedSize;
     @ManyToMany(mappedBy = "archiveContentBlocks")
     @JsonIgnore
