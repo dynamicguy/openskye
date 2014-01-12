@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.Task;
+import org.openskye.node.NodeManager;
 import org.openskye.stores.archive.AbstractArchiveStoreWriter;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,6 +51,10 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         } else {
 
             ArchiveContentBlock acb = new ArchiveContentBlock();
+
+            // We need to link this ACB to the Node we are currently running on
+            acb.setNodes(new ArrayList());
+            acb.getNodes().add(NodeManager.getNode());
 
             ObjectMetadata om = simpleObject.getObjectMetadata();
             acb.setArchiveStoreInstanceId(this.localFilesystemArchiveStore.getArchiveStoreInstance().getId());

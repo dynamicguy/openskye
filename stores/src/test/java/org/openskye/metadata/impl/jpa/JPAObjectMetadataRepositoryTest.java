@@ -78,6 +78,10 @@ public class JPAObjectMetadataRepositoryTest {
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
         asd.setName("Test");
         ArchiveContentBlock acb = new ArchiveContentBlock();
+        acb.setChecksum("123");
+        acb.setCompressedSize(1000);
+        acb.setOriginalSize(1000);
+
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();

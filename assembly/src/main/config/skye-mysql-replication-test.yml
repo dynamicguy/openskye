@@ -1,0 +1,74 @@
+database:
+  # the name of your JDBC driver
+  driverClass: com.mysql.jdbc.Driver
+
+  # the username
+  user: root
+
+  # the password
+  password:
+
+  # the JDBC URL
+  url: "jdbc:mysql://10.0.0.16/openskye2"
+
+  # Hibernate dialect
+  dialect: "org.hibernate.dialect.MySQLDialect"
+  
+  # C3PO connection pool settings below
+  # hibernate.connection.provider_class
+  connectionProviderClass: org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider 
+  
+  # hibernate.c3p0.max_size
+  poolMaxSize: 10
+  
+  # hibernate.c3p0.min_size
+  poolMinSize: 1
+  
+  # hibernate.c3p0.timeout
+  poolTimeOut: 0
+  
+  # hibernate.c3p0.idle_test_period in seconds
+  poolIdleTestPeriod: 60
+  
+  # hibernate.c3p0.preferredTestQuery
+  poolPreferredTestQuery: SELECT 1
+
+  # hibernate.c3p0.testConnectionOnCheckout
+  poolTestConnectionOnCheckout: false
+  
+  # poolConnectionMaxIdleTime
+  poolConnectionMaxIdleTime: 3600
+  
+  # maxIdleTimeExcessConnections
+  maxIdleTimeExcessConnections: 900
+  
+  # unreturnedConnectionTimeout
+  unreturnedConnectionTimeout: 0
+  
+
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch
+  taskManager: org.openskye.task.queue.QueueWorkerManager
+  taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
+
+worker:
+  # TODO you will need to specify a nodeID once you have created one
+  # nodeId:
+  threadCount: 5
+  pollPeriodSec: 30
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 5001
+  adminConnectors:
+    - type: http
+      port: 8082
+
+logging:
+  level: INFO
+  loggers:
+    org.openskye: DEBUG
+  appenders:
+    - type: console

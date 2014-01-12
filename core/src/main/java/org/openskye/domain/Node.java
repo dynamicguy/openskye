@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
+import org.openskye.core.ArchiveContentBlock;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -34,4 +35,12 @@ public class Node implements Identifiable {
     @NaturalId
     private String hostname;
     private String serviceAccount;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "NODE_ARCHIVE_CONTENT_BLOCK",
+            joinColumns = {@JoinColumn(name = "ARCHIVE_CONTENT_BLOCK_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "NODE_ID", referencedColumnName = "ID")})
+    @JsonIgnore
+    private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
+
 }

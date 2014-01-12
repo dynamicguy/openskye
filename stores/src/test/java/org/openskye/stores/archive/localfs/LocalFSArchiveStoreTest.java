@@ -19,6 +19,7 @@ import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.*;
 import org.openskye.metadata.ObjectMetadataRepository;
+import org.openskye.node.NodeManager;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.stores.information.jdbc.JDBCStructuredInformationStore;
@@ -60,6 +61,8 @@ public class LocalFSArchiveStoreTest {
 
     @Before
     public void setUp() {
+
+
         try {
             persistService.start();
         } catch (IllegalStateException e) {
@@ -135,6 +138,7 @@ public class LocalFSArchiveStoreTest {
         channel.setProject(project);
         Node node = new Node();
         node.setId(UUID.randomUUID().toString());
+        NodeManager.setNode(node);
 
         Task discovery = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discovery);
