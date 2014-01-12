@@ -260,19 +260,21 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
      *
      * @param acb         The ACB you wish to copy
      * @param primaryNode The node we are copying from
-     * @param node        The node we are copying to (should we were we are)
+     * @param targetNode  The node we are copying to (should we were we are)
      */
-    protected void copyACB(ArchiveContentBlock acb, Node primaryNode, Node node) {
+    protected void copyACB(ArchiveContentBlock acb, Node primaryNode, Node targetNode) {
 
         // Get the paths
 
-        String sourceAcbPath = getAcbPath(acb, false).getPath();
-        String targetAcbPath = getAcbPath(acb, false).getPath();
+        String sourceAcbPath = getAcbPath(acb, true).getPath();
+        String targetAcbPath = getAcbPath(acb, true).getPath();
 
         JSch jsch = new JSch();
 
         try {
+            log.debug("Creating session to " + primaryNode);
             Session session = jsch.getSession(primaryNode.getServiceAccount(), primaryNode.getHostname(), 22);
+            session.connect();
 
             // exec 'scp -f rfile' remotely
             String command = "scp -f " + sourceAcbPath;
@@ -355,12 +357,19 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
             }
 
             session.disconnect();
+
+            acb.getNodes().add(targetNode);
+            omr.put(acb);
+
         } catch (JSchException e) {
-            throw new SkyeException("Unable to connect to " + node.getHostname() + " as " + node.getServiceAccount(), e);
+            e.printStackTrace();
+            throw new SkyeException("Unable to connect to " + primaryNode.getHostname() + " as " + primaryNode.getServiceAccount(), e);
         } catch (FileNotFoundException e) {
-            throw new SkyeException("Unable to find ACB " + acb + " on " + node.getHostname(), e);
+            e.printStackTrace();
+            throw new SkyeException("Unable to find ACB " + acb + " on " + primaryNode.getHostname(), e);
         } catch (IOException e) {
-            throw new SkyeException("Unable to copy to find ACB " + acb + " from " + node.getHostname(), e);
+            e.printStackTrace();
+            throw new SkyeException("Unable to copy to find ACB " + acb + " from " + primaryNode.getHostname(), e);
         }
     }
 

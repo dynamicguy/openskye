@@ -19,16 +19,18 @@ public class LocalFSReplicator implements Replicator {
     private final LocalFSArchiveStore archiveStore;
 
     public LocalFSReplicator(LocalFSArchiveStore localFSArchiveStore) {
+        log.info("Creating replicator for " + localFSArchiveStore);
         this.archiveStore = localFSArchiveStore;
     }
 
     @Override
-    public void replicate(Node secondary, Project project) {
+    public void replicate(Node targetNode, Project project) {
         // First we need to identify the node that is the primary
         // for this archive store
 
-        log.debug("Replicator starting ");
+        log.debug("Replicator starting on node " + targetNode);
 
+        checkNode(targetNode);
 
         Node primaryNode = getPrimaryNode();
 
@@ -48,9 +50,27 @@ public class LocalFSReplicator implements Replicator {
 
     }
 
+    private void checkNode(Node targetNode) {
+        log.debug("Checking target node is " + targetNode + " and we are node " + NodeManager.getNode());
+        if (!targetNode.equals(NodeManager.getNode())) {
+            throw new SkyeException("You must run replication on the target node");
+        }
+
+        for (NodeArchiveStoreInstance nodeInstance : archiveStore.getArchiveStoreInstance().getNodes()) {
+            if (targetNode.equals(nodeInstance.getNode())) {
+                if (!NodeRole.REPLICA.equals(nodeInstance.getNodeRole()))
+                    throw new SkyeException("Replication can not be run on a node that does not have the role REPLICA for the given archive store, this looks like it is the primary");
+                return;
+            }
+        }
+        throw new SkyeException("Replication must be run on a node with a role of REPLICA for the given archive store");
+    }
+
     public Node getPrimaryNode() {
+        log.info("Archive store instance has " + archiveStore.getArchiveStoreInstance().getNodes().size() + " nodes");
         for (NodeArchiveStoreInstance nodeInstance : archiveStore.getArchiveStoreInstance().getNodes()) {
             if (NodeRole.PRIMARY.equals(nodeInstance.getNodeRole())) {
+                log.debug("Identified primary as " + nodeInstance);
                 return nodeInstance.getNode();
             }
         }

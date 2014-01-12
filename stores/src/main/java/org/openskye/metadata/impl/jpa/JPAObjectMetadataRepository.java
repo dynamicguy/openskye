@@ -376,7 +376,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
-        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("SELECT acb FROM ArchiveContentBlock acb WHERE acb.nodeId=:primaryNodeId and acb.id NOT IN (SELECT distinct(acb2.sourceId) FROM ArchiveContentBlock acb2 where acb2.nodeId=:targetNodeId)", ArchiveContentBlock.class);
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a INNER JOIN a.nodes n where n.id=:primaryNodeId AND a.id NOT IN (SELECT a2.id FROM ArchiveContentBlock a2 INNER JOIN a2.nodes n2 WHERE n2.id=:targetNodeId)", ArchiveContentBlock.class);
         query.setParameter("primaryNodeId", primary.getId());
         query.setParameter("targetNodeId", target.getId());
         return query.getResultList();

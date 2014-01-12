@@ -53,7 +53,7 @@ public class ReplicateTaskStep extends TaskStep {
         // When we come back form JSON we have the id
         // but we need the entity
         project = projectDAO.get(project.getId()).get();
-
+        setNode(nodeDAO.get(getNode().getId()).get());
     }
 
     @Override
