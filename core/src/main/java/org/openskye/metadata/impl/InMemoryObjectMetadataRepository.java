@@ -76,6 +76,12 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
         taskMap.get(objectMetadata.getTaskId()).add(objectMetadata);
 
+        // Check to see if we need to generate ID's for the ACB's
+        for (ArchiveContentBlock acb : objectMetadata.getArchiveContentBlocks()) {
+            if (acb.getId() == null)
+                acb.setId(UUID.randomUUID().toString());
+        }
+
         return objectMetadata;
     }
 
@@ -138,12 +144,6 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata) {
-        // TODO needs implementing
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
         // TODO needs implementing
         throw new UnsupportedOperationException();
     }

@@ -213,7 +213,7 @@ public class AbstractObjectTest {
 
         acb = new ArchiveContentBlock();
         acb.setId(UUID.randomUUID().toString());
-        acb.setArchiveStoreInstanceId(asi.getId());
+        acb.setArchiveStoreInstance(asi);
         acbList.add(acb);
         acbResult = new PaginatedResult<>(acbList);
         metadataInstance.setProject(projectList.get(0));
@@ -225,7 +225,6 @@ public class AbstractObjectTest {
         when(repository.get(metadataInstance.getId())).thenReturn(Optional.of(metadataInstance));
         metadataList.add(metadataInstance);
 
-        when(repository.getArchiveStoreInstance(any(ArchiveContentBlock.class))).thenReturn(asi);
         when(registry.build(any(ArchiveStoreInstance.class))).thenReturn(Optional.of(archiveStore));
 
         String hello = "Hello World";

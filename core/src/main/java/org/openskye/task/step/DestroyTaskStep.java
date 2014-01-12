@@ -86,8 +86,7 @@ public class DestroyTaskStep extends TaskStep {
                 for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
                     // TODO do we need to check if this ACB is in use by another
                     // object metadata
-                    ArchiveStoreInstance asi = omr.getArchiveStoreInstance(acb);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(asi);
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
                     if (archiveStore.isPresent()) {
                         archiveStore.get().destroy(om);
                         auditObject(om, ObjectEvent.DESTROYED);

@@ -190,7 +190,12 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public ObjectMetadata put(ObjectMetadata objectMetadata) {
         log.debug("Putting object metadata " + objectMetadata);
-        return getEntityManager().merge(objectMetadata);
+        ObjectMetadata result = getEntityManager().merge(objectMetadata);
+
+        // We need to ensure that we have the id's in place on the ACB's
+        getEntityManager().flush();
+
+        return result;
     }
 
     /**
@@ -362,25 +367,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
             throw new SkyeException("The InformationStoreDefinition Id is invalid.");
 
         return isd.get();
-    }
-
-    /**
-     * Gets the {@link ArchiveStoreDefinition} related to the
-     * {@link ArchiveContentBlock}.
-     *
-     * @param archiveContentBlock The {@link ArchiveContentBlock} for which the
-     *                            query will be run.
-     * @return The {@link ArchiveStoreDefinition} related to the given
-     * {@link ArchiveContentBlock}.
-     */
-    @Override
-    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
-        Optional<ArchiveStoreInstance> asd = archiveStores.get(archiveContentBlock.getArchiveStoreInstanceId());
-
-        if (!asd.isPresent())
-            throw new SkyeException("The archive store instance id is invalid.");
-
-        return asd.get();
     }
 
     @Override

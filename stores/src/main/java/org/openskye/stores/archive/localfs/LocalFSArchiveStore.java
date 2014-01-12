@@ -112,8 +112,8 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
-            if (metadata.getArchiveContentBlock(this.getArchiveStoreInstance().getId()).isPresent()) {
-                InputStream is = new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), false));
+            if (metadata.getArchiveContentBlock(this.getArchiveStoreInstance()).isPresent()) {
+                InputStream is = new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance()).get(), false));
                 return Optional.of(is);
             } else return Optional.absent();
         } catch (FileNotFoundException e) {
@@ -127,15 +127,15 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
             Class<?> impl = Class.forName(metadata.getImplementation());
 
             log.debug("Looking for implementation " + impl);
-            if (metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) { //is there an ACB?
-                if (isObjectArchived(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), metadata)) { //is the object currently archived?
+            if (metadata.getArchiveContentBlock(getArchiveStoreInstance()).isPresent()) { //is there an ACB?
+                if (isObjectArchived(metadata.getArchiveContentBlock(getArchiveStoreInstance()).get(), metadata)) { //is the object currently archived?
                     if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
                         if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
                             log.debug("Found an structured object, returning");
                             File tableFile = new File(getTempPath() + UUID.randomUUID().toString() + "/" + metadata.getPath().substring(metadata.getPath().lastIndexOf("/")) + ".csv");
                             mkParentDir(tableFile);
                             tableFile.deleteOnExit();
-                            IOUtils.copy(new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), false)), new FileOutputStream(tableFile));
+                            IOUtils.copy(new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance()).get(), false)), new FileOutputStream(tableFile));
                             DataContext dataContext = createCsvDataContext(tableFile);
                             // We need to make sure that the table name is correct
 
@@ -179,8 +179,8 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public void destroy(ObjectMetadata om) {
-        if (om.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) {
-            getAcbPath(om.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), false).delete();
+        if (om.getArchiveContentBlock(getArchiveStoreInstance()).isPresent()) {
+            getAcbPath(om.getArchiveContentBlock(getArchiveStoreInstance()).get(), false).delete();
         }
     }
 
@@ -199,9 +199,10 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
-        String fileName = getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + ".csv";
+        // Lets create rough buckets so we don't end up with everything in one directory
+        String fileName = getLocalPath() + "/" + acb.getId().substring(6) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
-        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
+        log.debug("Storing object with ACB [" + fileName + "]");
 
         if (isNew) {
             mkParentDir(simpleObjectDir);
@@ -212,9 +213,10 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public File getTempACBPath(ArchiveContentBlock acb, boolean isNew) {
-        String fileName = getTempPath() + "/" + acb.getId() + "/" + acb.getId() + ".csv";
+        // Lets create rough buckets so we don't end up with everything in one directory
+        String fileName = getTempPath() + "/" + acb.getId().substring(6) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
-        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
+        log.debug("Storing temp object with ACB [" + fileName + "]");
 
         if (isNew) {
             mkParentDir(simpleObjectDir);

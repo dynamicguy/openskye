@@ -46,7 +46,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
         if (isObjectArchived(simpleObject)) {
             //This archive store has this object already
             List<ArchiveContentBlock> objectACBs = simpleObject.getObjectMetadata().getArchiveContentBlocks();
-            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance().getId()).get());
+            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance()).get());
             simpleObject.getObjectMetadata().setArchiveContentBlocks(objectACBs);
         } else {
 
@@ -55,9 +55,15 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             // We need to link this ACB to the Node we are currently running on
             acb.setNodes(new ArrayList());
             acb.getNodes().add(NodeManager.getNode());
+            acb.setArchiveStoreInstance(localFilesystemArchiveStore.getArchiveStoreInstance());
+            acb.setChecksum(simpleObject.getObjectMetadata().getChecksum());
+            acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
 
-            ObjectMetadata om = simpleObject.getObjectMetadata();
-            acb.setArchiveStoreInstanceId(this.localFilesystemArchiveStore.getArchiveStoreInstance().getId());
+            // We need to push the ACB to the OMR so that we are able to have a
+            // UUID on the ACB
+            simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
+
+            updateMetadata(simpleObject);
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
@@ -114,9 +120,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             } else {
                 throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
             }
-
-
-            simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
             updateMetadata(simpleObject);
         }
         return simpleObject;
@@ -148,6 +151,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public boolean isObjectArchived(SimpleObject simpleObject) {
-        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance().getId()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
+        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
     }
 }

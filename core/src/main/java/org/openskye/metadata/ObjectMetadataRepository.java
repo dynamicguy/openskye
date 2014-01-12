@@ -154,15 +154,6 @@ public interface ObjectMetadataRepository {
     InformationStoreDefinition getSourceInformationStoreDefinition(ObjectMetadata objectMetadata);
 
     /**
-     * Returns the instance of the {@link ArchiveStoreDefinition} that is linked to this
-     * {@link ArchiveContentBlock}
-     *
-     * @param archiveContentBlock The archive content block to find the archive store definition for
-     * @return the archive store definition
-     */
-    ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock);
-
-    /**
      * Updates the given {@link org.openskye.core.ObjectSet}
      *
      * @param objectSet the object set to update

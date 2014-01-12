@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Project;
 
 import javax.persistence.*;
@@ -70,18 +71,18 @@ public class ObjectMetadata {
      * A mechanism to find it there is an {@link ArchiveContentBlock} for a given
      * {@link org.openskye.domain.ArchiveStoreDefinition} by id
      *
-     * @param archiveStoreInstanceId The id of the {@link org.openskye.domain.ArchiveStoreInstance}
+     * @param archiveStoreInstance The {@link org.openskye.domain.ArchiveStoreInstance}
      * @return return an instance of the {@link ArchiveContentBlock} if one is found for the archive store
      */
-    public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreInstanceId) {
-        log.debug("Resolving ACB for " + archiveStoreInstanceId);
+    public Optional<ArchiveContentBlock> getArchiveContentBlock(ArchiveStoreInstance archiveStoreInstance) {
+        log.debug("Resolving ACB for " + archiveStoreInstance);
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
-            if (acb.getArchiveStoreInstanceId() != null && acb.getArchiveStoreInstanceId().equals(archiveStoreInstanceId)) {
+            if (acb.getArchiveStoreInstance().equals(archiveStoreInstance)) {
                 log.debug("Found ACB " + acb);
                 return Optional.of(acb);
             }
         }
-        log.debug("No ACB found for " + archiveStoreInstanceId);
+        log.debug("No ACB found for " + archiveStoreInstance);
         return Optional.absent();
     }
 }

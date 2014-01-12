@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Node;
 
 import javax.persistence.*;
@@ -32,9 +33,9 @@ public class ArchiveContentBlock {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, length = 36)
     private String id;
-    @NotBlank
     @NotNull
-    private String archiveStoreInstanceId;
+    @ManyToOne
+    private ArchiveStoreInstance archiveStoreInstance;
     @NotBlank
     @NotNull
     private String checksum;
@@ -42,10 +43,10 @@ public class ArchiveContentBlock {
     private long originalSize;
     @NotNull
     private long compressedSize;
-    @ManyToMany(mappedBy="archiveContentBlocks")
+    @ManyToMany(mappedBy = "archiveContentBlocks")
     @JsonIgnore
     private List<ObjectMetadata> objectMetadataReferences = new ArrayList<>();
-    @ManyToMany(mappedBy="archiveContentBlocks")
+    @ManyToMany(mappedBy = "archiveContentBlocks")
     @JsonIgnore
     private List<Node> nodes = new ArrayList<>();
 
