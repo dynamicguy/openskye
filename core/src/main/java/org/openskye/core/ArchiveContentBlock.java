@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Node;
@@ -24,6 +25,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "ARCHIVE_CONTENT_BLOCK")
+@ToString(exclude = {"nodes", "objectMetadataReferences"})
 public class ArchiveContentBlock {
 
     // This is the unique id across all nodes

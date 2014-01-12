@@ -4,7 +4,10 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.*;
+import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Node;
+import org.openskye.domain.Project;
+import org.openskye.domain.Task;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
@@ -191,10 +194,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     public ObjectMetadata put(ObjectMetadata objectMetadata) {
         log.debug("Putting object metadata " + objectMetadata);
         ObjectMetadata result = getEntityManager().merge(objectMetadata);
-
-        // We need to ensure that we have the id's in place on the ACB's
-        getEntityManager().flush();
-
         return result;
     }
 
@@ -381,5 +380,12 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         query.setParameter("primaryNodeId", primary.getId());
         query.setParameter("targetNodeId", target.getId());
         return query.getResultList();
+    }
+
+    @Override
+    public ArchiveContentBlock put(ArchiveContentBlock acb) {
+        log.debug("Putting ACB " + acb);
+        ArchiveContentBlock result = getEntityManager().merge(acb);
+        return result;
     }
 }

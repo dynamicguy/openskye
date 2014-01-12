@@ -199,6 +199,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
+        log.debug("Getting path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
         String fileName = getLocalPath() + "/" + acb.getId().substring(6) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
@@ -213,6 +214,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public File getTempACBPath(ArchiveContentBlock acb, boolean isNew) {
+        log.debug("Getting temp path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
         String fileName = getTempPath() + "/" + acb.getId().substring(6) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);

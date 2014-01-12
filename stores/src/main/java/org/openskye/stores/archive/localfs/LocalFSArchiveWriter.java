@@ -55,6 +55,8 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             // We need to link this ACB to the Node we are currently running on
             acb.setNodes(new ArrayList());
             acb.getNodes().add(NodeManager.getNode());
+            acb.setObjectMetadataReferences(new ArrayList());
+            acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
             acb.setArchiveStoreInstance(localFilesystemArchiveStore.getArchiveStoreInstance());
             acb.setChecksum(simpleObject.getObjectMetadata().getChecksum());
             acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
@@ -63,7 +65,8 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             // UUID on the ACB
             simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
 
-            updateMetadata(simpleObject);
+            // Store this new ACB
+            acb = getOmr().put(acb);
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
@@ -120,7 +123,6 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
             } else {
                 throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
             }
-            updateMetadata(simpleObject);
         }
         return simpleObject;
     }
