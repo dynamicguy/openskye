@@ -191,7 +191,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public TaskStep setTargetInformationStore(TaskStep step) {
 
         try {
-            InformationStoreDefinition chosenDef = getResource("informationStores/" + resolveAlias(dynamicParams.get("targetInformationStoreDefinition"))).get(InformationStoreDefinition.class);
+            InformationStoreDefinition chosenDef = getResource("informationStoreDefinitions/" + resolveAlias(dynamicParams.get("targetInformationStoreDefinition"))).get(InformationStoreDefinition.class);
             if (step instanceof ExtractTaskStep) {
                 ((ExtractTaskStep) step).setTargetInformationStoreDefinition(chosenDef);
             } else {
