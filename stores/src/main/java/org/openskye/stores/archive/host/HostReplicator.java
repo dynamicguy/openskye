@@ -1,4 +1,4 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import com.jcraft.jsch.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +14,16 @@ import org.openskye.replicate.Replicator;
 import java.io.*;
 
 /**
- * An implementation of a {@link org.openskye.replicate.Replicator} for the {@link org.openskye.stores.archive.localfs.LocalFSArchiveStore}
+ * An implementation of a {@link org.openskye.replicate.Replicator} for the {@link org.openskye.stores.archive.host.HostArchiveStore}
  */
 @Slf4j
-public class LocalFSReplicator implements Replicator {
+public class HostReplicator implements Replicator {
 
-    private final LocalFSArchiveStore archiveStore;
+    private final org.openskye.stores.archive.host.HostArchiveStore archiveStore;
 
-    public LocalFSReplicator(LocalFSArchiveStore localFSArchiveStore) {
-        log.info("Creating replicator for " + localFSArchiveStore);
-        this.archiveStore = localFSArchiveStore;
+    public HostReplicator(org.openskye.stores.archive.host.HostArchiveStore HostArchiveStore) {
+        log.info("Creating replicator for " + HostArchiveStore);
+        this.archiveStore = HostArchiveStore;
     }
 
     @Override
