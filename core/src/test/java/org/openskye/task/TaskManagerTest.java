@@ -4,6 +4,7 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.Node;
 import org.openskye.domain.Project;
 import org.openskye.domain.Task;
@@ -47,7 +48,7 @@ public class TaskManagerTest {
                 testTask.getStatus() == TaskStatus.COMPLETED);
     }
 
-    @Test
+    @Test(expected = SkyeException.class)
     public void doTestTaskFail() throws Exception {
         Project mockProject = new Project();
         Node testNode = new Node();

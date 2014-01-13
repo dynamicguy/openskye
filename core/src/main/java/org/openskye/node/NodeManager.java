@@ -13,6 +13,10 @@ public class NodeManager {
 
     private static Node node;
 
+    public static boolean hasNode() {
+        return (node != null);
+    }
+
     public static Node getNode() {
         if (node == null)
             throw new SkyeException("Node could not be identified");

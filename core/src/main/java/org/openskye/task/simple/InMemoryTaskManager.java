@@ -2,6 +2,7 @@ package org.openskye.task.simple;
 
 import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
 import org.openskye.task.TaskManager;
@@ -35,14 +36,19 @@ public class InMemoryTaskManager implements TaskManager {
         step.rehydrate();
         log.info("Start task step for " + task);
         TaskStatus status;
+        Exception lastException = null;
         try {
             status = step.call();
         } catch(Exception e) {
             status = TaskStatus.FAILED;
+            lastException = e;
             log.error("Task step exception",e);
         }
         task.setStatus(status);
         log.info("Final status "+status+" for "+task);
+        if ( lastException != null ) {
+            throw new SkyeException(task+" failed",lastException);
+        }
     }
 
 
