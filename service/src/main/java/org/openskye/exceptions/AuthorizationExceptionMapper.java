@@ -27,7 +27,7 @@ public class AuthorizationExceptionMapper implements
             message.setErrorCode(3003);
             message.setMessage(ex.getMessage());
         }
-        return Response.status(401).
+        return Response.status(403).
                 entity(message).
                 type("application/json").
                 build();

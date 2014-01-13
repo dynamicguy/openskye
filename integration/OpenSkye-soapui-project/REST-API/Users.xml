@@ -10,7 +10,7 @@
       <con:parameters/>
       <con:representation type="FAULT">
         <con:mediaType xsi:nil="true"/>
-        <con:status>401</con:status>
+        <con:status>403</con:status>
         <con:params/>
         <con:element>data</con:element>
       </con:representation>
@@ -507,67 +507,67 @@
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
@@ -585,31 +585,31 @@
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
-      <con:status>401</con:status>
+      <con:status>403</con:status>
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
