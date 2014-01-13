@@ -67,7 +67,7 @@ public class LocalFSInformationStoreTest {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("pj2");
-        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.FILE_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getLocalFsDis();
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);

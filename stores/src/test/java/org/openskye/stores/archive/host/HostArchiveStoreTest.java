@@ -116,7 +116,7 @@ public class HostArchiveStoreTest {
         asi.setId(UUID.randomUUID().toString());
         asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.FILE_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test1");
         dis.setId(UUID.randomUUID().toString());
 
@@ -159,7 +159,7 @@ public class HostArchiveStoreTest {
         asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         asi.setId(UUID.randomUUID().toString());
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.FILE_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test2");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
@@ -216,7 +216,7 @@ public class HostArchiveStoreTest {
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.FILE_PATH, temp.toAbsolutePath().toString());
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
         das.setArchiveStoreInstance(asi);

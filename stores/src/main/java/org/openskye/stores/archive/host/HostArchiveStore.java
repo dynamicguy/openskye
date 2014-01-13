@@ -31,15 +31,15 @@ import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
 @Slf4j
 public class HostArchiveStore implements ArchiveStore, QueryableStore {
 
-    public final static String IMPLEMENTATION = "localFS";
-    public static final String LOCALFS_PATH = "localFsPath";
-    public static final String LOCALFS_TMP_PATH = "localFsTmpPath";
+    public final static String IMPLEMENTATION = "host";
+    public static final String FILE_PATH = "filePath";
+    public static final String TMP_PATH = "tmpPath";
     @Inject
     private ObjectMetadataSearch oms;
     @Getter
     @Inject
     private ObjectMetadataRepository omr;
-    private String localPath;
+    private String filePath;
     @Inject
     private Injector injector;
     private String tmpPath;
@@ -53,21 +53,21 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public void initialize(ArchiveStoreInstance asi) {
         this.archiveStoreInstance = asi;
-        this.localPath = archiveStoreInstance.getProperties().get(LOCALFS_PATH);
+        this.filePath = archiveStoreInstance.getProperties().get(FILE_PATH);
 
-        this.tmpPath = archiveStoreInstance.getProperties().get(LOCALFS_TMP_PATH);
+        this.tmpPath = archiveStoreInstance.getProperties().get(TMP_PATH);
 
-        if (this.localPath == null)
-            this.localPath = "/tmp/" + archiveStoreInstance.getId() + "/archives";
+        if (this.filePath == null)
+            this.filePath = "/tmp/" + archiveStoreInstance.getId() + "/archives";
         if (this.tmpPath == null)
             this.tmpPath = "/tmp/" + archiveStoreInstance.getId() + "/tmp";
 
         HostArchiveStore.log.info("Creating instance of " + this.getName());
 
         try {
-            FileUtils.forceMkdir(new File(this.localPath));
+            FileUtils.forceMkdir(new File(this.filePath));
         } catch (IOException e) {
-            HostArchiveStore.log.error("A problem occurred while trying to create path " + this.localPath);
+            HostArchiveStore.log.error("A problem occurred while trying to create path " + this.filePath);
             throw new SkyeException("Unable to create path for local filesystem archive store", e);
         }
     }
@@ -189,8 +189,8 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         return Optional.of(replicator);
     }
 
-    public String getLocalPath() {
-        return localPath;
+    public String getFilePath() {
+        return filePath;
     }
 
     public String getTempPath() {
@@ -200,7 +200,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
         HostArchiveStore.log.debug("Getting path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
-        String fileName = getLocalPath() + "/" + getBucket(acb) + "/" + acb.getId();
+        String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
         HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
 

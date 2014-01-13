@@ -55,7 +55,7 @@ public class CifsInformationStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, "/tmp/pj3");
+        asi.getProperties().put(HostArchiveStore.FILE_PATH, "/tmp/pj3");
         InformationStoreDefinition dis = getCifsDis();
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);

@@ -112,7 +112,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 try {
                     FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
                 } catch (IOException e) {
-                    throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
+                    throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getFilePath(), e);
                 } catch (MissingObjectException e) {
                     throw new SkyeException("Simple object missing from information store?", e);
                 }
