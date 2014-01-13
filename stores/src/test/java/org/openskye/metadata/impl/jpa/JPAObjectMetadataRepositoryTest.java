@@ -78,6 +78,10 @@ public class JPAObjectMetadataRepositoryTest {
         ArchiveStoreDefinition asd = new ArchiveStoreDefinition();
         asd.setName("Test");
         ArchiveContentBlock acb = new ArchiveContentBlock();
+        acb.setChecksum("123");
+        acb.setCompressedSize(1000);
+        acb.setOriginalSize(1000);
+
         InformationStoreDefinition isd = new InformationStoreDefinition();
         isd.setName("Test");
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -88,7 +92,7 @@ public class JPAObjectMetadataRepositoryTest {
         archiveStoreInstanceDAO.create(asi);
         asd.setArchiveStoreInstance(asi);
         archiveStores.create(asd);
-        acb.setArchiveStoreInstanceId(asi.getId());
+        acb.setArchiveStoreInstance(asi);
         objectMetadata.getArchiveContentBlocks().add(acb);
 
         isd.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
@@ -129,14 +133,14 @@ public class JPAObjectMetadataRepositoryTest {
 
         assertThat("information store associated with object is found", outputIsd.isPresent());
 
-        Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asi.getId());
+        Optional<ArchiveContentBlock> acbOutput = metadataOutput.get().getArchiveContentBlock(asi);
 
         // Test that the persisted ACB is present, and that it
         // matches the input.
         assertThat("object should have the correct archive content block",
                 acbOutput.isPresent());
         assertThat("object should have the correct archive store instance",
-                acbOutput.get().getArchiveStoreInstanceId(),
+                acbOutput.get().getArchiveStoreInstance().getId(),
                 is(equalTo(asi.getId())));
 
         // Test that the persisted metadata can be retrieved by information

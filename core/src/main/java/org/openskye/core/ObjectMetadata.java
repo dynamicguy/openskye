@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Project;
 
 import javax.persistence.*;
@@ -33,17 +34,17 @@ public class ObjectMetadata {
     private String taskId;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
-            name="OBJECT_METADATA_TAGS",
-            joinColumns=@JoinColumn(name="OBJECT_METADATA_ID")
+            name = "OBJECT_METADATA_TAGS",
+            joinColumns = @JoinColumn(name = "OBJECT_METADATA_ID")
     )
-    @Column(name="tag")
+    @Column(name = "tag")
     private Set<Tag> tags = new HashSet<>();
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
-            name="OBJECT_METADATA_DATA",
-            joinColumns=@JoinColumn(name="OBJECT_METADATA_ID")
+            name = "OBJECT_METADATA_DATA",
+            joinColumns = @JoinColumn(name = "OBJECT_METADATA_ID")
     )
-    @Column(name="metadata")
+    @Column(name = "metadata")
     private Map<String, String> metadata = new HashMap<>();
     private boolean container = false;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -59,30 +60,29 @@ public class ObjectMetadata {
     private String mimeType;
     private String checksum;
     private String informationStoreId;
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name="ARCHIVE_CONTENT_BLOCKS",
-            joinColumns=@JoinColumn(name="OBJECT_METADATA_ID")
-    )
-    @Column(name="archiveContentBlock")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "OBJECT_METADATA_ARCHIVE_CONTENT_BLOCK",
+            joinColumns = {@JoinColumn(name = "ARCHIVE_CONTENT_BLOCK_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "OBJECT_METADATA_ID", referencedColumnName = "ID")})
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
     /**
      * A mechanism to find it there is an {@link ArchiveContentBlock} for a given
      * {@link org.openskye.domain.ArchiveStoreDefinition} by id
      *
-     * @param archiveStoreInstanceId The id of the {@link org.openskye.domain.ArchiveStoreInstance}
+     * @param archiveStoreInstance The {@link org.openskye.domain.ArchiveStoreInstance}
      * @return return an instance of the {@link ArchiveContentBlock} if one is found for the archive store
      */
-    public Optional<ArchiveContentBlock> getArchiveContentBlock(String archiveStoreInstanceId) {
-        log.debug("Resolving ACB for " + archiveStoreInstanceId);
+    public Optional<ArchiveContentBlock> getArchiveContentBlock(ArchiveStoreInstance archiveStoreInstance) {
+        log.debug("Resolving ACB for " + archiveStoreInstance);
         for (ArchiveContentBlock acb : this.getArchiveContentBlocks()) {
-            if (acb.getArchiveStoreInstanceId() != null && acb.getArchiveStoreInstanceId().equals(archiveStoreInstanceId)) {
+            if (acb.getArchiveStoreInstance().equals(archiveStoreInstance)) {
                 log.debug("Found ACB " + acb);
                 return Optional.of(acb);
             }
         }
-        log.debug("No ACB found for " + archiveStoreInstanceId);
+        log.debug("No ACB found for " + archiveStoreInstance);
         return Optional.absent();
     }
 }

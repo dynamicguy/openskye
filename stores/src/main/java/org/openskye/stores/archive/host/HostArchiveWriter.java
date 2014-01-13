@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.Task;
+import org.openskye.node.NodeManager;
 import org.openskye.stores.archive.AbstractArchiveStoreWriter;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,14 +46,27 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
         if (isObjectArchived(simpleObject)) {
             //This archive store has this object already
             List<ArchiveContentBlock> objectACBs = simpleObject.getObjectMetadata().getArchiveContentBlocks();
-            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance().getId()).get());
+            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance()).get());
             simpleObject.getObjectMetadata().setArchiveContentBlocks(objectACBs);
         } else {
 
             ArchiveContentBlock acb = new ArchiveContentBlock();
 
-            ObjectMetadata om = simpleObject.getObjectMetadata();
-            acb.setArchiveStoreInstanceId(this.localFilesystemArchiveStore.getArchiveStoreInstance().getId());
+            // We need to link this ACB to the Node we are currently running on
+            acb.setNodes(new ArrayList());
+            acb.getNodes().add(NodeManager.getNode());
+            acb.setObjectMetadataReferences(new ArrayList());
+            acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
+            acb.setArchiveStoreInstance(localFilesystemArchiveStore.getArchiveStoreInstance());
+            acb.setChecksum(simpleObject.getObjectMetadata().getChecksum());
+            acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
+
+            // We need to push the ACB to the OMR so that we are able to have a
+            // UUID on the ACB
+            simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
+
+            // Store this new ACB
+            acb = getOmr().put(acb);
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
@@ -108,10 +123,6 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             } else {
                 throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
             }
-
-
-            simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
-            updateMetadata(simpleObject);
         }
         return simpleObject;
     }
@@ -142,6 +153,6 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public boolean isObjectArchived(SimpleObject simpleObject) {
-        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance().getId()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
+        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
     }
 }

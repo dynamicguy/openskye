@@ -98,14 +98,14 @@ public class ExtractTaskStep extends TaskStep {
                 if (om.getArchiveContentBlocks().size() > 0) {
                     // Lets just get the first ACB
                     ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreInstance(acb));
+                    Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
                     if (archiveStore.isPresent()) {
                         Optional<SimpleObject> simpleObject = archiveStore.get().materialize(om);
                         if (simpleObject.isPresent()) {
                             targetInformationStore.get().put(simpleObject.get());
                         }
                     } else {
-                        throw new SkyeException("Unable to build the archive store from definition " + omr.getArchiveStoreInstance(acb));
+                        throw new SkyeException("Unable to build the archive store from definition " + acb.getArchiveStoreInstance());
                     }
 
                 } else {

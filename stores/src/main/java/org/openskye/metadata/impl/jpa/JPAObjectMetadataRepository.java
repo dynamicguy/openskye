@@ -4,7 +4,10 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.*;
+import org.openskye.domain.InformationStoreDefinition;
+import org.openskye.domain.Node;
+import org.openskye.domain.Project;
+import org.openskye.domain.Task;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
@@ -190,7 +193,8 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public ObjectMetadata put(ObjectMetadata objectMetadata) {
         log.debug("Putting object metadata " + objectMetadata);
-        return getEntityManager().merge(objectMetadata);
+        ObjectMetadata result = getEntityManager().merge(objectMetadata);
+        return result;
     }
 
     /**
@@ -364,25 +368,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         return isd.get();
     }
 
-    /**
-     * Gets the {@link ArchiveStoreDefinition} related to the
-     * {@link ArchiveContentBlock}.
-     *
-     * @param archiveContentBlock The {@link ArchiveContentBlock} for which the
-     *                            query will be run.
-     * @return The {@link ArchiveStoreDefinition} related to the given
-     * {@link ArchiveContentBlock}.
-     */
-    @Override
-    public ArchiveStoreInstance getArchiveStoreInstance(ArchiveContentBlock archiveContentBlock) {
-        Optional<ArchiveStoreInstance> asd = archiveStores.get(archiveContentBlock.getArchiveStoreInstanceId());
-
-        if (!asd.isPresent())
-            throw new SkyeException("The archive store instance id is invalid.");
-
-        return asd.get();
-    }
-
     @Override
     public void updateObjectSet(Optional<ObjectSet> objectSet) {
         log.debug("Updating object set " + objectSet);
@@ -391,9 +376,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
-        TypedQuery<ArchiveContentBlock> query = getEntityManager().createNamedQuery("ArchiveContentBlock.findACBsForReplication", ArchiveContentBlock.class);
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a INNER JOIN a.nodes n where n.id=:primaryNodeId AND a.id NOT IN (SELECT a2.id FROM ArchiveContentBlock a2 INNER JOIN a2.nodes n2 WHERE n2.id=:targetNodeId)", ArchiveContentBlock.class);
         query.setParameter("primaryNodeId", primary.getId());
         query.setParameter("targetNodeId", target.getId());
         return query.getResultList();
+    }
+
+    @Override
+    public ArchiveContentBlock put(ArchiveContentBlock acb) {
+        log.debug("Putting ACB " + acb);
+        ArchiveContentBlock result = getEntityManager().merge(acb);
+        return result;
     }
 }

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
+import org.openskye.core.ArchiveContentBlock;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = {"archiveContentBlocks","nodes"})
 public class Node implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -34,4 +37,8 @@ public class Node implements Identifiable {
     @NaturalId
     private String hostname;
     private String serviceAccount;
+    @ManyToMany(mappedBy = "nodes", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
+
 }
