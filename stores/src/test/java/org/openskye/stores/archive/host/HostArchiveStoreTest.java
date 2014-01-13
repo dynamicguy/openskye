@@ -12,7 +12,6 @@ import org.eobjects.metamodel.schema.ColumnType;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.*;
@@ -23,7 +22,6 @@ import org.openskye.node.NodeManager;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.stores.information.jdbc.JDBCStructuredInformationStore;
-import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 import org.openskye.stores.inmemory.InMemoryUnstructuredObject;
 import org.openskye.task.TaskManager;
 import org.openskye.task.step.ArchiveTaskStep;
@@ -206,8 +204,13 @@ public class HostArchiveStoreTest {
     }
 
     @Test
-    @Ignore  //TODO -- execute this test when issue ORION-240 is resolved
     public void UnstructuredObjectTest() throws Exception {
+
+        // Construct a mock node
+        Node node = new Node();
+        node.setHostname("localhost");
+        node.setId(UUID.randomUUID().toString());
+        NodeManager.setNode(node);
 
         // Construct a mock archive store
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
@@ -237,7 +240,7 @@ public class HostArchiveStoreTest {
 
         // Get the object back out of the store and read it
         ObjectMetadata omPut = objectPut.getObjectMetadata();
-        LocalFileUnstructuredObject objectOut = (LocalFileUnstructuredObject) store.materialize(omPut).get();
+        HostArchiveUnstructuredObject objectOut = (HostArchiveUnstructuredObject) store.materialize(omPut).get();
         BufferedReader reader = new BufferedReader(new InputStreamReader(objectOut.getInputStream()) );
         String contentOut = reader.readLine();
 

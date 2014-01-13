@@ -15,7 +15,6 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.replicate.Replicator;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
-import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 
 import javax.inject.Inject;
 import java.io.*;
@@ -139,7 +138,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
 
                             HostArchiveStore.log.debug("Loaded structured object with table " + dataContext.getDefaultSchema().getTableNames()[0]);
 
-                            SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
+                            SimpleObject simpleObject = new HostArchiveStructuredObject(dataContext);
                             simpleObject.setObjectMetadata(metadata);
                             return Optional.of(simpleObject);
                         } else {
@@ -148,8 +147,10 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
                         }
                     } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
                         HostArchiveStore.log.debug("Found an unstructured object, returning");
-                        SimpleObject simpleObject = new LocalFileUnstructuredObject();
-                        simpleObject.setObjectMetadata(metadata);
+                        HostArchiveUnstructuredObject archivedObject = new HostArchiveUnstructuredObject();
+                        archivedObject.setObjectMetadata(metadata);
+                        archivedObject.setArchiveStore(this);
+                        SimpleObject simpleObject = archivedObject;
                         return Optional.of(simpleObject);
                     } else {
                         HostArchiveStore.log.debug("Simple object type not supported!");
@@ -244,7 +245,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         List<StructuredObject> contextObjects = context.resolveObjects(this);
         List<DataContext> dataContexts = new ArrayList<>();
         for (StructuredObject obj : contextObjects) {
-            DataContext dc = ((JDBCStructuredObject) obj).getDataContext();
+            DataContext dc = ((HostArchiveStructuredObject) obj).getDataContext();
             dataContexts.add(dc);
         }
 
