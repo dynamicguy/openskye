@@ -12,8 +12,10 @@ import org.eobjects.metamodel.schema.ColumnType;
 import org.eobjects.metamodel.schema.Schema;
 import org.eobjects.metamodel.schema.Table;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.*;
@@ -42,6 +44,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 /**
  * Test basic functionality of the {@link HostArchiveStore}
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class HostArchiveStoreTest {
 
     @Rule
@@ -174,14 +177,15 @@ public class HostArchiveStoreTest {
         channel.setProject(project);
         Node node = new Node();
         node.setId(UUID.randomUUID().toString());
+        NodeManager.setNode(node);
+
         Task discovery = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discovery);
+        long discovered = discovery.getStatistics().getSimpleObjectsFound();
+        assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
 
         Task archive = new ArchiveTaskStep(channel, node).toTask();
         taskManager.submit(archive);
-
-        long discovered = discovery.getStatistics().getSimpleObjectsFound();
-        assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
         long ingested = archive.getStatistics().getSimpleObjectsProcessed();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
 

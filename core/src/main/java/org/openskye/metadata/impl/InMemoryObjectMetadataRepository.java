@@ -92,7 +92,8 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
         List<ObjectMetadata> matchingObjects = new ArrayList<ObjectMetadata>();
         for (ObjectMetadata objectMetadata : objects.values()) {
-            if (objectMetadata.getInformationStoreId().equals(informationStoreDefinition.getId())) {
+            String objectInformationStoreId = objectMetadata.getInformationStoreId();
+            if (objectInformationStoreId != null && objectInformationStoreId.equals(informationStoreDefinition.getId())) {
                 matchingObjects.add(objectMetadata);
             }
         }
