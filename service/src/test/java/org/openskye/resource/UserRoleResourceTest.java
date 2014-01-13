@@ -4,14 +4,12 @@ package org.openskye.resource;
 import com.google.common.base.Optional;
 import com.sun.jersey.api.client.ClientResponse;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import io.dropwizard.util.Generics;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.openskye.domain.Domain;
-import org.openskye.domain.Identifiable;
 import org.openskye.domain.User;
 import org.openskye.domain.UserRole;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
@@ -25,9 +23,7 @@ import javax.ws.rs.core.MediaType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UserRoleResourceTest {
     private final Subject subject = mock(Subject.class);
@@ -94,7 +90,7 @@ public class UserRoleResourceTest {
     public void testUnAuthorizedGetAll() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":list")).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural()).get(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural()).get(ClientResponse.class).getStatus(), equalTo(403));
     }
     @Test
     public void testAuthorizedGetAll() throws Exception {
@@ -106,7 +102,7 @@ public class UserRoleResourceTest {
     public void testUnAuthorizedPost() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":create")).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural()).type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, getInstance()).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural()).type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, getInstance()).getStatus(), equalTo(403));
     }
      @Test
         public void testAuthorizedPost() throws Exception {
@@ -126,6 +122,6 @@ public class UserRoleResourceTest {
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":delete")).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class).getStatus(), equalTo(403));
     }
 }

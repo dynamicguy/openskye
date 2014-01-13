@@ -63,7 +63,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .put(ClientResponse.class, metadataInstance);
 
-        assertThat("object update was not permitted", response.getStatus(), equalTo(401));
+        assertThat("object update was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("get object was not permitted", response.getStatus(), equalTo(401));
+        assertThat("get object was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("list operation was not permitted", response.getStatus(), equalTo(401));
+        assertThat("list operation was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("get archive content blocks was not permitted", response.getStatus(), equalTo(401));
+        assertThat("get archive content blocks was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("list by information store is not permitted", response.getStatus(), equalTo(401));
+        assertThat("list by information store is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -212,7 +212,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("list by task is not permitted", response.getStatus(), equalTo(401));
+        assertThat("list by task is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -242,7 +242,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .put(ClientResponse.class);
 
-        assertThat("index operation was not permitted", response.getStatus(), equalTo(401));
+        assertThat("index operation was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -274,7 +274,7 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("search was not permitted", response.getStatus(), equalTo(401));
+        assertThat("search was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -308,6 +308,6 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("search with project was not permitted", response.getStatus(), equalTo(401));
+        assertThat("search with project was not permitted", response.getStatus(), equalTo(403));
     }
 }

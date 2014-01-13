@@ -59,7 +59,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .post(ClientResponse.class, objectSetInstance);
 
-        assertThat("object set creation was not permitted", response.getStatus(), equalTo(401));
+        assertThat("object set creation was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("get object set was not permitted", response.getStatus(), equalTo(401));
+        assertThat("get object set was not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("list object sets is not permitted", response.getStatus(), equalTo(401));
+        assertThat("list object sets is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -145,7 +145,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .delete(ClientResponse.class);
 
-        assertThat("delete object set is not permitted", response.getStatus(), equalTo(401));
+        assertThat("delete object set is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -180,7 +180,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("object set is found operation is not permitted", response.getStatus(), equalTo(401));
+        assertThat("object set is found operation is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .get(ClientResponse.class);
 
-        assertThat("get objects from set is not permitted", response.getStatus(), equalTo(401));
+        assertThat("get objects from set is not permitted", response.getStatus(), equalTo(403));
 
     }
 
@@ -246,7 +246,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .put(ClientResponse.class);
 
-        assertThat("add object to set is not permitted", response.getStatus(), equalTo(401));
+        assertThat("add object to set is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -280,7 +280,7 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
                 .type(MEDIA_TYPE)
                 .delete(ClientResponse.class);
 
-        assertThat("remove object from set is not permitted", response.getStatus(), equalTo(401));
+        assertThat("remove object from set is not permitted", response.getStatus(), equalTo(403));
     }
 
     @Test
@@ -314,6 +314,6 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
 
         assertThat("add objects to set from search operation is not permitted",
                 response.getStatus(),
-                equalTo(401));
+                equalTo(403));
     }
 }

@@ -37,7 +37,7 @@ public abstract class ProjectSpecificResourceTest<T extends Identifiable> extend
     public void testUnAuthorizedPut() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":update:"+projectID)).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, getInstance()).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, getInstance()).getStatus(), equalTo(403));
     }
 
     @Override
@@ -55,7 +55,7 @@ public abstract class ProjectSpecificResourceTest<T extends Identifiable> extend
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":create:"+projectID)).thenReturn(false);
         when(subject.isPermitted(getSingular() + ":create:"+anyString())).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural()).type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, getInstance()).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural()).type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, getInstance()).getStatus(), equalTo(403));
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class ProjectSpecificResourceTest<T extends Identifiable> extend
     public void testUnAuthorizedGetAll() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":list:"+anyString())).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural()).get(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural()).get(ClientResponse.class).getStatus(), equalTo(403));
     }
 
     @Override
@@ -89,7 +89,7 @@ public abstract class ProjectSpecificResourceTest<T extends Identifiable> extend
     public void testUnAuthorisedDelete() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":delete:"+projectID)).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").delete(ClientResponse.class).getStatus(), equalTo(403));
     }
 
     @Override
@@ -107,7 +107,7 @@ public abstract class ProjectSpecificResourceTest<T extends Identifiable> extend
     public void testUnAuthorisedGetMissing() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":get:*")).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/60ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/60ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(ClientResponse.class).getStatus(), equalTo(403));
     }
 
     @Override
@@ -124,6 +124,6 @@ public abstract class ProjectSpecificResourceTest<T extends Identifiable> extend
     public void testUnAuthorisedGet() throws Exception {
         ThreadContext.bind(subject);
         when(subject.isPermitted(getSingular() + ":get:"+projectID)).thenReturn(false);
-        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(ClientResponse.class).getStatus(), equalTo(401));
+        assertThat(getResources().client().resource("/api/1/" + getPlural() + "/59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9").get(ClientResponse.class).getStatus(), equalTo(403));
     }
 }
