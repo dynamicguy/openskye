@@ -8,7 +8,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.User;
 import org.openskye.domain.UserRole;
-import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.domain.dao.UserDAO;
 import org.openskye.exceptions.BadRequestException;
