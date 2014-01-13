@@ -1,4 +1,4 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import com.google.common.base.Optional;
 import com.google.inject.Injector;
@@ -32,7 +32,7 @@ import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
  * filesystem to store archives
  */
 @Slf4j
-public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
+public class HostArchiveStore implements ArchiveStore, QueryableStore {
 
     public final static String IMPLEMENTATION = "localFS";
     public static final String LOCALFS_PATH = "localFsPath";
@@ -65,12 +65,12 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
         if (this.tmpPath == null)
             this.tmpPath = "/tmp/" + archiveStoreInstance.getId() + "/tmp";
 
-        log.info("Creating instance of " + this.getName());
+        HostArchiveStore.log.info("Creating instance of " + this.getName());
 
         try {
             FileUtils.forceMkdir(new File(this.localPath));
         } catch (IOException e) {
-            log.error("A problem occurred while trying to create path " + this.localPath);
+            HostArchiveStore.log.error("A problem occurred while trying to create path " + this.localPath);
             throw new SkyeException("Unable to create path for local filesystem archive store", e);
         }
     }
@@ -104,7 +104,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     public ArchiveStoreWriter getWriter(Task task) {
         // We need to make sure we inject everything we need into the writer
         // since the abstract writer has some injection
-        LocalFSArchiveWriter writer = new LocalFSArchiveWriter(task, this);
+        HostArchiveWriter writer = new HostArchiveWriter(task, this);
         injector.injectMembers(writer);
         return writer;
     }
@@ -122,16 +122,16 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     @Override
-    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+    public Optional<SimpleObject> materialize(ObjectMetadata metadata) {
         try {
             Class<?> impl = Class.forName(metadata.getImplementation());
 
-            log.debug("Looking for implementation " + impl);
+            HostArchiveStore.log.debug("Looking for implementation " + impl);
             if (metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).isPresent()) { //is there an ACB?
                 if (isObjectArchived(metadata.getArchiveContentBlock(getArchiveStoreInstance().getId()).get(), metadata)) { //is the object currently archived?
                     if (impl.getSuperclass().equals(StructuredObject.class)) { //is the object structured?
                         if (metadata.getImplementation().equals(JDBCStructuredObject.class.getCanonicalName())) {
-                            log.debug("Found an structured object, returning");
+                            HostArchiveStore.log.debug("Found an structured object, returning");
                             File tableFile = new File(getTempPath() + UUID.randomUUID().toString() + "/" + metadata.getPath().substring(metadata.getPath().lastIndexOf("/")) + ".csv");
                             mkParentDir(tableFile);
                             tableFile.deleteOnExit();
@@ -139,30 +139,30 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
                             DataContext dataContext = createCsvDataContext(tableFile);
                             // We need to make sure that the table name is correct
 
-                            log.debug("Loaded structured object with table " + dataContext.getDefaultSchema().getTableNames()[0]);
+                            HostArchiveStore.log.debug("Loaded structured object with table " + dataContext.getDefaultSchema().getTableNames()[0]);
 
                             SimpleObject simpleObject = new JDBCStructuredObject(dataContext);
                             simpleObject.setObjectMetadata(metadata);
                             return Optional.of(simpleObject);
                         } else {
-                            log.debug("Found a structured object, but implementation not known?");
+                            HostArchiveStore.log.debug("Found a structured object, but implementation not known?");
                             return Optional.absent();
                         }
                     } else if (impl.getSuperclass().equals(UnstructuredObject.class)) {  //its unstructured
-                        log.debug("Found an unstructured object, returning");
+                        HostArchiveStore.log.debug("Found an unstructured object, returning");
                         SimpleObject simpleObject = new LocalFileUnstructuredObject();
                         simpleObject.setObjectMetadata(metadata);
                         return Optional.of(simpleObject);
                     } else {
-                        log.debug("Simple object type not supported!");
+                        HostArchiveStore.log.debug("Simple object type not supported!");
                         return Optional.absent();
                     }
                 } else {
-                    log.debug("Unable to find ACB for " + metadata + ", maybe it hasn't been archived?");
+                    HostArchiveStore.log.debug("Unable to find ACB for " + metadata + ", maybe it hasn't been archived?");
                     return Optional.absent();
                 }
             } else {
-                log.debug("Unable to find ACB for " + metadata + " for archive store " + getArchiveStoreInstance());
+                HostArchiveStore.log.debug("Unable to find ACB for " + metadata + " for archive store " + getArchiveStoreInstance());
                 return Optional.absent();
             }
         } catch (Exception e) {
@@ -186,7 +186,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public Optional<Replicator> getReplicator() {
-        Replicator replicator = new LocalFSReplicator(this);
+        Replicator replicator = new HostReplicator(this);
         return Optional.of(replicator);
     }
 
@@ -201,7 +201,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
         String fileName = getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + ".csv";
         File simpleObjectDir = new File(fileName);
-        log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
+        HostArchiveStore.log.info("Storing object with ACB [" + getLocalPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
 
         if (isNew) {
             mkParentDir(simpleObjectDir);
@@ -214,7 +214,7 @@ public class LocalFSArchiveStore implements ArchiveStore, QueryableStore {
     public File getTempACBPath(ArchiveContentBlock acb, boolean isNew) {
         String fileName = getTempPath() + "/" + acb.getId() + "/" + acb.getId() + ".csv";
         File simpleObjectDir = new File(fileName);
-        log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
+        HostArchiveStore.log.info("Storing temp object with ACB [" + getTempPath() + "/" + acb.getId() + "/" + acb.getId() + "]");
 
         if (isNew) {
             mkParentDir(simpleObjectDir);

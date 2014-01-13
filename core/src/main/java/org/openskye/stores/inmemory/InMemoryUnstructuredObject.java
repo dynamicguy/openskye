@@ -34,7 +34,7 @@ public class InMemoryUnstructuredObject extends UnstructuredObject {
     }
 
     @Override
-    public InputStream getContent() throws MissingObjectException {
+    public InputStream getInputStream() throws MissingObjectException {
         try {
             return new ByteArrayInputStream(content.getBytes(Charset.defaultCharset()));
         } catch(Exception e) {

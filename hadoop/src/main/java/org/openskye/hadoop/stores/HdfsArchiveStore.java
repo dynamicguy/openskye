@@ -105,7 +105,7 @@ public class HdfsArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+    public Optional<SimpleObject> materialize(ObjectMetadata metadata) {
         if (this.getStream(metadata).isPresent()) {
             if (metadata.getImplementation().equals(HStructuredObject.class.getCanonicalName())) {
                 if (metadata.getArchiveContentBlock(this.getArchiveStoreDefinition().get().getId()).isPresent()) {
@@ -210,7 +210,7 @@ public class HdfsArchiveStore implements ArchiveStore, ArchiveStoreWriter {
         } else if (simpleObject instanceof UnstructuredObject) {
             try {
                 FSDataOutputStream in = hdfsFileSystem.create(new Path(hdfsFileSystem.getWorkingDirectory().toString() + "/" + acb.getId() + "/" + om.getPath() + ".txt"));
-                in.write(Bytes.toBytes(String.valueOf(((UnstructuredObject) simpleObject).getContent())));
+                in.write(Bytes.toBytes(String.valueOf(((UnstructuredObject) simpleObject).getInputStream())));
             } catch (IOException e) {
                 log.error("File not found");
                 throw new SkyeException("File not found", e);

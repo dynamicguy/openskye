@@ -1,4 +1,4 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.SkyeException;
@@ -10,13 +10,13 @@ import org.openskye.node.NodeManager;
 import org.openskye.replicate.Replicator;
 
 /**
- * An implementation of a {@link org.openskye.replicate.Replicator} for the {@link org.openskye.stores.archive.localfs.LocalFSArchiveStore}
+ * An implementation of a {@link org.openskye.replicate.Replicator} for the {@link HostArchiveStore}
  */
-public class LocalFSReplicator implements Replicator {
+public class HostReplicator implements Replicator {
 
-    private final LocalFSArchiveStore archiveStore;
+    private final HostArchiveStore archiveStore;
 
-    public LocalFSReplicator(LocalFSArchiveStore localFSArchiveStore) {
+    public HostReplicator(HostArchiveStore localFSArchiveStore) {
         this.archiveStore = localFSArchiveStore;
     }
 

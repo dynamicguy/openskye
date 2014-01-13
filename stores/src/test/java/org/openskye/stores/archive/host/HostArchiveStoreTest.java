@@ -1,4 +1,4 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
@@ -41,9 +41,9 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
- * Test basic functionality of the {@link LocalFSArchiveStore}
+ * Test basic functionality of the {@link HostArchiveStore}
  */
-public class LocalFSArchiveStoreTest {
+public class HostArchiveStoreTest {
 
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(InMemoryTestModule.class);
@@ -113,9 +113,9 @@ public class LocalFSArchiveStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setId(UUID.randomUUID().toString());
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test1");
         dis.setId(UUID.randomUUID().toString());
 
@@ -154,10 +154,10 @@ public class LocalFSArchiveStoreTest {
 
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         asi.setId(UUID.randomUUID().toString());
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test2");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
@@ -207,13 +207,13 @@ public class LocalFSArchiveStoreTest {
 
         // Construct a mock archive store
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
         das.setArchiveStoreInstance(asi);
-        LocalFSArchiveStore store = new LocalFSArchiveStore();
+        HostArchiveStore store = new HostArchiveStore();
         store.initialize(asi);
         injector.injectMembers(store);
 
@@ -233,8 +233,8 @@ public class LocalFSArchiveStoreTest {
 
         // Get the object back out of the store and read it
         ObjectMetadata omPut = objectPut.getObjectMetadata();
-        LocalFileUnstructuredObject objectOut = (LocalFileUnstructuredObject) store.getSimpleObject(omPut).get();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(objectOut.getContent()) );
+        LocalFileUnstructuredObject objectOut = (LocalFileUnstructuredObject) store.materialize(omPut).get();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(objectOut.getInputStream()) );
         String contentOut = reader.readLine();
 
         assertThat("Content retrieved matches content stored", contentOut, is(equalTo(contentIn)));

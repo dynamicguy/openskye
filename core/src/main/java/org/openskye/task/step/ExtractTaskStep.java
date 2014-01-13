@@ -100,7 +100,7 @@ public class ExtractTaskStep extends TaskStep {
                     ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
                     Optional<ArchiveStore> archiveStore = storeRegistry.build(omr.getArchiveStoreInstance(acb));
                     if (archiveStore.isPresent()) {
-                        Optional<SimpleObject> simpleObject = archiveStore.get().getSimpleObject(om);
+                        Optional<SimpleObject> simpleObject = archiveStore.get().materialize(om);
                         if (simpleObject.isPresent()) {
                             targetInformationStore.get().put(simpleObject.get());
                         }

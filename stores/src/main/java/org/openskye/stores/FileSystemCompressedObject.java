@@ -58,7 +58,7 @@ public class FileSystemCompressedObject extends UnstructuredCompressedObject {
     }
 
     @Override
-    public InputStream getContent() throws MissingObjectException {
+    public InputStream getInputStream() throws MissingObjectException {
         ArchiveInputStream stream = null;
         try {
             stream = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(this.getObjectMetadata().getPath())));

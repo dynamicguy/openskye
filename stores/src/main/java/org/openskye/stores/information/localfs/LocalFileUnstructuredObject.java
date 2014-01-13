@@ -16,7 +16,7 @@ import java.io.InputStream;
 public class LocalFileUnstructuredObject extends UnstructuredObject {
 
     @Override
-    public InputStream getContent() throws MissingObjectException {
+    public InputStream getInputStream() throws MissingObjectException {
         try {
             log.info("Getting content on " + getObjectMetadata());
             InputStream is = new FileInputStream(getObjectMetadata().getPath());

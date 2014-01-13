@@ -26,7 +26,7 @@ public class QueryContext {
         for (ObjectMetadata om : objects) {
             log.debug("Resolving object metadata " + om);
 
-            Optional<SimpleObject> optionObject = archiveStore.getSimpleObject(om);
+            Optional<SimpleObject> optionObject = archiveStore.materialize(om);
 
             log.debug("Resolved simple object " + optionObject);
 

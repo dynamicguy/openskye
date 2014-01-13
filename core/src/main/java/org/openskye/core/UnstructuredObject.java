@@ -7,6 +7,6 @@ import java.io.InputStream;
  */
 public abstract class UnstructuredObject extends SimpleObject {
 
-    public abstract InputStream getContent() throws MissingObjectException;
+    public abstract InputStream getInputStream() throws MissingObjectException;
 
 }

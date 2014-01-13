@@ -1,4 +1,4 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -26,14 +26,14 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * An implementation of an {@link ArchiveStoreWriter} for the {@link LocalFSArchiveStore}
+ * An implementation of an {@link ArchiveStoreWriter} for the {@link HostArchiveStore}
  */
 @Slf4j
-public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
+public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     private final Task task;
-    private final LocalFSArchiveStore localFilesystemArchiveStore;
+    private final HostArchiveStore localFilesystemArchiveStore;
 
-    public LocalFSArchiveWriter(Task task, LocalFSArchiveStore localFilesystemArchiveStore) {
+    public HostArchiveWriter(Task task, HostArchiveStore localFilesystemArchiveStore) {
         this.localFilesystemArchiveStore = localFilesystemArchiveStore;
         this.task = task;
     }
@@ -57,8 +57,8 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
                 // we need to store the whole table as a CSV
                 final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
                 final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
-                if (log.isDebugEnabled())
-                    log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
+                if (HostArchiveWriter.log.isDebugEnabled())
+                    HostArchiveWriter.log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
                 final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(tempStoragePath);
                 dataContext.executeUpdate(new UpdateScript() {
                     public void run(UpdateCallback callback) {
@@ -95,7 +95,7 @@ public class LocalFSArchiveWriter extends AbstractArchiveStoreWriter {
                 final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
 
                 try {
-                    FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), tempStoragePath);
+                    FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
                 } catch (IOException e) {
                     throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getLocalPath(), e);
                 } catch (MissingObjectException e) {

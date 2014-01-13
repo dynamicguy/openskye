@@ -21,7 +21,7 @@ public class HUnstructuredObject extends UnstructuredObject {
 
 
     @Override
-    public InputStream getContent() {
+    public InputStream getInputStream() {
         return new ByteArrayInputStream(content);
     }
 }

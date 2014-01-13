@@ -98,7 +98,7 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+    public Optional<SimpleObject> materialize(ObjectMetadata metadata) {
         SimpleObject result = null;
         if (metadata.getImplementation().equals(StructuredObject.class.getCanonicalName())) {
             try {
@@ -139,7 +139,7 @@ public class HBaseArchiveStore implements ArchiveStore, ArchiveStoreWriter {
 
     @Override
     public void destroy(ObjectMetadata om) {
-        hBaseEntityManager.remove(getSimpleObject(om));
+        hBaseEntityManager.remove(materialize(om));
     }
 
     @Override
