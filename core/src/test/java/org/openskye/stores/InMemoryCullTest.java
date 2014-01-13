@@ -57,9 +57,9 @@ public class InMemoryCullTest {
         }
     }
 
-    private Project mockProject() {
+    private Project mockProject(String name) {
         Project project = new Project();
-        project.setName("Cull Test Project");
+        project.setName(name);
         return projectDAO.create(project);
     }
 
@@ -92,7 +92,7 @@ public class InMemoryCullTest {
     public void testBasicCulling() throws Exception {
 
         emf.get().getTransaction().begin();
-        Project project = mockProject();
+        Project project = mockProject("testBasicCulling Project");
         Node node = mockNode();
         RetentionPolicy p3 = mockPolicy("CULL_P3", "Cull Test 3 Year Policy", 3);
         RetentionPolicy p5 = mockPolicy("CULL_P5", "Cull Test 5 Year Policy", 5);

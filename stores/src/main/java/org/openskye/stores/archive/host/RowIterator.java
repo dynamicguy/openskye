@@ -1,4 +1,4 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import org.eobjects.metamodel.data.Row;
 

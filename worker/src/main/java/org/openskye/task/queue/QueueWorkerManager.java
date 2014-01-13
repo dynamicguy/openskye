@@ -14,6 +14,7 @@ import org.openskye.domain.Task;
 import org.openskye.domain.TaskStatus;
 import org.openskye.domain.dao.NodeDAO;
 import org.openskye.domain.dao.TaskDAO;
+import org.openskye.node.NodeManager;
 import org.openskye.task.step.TaskStep;
 
 import javax.persistence.EntityManager;
@@ -82,6 +83,9 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
             log.info("Got node " + node);
             emf.get().getTransaction().rollback();
         }
+
+        // Set which node we are on
+        NodeManager.setNode(currentNode);
 
 
         monitor = Executors.newSingleThreadScheduledExecutor();

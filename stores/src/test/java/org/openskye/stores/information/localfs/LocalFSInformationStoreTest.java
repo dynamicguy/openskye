@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
 import org.openskye.stores.StoreRegistry;
-import org.openskye.stores.archive.localfs.LocalFSArchiveStore;
+import org.openskye.stores.archive.host.HostArchiveStore;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.stores.inmemory.InMemoryArchiveStore;
 import org.openskye.task.TaskManager;
@@ -65,9 +65,9 @@ public class LocalFSInformationStoreTest {
         LocalFSInformationStore is = (LocalFSInformationStore) registry.build(getLocalFsDis()).get();
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("pj2");
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getLocalFsDis();
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);

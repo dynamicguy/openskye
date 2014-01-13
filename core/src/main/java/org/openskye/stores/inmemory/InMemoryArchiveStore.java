@@ -61,7 +61,7 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata) {
+    public Optional<SimpleObject> materialize(ObjectMetadata metadata) {
         if (objects.containsKey(metadata.getId())) {
             return Optional.of(objects.get(metadata.getId()));
         } else

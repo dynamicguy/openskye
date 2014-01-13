@@ -84,7 +84,7 @@ public interface ArchiveStore {
      * @param metadata the metadata for the object you want to get back
      * @return optionally the {@link SimpleObject}
      */
-    Optional<SimpleObject> getSimpleObject(ObjectMetadata metadata);
+    Optional<SimpleObject> materialize(ObjectMetadata metadata);
 
     /**
      * Returns a list of the {@link ObjectStreamFilter}s that have been

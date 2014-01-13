@@ -65,6 +65,7 @@ public class SkyeCli {
         commands.add(new ArchiveStoreInstancesCommand());
         commands.add(new InformationStoreDefinitionsCommand());
         commands.add(new MetadataTemplatesCommand());
+        commands.add(new NodesCommand());
         commands.add(new TasksCommand());
         commands.add(new TaskSchedulesCommand());
         commands.add(new ChannelsCommand());

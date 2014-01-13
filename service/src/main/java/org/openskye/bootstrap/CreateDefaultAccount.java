@@ -56,8 +56,9 @@ public class CreateDefaultAccount {
     public void init() {
         log.info("Checking for default admin account");
 
+        userDAO.getEntityManagerProvider().get().getTransaction().begin();
+
         if (!userDAO.findByEmail("admin@openskye.org").isPresent()) {
-            userDAO.getEntityManagerProvider().get().getTransaction().begin();
             log.info("Creating default admin account");
             Domain domain = new Domain();
             domain.setName("Skye");
@@ -92,13 +93,11 @@ public class CreateDefaultAccount {
             adminUser.setUserRoles(ImmutableList.of(uRole));
             userDAO.create(adminUser);
 
-            userDAO.getEntityManagerProvider().get().getTransaction().commit();
         }
 
         log.info("Checking for default readonly account");
 
         if (!userDAO.findByEmail("reader@openskye.org").isPresent()) {
-            userDAO.getEntityManagerProvider().get().getTransaction().begin();
             log.info("Creating default readonly account");
 
             Domain domain = domainDAO.findByName("Skye").get();
@@ -144,8 +143,10 @@ public class CreateDefaultAccount {
             readonlyUser.setUserRoles(ImmutableList.of(uRole));
             userDAO.create(readonlyUser);
 
-            userDAO.getEntityManagerProvider().get().getTransaction().commit();
         }
+
+        userDAO.getEntityManagerProvider().get().getTransaction().commit();
+
     }
 
     /**

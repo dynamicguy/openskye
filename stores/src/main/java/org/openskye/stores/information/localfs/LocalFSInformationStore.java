@@ -177,7 +177,7 @@ public class LocalFSInformationStore implements InformationStore {
             if (simpleObject instanceof UnstructuredObject) {
                 UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
                 try {
-                    FileUtils.copyInputStreamToFile(unstructuredObject.getContent(), targetFile);
+                    FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), targetFile);
                 } catch (Exception e) {
                     throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store",e);
                 }

@@ -1,5 +1,6 @@
 package org.openskye.stores.archive;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ArchiveStoreWriter;
 import org.openskye.core.ObjectStreamFilter;
@@ -18,8 +19,10 @@ import java.io.InputStream;
 @Slf4j
 public abstract class AbstractArchiveStoreWriter implements ArchiveStoreWriter {
     @Inject
+    @Getter
     private ObjectMetadataRepository omr;
     @Inject
+    @Getter
     private ObjectMetadataSearch oms;
 
     public void updateMetadata(SimpleObject simpleObject) {

@@ -1,7 +1,8 @@
-package org.openskye.stores.archive.localfs;
+package org.openskye.stores.archive.host;
 
 import com.google.common.base.Optional;
 import com.google.guiceberry.junit4.GuiceBerryRule;
+import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 import org.eobjects.metamodel.UpdateCallback;
 import org.eobjects.metamodel.UpdateScript;
@@ -13,32 +14,35 @@ import org.eobjects.metamodel.schema.Table;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openskye.core.ArchiveStore;
-import org.openskye.core.QueryContext;
-import org.openskye.core.QueryableStore;
-import org.openskye.core.StructuredObject;
+import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.*;
 import org.openskye.metadata.ObjectMetadataRepository;
+import org.openskye.node.NodeManager;
 import org.openskye.stores.StoreRegistry;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.stores.information.jdbc.JDBCStructuredInformationStore;
+import org.openskye.stores.inmemory.InMemoryUnstructuredObject;
 import org.openskye.task.TaskManager;
 import org.openskye.task.step.ArchiveTaskStep;
 import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
- * Test basic functionality of the {@link LocalFSArchiveStore}
+ * Test basic functionality of the {@link HostArchiveStore}
  */
-public class LocalFSArchiveStoreTest {
+public class HostArchiveStoreTest {
 
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(InMemoryTestModule.class);
@@ -50,9 +54,13 @@ public class LocalFSArchiveStoreTest {
     public ObjectMetadataRepository omr;
     @Inject
     public PersistService persistService;
+    @Inject
+    private Injector injector;
 
     @Before
     public void setUp() {
+
+
         try {
             persistService.start();
         } catch (IllegalStateException e) {
@@ -106,9 +114,9 @@ public class LocalFSArchiveStoreTest {
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setId(UUID.randomUUID().toString());
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test1");
         dis.setId(UUID.randomUUID().toString());
 
@@ -128,6 +136,7 @@ public class LocalFSArchiveStoreTest {
         channel.setProject(project);
         Node node = new Node();
         node.setId(UUID.randomUUID().toString());
+        NodeManager.setNode(node);
 
         Task discovery = new DiscoverTaskStep(channel, node).toTask();
         taskManager.submit(discovery);
@@ -147,10 +156,10 @@ public class LocalFSArchiveStoreTest {
 
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
         asi.setId(UUID.randomUUID().toString());
         Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
         InformationStoreDefinition dis = getDis("test2");
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
@@ -192,5 +201,49 @@ public class LocalFSArchiveStoreTest {
         assertThat("result has first row", iter.next() != null);
         assertThat("we have a row", iter.hasNext());
         assertThat("result has second row", iter.next() != null);
+    }
+
+    @Test
+    public void UnstructuredObjectTest() throws Exception {
+
+        // Construct a mock node
+        Node node = new Node();
+        node.setHostname("localhost");
+        node.setId(UUID.randomUUID().toString());
+        NodeManager.setNode(node);
+
+        // Construct a mock archive store
+        ArchiveStoreInstance asi = new ArchiveStoreInstance();
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
+        Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, temp.toAbsolutePath().toString());
+        ArchiveStoreDefinition das = new ArchiveStoreDefinition();
+        das.setId(UUID.randomUUID().toString());
+        das.setArchiveStoreInstance(asi);
+        HostArchiveStore store = new HostArchiveStore();
+        store.initialize(asi);
+        injector.injectMembers(store);
+
+        // Build an unstructured simple object residing in memory
+        Project project = new Project();
+        project.setName("UnstructuredObjectTest Project");
+        project.setId(UUID.randomUUID().toString());
+        String objectId = UUID.randomUUID().toString();
+        String path = "UnstructuredObjectTest/123.txt";
+        String contentIn = "This is a test of unstructured object archiving";
+        InMemoryUnstructuredObject objectIn = new InMemoryUnstructuredObject(project,objectId,path,contentIn);
+
+        // Put the object into the store
+        ArchiveStoreWriter writer = store.getWriter(null);
+        SimpleObject objectPut = writer.put(objectIn);
+        writer.close();
+
+        // Get the object back out of the store and read it
+        ObjectMetadata omPut = objectPut.getObjectMetadata();
+        HostArchiveUnstructuredObject objectOut = (HostArchiveUnstructuredObject) store.materialize(omPut).get();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(objectOut.getInputStream()) );
+        String contentOut = reader.readLine();
+
+        assertThat("Content retrieved matches content stored", contentOut, is(equalTo(contentIn)));
     }
 }

@@ -6,7 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.domain.*;
 import org.openskye.stores.StoreRegistry;
-import org.openskye.stores.archive.localfs.LocalFSArchiveStore;
+import org.openskye.stores.archive.host.HostArchiveStore;
 import org.openskye.stores.information.InMemoryTestModule;
 import org.openskye.task.TaskManager;
 import org.openskye.task.step.DiscoverTaskStep;
@@ -54,8 +54,8 @@ public class CifsInformationStoreTest {
         CifsInformationStore is = (CifsInformationStore) registry.build(getCifsDis()).get();
 
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
-        asi.setImplementation(LocalFSArchiveStore.IMPLEMENTATION);
-        asi.getProperties().put(LocalFSArchiveStore.LOCALFS_PATH, "/tmp/pj3");
+        asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
+        asi.getProperties().put(HostArchiveStore.LOCALFS_PATH, "/tmp/pj3");
         InformationStoreDefinition dis = getCifsDis();
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setArchiveStoreInstance(asi);

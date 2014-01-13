@@ -17,7 +17,7 @@ public class CifsUnstructuredObject extends UnstructuredObject {
     public SmbFile smbFile;
 
     @Override
-    public InputStream getContent() throws MissingObjectException {
+    public InputStream getInputStream() throws MissingObjectException {
 
         try {
             InputStream is;
