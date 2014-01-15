@@ -20,8 +20,8 @@ import java.util.UUID;
 /**
  * The representation of a user
  */
-@Entity
-@Table(name = "USER")
+@Entity(name = "SKYE_USER")
+@Table(name = "SKYE_USER")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)

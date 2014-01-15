@@ -34,6 +34,7 @@ public class AuditLog implements Identifiable {
      * The user who caused the audited event to occur.
      */
     @ManyToOne
+    @JoinColumn(name = "SKYE_USER_ID")
     private User user;
     /**
      * The the class name of the Skye component operated on in this event.
