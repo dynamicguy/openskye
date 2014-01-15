@@ -8,6 +8,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class ObjectSet_ {
     public static volatile SingularAttribute<ObjectSet, String> id;
     public static volatile SingularAttribute<ObjectSet, String> name;
+    public static volatile SingularAttribute<ObjectSet, ObjectSetType> type;
+    public static volatile SingularAttribute<ObjectSet, String> query;
     public static volatile SingularAttribute<ObjectSet, Boolean> onHold;
     public static volatile SetAttribute<ObjectSet, ObjectMetadata> objectMetadataSet;
 }
