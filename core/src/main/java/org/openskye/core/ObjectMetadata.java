@@ -31,7 +31,7 @@ public class ObjectMetadata {
     @Column(unique = true)
     @NotNull
     private String id = UUID.randomUUID().toString();
-    @Max(1024)
+    @Size(min = 1, max = 1024)
     @Column(length = 1024)
     private String path;
     private String implementation;
