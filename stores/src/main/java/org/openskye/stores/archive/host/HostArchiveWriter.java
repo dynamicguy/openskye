@@ -54,7 +54,9 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
             // We need to link this ACB to the Node we are currently running on
             acb.setNodes(new ArrayList());
-            acb.getNodes().add(NodeManager.getNode());
+            if ( NodeManager.hasNode() ) {
+                acb.getNodes().add(NodeManager.getNode());
+            }
             acb.setObjectMetadataReferences(new ArrayList());
             acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
             acb.setArchiveStoreInstance(localFilesystemArchiveStore.getArchiveStoreInstance());

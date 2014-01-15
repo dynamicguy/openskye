@@ -66,6 +66,10 @@ server:
     - type: http
       port: 8082
 
+search:
+  host: "localhost"
+  port: 9300
+
 logging:
   level: INFO
   loggers:

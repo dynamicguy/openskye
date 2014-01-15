@@ -18,6 +18,10 @@ public class SkyeConfiguration extends Configuration {
     @Valid
     @JsonProperty
     private ServiceConfiguration services = new ServiceConfiguration();
+    @Valid
+    @NotNull
+    @JsonProperty
+    private SearchConfiguration search = new SearchConfiguration();
 
     public DatabaseConfiguration getDatabaseConfiguration() {
         return database;
@@ -25,6 +29,10 @@ public class SkyeConfiguration extends Configuration {
 
     public ServiceConfiguration getServices() {
         return services;
+    }
+
+    public SearchConfiguration getSearchConfiguration() {
+        return search;
     }
 
 }

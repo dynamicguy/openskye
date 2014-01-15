@@ -31,7 +31,7 @@ database:
 
   # http://javatech.org/2007/11/c3p0-connectionpool-configuration-rules-of-thumb/
   poolConnectionMaxIdleTime: 3600
-  unreturnedConnectionTimeout: 60
+  unreturnedConnectionTimeout: 0
   maxIdleTimeExcessConnections: 300
 
   # hibernate.c3p0.preferredTestQuery
