@@ -1,0 +1,92 @@
+database:
+  # the name of your JDBC driver
+  driverClass: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  # the username
+  user: openskye
+  # the password
+  password: infobelt12
+
+  # the JDBC URL
+  url: "jdbc:sqlserver://localhost:51423"
+
+  # Hibernate dialect
+  dialect: "org.hibernate.dialect.SQLServerDialect"
+
+  # C3PO connection pool settings below
+  # hibernate.connection.provider_class
+  connectionProviderClass: org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider
+
+  # hibernate.c3p0.max_size
+  poolMaxSize: 10
+
+  # hibernate.c3p0.min_size
+  poolMinSize: 1
+
+  # hibernate.c3p0.timeout
+  poolTimeOut: 0
+
+  # hibernate.c3p0.idle_test_period in seconds
+  poolIdleTestPeriod: 60
+
+  # hibernate.c3p0.preferredTestQuery
+  poolPreferredTestQuery: SELECT 1
+
+  # hibernate.c3p0.testConnectionOnCheckout
+  poolTestConnectionOnCheckout: true
+
+  # poolConnectionMaxIdleTime
+  poolConnectionMaxIdleTime: 3600
+
+  # maxIdleTimeExcessConnections
+  maxIdleTimeExcessConnections: 900
+
+  # unreturnedConnectionTimeout
+  unreturnedConnectionTimeout: 5
+
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch
+  taskManager: org.openskye.task.queue.QueueTaskManager
+  taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
+
+server:
+#  softNofileLimit: 1000
+#  hardNofileLimit: 1000
+  applicationConnectors:
+    - type: http
+      port: 5000
+#    - type: https
+#      port: 8443
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
+# this requires the npn-boot library on the JVM's boot classpath
+#    - type: spdy
+#      port: 8445
+#      keyStore: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8081
+#    - type: https
+#      port: 8444
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    org.openskye: DEBUG
+
+  appenders:
+    - type: console
