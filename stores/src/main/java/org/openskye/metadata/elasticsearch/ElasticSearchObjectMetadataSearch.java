@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
-
 /**
  * An implementation of OMS that uses ElasticSearch
  */
@@ -33,7 +31,8 @@ import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
 public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
     private static final SearchType SEARCH_TYPE = SearchType.QUERY_THEN_FETCH;
-    private Client client = nodeBuilder().local(true).node().client();
+    @Inject
+    private Client client;
     @Inject
     private SkyeSession session;
     @Inject

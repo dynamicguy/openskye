@@ -16,6 +16,8 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 import org.openskye.task.TaskScheduler;
 
+import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
+
 /**
  * The Guice module for Skye
  */
@@ -58,16 +60,17 @@ public class SkyeModule extends AbstractModule {
 
     @Provides
     @Singleton
-    protected Client provideClient()
-    {
-        Client client = new TransportClient()
-                            .addTransportAddress(
-                                    new InetSocketTransportAddress(
-                                            "localhost",
-                                            9300
-                                    )
-                            );
-
-        return client;
+    protected Client provideClient() {
+        if (skyeConfiguration.getSearchConfiguration().getHost() == null) {
+            return nodeBuilder().local(false).node().client();
+        } else {
+            return new TransportClient()
+                    .addTransportAddress(
+                            new InetSocketTransportAddress(
+                                    skyeConfiguration.getSearchConfiguration().getHost(),
+                                    skyeConfiguration.getSearchConfiguration().getPort()
+                            )
+                    );
+        }
     }
 }
