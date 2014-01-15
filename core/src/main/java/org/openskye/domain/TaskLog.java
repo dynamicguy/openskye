@@ -72,7 +72,11 @@ public class TaskLog implements Identifiable {
         } else {
             try {
                 setExceptionJson(MAPPER.writeValueAsString(getException()));
-            } catch (IOException e) {
+            }
+            catch (com.fasterxml.jackson.databind.JsonMappingException e) {
+                setExceptionJson(e.getMessage());
+            }
+            catch (IOException e) {
                 throw new SkyeException("Unable to serialize exception in task log", e);
             }
         }
