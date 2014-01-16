@@ -114,6 +114,10 @@ public class CreateDefaultAccount {
             list.setPermission("*:list");
             permissionDAO.create(list);
 
+            Permission searchPermission = new Permission();
+            searchPermission.setPermission("objects:search");
+            permissionDAO.create(searchPermission);
+
             Role readonlyRole = new Role();
             readonlyRole.setName("readonly");
 
@@ -125,7 +129,11 @@ public class CreateDefaultAccount {
             rp2.setRole(readonlyRole);
             rp2.setPermission(list);
 
-            readonlyRole.setRolePermissions(ImmutableList.of(rp, rp2));
+            RolePermission accountRP = new RolePermission();
+            accountRP.setRole(readonlyRole);
+            accountRP.setPermission(searchPermission);
+
+            readonlyRole.setRolePermissions(ImmutableList.of(rp, rp2, accountRP));
             roleDAO.create(readonlyRole);
 
             User readonlyUser = new User();
