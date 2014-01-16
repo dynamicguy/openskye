@@ -47,7 +47,10 @@ public class UserResource extends AbstractUpdatableDomainResource<User> {
     @Transactional
     @Timed
     public User update(@PathParam("id") String id, UpdateUser userUpdate) {
-        authorize("update");
+        // Allow the user to update their own account, otherwise check permissions
+        if (!getCurrentUser().getId().equals(id)) {
+            authorize("update");
+        }
 
         // We need to merge the user that we have in the system
         // with the one that is coming in to handle password changes
