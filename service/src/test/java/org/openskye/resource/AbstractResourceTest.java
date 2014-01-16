@@ -47,6 +47,7 @@ public abstract class AbstractResourceTest<T extends Identifiable> {
         domain.setName("Domain");
 
         User user = new User();
+        user.setId("59ae3dfe-15ce-4e0d-b0fd-f1582fe699a9");
         user.setDomain(domain);
 
         when(getDAO().list()).thenReturn(getExpectedResult());

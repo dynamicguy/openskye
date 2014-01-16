@@ -2,9 +2,7 @@ package org.openskye.resource;
 
 import com.google.common.base.Optional;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
-import org.junit.Test;
 import org.openskye.domain.User;
 import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.PaginatedResult;
@@ -12,10 +10,6 @@ import org.openskye.domain.dao.UserDAO;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
 
-import javax.ws.rs.core.MediaType;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

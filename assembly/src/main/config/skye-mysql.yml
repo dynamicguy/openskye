@@ -24,10 +24,10 @@ database:
   poolMinSize: 1
   
   # hibernate.c3p0.timeout
-  poolTimeOut: 0
+  poolTimeOut: 25200
   
   # hibernate.c3p0.idle_test_period in seconds
-  poolIdleTestPeriod: 60
+  poolIdleTestPeriod: 14400
   
   # hibernate.c3p0.preferredTestQuery
   poolPreferredTestQuery: SELECT 1
@@ -42,7 +42,7 @@ database:
   maxIdleTimeExcessConnections: 900
   
   # unreturnedConnectionTimeout
-  unreturnedConnectionTimeout: 5
+  unreturnedConnectionTimeout: 0
 
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
