@@ -1,5 +1,6 @@
 package org.openskye.cli;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import lombok.Setter;
  * useful in multi-command scripts, where the exit status of a call to SkyeCli can be used to make decisions
  * based on the status of Skye, such as whether a previously submitted Task has completed yet.
  */
+@Data
 public class CliExitCodeException extends RuntimeException {
     @Getter
     @Setter
