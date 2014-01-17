@@ -23,7 +23,7 @@ public class NodesCommand extends AbstractCrudCommand {
     private final String commandName = "nodes";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("hostName")).build();
+        return FieldBuilder.start().add(new TextField("hostname")).build();
     }
 
     @Override
