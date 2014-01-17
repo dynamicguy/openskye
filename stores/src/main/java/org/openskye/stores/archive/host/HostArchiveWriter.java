@@ -33,10 +33,10 @@ import java.util.List;
 @Slf4j
 public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     private final Task task;
-    private final HostArchiveStore localFilesystemArchiveStore;
+    private final HostArchiveStore hostArchiveStore;
 
     public HostArchiveWriter(Task task, HostArchiveStore localFilesystemArchiveStore) {
-        this.localFilesystemArchiveStore = localFilesystemArchiveStore;
+        this.hostArchiveStore = localFilesystemArchiveStore;
         this.task = task;
     }
 
@@ -46,7 +46,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
         if (isObjectArchived(simpleObject)) {
             //This archive store has this object already
             List<ArchiveContentBlock> objectACBs = simpleObject.getObjectMetadata().getArchiveContentBlocks();
-            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance()).get());
+            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).get());
             simpleObject.getObjectMetadata().setArchiveContentBlocks(objectACBs);
         } else {
 
@@ -59,7 +59,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             }
             acb.setObjectMetadataReferences(new ArrayList());
             acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
-            acb.setArchiveStoreInstance(localFilesystemArchiveStore.getArchiveStoreInstance());
+            acb.setArchiveStoreInstance(hostArchiveStore.getArchiveStoreInstance());
             acb.setChecksum(simpleObject.getObjectMetadata().getChecksum());
             acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
 
@@ -72,7 +72,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
-                final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
+                final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
                 final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
                 if (HostArchiveWriter.log.isDebugEnabled())
                     HostArchiveWriter.log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
@@ -109,12 +109,12 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             } else if (simpleObject instanceof UnstructuredObject) {
                 // we can just store this as a file
                 UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
-                final File tempStoragePath = localFilesystemArchiveStore.getTempACBPath(acb, true);
+                final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
 
                 try {
                     FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
                 } catch (IOException e) {
-                    throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + localFilesystemArchiveStore.getFilePath(), e);
+                    throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + hostArchiveStore.getFilePath(), e);
                 } catch (MissingObjectException e) {
                     throw new SkyeException("Simple object missing from information store?", e);
                 }
@@ -123,7 +123,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 postProcess(acb, tempStoragePath, simpleObject);
 
             } else {
-                throw new SkyeException("Archive store " + localFilesystemArchiveStore.getName() + " does not support simple object " + simpleObject);
+                throw new SkyeException("Archive store " + hostArchiveStore.getName() + " does not support simple object " + simpleObject);
             }
         }
         return simpleObject;
@@ -132,8 +132,8 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     private void postProcess(ArchiveContentBlock acb, File tempStoragePath, SimpleObject simpleObject) {
         try {
             simpleObject.getObjectMetadata().setOriginalSize(tempStoragePath.length());
-            File targetPath = localFilesystemArchiveStore.getAcbPath(acb, true);
-            FileUtils.copyInputStreamToFile(processFilters(localFilesystemArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
+            File targetPath = hostArchiveStore.getAcbPath(acb, true);
+            FileUtils.copyInputStreamToFile(processFilters(hostArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
 
             FileInputStream fis = new FileInputStream(targetPath);
             simpleObject.getObjectMetadata().setChecksum(DigestUtils.md5Hex(fis));
@@ -155,6 +155,6 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public boolean isObjectArchived(SimpleObject simpleObject) {
-        return simpleObject.getObjectMetadata().getArchiveContentBlock(localFilesystemArchiveStore.getArchiveStoreInstance()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
+        return simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
     }
 }
