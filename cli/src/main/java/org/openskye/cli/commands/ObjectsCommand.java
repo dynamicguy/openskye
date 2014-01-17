@@ -44,7 +44,7 @@ public class ObjectsCommand extends AbstractCrudCommand {
 
     @Override
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new NumberField("archiveSize")).add(new NumberField("checksum")).add(new BooleanField("container")).add(new TextField("created")).add(new TextField("path")).add(new TextField("implementation")).add(new TextField("informationStoreId")).add(new TextField("ingested")).add(new TextField("lastModified")).add(new TextField("mimeType")).add(new ReferenceField(Project.class)).add(new PropertiesField("metadata")).build();
+        return FieldBuilder.start().add(new NumberField("archiveSize")).add(new NumberField("checksum")).add(new BooleanField("container")).add(new TextField("path")).add(new TextField("implementation")).add(new TextField("informationStoreId")).add(new TextField("mimeType")).add(new ReferenceField(Project.class)).add(new PropertiesField("metadata")).build();
     }
 
     @Override
