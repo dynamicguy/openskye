@@ -5,7 +5,10 @@ import com.google.inject.Provider;
 import io.dropwizard.util.Generics;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.SkyeSession;
-import org.openskye.domain.*;
+import org.openskye.domain.AuditEvent;
+import org.openskye.domain.AuditLog;
+import org.openskye.domain.Identifiable;
+import org.openskye.domain.User;
 import org.openskye.query.RequestQueryContext;
 import org.openskye.query.RequestQueryContextHolder;
 import org.openskye.query.SortDirection;
@@ -17,7 +20,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.validation.*;
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -53,6 +55,12 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         Root<T> selectEntity = criteria.from(entityClass);
 
         criteria.select(selectEntity);
+        TypedQuery<T> query = getPaginatedQuery(criteria, selectEntity);
+
+        return new PaginatedResult<>(query.getResultList());
+    }
+
+    protected TypedQuery<T> getPaginatedQuery(CriteriaQuery<T> criteria, Root<T> selectEntity) {
         RequestQueryContext requestContext = RequestQueryContextHolder.getContext();
 
         if (requestContext != null && requestContext.getSort() != null) {
@@ -81,8 +89,7 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         // Apply the pagination
         query.setFirstResult(requestContext.getOffset());
         query.setMaxResults(requestContext.getPageSize());
-
-        return new PaginatedResult<>(query.getResultList());
+        return query;
     }
 
     public boolean isAudited() {
