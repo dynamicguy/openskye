@@ -106,6 +106,9 @@ public class SkyeCli {
                     }
                 }
             }
+        } catch (CliExitCodeException e) {
+            consoleLogger.message(e.getMessage());
+            System.exit(e.getExitCode());
         } catch (MissingCommandException e) {
             jc.usage();
         } catch (ClientHandlerException e) {
