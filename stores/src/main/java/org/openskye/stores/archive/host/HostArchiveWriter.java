@@ -35,8 +35,8 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     private final Task task;
     private final HostArchiveStore hostArchiveStore;
 
-    public HostArchiveWriter(Task task, HostArchiveStore localFilesystemArchiveStore) {
-        this.hostArchiveStore = localFilesystemArchiveStore;
+    public HostArchiveWriter(Task task, HostArchiveStore hostArchiveStore) {
+        this.hostArchiveStore = hostArchiveStore;
         this.task = task;
     }
 
