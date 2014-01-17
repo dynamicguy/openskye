@@ -19,7 +19,7 @@ public class TaskLogDAO extends AbstractPaginatingDAO<TaskLog> {
         Root<TaskLog> taskLogRoot = criteria.from(TaskLog.class);
         criteria.select(taskLogRoot);
         criteria.where(builder.equal(taskLogRoot.get("taskId"), task.getId()));
-        List<TaskLog> resultList = currentEntityManager().createQuery(criteria).getResultList();
+        List<TaskLog> resultList = getPaginatedQuery(criteria, taskLogRoot).getResultList();
         return new PaginatedResult<>(resultList);
     }
 }

@@ -3,6 +3,7 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
@@ -54,11 +55,16 @@ public class TaskLog implements Identifiable {
     protected void deserialize() {
         if (getExceptionJson() == null) {
             setException(null);
-        } else {
+        }
+        else {
             try {
                 Exception exception = MAPPER.readValue(getExceptionJson(), Exception.class);
                 setException(exception);
-            } catch (ClassCastException | IOException e) {
+            }
+            catch (JsonParseException e) {
+                setException(new Exception(getExceptionJson()));
+            }
+            catch (ClassCastException | IOException e) {
                 throw new SkyeException("Unable to deserialize exception in task log", e);
             }
         }
