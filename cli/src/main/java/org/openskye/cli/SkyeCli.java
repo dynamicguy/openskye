@@ -74,6 +74,7 @@ public class SkyeCli {
         commands.add(new ProjectUsersCommand());
         commands.add(new RetentionPoliciesCommand());
         commands.add(new HoldsCommand());
+        commands.add(new LogoutCommand());
         commands.add(new SkyeCommand());
 
         SkyeCliSettings skyeCliSettings = SkyeCliSettings.load();

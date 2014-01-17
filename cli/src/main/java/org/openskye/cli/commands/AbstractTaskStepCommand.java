@@ -110,7 +110,6 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void discover() {
         TaskStep step = new DiscoverTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
         selectReferenceField(new ReferenceField(Channel.class), step);
         create(step);
     }
@@ -118,7 +117,6 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void archive() {
         TaskStep step = new ArchiveTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
         selectReferenceField(new ReferenceField(Channel.class), step);
         create(step);
     }
@@ -126,7 +124,6 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void cull() {
         TaskStep step = new CullTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
         selectReferenceField(new ReferenceField(Project.class), step);
         create(step);
     }

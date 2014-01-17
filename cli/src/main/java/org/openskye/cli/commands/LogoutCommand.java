@@ -21,5 +21,6 @@ public class LogoutCommand extends ExecutableCommand {
         settings.mustHaveApiKey();
         settings.setApiKey(null);
         settings.save();
+        output.success("You have been logged out.");
     }
 }
