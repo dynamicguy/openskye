@@ -74,6 +74,7 @@ public class SkyeCli {
         commands.add(new ProjectUsersCommand());
         commands.add(new RetentionPoliciesCommand());
         commands.add(new HoldsCommand());
+        commands.add(new LogoutCommand());
         commands.add(new SkyeCommand());
 
         SkyeCliSettings skyeCliSettings = SkyeCliSettings.load();
@@ -105,6 +106,9 @@ public class SkyeCli {
                     }
                 }
             }
+        } catch (CliExitCodeException e) {
+            consoleLogger.message(e.getMessage());
+            System.exit(e.getExitCode());
         } catch (MissingCommandException e) {
             jc.usage();
         } catch (ClientHandlerException e) {

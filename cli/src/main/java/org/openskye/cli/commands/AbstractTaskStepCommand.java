@@ -159,7 +159,6 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new ExtractTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         selectReferenceField(new ReferenceField(Node.class), step);
-        //TODO extract should optionally take a set ID parameter instead of a channel
         if (dynamicParams.get("objectSetId") != null) {
             ((ExtractTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
         } else {
