@@ -17,7 +17,9 @@ public class SkyeExceptionMapper implements
         ExceptionMessage message = new ExceptionMessage();
         message.setErrorCode(5000);
         message.setMessage(ex.getMessage());
-        message.setDetail(ex.getCause().getMessage());
+        if ( ex.getCause() != null ) {
+            message.setDetail(ex.getCause().getMessage());
+        }
         return Response.status(500).
                 entity(message).
                 type("application/json").
