@@ -3,12 +3,12 @@ database:
   driverClass: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   # the username
-  user: openskye
+  user: sa
   # the password
-  password: infobelt12
+  password: Infobelt12!
 
   # the JDBC URL
-  url: "jdbc:sqlserver://localhost:51423"
+  url: "jdbc:sqlserver://database.infobelt.com:49431"
 
   # Hibernate dialect
   dialect: "org.hibernate.dialect.SQLServerDialect"
