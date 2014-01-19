@@ -10,6 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
+import org.openskye.core.SearchPage;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.NotFoundException;
 import org.openskye.metadata.ObjectMetadataRepository;
@@ -359,12 +360,14 @@ public class ObjectSetResource {
 
         checkPermission(OPERATION_SEARCH);
 
+        SearchPage searchPage = new SearchPage(1, 1000);
+
         Optional<ObjectSet> objectSet = repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        Iterable<ObjectMetadata> metadataList = search.search(query);
+        Iterable<ObjectMetadata> metadataList = search.search(query, searchPage);
 
         for (ObjectMetadata metadata : metadataList)
             repository.addObjectToSet(objectSet.get(), metadata);

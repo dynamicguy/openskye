@@ -39,7 +39,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     private ObjectMapper objectMapper;
 
     @Override
-    public Iterable<ObjectMetadata> search(String query) {
+    public Iterable<ObjectMetadata> search(String query, SearchPage searchPage) {
         List<ObjectMetadata> listMetadata = new ArrayList<>();
 
         try {
@@ -47,6 +47,9 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
             SearchResponse response = this.client.prepareSearch()
                     .setIndices(session.getDomain().getId())
                     .setSearchType(SEARCH_TYPE)
+                    .setQuery(new QueryStringQueryBuilder(query))
+                    .setFrom(searchPage.getPageStart())
+                    .setSize(searchPage.getPageEnd())
                     .setQuery(new QueryStringQueryBuilder(smartEscapeQuery(query)))
                     .execute()
                     .actionGet();
@@ -81,6 +84,9 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                     .setIndices(session.getDomain().getId())
                     .setTypes(project.getId())
                     .setSearchType(SEARCH_TYPE)
+                    .setQuery(new QueryStringQueryBuilder(query))
+                    .setFrom(searchPage.getPageStart())
+                    .setSize(searchPage.getPageSize())
                     .setQuery(new QueryStringQueryBuilder(smartEscapeQuery(query)))
                     .execute()
                     .actionGet();

@@ -1,6 +1,7 @@
 package org.openskye.metadata.impl;
 
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
 import org.openskye.domain.Project;
 import org.openskye.metadata.ObjectMetadataSearch;
 
@@ -15,24 +16,53 @@ public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
     private Set<ObjectMetadata> objects = new HashSet<>();
 
     @Override
-    public Iterable<ObjectMetadata> search(String query) {
+
+    public Iterable<ObjectMetadata> search(String query, SearchPage searchPage)
+    {
         Set<ObjectMetadata> hits = new HashSet<>();
         String pattern = query.replaceAll("\\*",".*");
-        for ( ObjectMetadata om : objects ) {
-            if ( om.getPath().matches(pattern) ) {
-                hits.add(om);
+        int currentResult = 0;
+
+        for ( ObjectMetadata om : objects )
+        {
+            if ( om.getPath().matches(pattern) )
+            {
+                if(currentResult >= searchPage.getPageStart())
+                {
+                    hits.add(om);
+
+                    currentResult++;
+
+                    if(currentResult >= searchPage.getPageEnd())
+                        return hits;
+                }
+
             }
         }
+
         return hits;
     }
 
     @Override
-    public Iterable<ObjectMetadata> search(Project project, String query) {
+    public Iterable<ObjectMetadata> search(Project project, String query, SearchPage searchPage)
+    {
         Set<ObjectMetadata> hits = new HashSet<>();
         String pattern = query.replaceAll("\\*",".*");
-        for ( ObjectMetadata om : objects ) {
-            if ( om.getPath().matches(pattern) && om.getProject().getId().equals(project.getId())) {
-                hits.add(om);
+        int currentResult = 0;
+
+        for ( ObjectMetadata om : objects )
+        {
+            if ( om.getPath().matches(pattern) && om.getProject().getId().equals(project.getId()))
+            {
+                if(currentResult >= searchPage.getPageStart())
+                {
+                    hits.add(om);
+
+                    currentResult++;
+
+                    if(currentResult >= searchPage.getPageEnd())
+                        return hits;
+                }
             }
         }
         return hits;

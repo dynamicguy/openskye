@@ -12,6 +12,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
 import org.openskye.core.SimpleObject;
 import org.openskye.domain.Domain;
 import org.openskye.domain.InformationStoreDefinition;
@@ -251,7 +252,10 @@ public class ObjectMetadataResource {
                                                   @QueryParam("query")
                                                   String query) {
         checkPermission("search","*");
-        List<ObjectMetadata> results = Lists.newArrayList(search.search(query));
+
+        SearchPage searchPage = new SearchPage(1, 1000);
+
+        List<ObjectMetadata> results = Lists.newArrayList(search.search(query, searchPage));
         for(ObjectMetadata om : results){
             if(!SecurityUtils.getSubject().isPermitted("objects:search:"+om.getProject().getId())){
                 results.remove(om);
@@ -286,12 +290,14 @@ public class ObjectMetadataResource {
                                                   String query) {
         checkPermission("search", projectId);
 
+        SearchPage searchPage = new SearchPage(1, 1000);
+
         Optional<Project> project = projects.get(projectId);
 
         if (!project.isPresent())
             throw new NotFoundException();
 
-        return new PaginatedResult<>(search.search(project.get(), query));
+        return new PaginatedResult<>(search.search(project.get(), query, searchPage));
     }
 
     private void checkPermission(String operation, String projectId) {
