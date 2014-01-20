@@ -4,6 +4,8 @@ import com.beust.jcommander.Parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.openskye.cli.commands.fields.Field;
 import org.openskye.cli.commands.fields.FieldBuilder;
 import org.openskye.cli.commands.fields.ReferenceField;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Traght on 1/20/14.
+ * Display information for task log entries
  */
 @Data
 @Slf4j
@@ -97,7 +99,6 @@ public class TaskLogsCommand extends ExecutableCommand {
                 output.raw("\nTask Log Id: "+taskLog.getId());
                 output.raw("\nTask Id: "+taskLog.getTaskId());
                 output.raw("\nStatus: "+taskLog.getStatus());
-                output.raw("\nDate/Time: "+taskLog.getLogTime());
                 output.raw("\nMessage: "+taskLog.getMessage());
                 printException(taskLog.getException());
                 saveAlias(logId);
