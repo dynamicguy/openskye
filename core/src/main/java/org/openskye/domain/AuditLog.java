@@ -2,6 +2,8 @@ package org.openskye.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -58,6 +60,7 @@ public class AuditLog implements Identifiable {
      * The date this entry in the audit log was created.
      */
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt = LocalDateTime.now();
     /**

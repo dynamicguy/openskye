@@ -45,7 +45,7 @@ public class TasksCommand extends AbstractTaskStepCommand {
     }
 
     protected void checkStatus(String taskId, Iterable<TaskStatus> expectedStatuses ) {
-        Task task = getResource("tasks/" + taskId).get(Task.class);
+        Task task = getResource("tasks/" + resolveAlias(taskId)).get(Task.class);
         for ( TaskStatus status : expectedStatuses ) {
             if ( task.getStatus() == status ) {
                 output.success("\nTask " + taskId + " is " + task.getStatus());

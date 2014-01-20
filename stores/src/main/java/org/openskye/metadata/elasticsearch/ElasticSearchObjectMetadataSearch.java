@@ -47,7 +47,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
             SearchResponse response = this.client.prepareSearch()
                     .setIndices(session.getDomain().getId())
                     .setSearchType(SEARCH_TYPE)
-                    .setQuery(new QueryStringQueryBuilder(query))
+                    .setQuery(new QueryStringQueryBuilder(smartEscapeQuery(query)))
                     .execute()
                     .actionGet();
             SearchHits searchHits = response.getHits();
@@ -81,7 +81,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                     .setIndices(session.getDomain().getId())
                     .setTypes(project.getId())
                     .setSearchType(SEARCH_TYPE)
-                    .setQuery(new QueryStringQueryBuilder(query))
+                    .setQuery(new QueryStringQueryBuilder(smartEscapeQuery(query)))
                     .execute()
                     .actionGet();
 
@@ -162,4 +162,30 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
         return indexSet.toArray(new String[0]);
     }
+
+    /**
+     * Escape the string from bad chars for the search
+     *
+     * @param str the String that should be escaped
+     * @return an escaped String
+     */
+    @SuppressWarnings({"ConstantConditions"})
+    private static String smartEscapeQuery(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '\\' || c == '+' || c == '-' || c == '!' || c ==
+                    '(' || c == ')' || c == ':'
+                    || c == '^' || c == '[' || c == ']' || c == '\"'
+                    || c == '{' || c == '}' || c == '~' || c == '/'
+                    || c == '?' || c == '|' || c == '&' || c == ';'
+                    || (!Character.isSpaceChar(c) &&
+                    Character.isWhitespace(c))) {
+                sb.append('\\');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
 }

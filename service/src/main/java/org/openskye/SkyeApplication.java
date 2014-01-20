@@ -1,5 +1,6 @@
 package org.openskye;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Function;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -9,7 +10,6 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.guice.web.GuiceShiroFilter;
 import org.openskye.config.SkyeConfiguration;
 import org.openskye.exceptions.ConstraintViolationExceptionMapper;
 import org.openskye.guice.*;
@@ -65,6 +65,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
     public void initialize(Bootstrap<SkyeConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
         bootstrap.addBundle(new SwaggerBundle());
+        bootstrap.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         this.bootstrap = bootstrap;
     }

@@ -47,10 +47,10 @@ public class RequestQueryContextFilter implements Filter {
                 }
             }
 
-            if (httpRequest.getParameter("_sort") != null)
+            if (httpRequest.getParameter("_sort") != null) {
                 log.debug("Setting sort to " + httpRequest.getParameter("_sort"));
-
-            context.setSort(httpRequest.getParameter("_sort"));
+                context.setSort(httpRequest.getParameter("_sort"));
+            }
 
             if ("desc".equals(httpRequest.getParameter("_sortDir"))) {
                 log.debug("Setting sort direction to desc");

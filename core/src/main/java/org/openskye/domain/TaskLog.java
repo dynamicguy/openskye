@@ -3,10 +3,8 @@ package org.openskye.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -61,7 +59,7 @@ public class TaskLog implements Identifiable {
                 Exception exception = MAPPER.readValue(getExceptionJson(), Exception.class);
                 setException(exception);
             }
-            catch (JsonParseException e) {
+            catch (JsonProcessingException e) {
                 setException(new Exception(getExceptionJson()));
             }
             catch (ClassCastException | IOException e) {
@@ -79,11 +77,8 @@ public class TaskLog implements Identifiable {
             try {
                 setExceptionJson(MAPPER.writeValueAsString(getException()));
             }
-            catch (com.fasterxml.jackson.databind.JsonMappingException e) {
+            catch (JsonProcessingException e) {
                 setExceptionJson(e.getMessage());
-            }
-            catch (IOException e) {
-                throw new SkyeException("Unable to serialize exception in task log", e);
             }
         }
     }

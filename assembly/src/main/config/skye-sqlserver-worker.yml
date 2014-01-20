@@ -50,43 +50,34 @@ services:
   taskManager: org.openskye.task.queue.QueueTaskManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
+services:
+  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
+  oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch
+  taskManager: org.openskye.task.queue.QueueWorkerManager
+  taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
+
+worker:
+  # TODO you will need to specify a nodeID once you have created one
+  # nodeId:
+  threadCount: 5
+  pollPeriodSec: 30
+
 server:
-#  softNofileLimit: 1000
-#  hardNofileLimit: 1000
   applicationConnectors:
     - type: http
-      port: 5000
-#    - type: https
-#      port: 8443
-#      keyStorePath: example.keystore
-#      keyStorePassword: example
-#      validateCerts: false
-# this requires the npn-boot library on the JVM's boot classpath
-#    - type: spdy
-#      port: 8445
-#      keyStore: example.keystore
-#      keyStorePassword: example
-#      validateCerts: false
+      port: 5001
   adminConnectors:
     - type: http
-      port: 8081
-#    - type: https
-#      port: 8444
-#      keyStorePath: example.keystore
-#      keyStorePassword: example
-#      validateCerts: false
+      port: 8082
 
-# Logging settings.
+search:
+  host: "localhost"
+  port: 9300
+
 logging:
-
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
-
-  # Logger-specific levels.
   loggers:
-
-    # Sets the level for 'com.example.app' to DEBUG.
     org.openskye: DEBUG
-
   appenders:
     - type: console
+
