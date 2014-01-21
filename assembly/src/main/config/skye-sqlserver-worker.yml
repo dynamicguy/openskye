@@ -3,9 +3,9 @@ database:
   driverClass: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   # the username
-  user: sa
+  user: openskye
   # the password
-  password: Infobelt12!
+  password: infobelt12
 
   # the JDBC URL
   url: "jdbc:sqlserver://database.infobelt.com:49431"
@@ -50,9 +50,9 @@ services:
   taskManager: org.openskye.task.queue.QueueTaskManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
-#search:
-#  host: atpblade05.infobelt.com
-#  port: 9300
+search:
+   host: localhost
+  port: 9300
 
 worker:
   # TODO you will need to specify a nodeID once you have created one
