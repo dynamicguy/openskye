@@ -207,7 +207,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         if (isNew) {
             mkParentDir(simpleObjectDir);
         } else if (!simpleObjectDir.exists()) {
-            throw new SkyeException("Unable to find simple object for acb " + acb);
+            throw new SkyeException("ACB Directory not found: " + fileName);
         }
         return simpleObjectDir;
     }
