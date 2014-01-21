@@ -78,44 +78,39 @@ public class ExtractTaskStep extends TaskStep {
 
     @Override
     public TaskStatus call() throws Exception {
-        Optional<ObjectSet> objectSet;
-        if (objectSetId != null) {
-            objectSet = omr.getObjectSet(objectSetId);
-        } else {
-            objectSet = Optional.absent();
-        }
 
         Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
+        if (! targetInformationStore.isPresent()) {
+            throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
+        }
 
-        if (targetInformationStore.isPresent()) {
-            Iterable<ObjectMetadata> objectMetadataIterable;
-            if (objectSet.isPresent()) {
-                objectMetadataIterable = omr.getObjects(objectSet.get());
-            } else {
-                objectMetadataIterable = omr.getObjects(channel.getInformationStoreDefinition());
-            }
-            for (ObjectMetadata om : objectMetadataIterable) {
-                if (om.getArchiveContentBlocks().size() > 0) {
-                    // Lets just get the first ACB
-                    ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
-                    if (archiveStore.isPresent()) {
-                        Optional<SimpleObject> simpleObject = archiveStore.get().materialize(om);
-                        if (simpleObject.isPresent()) {
-                            targetInformationStore.get().put(simpleObject.get());
-                        }
-                    } else {
-                        throw new SkyeException("Unable to build the archive store from definition " + acb.getArchiveStoreInstance());
+        Iterable<ObjectMetadata> objectMetadataIterable;
+        if (objectSetId != null) {
+            Optional<ObjectSet> objectSet = omr.getObjectSet(objectSetId);
+            objectMetadataIterable = omr.getObjects(objectSet.get());
+        } else if ( channel != null ) {
+            objectMetadataIterable = omr.getObjects(channel.getInformationStoreDefinition());
+        } else {
+            throw new SkyeException("No valid object set or channel provided");
+        }
+
+        for (ObjectMetadata om : objectMetadataIterable) {
+            if (om.getArchiveContentBlocks().size() > 0) {
+                // Lets just get the first ACB
+                ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
+                Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
+                if (archiveStore.isPresent()) {
+                    Optional<SimpleObject> simpleObject = archiveStore.get().materialize(om);
+                    if (simpleObject.isPresent()) {
+                        targetInformationStore.get().put(simpleObject.get());
                     }
-
                 } else {
-                    throw new SkyeException("Missing an archive content block for " + om);
+                    throw new SkyeException("Unable to build the archive store from definition " + acb.getArchiveStoreInstance());
                 }
 
+            } else {
+                throw new SkyeException("Missing an archive content block for " + om);
             }
-
-        } else {
-            throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
         }
 
         return TaskStatus.COMPLETED;
