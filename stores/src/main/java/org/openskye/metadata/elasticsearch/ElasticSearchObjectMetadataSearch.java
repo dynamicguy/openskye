@@ -33,7 +33,7 @@ import java.util.Set;
 public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
     private static final SearchType SEARCH_TYPE = SearchType.QUERY_THEN_FETCH;
-    private static final int START_PAGE = 1;
+    private static final int START_PAGE = 0;
     @Inject
     private Client client;
     @Inject

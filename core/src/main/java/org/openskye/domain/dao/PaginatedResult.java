@@ -1,7 +1,10 @@
 package org.openskye.domain.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import lombok.Data;
+import org.openskye.core.SearchPage;
+import org.openskye.query.RequestQueryContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,48 +15,92 @@ import java.util.List;
 @Data
 public class PaginatedResult<T> {
 
-    private long page;
-    private long pageSize;
-    private long totalResults;
+    private long page = 0;
+    private long pageSize = 20;
+    private long totalResults = 0;
     private List<T> results = new ArrayList<>();
 
     public PaginatedResult() {
-        return;
     }
 
     public PaginatedResult(Iterable<T> list) {
-        this.results = Lists.newArrayList(list);
+        results = Lists.newArrayList(list);
+        totalResults = results.size();
+        pageSize = totalResults;
+    }
 
-        this.totalResults = results.size();
+    public PaginatedResult(Iterable<T> list, SearchPage searchPage)
+    {
+        results = Lists.newArrayList(list);
+        totalResults = results.size();
+        page = searchPage.getPageNumber();
+        pageSize = searchPage.getPageSize();
+    }
 
-        return;
+    public PaginatedResult(Iterable<T> list, RequestQueryContext context)
+    {
+        results = Lists.newArrayList(list);
+        totalResults = results.size();
+        page = context.getPage();
+        pageSize = context.getPageSize();
     }
 
     public PaginatedResult(List<T> list) {
-        this.results = list;
+        results = list;
+        totalResults = results.size();
+        pageSize = totalResults;
+    }
 
-        this.totalResults = results.size();
+    public PaginatedResult(List<T> list, SearchPage searchPage)
+    {
+        results = list;
+        totalResults = results.size();
+        page = searchPage.getPageNumber();
+        pageSize = searchPage.getPageSize();
+    }
 
-        return;
+    public PaginatedResult(List<T> list, RequestQueryContext context)
+    {
+        results = list;
+        totalResults = results.size();
+        page = context.getPage();
+        pageSize = context.getPageSize();
     }
 
     public PaginatedResult<T> paginate(List<T> list) {
         this.results = list;
         this.totalResults = results.size();
+        pageSize = getPageSize();
 
         return this;
     }
 
+    @JsonIgnore
+    public long getDisplayPage()
+    {
+        return page + 1;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (o instanceof PaginatedResult) {
+
+        // TODO: Fix PaginatedResult.equals(Object) check.
+        if (o instanceof PaginatedResult)
+        {
             PaginatedResult<T> other = (PaginatedResult<T>) o;
-            if (other.getPage() == this.page && other.getPageSize() == this.pageSize) {
+
+            if (other.page == this.page &&
+                    other.pageSize == this.pageSize)
+            {
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
-        } else {
+        }
+        else
+        {
             return false;
         }
     }

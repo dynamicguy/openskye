@@ -84,7 +84,7 @@ public class ObjectsCommand extends AbstractCrudCommand {
         if(strPageNumber != null && !strPageNumber.isEmpty())
         {
             if(strPageSize == null || strPageSize.isEmpty())
-                 pageSize = 10;
+                 pageSize = 20;
             else
             {
                 try
@@ -119,7 +119,7 @@ public class ObjectsCommand extends AbstractCrudCommand {
                 throw new SkyeException("The pageSize parameter must be an integer", ex);
             }
 
-            searchPage = new SearchPage(1, pageSize);
+            searchPage = new SearchPage(0, pageSize);
         }
 
         MultivaluedMap queryParams = new MultivaluedMapImpl();
@@ -151,16 +151,22 @@ public class ObjectsCommand extends AbstractCrudCommand {
         fieldsWithId.add("id");
         fieldsWithId.addAll(getFieldNames());
 
-        if (paginatedResult.getResults().size() > 0) {
+        if (paginatedResult.getTotalResults() > 0) {
 
-            output.message("Listing " + getCollectionPlural());
-
-            output.message("Listing page number " + paginatedResult.getPage());
+            if(searchPage == null)
+                output.message("Listing " + getCollectionPlural());
 
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
             output.insertLines(1);
             tableView.draw(output);
-            output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
+
+            if(searchPage == null)
+                output.success("\nFound " + paginatedResult.getTotalResults() + " " + getCollectionPlural());
+            else
+            {
+                output.success("\nShowing page number: " + paginatedResult.getPage());
+                output.success("\nResults on this page: " + paginatedResult.getPageSize());
+            }
 
         } else {
             output.success("\nNo " + getCollectionPlural() + " found");

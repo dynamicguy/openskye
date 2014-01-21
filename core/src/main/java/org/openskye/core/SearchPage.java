@@ -29,11 +29,11 @@ public class SearchPage
 
     public long getPageStart()
     {
-        return (pageNumber - 1) * pageSize;
+        return (pageNumber * pageSize);
     }
 
     public long getPageEnd()
     {
-        return (pageNumber * pageSize);
+        return ((pageNumber + 1) * pageSize);
     }
 }

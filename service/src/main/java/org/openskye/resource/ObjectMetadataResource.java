@@ -300,15 +300,17 @@ public class ObjectMetadataResource {
     {
         checkPermission("search","*");
         Iterable <ObjectMetadata> hits = search.search(query);
+        List<ObjectMetadata> resultList = Lists.newArrayList(hits);
 
-        List<ObjectMetadata> results = Lists.newArrayList(hits);
-        for(ObjectMetadata om : results){
+        for(ObjectMetadata om : resultList){
             if(!SecurityUtils.getSubject().isPermitted("objects:search:"+om.getProject().getId())){
-                results.remove(om);
+                resultList.remove(om);
             }
         }
 
-        return new PaginatedResult<>(results);
+        PaginatedResult<ObjectMetadata> results = new PaginatedResult<>(resultList);
+
+        return results;
     }
 
 
@@ -343,8 +345,9 @@ public class ObjectMetadataResource {
             throw new NotFoundException();
 
         Iterable<ObjectMetadata> hits = search.search(project.get(), query);
+        PaginatedResult<ObjectMetadata> results = new PaginatedResult<>(hits);
 
-        return new PaginatedResult<>(Lists.newArrayList(hits));
+        return results;
     }
 
     /**
@@ -383,9 +386,7 @@ public class ObjectMetadataResource {
             }
         }
 
-        PaginatedResult<ObjectMetadata> paginatedResult = new PaginatedResult<>(results);
-
-        paginatedResult.setPage(pageNumber);
+        PaginatedResult<ObjectMetadata> paginatedResult = new PaginatedResult<>(results, searchPage);
 
         return paginatedResult;
     }
@@ -429,8 +430,9 @@ public class ObjectMetadataResource {
 
         SearchPage searchPage = new SearchPage(pageNumber, pageSize);
         Iterable<ObjectMetadata> hits = search.search(project.get(), query, searchPage);
+        PaginatedResult<ObjectMetadata> results = new PaginatedResult<>(hits, searchPage);
 
-        return new PaginatedResult<>(Lists.newArrayList(hits));
+        return results;
     }
 
     private void checkPermission(String operation, String projectId) {

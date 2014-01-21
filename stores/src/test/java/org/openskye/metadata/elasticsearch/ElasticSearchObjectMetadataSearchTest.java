@@ -23,8 +23,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ElasticSearchObjectMetadataSearchTest {
     public static final String PROJECT_ID = "project1";
     public static final String METADATA_PATH = "/tmp/" + UUID.randomUUID().toString();
-    public static final int PAGE_NUMBER = 1;
-    public static final int PAGE_SIZE = 50;
     @Rule
     public GuiceBerryRule guiceBerry = new GuiceBerryRule(InMemoryTestModule.class);
     @Inject
@@ -73,7 +71,7 @@ public class ElasticSearchObjectMetadataSearchTest {
 
         // First, attempt to search for the object using just to domain,
         // which got to the OMS via the project we set up.
-        Iterable<ObjectMetadata> resultList = this.search.search(searchString, new SearchPage(1, 1000));
+        Iterable<ObjectMetadata> resultList = this.search.search(searchString);
 
         // The first test is that something was, in fact, found.
         Iterator<ObjectMetadata> resultIterator = resultList.iterator();
@@ -92,7 +90,7 @@ public class ElasticSearchObjectMetadataSearchTest {
         // Next, we'll attempt to search with both the domain and the
         // project.
         resultList = this.search.search(project,
-                searchString, new SearchPage(1, 1000));
+                searchString);
 
         // Now, ensure that the something was found.
         resultIterator = resultList.iterator();

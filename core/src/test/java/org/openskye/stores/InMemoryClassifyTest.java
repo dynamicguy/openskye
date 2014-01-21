@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ObjectMetadata;
-import org.openskye.core.SearchPage;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.NodeDAO;
 import org.openskye.domain.dao.ProjectDAO;
@@ -122,7 +121,7 @@ public class InMemoryClassifyTest {
         emf.get().getTransaction().commit();
 
         int nIndexed = 0;
-        Iterable<ObjectMetadata> hits = oms.search(project, "*", new SearchPage(1, 1000));
+        Iterable<ObjectMetadata> hits = oms.search(project, "*");
         if (hits != null) {
             for (ObjectMetadata hit : hits) {
                 nIndexed++;

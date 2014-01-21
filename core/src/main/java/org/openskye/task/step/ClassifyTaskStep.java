@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ObjectMetadata;
-import org.openskye.core.SearchPage;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Node;
 import org.openskye.domain.Project;
@@ -80,7 +79,7 @@ public class ClassifyTaskStep extends TaskStep {
         for (RetentionPolicy policy : retentionPolicyDAO.list().getResults()) {
             Iterable<ObjectMetadata> hits = null;
             if (policy.getMetadataCriteria() != null) {
-                hits = oms.search(project, policy.getMetadataCriteria(), new SearchPage(1, 1000));
+                hits = oms.search(project, policy.getMetadataCriteria());
             }
             if (hits != null) {
                 for (ObjectMetadata om : hits) {
