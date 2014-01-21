@@ -113,14 +113,14 @@ public class SkyeCli {
         } catch (MissingCommandException e) {
             jc.usage();
         } catch (ClientHandlerException e) {
-            consoleLogger.error("Unable to connect to server: " + e.getLocalizedMessage());
-            e.printStackTrace();
+            consoleLogger.error("Unable to connect to server: ");
+            printException(consoleLogger,e);
         } catch (CliException c) {
             consoleLogger.error(c.getLocalizedMessage());
-            c.printStackTrace();
+            printException(consoleLogger,c);
         } catch (SkyeException se) {
             consoleLogger.error(se.getLocalizedMessage());
-            se.printStackTrace();
+            printException(consoleLogger,se);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus() == 401) {
                 consoleLogger.error("Not authorized, has your API key changed?");
@@ -139,5 +139,13 @@ public class SkyeCli {
             }
         }
 
+    }
+
+    private void printException( ConsoleLogger consoleLogger, Throwable e ) {
+        if ( e != null ) {
+            consoleLogger.error(e.getClass().getName()+": "+e.getMessage());
+            e.printStackTrace();
+            printException(consoleLogger,e.getCause());
+        }
     }
 }
