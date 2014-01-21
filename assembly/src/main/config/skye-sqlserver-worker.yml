@@ -47,7 +47,7 @@ database:
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
   oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch
-  taskManager: org.openskye.task.queue.QueueTaskManager
+  taskManager: org.openskye.task.queue.QueueWorkerManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
 search:
