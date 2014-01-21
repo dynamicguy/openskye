@@ -160,7 +160,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         output.message("Creating a new " + step.getLabel() + " task:\n");
         selectReferenceField(new ReferenceField(Node.class), step);
         if (dynamicParams.get("objectSetId") != null) {
-            ((ExtractTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
+            ((ExtractTaskStep) step).setObjectSetId(resolveAlias(dynamicParams.get("objectSetId")));
         } else {
             selectReferenceField(new ReferenceField(Channel.class), step);
         }
