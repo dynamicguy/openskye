@@ -4,6 +4,7 @@ database:
 
   # the username
   user: root
+
   # the password
   password: password
 
@@ -12,37 +13,38 @@ database:
 
   # Hibernate dialect
   dialect: "org.hibernate.dialect.MySQLDialect"
-  
+
   # C3PO connection pool settings below
   # hibernate.connection.provider_class
   connectionProviderClass: org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider
-  
+
   # hibernate.c3p0.max_size
   poolMaxSize: 10
-  
+
   # hibernate.c3p0.min_size
   poolMinSize: 1
-  
+
   # hibernate.c3p0.timeout
   poolTimeOut: 25200
-  
+
   # hibernate.c3p0.idle_test_period in seconds
   poolIdleTestPeriod: 14400
-  
+
   # hibernate.c3p0.preferredTestQuery
   poolPreferredTestQuery: SELECT 1
 
   # hibernate.c3p0.testConnectionOnCheckout
-  poolTestConnectionOnCheckout: true
-  
+  poolTestConnectionOnCheckout: false
+
   # poolConnectionMaxIdleTime
   poolConnectionMaxIdleTime: 3600
-  
+
   # maxIdleTimeExcessConnections
   maxIdleTimeExcessConnections: 900
-  
+
   # unreturnedConnectionTimeout
   unreturnedConnectionTimeout: 0
+
 
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
@@ -51,42 +53,20 @@ services:
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
 server:
-#  softNofileLimit: 1000
-#  hardNofileLimit: 1000
   applicationConnectors:
     - type: http
       port: 5000
-#    - type: https
-#      port: 8443
-#      keyStorePath: example.keystore
-#      keyStorePassword: example
-#      validateCerts: false
-# this requires the npn-boot library on the JVM's boot classpath
-#    - type: spdy
-#      port: 8445
-#      keyStore: example.keystore
-#      keyStorePassword: example
-#      validateCerts: false
   adminConnectors:
     - type: http
       port: 8081
-#    - type: https
-#      port: 8444
-#      keyStorePath: example.keystore
-#      keyStorePassword: example
-#      validateCerts: false
 
-# Logging settings.
+search:
+  host: "localhost"
+  port: 9300
+
 logging:
-
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
-
-  # Logger-specific levels.
   loggers:
-
-    # Sets the level for 'com.example.app' to DEBUG.
     org.openskye: DEBUG
-
   appenders:
     - type: console
