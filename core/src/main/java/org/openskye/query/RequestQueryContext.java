@@ -13,7 +13,9 @@ import java.util.Map;
 public class RequestQueryContext {
 
     private int page = 0;
-    private int pageSize = 20;
+    // Temporary "show all fix"
+    //private int pageSize = 20;
+    private int pageSize = 0;
     private String sort = null;
     private SortDirection sortDir = SortDirection.ASC;
     private Map<String, String> filter = new HashMap<>();

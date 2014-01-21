@@ -87,9 +87,18 @@ public class ExtractTaskStep extends TaskStep {
         Iterable<ObjectMetadata> objectMetadataIterable;
         if (objectSetId != null) {
             Optional<ObjectSet> objectSet = omr.getObjectSet(objectSetId);
-            objectMetadataIterable = omr.getObjects(objectSet.get());
+            if ( objectSet.isPresent() ) {
+                objectMetadataIterable = omr.getObjects(objectSet.get());
+            } else {
+                throw new SkyeException("Object set "+objectSetId+" not found");
+            }
         } else if ( channel != null ) {
-            objectMetadataIterable = omr.getObjects(channel.getInformationStoreDefinition());
+            InformationStoreDefinition isd = channel.getInformationStoreDefinition();
+            if ( isd != null ) {
+                objectMetadataIterable = omr.getObjects(channel.getInformationStoreDefinition());
+            } else {
+                throw new SkyeException("Channel "+channel.getId()+" has no information store definition");
+            }
         } else {
             throw new SkyeException("No valid object set or channel provided");
         }
