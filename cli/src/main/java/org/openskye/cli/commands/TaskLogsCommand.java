@@ -4,15 +4,7 @@ import com.beust.jcommander.Parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.openskye.cli.commands.fields.Field;
-import org.openskye.cli.commands.fields.FieldBuilder;
-import org.openskye.cli.commands.fields.ReferenceField;
-import org.openskye.cli.commands.fields.TextField;
 import org.openskye.cli.util.ObjectTableView;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Project;
 import org.openskye.domain.TaskLog;
 import org.openskye.domain.dao.PaginatedResult;
 
@@ -97,9 +89,9 @@ public class TaskLogsCommand extends ExecutableCommand {
             } else {
                 TaskLog taskLog = (TaskLog) paginatedResult.getResults().get(0);
                 output.raw("\nTask Log Id: "+taskLog.getId());
-                output.raw("\nTask Id: "+taskLog.getTaskId());
-                output.raw("\nStatus: "+taskLog.getStatus());
-                output.raw("\nMessage: "+taskLog.getMessage());
+                output.raw("Task Id: "+taskLog.getTaskId());
+                output.raw("Status: "+taskLog.getStatus());
+                output.raw("Message: "+taskLog.getMessage());
                 printException(taskLog.getException());
                 saveAlias(logId);
             }
@@ -110,9 +102,9 @@ public class TaskLogsCommand extends ExecutableCommand {
         if ( e == null ) {
             return;
         } else {
-            output.raw("\n"+e.getClass().getName()+": "+e.getMessage());
+            output.raw(e.getClass().getName()+": "+e.getMessage());
             for ( StackTraceElement te : e.getStackTrace() ) {
-                output.raw("\n    "+te.toString());
+                output.raw("    "+te.toString());
             }
             printException(e.getCause());
         }
