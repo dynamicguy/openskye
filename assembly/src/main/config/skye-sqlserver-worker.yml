@@ -51,7 +51,7 @@ services:
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
 search:
-   host: localhost
+  host: localhost
   port: 9300
 
 worker:

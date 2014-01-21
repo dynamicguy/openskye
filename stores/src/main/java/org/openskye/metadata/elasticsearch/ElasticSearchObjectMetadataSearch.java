@@ -46,10 +46,19 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     {
         String index = session.getDomain().getId();
         String escapedQuery = smartEscapeQuery(query);
-        CountResponse response = client.prepareCount(index)
-                                       .setQuery(new QueryStringQueryBuilder(escapedQuery))
-                                       .execute()
-                                       .actionGet();
+        CountResponse response;
+
+        try
+        {
+            response = client.prepareCount(index)
+                             .setQuery(new QueryStringQueryBuilder(escapedQuery))
+                             .execute()
+                             .actionGet();
+        }
+        catch(IndexMissingException ex)
+        {
+            return 0;
+        }
 
         return response.getCount();
     }
@@ -60,11 +69,20 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         String index = session.getDomain().getId();
         String type = project.getId();
         String escapedQuery = smartEscapeQuery(query);
-        CountResponse response = client.prepareCount(index)
-                                       .setTypes(type)
-                                       .setQuery(new QueryStringQueryBuilder(escapedQuery))
-                                       .execute()
-                                       .actionGet();
+        CountResponse response;
+
+        try
+        {
+            response = client.prepareCount(index)
+                             .setTypes(type)
+                             .setQuery(new QueryStringQueryBuilder(escapedQuery))
+                             .execute()
+                             .actionGet();
+        }
+        catch(IndexMissingException ex)
+        {
+            return 0;
+        }
 
         return response.getCount();
     }
@@ -73,6 +91,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     public Iterable<ObjectMetadata> search(String query)
     {
         long count = count(query);
+
+        if(count == 0)
+            return new ArrayList<>();
+
         SearchPage searchPage = new SearchPage(START_PAGE, count);
 
         return search(query, searchPage);
@@ -82,6 +104,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     public Iterable<ObjectMetadata> search(Project project, String query)
     {
         long count = count(project, query);
+
+        if(count == 0)
+            return new ArrayList<>();
+
         SearchPage searchPage = new SearchPage(START_PAGE, count);
 
         return search(query, searchPage);
@@ -105,15 +131,15 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
             for (SearchHit hit : searchHits) {
                 String json = hit.getSourceAsString();
-                JsonObjectMetadata jsonMetadata;
+                ObjectMetadata metadata;
 
                 try {
-                    jsonMetadata = this.objectMapper.readValue(json, JsonObjectMetadata.class);
+                    metadata = this.objectMapper.readValue(json, ObjectMetadata.class);
                 } catch (IOException ex) {
                     throw new SkyeException("Failed to demarshal ObjectMetadata form JSON.", ex);
                 }
 
-                listMetadata.add(jsonMetadata.toObjectMetadata());
+                listMetadata.add(metadata);
             }
 
 
@@ -142,15 +168,15 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
             for (SearchHit hit : searchHits) {
                 String json = hit.getSourceAsString();
-                JsonObjectMetadata jsonMetadata;
+                ObjectMetadata metadata;
 
                 try {
-                    jsonMetadata = this.objectMapper.readValue(json, JsonObjectMetadata.class);
+                    metadata = this.objectMapper.readValue(json, ObjectMetadata.class);
                 } catch (IOException ex) {
                     throw new SkyeException("Failed to demarshal ObjectMetadata from JSON.", ex);
                 }
 
-                listMetadata.add(jsonMetadata.toObjectMetadata());
+                listMetadata.add(metadata);
             }
         } catch (IndexMissingException ex) {
             log.warn("Attempt to search on index that doesn't exist (domain:" + session.getDomain().getId() + ")");
@@ -161,14 +187,12 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
     @Override
     public void index(ObjectMetadata objectMetadata) {
-        JsonObjectMetadata metadata = new JsonObjectMetadata(objectMetadata);
-
         String domainId = objectMetadata.getProject().getDomain().getId();
         String projectId = objectMetadata.getProject().getId();
         log.debug("Starting to index " + objectMetadata +" on index "+domainId+" with type "+projectId);
 
         try {
-            String json = this.objectMapper.writeValueAsString(metadata);
+            String json = this.objectMapper.writeValueAsString(objectMetadata);
             client.prepareIndex(domainId, projectId, objectMetadata.getId())
                     .setSource(json)
                     .execute()
