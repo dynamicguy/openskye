@@ -38,12 +38,18 @@ public class ObjectsCommand extends AbstractCrudCommand {
     @Parameter(names = "--search")
     private boolean search;
 
+    @Parameter(names = "--searchCount")
+    private boolean count;
+
     @Override
     public void execute(){
         super.execute();
-        if(search){
+
+        if(search)
             search();
-        }
+
+        if(count)
+            count();
     }
 
     @Override
@@ -149,6 +155,8 @@ public class ObjectsCommand extends AbstractCrudCommand {
 
             output.message("Listing " + getCollectionPlural());
 
+            output.message("Listing page number " + paginatedResult.getPage());
+
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
             output.insertLines(1);
             tableView.draw(output);
@@ -158,6 +166,32 @@ public class ObjectsCommand extends AbstractCrudCommand {
             output.success("\nNo " + getCollectionPlural() + " found");
 
         }
+    }
+
+    public void count()
+    {
+        String query = dynamicParams.get("query");
+        String projectId = resolveAlias(dynamicParams.get("project"));
+
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+        String url = settings.getUrl() + getCollectionPlural() + "/search/count";
+
+        queryParams.add("query", query);
+
+        if(projectId != null && !projectId.isEmpty())
+            url += "/" + projectId;
+
+        WebResource resource = client.resource(url).queryParams(queryParams);
+
+        WebResource.Builder builder = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
+
+        if (settings.getApiKey() != null) {
+            builder.header("X-Api-Key", settings.getApiKey());
+        }
+
+        Long results = builder.get(Long.class);
+
+        output.success("Showing number of results to the query: " + results);
     }
 
 }

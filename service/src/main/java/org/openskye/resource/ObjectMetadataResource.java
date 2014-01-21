@@ -233,6 +233,59 @@ public class ObjectMetadataResource {
 
     }
 
+    @ApiOperation(value = "Counts the results for a search query.",
+            notes = "Supply a query string (query).  Returns the number of search results",
+            response = Long.class)
+    @Path("/search/count")
+    @GET
+    @Transactional
+    @Timed
+    public Long countSearchResults(@ApiParam(value = "The query string", required = true)
+                                   @QueryParam("query")
+                                   String query)
+    {
+        checkPermission("search","*");
+
+        // TODO: Add query details which include only projects for which the user has permissions.
+
+        return search.count(query);
+    }
+
+
+    /**
+     * Searches for {@link ObjectMetadata} for a specific {@link Project} within
+     * the specified {@link Domain}.
+     *
+     * @param projectId The id of the {@link Project} to be searched.
+     * @param query     The query to be performed.
+     * @return A {@link PaginatedResult} containing the specified
+     *         of the search requested.
+     */
+    @ApiOperation(value = "Counts the results for a search query.",
+            notes = "Supply a  a Project id, a query string (query),  " +
+                    "Returns the number of results for the search",
+            response = Long.class)
+    @Path("/search/count/{projectId}")
+    @GET
+    @Transactional
+    @Timed
+    public Long countSearchResults(@PathParam("projectId")
+                                   String projectId,
+                                   @ApiParam(value = "The query string", required = true)
+                                   @QueryParam("query")
+                                   String query)
+    {
+        checkPermission("search", projectId);
+
+        Optional<Project> project = projects.get(projectId);
+
+        if (!project.isPresent())
+            throw new NotFoundException();
+
+        return search.count(project.get(), query);
+    }
+
+
     @ApiOperation(value = "Searches for ObjectMetadata",
             notes = "Supply a query string (query).  Returns a list of ObjectMetadata in a paginated structure",
             responseContainer = "List",
@@ -243,7 +296,8 @@ public class ObjectMetadataResource {
     @Timed
     public PaginatedResult<ObjectMetadata> search(@ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
-                                                  String query) {
+                                                  String query)
+    {
         checkPermission("search","*");
         Iterable <ObjectMetadata> hits = search.search(query);
 
@@ -329,7 +383,11 @@ public class ObjectMetadataResource {
             }
         }
 
-        return new PaginatedResult<>(results);
+        PaginatedResult<ObjectMetadata> paginatedResult = new PaginatedResult<>(results);
+
+        paginatedResult.setPage(pageNumber);
+
+        return paginatedResult;
     }
 
 
