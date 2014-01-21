@@ -117,9 +117,9 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         if (settings.getApiKey() != null) {
             builder.header("X-Api-Key", settings.getApiKey());
         }
-        ObjectSet result = builder.put(ObjectSet.class);
+        builder.put();
 
-        output.success("Successfully added objects to the Object Set with id: " + result.getId());
+        output.success("Successfully added objects to the Object Set with id: " + objectSetID);
     }
 
     /**
