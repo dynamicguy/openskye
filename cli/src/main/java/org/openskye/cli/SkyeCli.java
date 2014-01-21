@@ -113,7 +113,8 @@ public class SkyeCli {
         } catch (MissingCommandException e) {
             jc.usage();
         } catch (ClientHandlerException e) {
-            consoleLogger.error("Unable to connect to server " + e.getLocalizedMessage());
+            consoleLogger.error("Unable to connect to server: " + e.getLocalizedMessage());
+            e.printStackTrace();
         } catch (CliException c) {
             consoleLogger.error(c.getLocalizedMessage());
             c.printStackTrace();
