@@ -360,14 +360,12 @@ public class ObjectSetResource {
 
         checkPermission(OPERATION_SEARCH);
 
-        SearchPage searchPage = new SearchPage(1, 1000);
-
         Optional<ObjectSet> objectSet = repository.getObjectSet(setId);
 
         if (!objectSet.isPresent())
             throw new NotFoundException();
 
-        Iterable<ObjectMetadata> metadataList = search.search(query, searchPage);
+        Iterable<ObjectMetadata> metadataList = search.search(query);
 
         for (ObjectMetadata metadata : metadataList)
             repository.addObjectToSet(objectSet.get(), metadata);

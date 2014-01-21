@@ -1,6 +1,7 @@
 package org.openskye.resource;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
@@ -289,12 +290,11 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
         when(subject.isPermitted(ObjectSetResource.OPERATION_SEARCH)).thenReturn(true);
 
         String api = API_ADDRESS + "/" +
-                objectSetInstance.getId() + "/search/?query=" + pathSearch;
+                objectSetInstance.getId() + "/search?query=" + pathSearch;
 
-        ObjectSet objectSet = resourceRule.client()
-                .resource(api)
-                .type(MEDIA_TYPE)
-                .put(ObjectSet.class);
+        WebResource resource = resourceRule.client().resource(api);
+
+        ObjectSet objectSet = resource.type(MEDIA_TYPE).put(ObjectSet.class);
 
         assertThat("objects were added to a set from a search", objectSet.getId(), equalTo(objectSetInstance.getId()));
     }
@@ -307,10 +307,9 @@ public class ObjectSetResourceTest extends AbstractObjectTest {
         String api = API_ADDRESS + "/" +
                 objectSetInstance.getId() + "/search/?query=" + pathSearch;
 
-        ClientResponse response = resourceRule.client()
-                .resource(api)
-                .type(MEDIA_TYPE)
-                .put(ClientResponse.class);
+        WebResource resource = resourceRule.client().resource(api);
+
+        ClientResponse response = resource.type(MEDIA_TYPE).put(ClientResponse.class);
 
         assertThat("add objects to set from search operation is not permitted",
                 response.getStatus(),

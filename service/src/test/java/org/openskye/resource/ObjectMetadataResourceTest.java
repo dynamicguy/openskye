@@ -1,12 +1,14 @@
 package org.openskye.resource;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
@@ -253,10 +255,9 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
 
         String api = API_ADDRESS + "/search/?query=" + pathSearch;
 
-        PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                .resource(api)
-                .type(MEDIA_TYPE)
-                .get(PaginatedResult.class);
+        WebResource resource = resourceRule.client().resource(api);
+
+        PaginatedResult<ObjectMetadata> result = resource.type(MEDIA_TYPE).get(PaginatedResult.class);
 
         assertThat("search returned expected results", result, equalTo(metadataSearchResult));
     }
@@ -266,13 +267,11 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         ThreadContext.bind(subject);
         when(subject.isPermitted("objects:search:"+metadataSearchResult.getResults().get(0).getProject().getId())).thenReturn(false);
 
-
         String api = API_ADDRESS + "/search/?query=" + pathSearch;
 
-        ClientResponse response = resourceRule.client()
-                .resource(api)
-                .type(MEDIA_TYPE)
-                .get(ClientResponse.class);
+        WebResource resource = resourceRule.client().resource(api);
+
+        ClientResponse response = resource.type(MEDIA_TYPE).get(ClientResponse.class);
 
         assertThat("search was not permitted", response.getStatus(), equalTo(403));
     }
@@ -286,10 +285,9 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 projectSearch.getId() +
                 "?query=" + pathSearch;
 
-        PaginatedResult<ObjectMetadata> result = resourceRule.client()
-                .resource(api)
-                .type(MEDIA_TYPE)
-                .get(PaginatedResult.class);
+        WebResource resource = resourceRule.client().resource(api);
+
+        PaginatedResult<ObjectMetadata> result = resource.type(MEDIA_TYPE).get(PaginatedResult.class);
 
         assertThat("search with project returned expected results", result, equalTo(metadataSearchResult));
     }
@@ -303,10 +301,9 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
                 projectSearch.getId() +
                 "?query=" + pathSearch;
 
-        ClientResponse response = resourceRule.client()
-                .resource(api)
-                .type(MEDIA_TYPE)
-                .get(ClientResponse.class);
+        WebResource resource = resourceRule.client().resource(api);
+
+        ClientResponse response = resource.type(MEDIA_TYPE).get(ClientResponse.class);
 
         assertThat("search with project was not permitted", response.getStatus(), equalTo(403));
     }

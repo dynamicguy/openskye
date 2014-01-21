@@ -40,6 +40,7 @@ import java.util.List;
 @Api(value = "/api/1/objects", description = "Access and act upon ObjectMetadata.")
 @Path("/api/1/objects")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ObjectMetadataResource {
 
     private ObjectMetadataRepository repository;
@@ -232,14 +233,6 @@ public class ObjectMetadataResource {
 
     }
 
-    /**
-     * Searches for {@link ObjectMetadata} across all {@link Project} instances
-     * for the given {@link Domain} id.
-     *
-     * @param query The query to be performed.
-     * @return A {@link PaginatedResult} containing the specified
-     *         of the search requested.
-     */
     @ApiOperation(value = "Searches for ObjectMetadata",
             notes = "Supply a query string (query).  Returns a list of ObjectMetadata in a paginated structure",
             responseContainer = "List",
@@ -252,10 +245,9 @@ public class ObjectMetadataResource {
                                                   @QueryParam("query")
                                                   String query) {
         checkPermission("search","*");
+        Iterable <ObjectMetadata> hits = search.search(query);
 
-        SearchPage searchPage = new SearchPage(1, 1000);
-
-        List<ObjectMetadata> results = Lists.newArrayList(search.search(query, searchPage));
+        List<ObjectMetadata> results = Lists.newArrayList(hits);
         for(ObjectMetadata om : results){
             if(!SecurityUtils.getSubject().isPermitted("objects:search:"+om.getProject().getId())){
                 results.remove(om);
@@ -263,8 +255,8 @@ public class ObjectMetadataResource {
         }
 
         return new PaginatedResult<>(results);
-
     }
+
 
     /**
      * Searches for {@link ObjectMetadata} for a specific {@link Project} within
@@ -284,20 +276,103 @@ public class ObjectMetadataResource {
     @GET
     @Transactional
     @Timed
-    public PaginatedResult<ObjectMetadata> search(@PathParam("projectId") String projectId,
+    public PaginatedResult<ObjectMetadata> search(@PathParam("projectId")
+                                                  String projectId,
                                                   @ApiParam(value = "The query string", required = true)
                                                   @QueryParam("query")
                                                   String query) {
         checkPermission("search", projectId);
-
-        SearchPage searchPage = new SearchPage(1, 1000);
 
         Optional<Project> project = projects.get(projectId);
 
         if (!project.isPresent())
             throw new NotFoundException();
 
-        return new PaginatedResult<>(search.search(project.get(), query, searchPage));
+        Iterable<ObjectMetadata> hits = search.search(project.get(), query);
+
+        return new PaginatedResult<>(Lists.newArrayList(hits));
+    }
+
+    /**
+     * Searches for {@link ObjectMetadata} across all {@link Project} instances
+     * for the given {@link Domain} id.
+     *
+     * @param query The query to be performed.
+     * @return A {@link PaginatedResult} containing the specified
+     *         of the search requested.
+     */
+    @ApiOperation(value = "Searches for ObjectMetadata",
+            notes = "Supply a query string (query).  Returns a list of ObjectMetadata in a paginated structure",
+            responseContainer = "List",
+            response = ObjectMetadata.class)
+    @Path("/search/paginated")
+    @GET
+    @Transactional
+    @Timed
+    public PaginatedResult<ObjectMetadata> search(@ApiParam(value = "The query string", required = true)
+                                                  @QueryParam("query")
+                                                  String query,
+                                                  @ApiParam(value = "The page number to query", required = true)
+                                                  @QueryParam("pageNumber")
+                                                  long pageNumber,
+                                                  @ApiParam(value = "The number of results to display on this page", required = true)
+                                                  @QueryParam("pageSize")
+                                                  long pageSize) {
+        checkPermission("search","*");
+        SearchPage searchPage = new SearchPage(pageNumber, pageSize);
+        Iterable <ObjectMetadata> hits = search.search(query, searchPage);
+
+        List<ObjectMetadata> results = Lists.newArrayList(hits);
+        for(ObjectMetadata om : results){
+            if(!SecurityUtils.getSubject().isPermitted("objects:search:"+om.getProject().getId())){
+                results.remove(om);
+            }
+        }
+
+        return new PaginatedResult<>(results);
+    }
+
+
+    /**
+     * Searches for {@link ObjectMetadata} for a specific {@link Project} within
+     * the specified {@link Domain}.
+     *
+     * @param projectId The id of the {@link Project} to be searched.
+     * @param query     The query to be performed.
+     * @return A {@link PaginatedResult} containing the specified
+     *         of the search requested.
+     */
+    @ApiOperation(value = "Searches for ObjectMetadata",
+            notes = "Supply a  a Project id, a query string (query),  " +
+                    "Returns a list of ObjectMetadata in a paginated structure",
+            responseContainer = "List",
+            response = ObjectMetadata.class)
+    @Path("/search/paginated/{projectId}")
+    @GET
+    @Transactional
+    @Timed
+    public PaginatedResult<ObjectMetadata> search(@PathParam("projectId")
+                                                  String projectId,
+                                                  @ApiParam(value = "The query string", required = true)
+                                                  @QueryParam("query")
+                                                  String query,
+                                                  @ApiParam(value = "The page number to query", required = true)
+                                                  @QueryParam("pageNumber")
+                                                  long pageNumber,
+                                                  @ApiParam(value = "The number of results to display on this page", required = true)
+                                                  @QueryParam("pageSize")
+                                                  long pageSize) {
+        checkPermission("search", projectId);
+
+        Optional<Project> project = projects.get(projectId);
+
+        if (!project.isPresent())
+            throw new NotFoundException();
+
+        SearchPage searchPage = new SearchPage(pageNumber, pageSize);
+        Iterable<ObjectMetadata> hits = search.search(project.get(), query, searchPage);
+
+        return new PaginatedResult<>(Lists.newArrayList(hits));
     }
 
     private void checkPermission(String operation, String projectId) {

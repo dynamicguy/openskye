@@ -11,6 +11,58 @@ import org.openskye.domain.Project;
 public interface ObjectMetadataSearch {
 
     /**
+     * Counts the results that will be produced by a query.
+     * Many systems require pagination information like the number of
+     * expected results, and the count operation can provide that.
+     *
+     *
+     * @param query The query for which results are counted.
+     *
+     * @return The number of results a query will produce.
+     */
+    long count(String query);
+
+    /**
+     * Counts the results that will be produced by a query on a project.
+     * Many systems require pagination information like the number of
+     * expected results, and the count operation can provide that.
+     *
+     *
+     * @param project The Project to be searched.
+     *
+     * @param query The query for which to perform the count.
+     *
+     * @return The number of results the query will produce.
+     */
+    long count(Project project, String query);
+
+    /**
+     * Attempts to count the results that the query.
+     * {@link SearchPage} information is built based on the count,
+     * and this information is used to query all results.
+     *
+     * @param query The query to be performed.
+     *
+     * @return All search results for the query.
+     */
+    Iterable<ObjectMetadata> search(String query);
+
+    /**
+     * Searches based on a given Project.
+     *
+     * Attempts to count the results that the query.
+     * {@link SearchPage} information is built based on the count,
+     * and this information is used to query all results.
+     *
+     * @param project The project to be searched.
+     *
+     * @param query The query to be performed.
+     *
+     * @return All search results for the query.
+     */
+    Iterable<ObjectMetadata> search(Project project, String query);
+
+    /**
      * Perform a search over repository using a query.
      *
      * @param query The query.

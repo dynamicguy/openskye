@@ -4,16 +4,20 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
+import org.openskye.core.SkyeException;
 import org.openskye.domain.Project;
 import org.openskye.domain.dao.PaginatedResult;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,9 +68,73 @@ public class ObjectsCommand extends AbstractCrudCommand {
 
     public void search(){
         String query = dynamicParams.get("query");
+        String strPageNumber = dynamicParams.get("pageNumber");
+        String strPageSize = dynamicParams.get("pageSize");
+        String projectId = resolveAlias(dynamicParams.get("project"));
+        long pageNumber = 0;
+        long pageSize = 0;
+        SearchPage searchPage = null;
 
-        WebResource resource = client.resource(settings.getUrl() + getCollectionPlural() + "/search").queryParam("query", query);
+        if(strPageNumber != null && !strPageNumber.isEmpty())
+        {
+            if(strPageSize == null || strPageSize.isEmpty())
+                 pageSize = 10;
+            else
+            {
+                try
+                {
+                    pageSize = Long.parseLong(strPageSize);
+                }
+                catch(Exception ex)
+                {
+                    throw new SkyeException("The pageSize parameter must be an integer", ex);
+                }
+            }
+
+            try
+            {
+                pageNumber = Long.parseLong(strPageNumber);
+            }
+            catch(Exception ex)
+            {
+                throw new SkyeException("The pageNumber parameter must be an integer", ex);
+            }
+
+            searchPage = new SearchPage(pageNumber, pageSize);
+        }
+        else if(strPageSize != null && !strPageSize.isEmpty())
+        {
+            try
+            {
+                pageSize = Long.parseLong(strPageSize);
+            }
+            catch(Exception ex)
+            {
+                throw new SkyeException("The pageSize parameter must be an integer", ex);
+            }
+
+            searchPage = new SearchPage(1, pageSize);
+        }
+
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+        String url = settings.getUrl() + getCollectionPlural() + "/search";
+
+        queryParams.add("query", query);
+
+        if(searchPage != null)
+        {
+            url += "/paginated";
+            queryParams.add("pageNumber", Long.toString(searchPage.getPageNumber()));
+            queryParams.add("pageSize", Long.toString(searchPage.getPageSize()));
+        }
+
+        if(projectId != null && !projectId.isEmpty())
+            url += "/" + projectId;
+
+        WebResource resource = client.resource(url).queryParams(queryParams);
+
         WebResource.Builder builder = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
+
         if (settings.getApiKey() != null) {
             builder.header("X-Api-Key", settings.getApiKey());
         }

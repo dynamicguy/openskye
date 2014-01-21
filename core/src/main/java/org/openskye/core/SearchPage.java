@@ -1,32 +1,38 @@
 package org.openskye.core;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
+
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class SearchPage
 {
-    private int pageNumber;
-    private int pageSize;
+    @Getter
+    @Setter
+    private long pageNumber;
 
-    public SearchPage(int pageNumber, int pageSize)
+    @Getter
+    @Setter
+    private long pageSize;
+
+    public SearchPage()
+    {
+        this.pageNumber = 0;
+        this.pageSize = 0;
+    }
+
+    public SearchPage(long pageNumber, long pageSize)
     {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }
 
-    public int getPageNumber()
-    {
-        return pageNumber;
-    }
-
-    public int getPageSize()
-    {
-        return pageSize;
-    }
-
-    public int getPageStart()
+    public long getPageStart()
     {
         return (pageNumber - 1) * pageSize;
     }
 
-    public int getPageEnd()
+    public long getPageEnd()
     {
         return (pageNumber * pageSize);
     }
