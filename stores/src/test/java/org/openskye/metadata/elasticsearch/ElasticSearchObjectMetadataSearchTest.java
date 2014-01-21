@@ -60,7 +60,7 @@ public class ElasticSearchObjectMetadataSearchTest {
         this.search.clear();
 
         // Now, attempt to index the data.  Note that this involves
-        // serializing the JsonObjectMetadata.
+        // serializing the ObjectMetadata.
         this.search.index(objectMetadata);
 
         // Now, we should flush the search client in order to ensure that
