@@ -4,6 +4,7 @@ import com.google.guiceberry.junit4.GuiceBerryRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
 import org.openskye.core.SkyeSession;
 import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
@@ -22,8 +23,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ElasticSearchObjectMetadataSearchTest {
     public static final String PROJECT_ID = "project1";
     public static final String METADATA_PATH = "/tmp/" + UUID.randomUUID().toString();
-    public static final int PAGE_NUMBER = 1;
-    public static final int PAGE_SIZE = 50;
     @Rule
     public GuiceBerryRule guiceBerry = new GuiceBerryRule(InMemoryTestModule.class);
     @Inject

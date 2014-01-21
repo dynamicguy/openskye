@@ -10,6 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
+import org.openskye.core.SearchPage;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.NotFoundException;
 import org.openskye.metadata.ObjectMetadataRepository;

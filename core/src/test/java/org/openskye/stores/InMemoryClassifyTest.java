@@ -145,5 +145,4 @@ public class InMemoryClassifyTest {
         assertThat("Already has same policy means no change", getRecordsCode(pBrB), is(equalTo("CL_PATH_B")));
         assertThat("Existing high priority policy means no change", getRecordsCode(pCrH), is(equalTo("CL_HI_PRI")));
     }
-
 }

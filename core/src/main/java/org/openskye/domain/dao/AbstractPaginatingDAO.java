@@ -57,6 +57,11 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
         criteria.select(selectEntity);
         TypedQuery<T> query = getPaginatedQuery(criteria, selectEntity);
 
+        RequestQueryContext requestContext = RequestQueryContextHolder.getContext();
+
+        if(requestContext != null)
+            return new PaginatedResult<>(query.getResultList(), requestContext);
+
         return new PaginatedResult<>(query.getResultList());
     }
 

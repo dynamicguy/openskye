@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse;
+import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
@@ -13,6 +14,7 @@ import org.elasticsearch.indices.IndexMissingException;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
 import org.openskye.core.SkyeException;
 import org.openskye.core.SkyeSession;
 import org.openskye.domain.Project;
@@ -31,6 +33,7 @@ import java.util.Set;
 public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
     private static final SearchType SEARCH_TYPE = SearchType.QUERY_THEN_FETCH;
+    private static final int START_PAGE = 0;
     @Inject
     private Client client;
     @Inject
@@ -39,7 +42,53 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     private ObjectMapper objectMapper;
 
     @Override
-    public Iterable<ObjectMetadata> search(String query) {
+    public long count(String query)
+    {
+        String index = session.getDomain().getId();
+        String escapedQuery = smartEscapeQuery(query);
+        CountResponse response = client.prepareCount(index)
+                                       .setQuery(new QueryStringQueryBuilder(escapedQuery))
+                                       .execute()
+                                       .actionGet();
+
+        return response.getCount();
+    }
+
+    @Override
+    public long count(Project project, String query)
+    {
+        String index = session.getDomain().getId();
+        String type = project.getId();
+        String escapedQuery = smartEscapeQuery(query);
+        CountResponse response = client.prepareCount(index)
+                                       .setTypes(type)
+                                       .setQuery(new QueryStringQueryBuilder(escapedQuery))
+                                       .execute()
+                                       .actionGet();
+
+        return response.getCount();
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> search(String query)
+    {
+        long count = count(query);
+        SearchPage searchPage = new SearchPage(START_PAGE, count);
+
+        return search(query, searchPage);
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> search(Project project, String query)
+    {
+        long count = count(project, query);
+        SearchPage searchPage = new SearchPage(START_PAGE, count);
+
+        return search(query, searchPage);
+    }
+
+    @Override
+    public Iterable<ObjectMetadata> search(String query, SearchPage searchPage) {
         List<ObjectMetadata> listMetadata = new ArrayList<>();
 
         try {
@@ -48,6 +97,8 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                     .setIndices(session.getDomain().getId())
                     .setSearchType(SEARCH_TYPE)
                     .setQuery(new QueryStringQueryBuilder(smartEscapeQuery(query)))
+                    .setFrom((int) searchPage.getPageStart())
+                    .setSize((int) searchPage.getPageSize())
                     .execute()
                     .actionGet();
             SearchHits searchHits = response.getHits();
@@ -74,7 +125,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public Iterable<ObjectMetadata> search(Project project, String query) {
+    public Iterable<ObjectMetadata> search(Project project, String query, SearchPage searchPage) {
         List<ObjectMetadata> listMetadata = new ArrayList<>();
         try {
             SearchResponse response = client.prepareSearch()
@@ -82,6 +133,8 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                     .setTypes(project.getId())
                     .setSearchType(SEARCH_TYPE)
                     .setQuery(new QueryStringQueryBuilder(smartEscapeQuery(query)))
+                    .setFrom((int) searchPage.getPageStart())
+                    .setSize((int) searchPage.getPageSize())
                     .execute()
                     .actionGet();
 

@@ -1,6 +1,7 @@
 package org.openskye.metadata;
 
 import org.openskye.core.ObjectMetadata;
+import org.openskye.core.SearchPage;
 import org.openskye.domain.Project;
 
 /**
@@ -10,22 +11,77 @@ import org.openskye.domain.Project;
 public interface ObjectMetadataSearch {
 
     /**
-     * Perform a search over repository using a query.
-     * Returns all results.
+     * Counts the results that will be produced by a query.
+     * Many systems require pagination information like the number of
+     * expected results, and the count operation can provide that.
      *
-     * @param query The query.
-     * @return The resulting {@link ObjectMetadata} instances.
+     *
+     * @param query The query for which results are counted.
+     *
+     * @return The number of results a query will produce.
+     */
+    long count(String query);
+
+    /**
+     * Counts the results that will be produced by a query on a project.
+     * Many systems require pagination information like the number of
+     * expected results, and the count operation can provide that.
+     *
+     *
+     * @param project The Project to be searched.
+     *
+     * @param query The query for which to perform the count.
+     *
+     * @return The number of results the query will produce.
+     */
+    long count(Project project, String query);
+
+    /**
+     * Attempts to count the results that the query.
+     * {@link SearchPage} information is built based on the count,
+     * and this information is used to query all results.
+     *
+     * @param query The query to be performed.
+     *
+     * @return All search results for the query.
      */
     Iterable<ObjectMetadata> search(String query);
+
+    /**
+     * Searches based on a given Project.
+     *
+     * Attempts to count the results that the query.
+     * {@link SearchPage} information is built based on the count,
+     * and this information is used to query all results.
+     *
+     * @param project The project to be searched.
+     *
+     * @param query The query to be performed.
+     *
+     * @return All search results for the query.
+     */
+    Iterable<ObjectMetadata> search(Project project, String query);
+
+    /**
+     * Perform a search over repository using a query.
+     *
+     * @param query The query.
+     * @param searchPage Object describing the pagination for the returned result.
+     *
+     * @return The resulting {@link ObjectMetadata} instances.
+     */
+    Iterable<ObjectMetadata> search(String query, SearchPage searchPage);
 
     /**
      * Perform a search over repository for a single project using a query.
      *
      * @param project The project in which to search.
      * @param query   The query.
+     * @param searchPage Object describing the pagination for the returned result.
+     *
      * @return The resulting {@link ObjectMetadata} instances.
      */
-    Iterable<ObjectMetadata> search(Project project, String query);
+    Iterable<ObjectMetadata> search(Project project, String query, SearchPage searchPage);
 
     /**
      * Add {@link ObjectMetadata} to the search

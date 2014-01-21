@@ -50,6 +50,11 @@ services:
   taskManager: org.openskye.task.queue.QueueTaskManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
+
+#search:
+#  host: atpblade05.infobelt.com
+#  port: 9300
+
 server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000

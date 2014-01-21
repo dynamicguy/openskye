@@ -50,11 +50,9 @@ services:
   taskManager: org.openskye.task.queue.QueueTaskManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
-services:
-  omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
-  oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch
-  taskManager: org.openskye.task.queue.QueueWorkerManager
-  taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
+#search:
+#  host: atpblade05.infobelt.com
+#  port: 9300
 
 worker:
   # TODO you will need to specify a nodeID once you have created one

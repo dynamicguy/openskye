@@ -111,8 +111,8 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
         String objectSetID = resolveAlias(dynamicParams.get("objectSetId"));
         String query = dynamicParams.get("query");
 
-
         WebResource resource = client.resource(settings.getUrl() + getCollectionPlural() + "/" + objectSetID + "/search").queryParam("query", query);
+
         WebResource.Builder builder = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
         if (settings.getApiKey() != null) {
             builder.header("X-Api-Key", settings.getApiKey());
