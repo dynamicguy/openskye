@@ -24,12 +24,12 @@ public abstract class ExecutableCommand {
      * A set of dynamic parameters passed from the command line and used for commands that require additional parameters
      * beyond the command name (such as create and update)
      */
-    @DynamicParameter(names = {"-P"}, description = "Additional parameters")
+    @DynamicParameter(names = {"-P"}, description = "Additional parameters for this command")
     public Map<String, String> dynamicParams = new HashMap<>();
     /**
      * An alias for a created object (called optionally from the command line with the "-A" flag)
      */
-    @Parameter(names = "-A")
+    @Parameter(names = "-A", description = "A signal to save a created/listed id as a given alias")
     protected String alias;
     /**
      * User settings

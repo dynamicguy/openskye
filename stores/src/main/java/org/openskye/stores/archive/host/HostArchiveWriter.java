@@ -65,10 +65,10 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
             // We need to push the ACB to the OMR so that we are able to have a
             // UUID on the ACB
+            acb = getOmr().put(acb);
+
             simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
 
-            // Store this new ACB
-            acb = getOmr().put(acb);
 
             if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
