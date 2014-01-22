@@ -66,8 +66,8 @@ public class ObjectMetadata {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "OBJECT_METADATA_ARCHIVE_CONTENT_BLOCK",
-            joinColumns = {@JoinColumn(name = "ARCHIVE_CONTENT_BLOCK_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "OBJECT_METADATA_ID", referencedColumnName = "ID")})
+            joinColumns = {@JoinColumn(name = "OBJECT_METADATA_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "ARCHIVE_CONTENT_BLOCK_ID", referencedColumnName = "ID")})
     private List<ArchiveContentBlock> archiveContentBlocks = new ArrayList<>();
 
     /**
