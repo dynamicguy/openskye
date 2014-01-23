@@ -62,7 +62,7 @@ public class ReplicateTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    protected TaskStatus doStep() throws Exception {
 
         log.debug("Starting replication task " + task);
         if (task.getStatistics() == null)
@@ -79,11 +79,8 @@ public class ReplicateTaskStep extends TaskStep {
             if (replicator.isPresent()) {
                 log.debug("Beginning replication with  " + replicator);
 
-                beginTransaction();
-
                 replicator.get().replicate(getNode(), getProject());
 
-                commitTransaction();
                 log.debug("Ended replication with  " + replicator);
 
             }

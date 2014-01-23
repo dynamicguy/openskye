@@ -63,8 +63,7 @@ public class DestroyTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
-        beginTransaction();
+    protected TaskStatus doStep() throws Exception {
 
         Optional<ObjectSet> objectSet;
         if (objectSetId != null) {
@@ -100,7 +99,6 @@ public class DestroyTaskStep extends TaskStep {
             throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
         }
 
-        commitTransaction();
         return TaskStatus.COMPLETED;
     }
 

@@ -58,9 +58,7 @@ public class DiscoverTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
-
-        beginTransaction();
+    protected TaskStatus doStep() throws Exception {
 
         InformationStore is = buildInformationStore(channel.getInformationStoreDefinition());
 
@@ -69,8 +67,6 @@ public class DiscoverTaskStep extends TaskStep {
         }
 
         discover(is, is.getRoot(), task);
-
-        commitTransaction();
 
         return TaskStatus.COMPLETED;
     }

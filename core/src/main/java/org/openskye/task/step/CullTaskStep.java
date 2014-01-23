@@ -72,15 +72,13 @@ public class CullTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    protected TaskStatus doStep() throws Exception {
 
         // Load retention policy information up front, to avoid a database query on every object
         Map<String, RetentionPolicy> policyMap = new HashMap<String, RetentionPolicy>();
         for (RetentionPolicy policy : retentionPolicyDAO.list().getResults()) {
             policyMap.put(policy.getRecordsCode(), policy);
         }
-
-        beginTransaction();
 
         String setName = project.getName() + " - retention expired " + new DateTime();
         objectSet = omr.createObjectSet(setName);
@@ -98,8 +96,6 @@ public class CullTaskStep extends TaskStep {
         }
 
         //TODO: exclude objects on hold
-
-        commitTransaction();
 
         return TaskStatus.COMPLETED;
     }

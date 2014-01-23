@@ -66,7 +66,7 @@ public class ClassifyTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    protected TaskStatus doStep() throws Exception {
 
         // Load retention policy information up front, to avoid a database query on every object
         Map<String, RetentionPolicy> policyMap = new HashMap<>();
@@ -124,7 +124,6 @@ public class ClassifyTaskStep extends TaskStep {
         }
 
         // update the objects in the OMR
-        beginTransaction();
         for (String objectId : classifyMap.keySet()) {
             ObjectMetadata om = omr.get(objectId).get();
             om.getMetadata().put("recordsCode", classifyMap.get(objectId));
@@ -132,7 +131,6 @@ public class ClassifyTaskStep extends TaskStep {
         }
         task.getStatistics().addSimpleObjectsFound(objectsFound);
         task.getStatistics().addSimpleObjectsProcessed(objectsProcessed);
-        commitTransaction();
 
         return TaskStatus.COMPLETED;
     }

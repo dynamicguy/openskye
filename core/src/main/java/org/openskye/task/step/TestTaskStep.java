@@ -59,7 +59,13 @@ public class TestTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    public TaskStatus call() throws Exception
+    {
+        return doStep();
+    }
+
+    @Override
+    protected TaskStatus doStep() throws Exception {
         try {
             log.info("Test Task: sleepSeconds=" + sleepSeconds + " iterations=" + iterations + " pass=" + pass);
             for (int i = 0; i < iterations; i++) {

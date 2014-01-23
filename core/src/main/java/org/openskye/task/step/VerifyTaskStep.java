@@ -36,7 +36,7 @@ public class VerifyTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    protected TaskStatus doStep() throws Exception {
         throw new SkyeException("Verify tasks are not yet implemented");
     }
 }

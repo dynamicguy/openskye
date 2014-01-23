@@ -77,7 +77,7 @@ public class ExtractTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    protected TaskStatus doStep() throws Exception {
 
         Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
         if (! targetInformationStore.isPresent()) {

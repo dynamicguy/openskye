@@ -130,6 +130,42 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         auditLogDAO.create(auditLog);
     }
 
+    @Override
+    public TaskStatus call() throws Exception
+    {
+        TaskStatus status = TaskStatus.COMPLETED;
+        SkyeException exception = null;
+
+        log.debug("Starting transaction for task " + getTask().getId());
+        beginTransaction();
+
+
+        try
+        {
+            log.debug("Performing task step for " + getTask().getId());
+            status = doStep();
+        }
+        catch(Exception ex)
+        {
+            status = TaskStatus.FAILED;
+            log.warn("Task " + getTask().getId() + " failed due to exception of type " + ex.getClass().getCanonicalName());
+            exception = new SkyeException("Transaction Step failed.", ex);
+
+        }
+        finally
+        {
+            commitTransaction();
+            log.debug("Committing transaction for task " + getTask().getId());
+        }
+
+        if(exception != null)
+            throw exception;
+
+        return status;
+    }
+
+    protected abstract TaskStatus doStep() throws Exception;
+
     @JsonIgnore
     public abstract String getLabel();  // example: "ARCHIVE"
 

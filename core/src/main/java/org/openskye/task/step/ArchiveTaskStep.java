@@ -56,13 +56,11 @@ public class ArchiveTaskStep extends TaskStep {
     }
 
     @Override
-    public TaskStatus call() throws Exception {
+    protected TaskStatus doStep() throws Exception {
 
         log.debug("Starting archive task " + task);
         if (task.getStatistics() == null)
             task.setStatistics(new TaskStatistics());
-
-        beginTransaction();
 
         // Build up the information and archive stores
         log.debug("Starting archive task step on " + channel);
@@ -92,7 +90,6 @@ public class ArchiveTaskStep extends TaskStep {
             }
         }
 
-        commitTransaction();
         return TaskStatus.COMPLETED;
     }
 
