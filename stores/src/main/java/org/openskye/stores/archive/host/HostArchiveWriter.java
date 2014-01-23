@@ -16,6 +16,7 @@ import org.openskye.core.*;
 import org.openskye.core.structured.Row;
 import org.openskye.domain.Task;
 import org.openskye.node.NodeManager;
+import org.openskye.stores.FileSystemCompressedObject;
 import org.openskye.stores.archive.AbstractArchiveStoreWriter;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
 
@@ -107,8 +108,14 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 postProcess(acb, tempStoragePath, simpleObject);
 
             } else if (simpleObject instanceof UnstructuredObject) {
+                UnstructuredObject unstructuredObject = null;
                 // we can just store this as a file
-                UnstructuredObject unstructuredObject = (UnstructuredObject) simpleObject;
+                if(simpleObject instanceof UnstructuredCompressedObject){ //is it a compressed object?
+                    unstructuredObject = (FileSystemCompressedObject) simpleObject;
+                }
+                else{
+                    unstructuredObject = (HostArchiveUnstructuredObject) simpleObject;
+                }
                 final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
 
                 try {

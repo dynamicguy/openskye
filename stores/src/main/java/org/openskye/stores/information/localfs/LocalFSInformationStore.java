@@ -107,12 +107,7 @@ public class LocalFSInformationStore implements InformationStore {
                         metadata.setMimeType(MimeTypeUtil.getContentType(p));
                         metadata.setInformationStoreId(informationStoreDefinition.getId());
                         compressedObj.setObjectMetadata(metadata);
-                        List<SimpleObject> objects = compressedObj.getObjectsContained();
-                        if (log.isDebugEnabled())
-                            log.debug("Found compressed file " + metadata);
-                        for (SimpleObject obj : objects) {
-                            all.add(obj);
-                        }
+                        all.add(compressedObj);
                     } else {
                         UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
                         ObjectMetadata metadata = new ObjectMetadata();

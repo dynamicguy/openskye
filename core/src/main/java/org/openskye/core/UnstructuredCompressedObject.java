@@ -12,4 +12,6 @@ import java.util.List;
 public abstract class UnstructuredCompressedObject extends UnstructuredObject {
 
     public abstract List<SimpleObject> getObjectsContained();
+
+    public abstract UnstructuredCompressedObject compress(SimpleObject so, CompressionType type);
 }

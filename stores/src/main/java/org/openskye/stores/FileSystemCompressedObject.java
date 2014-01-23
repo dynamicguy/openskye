@@ -6,7 +6,7 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.joda.time.DateTime;
 import org.openskye.core.*;
-import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
+import org.openskye.stores.archive.host.HostArchiveUnstructuredObject;
 import org.openskye.stores.util.MimeTypeUtil;
 
 import java.io.*;
@@ -25,16 +25,22 @@ public class FileSystemCompressedObject extends UnstructuredCompressedObject {
             List<SimpleObject> objects = new ArrayList<>();
             ArchiveInputStream stream = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(this.getObjectMetadata().getPath())));
             ArchiveEntry currentEntry = stream.getNextEntry();
+            ObjectMetadata om = this.getObjectMetadata();
+            String originalPath = this.getObjectMetadata().getPath();
             while(currentEntry!=null){
-                ObjectMetadata om = this.getObjectMetadata();
-                String originalPath = this.getObjectMetadata().getPath();
-                om.setPath(originalPath+"/"+currentEntry.getName());
-                om.setOriginalSize(currentEntry.getSize());
-                om.setContainer(currentEntry.isDirectory());
-                om.setLastModified(new DateTime(currentEntry.getLastModifiedDate()));
-                om.setMimeType(MimeTypeUtil.getContentType(readBytes(currentEntry, stream)));
-                SimpleObject so = new LocalFileUnstructuredObject();
-                so.setObjectMetadata(om);
+                ObjectMetadata newOm = new ObjectMetadata();
+                newOm.setPath(originalPath + "/" + currentEntry.getName());
+                newOm.setOriginalSize(currentEntry.getSize());
+                newOm.setContainer(currentEntry.isDirectory());
+                newOm.setLastModified(new DateTime(currentEntry.getLastModifiedDate()));
+                newOm.setMimeType(MimeTypeUtil.getContentType(readBytes(currentEntry, stream)));
+                newOm.setTaskId(om.getTaskId());
+                newOm.setCreated(om.getCreated());
+                newOm.setIngested(om.getIngested());
+                newOm.setInformationStoreId(om.getInformationStoreId());
+                newOm.setProject(om.getProject());
+                SimpleObject so = new HostArchiveUnstructuredObject();
+                so.setObjectMetadata(newOm);
                 objects.add(so);
                 currentEntry=stream.getNextEntry();
             }
@@ -43,6 +49,11 @@ public class FileSystemCompressedObject extends UnstructuredCompressedObject {
             throw new SkyeException("Skye Exception", e);
         }
 
+    }
+
+    @Override
+    public UnstructuredCompressedObject compress(SimpleObject so, CompressionType type) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public byte[] readBytes(ArchiveEntry entry, ArchiveInputStream stream){
