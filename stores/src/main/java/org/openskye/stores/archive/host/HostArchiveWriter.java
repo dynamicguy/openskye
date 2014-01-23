@@ -110,12 +110,16 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             } else if (simpleObject instanceof UnstructuredObject) {
                 UnstructuredObject unstructuredObject = null;
                 // we can just store this as a file
-                if(simpleObject instanceof UnstructuredCompressedObject){ //is it a compressed object?
+                if(simpleObject instanceof UnstructuredCompressedObject) { //is it a compressed object?
                     unstructuredObject = (FileSystemCompressedObject) simpleObject;
                 }
-                else{
+                else if (simpleObject instanceof HostArchiveUnstructuredObject) {
                     unstructuredObject = (HostArchiveUnstructuredObject) simpleObject;
                 }
+                else {
+                    unstructuredObject = (UnstructuredObject) simpleObject;
+                }
+
                 final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
 
                 try {
