@@ -81,10 +81,13 @@ public class DiscoverTaskStep extends TaskStep {
             task.setStatistics(new TaskStatistics());
 
         for (SimpleObject simpleObject : simpleObjects) {
-            if(!omr.isObjectInOMR(simpleObject.getObjectMetadata()) || task.getProject().isDuplicationAllowed()){  //is the object in the OMR already?
+            if (!omr.isObjectInOMR(simpleObject.getObjectMetadata()) || task.getProject().isDuplicationAllowed()) {  //is the object in the OMR already?
                 if (simpleObject instanceof ContainerObject)
                     discover(is, is.getChildren(simpleObject), task);
-                else {
+                else if (simpleObject instanceof UnstructuredCompressedObject) {
+                    omr.put(simpleObject.getObjectMetadata());
+                    discover(is, ((UnstructuredCompressedObject) simpleObject).getObjectsContained(), task);
+                } else {
                     if (isIncludedByFilter(simpleObject)) {
                         task.getStatistics().incrementSimpleObjectsFound();
 
@@ -107,10 +110,11 @@ public class DiscoverTaskStep extends TaskStep {
     }
 
     /**
-     * Helper method that looks at the {@link org.openskye.domain.ChannelFilterDefinition} for the
-     * {@link org.openskye.domain.Channel} to ensure that the simple object should be picked up
+     * Helper method that looks at the {@link org.openskye.domain.ChannelFilterDefinition} for the {@link
+     * org.openskye.domain.Channel} to ensure that the simple object should be picked up
      *
      * @param simpleObject simple object to check
+     *
      * @return true if the simple object should be included
      */
     private boolean isIncludedByFilter(SimpleObject simpleObject) {
