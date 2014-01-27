@@ -8,7 +8,7 @@ database:
   password: infobelt12
 
   # the JDBC URL
-  url: "jdbc:sqlserver://database.infobelt.com:49431"
+  url: "jdbc:sqlserver://localhost:49431"
 
   # Hibernate dialect
   dialect: "org.hibernate.dialect.SQLServerDialect"
@@ -46,7 +46,7 @@ database:
 
 services:
   omr: org.openskye.metadata.impl.jpa.JPAObjectMetadataRepository
-  oms: org.openskye.metadata.elasticsearch.ElasticSearchObjectMetadataSearch
+  oms: org.openskye.metadata.impl.InMemoryObjectMetadataSearch
   taskManager: org.openskye.task.queue.QueueWorkerManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
