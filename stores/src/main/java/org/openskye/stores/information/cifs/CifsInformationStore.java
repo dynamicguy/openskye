@@ -102,7 +102,7 @@ public class CifsInformationStore implements InformationStore {
             root.setObjectMetadata(metadata);
             return getChildren(root);
         } catch (Exception e) {
-            throw new SkyeException(e.getLocalizedMessage());
+            throw new SkyeException("Unable to get CIFS share root directory",e);
         }
     }
 
