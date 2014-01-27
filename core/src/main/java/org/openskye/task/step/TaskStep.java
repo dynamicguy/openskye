@@ -67,7 +67,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     }
 
     protected void commitTransaction() {
-        if (!hasOuterTransaction) {
+        if (!hasOuterTransaction && !emf.get().getTransaction().getRollbackOnly()) {
             emf.get().getTransaction().commit();
         }
     }
@@ -139,7 +139,6 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         log.debug("Starting transaction for task " + getTask().getId());
         beginTransaction();
 
-
         try
         {
             log.debug("Performing task step for " + getTask().getId());
@@ -150,7 +149,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
             status = TaskStatus.FAILED;
             log.warn("Task " + getTask().getId() + " failed due to exception of type " + ex.getClass().getCanonicalName());
             exception = new SkyeException("Transaction Step failed.", ex);
-
+            emf.get().getTransaction().setRollbackOnly();
         }
         finally
         {
