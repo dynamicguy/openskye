@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
-import com.google.inject.persist.UnitOfWork;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.bootstrap.CreateNode;
 import org.openskye.config.WorkerConfiguration;
@@ -58,7 +57,9 @@ public class QueueWorkerManager extends QueueTaskManager implements Runnable {
     }
 
     public String[] getActiveTaskIds() {
-        return (String[]) (futures.keySet().toArray());
+        String[] idArray = new String[futures.keySet().size()];
+        futures.keySet().toArray(idArray);
+        return idArray;
     }
 
     @Override
