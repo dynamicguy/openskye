@@ -9,8 +9,7 @@ import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A {@link TaskStep} that handles a task type of Archive
@@ -94,9 +93,31 @@ public class ArchiveTaskStep extends TaskStep {
     }
 
     private Iterable<ObjectMetadata> getObjectMetadataIterator() {
-        if (task.getParentTask() == null)
-            return omr.getObjects(channel.getInformationStoreDefinition());
-        else
-            return omr.getObjects(task.getParentTask());
+        List<ObjectMetadata> objects;
+        if (task.getParentTask() == null) {
+            objects = (List<ObjectMetadata>) omr.getObjects(channel.getInformationStoreDefinition());
+        } else {
+            objects = (List<ObjectMetadata>) omr.getObjects(task.getParentTask());
+        }
+        Collections.sort(objects, new Comparator<ObjectMetadata>() { //orders based on implementation
+            @Override
+            public int compare(ObjectMetadata o1, ObjectMetadata o2) {
+                if (o1.getImplementation().equals(o2.getImplementation())) {
+                    return 0;
+                } else try {
+                    if (Class.forName(o1.getImplementation()).getSuperclass().equals(UnstructuredCompressedObject.class)) {
+                        return -1;
+                    }
+
+                } catch (Exception e) {
+                    throw new SkyeException("Skye Exception", e);
+                }
+                return 1;
+            }
+        });
+
+        return objects;
     }
+
+
 }
