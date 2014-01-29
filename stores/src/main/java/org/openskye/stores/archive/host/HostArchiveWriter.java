@@ -21,7 +21,6 @@ import org.openskye.node.NodeManager;
 import org.openskye.stores.FileSystemCompressedObject;
 import org.openskye.stores.archive.AbstractArchiveStoreWriter;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
-import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -128,7 +127,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                         throw new SkyeException("Simple object missing from information store?", e);
                     }
                 } else {
-                    unstructuredObject = (LocalFileUnstructuredObject) simpleObject;
+                    unstructuredObject = (UnstructuredObject) simpleObject;
 
                     if (isInCompressedObject(unstructuredObject)) {
                         String path = unstructuredObject.getObjectMetadata().getPath();
