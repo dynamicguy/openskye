@@ -1,5 +1,7 @@
 package org.openskye.core;
 
+import java.util.List;
+
 /**
  * Provides the ability to write {@link SimpleObject} to an {@link ArchiveStore}
  */
@@ -13,6 +15,29 @@ public interface ArchiveStoreWriter {
      * @return The simple object enriched with information such as size, checksum etc
      */
     SimpleObject put(SimpleObject simpleObject);
+
+
+    public abstract boolean isObjectArchived(SimpleObject simpleObject);
+
+    /**
+     * Compress a {@link SimpleObject} into an UnstructuredCompressedObject. Users have a choice as to the manner of compression
+     *
+     * @param so The {@link SimpleObject} to compress
+     * @param type The type of compression to use in creating this object.
+     * @return The resulting compressed object
+     */
+    public abstract UnstructuredCompressedObject compress(SimpleObject so, CompressionType type);
+
+    /**
+     * Compress an {@link org.openskye.core.ArchiveContentBlock} into an UnstructuredCompressedObject. Users have a choice as to the manner of compression
+     *
+     * @param acb The {@link org.openskye.core.ArchiveContentBlock} to compress
+     * @param type The type of compression to use in creating this object.
+     * @return The resulting compressed object
+     */
+    public abstract UnstructuredCompressedObject compress(ArchiveContentBlock acb, CompressionType type);
+
+    public abstract List<SimpleObject> decompress(UnstructuredCompressedObject compressedObject);
 
     /**
      * Closes the resources for this writer

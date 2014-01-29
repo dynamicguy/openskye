@@ -40,7 +40,4 @@ public abstract class AbstractArchiveStoreWriter implements ArchiveStoreWriter {
         return lastInputStream;
     }
 
-    public abstract boolean isObjectArchived(SimpleObject simpleObject);
-
-
 }

@@ -9,6 +9,7 @@ import org.openskye.replicate.Replicator;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,6 +82,26 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
             objects.put(simpleObject.getObjectMetadata().getId(), simpleObject);
         }
         return simpleObject;
+    }
+
+    @Override
+    public boolean isObjectArchived(SimpleObject simpleObject) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public UnstructuredCompressedObject compress(SimpleObject so, CompressionType type) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public UnstructuredCompressedObject compress(ArchiveContentBlock acb, CompressionType type) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<SimpleObject> decompress(UnstructuredCompressedObject compressedObject) {
+        return null;
     }
 
     @Override

@@ -148,7 +148,12 @@ public class LocalFSInformationStore implements InformationStore {
 
     @Override
     public SimpleObject materialize(ObjectMetadata objectMetadata) throws InvalidSimpleObjectException {
-        UnstructuredObject unstructObj = new LocalFileUnstructuredObject();
+        SimpleObject unstructObj = null;
+        try {
+            unstructObj = (SimpleObject) Class.forName(objectMetadata.getImplementation()).newInstance();
+        } catch (Exception e) {
+            throw new SkyeException("Cannot materialize object from LocalFSInformationStore:", e);
+        }
         unstructObj.setObjectMetadata(objectMetadata);
         return unstructObj;
     }
@@ -174,7 +179,7 @@ public class LocalFSInformationStore implements InformationStore {
                 try {
                     FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), targetFile);
                 } catch (Exception e) {
-                    throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store",e);
+                    throw new SkyeException("Unable to write input stream for " + unstructuredObject + " to local file system information store", e);
                 }
             } else if (simpleObject instanceof JDBCStructuredObject) {
                 // we need to store the whole table as a CSV
