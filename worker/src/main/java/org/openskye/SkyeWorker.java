@@ -8,7 +8,6 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
-import org.openskye.config.SkyeConfiguration;
 import org.openskye.config.SkyeWorkerConfiguration;
 import org.openskye.exceptions.ConstraintViolationExceptionMapper;
 import org.openskye.guice.*;
@@ -116,7 +115,8 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
 
         jpaPersistModule.properties(props);
 
-        DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
+        DropwizardEnvironmentModule<SkyeWorkerConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeWorkerConfiguration.class);
+        dropwizardEnvironmentModule.setEnvironmentData(configuration, environment);
 
         SkyeModule skyeModule = new SkyeModule(configuration);
         // Set-up the filters
