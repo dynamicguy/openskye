@@ -23,13 +23,6 @@ import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created with IntelliJ IDEA.
- * User: joshua
- * Date: 11/11/13
- * Time: 10:49 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ObjectMetadataModule extends AbstractModule
 {
     protected static final String DOMAIN_ID = "domain1";
@@ -45,6 +38,9 @@ public class ObjectMetadataModule extends AbstractModule
         props.put("javax.persistence.jdbc.user", "sa");
         props.put("javax.persistence.jdbc.password", "");
         props.put("javax.persistence.jdbc.driver", "org.h2.Driver");
+        props.put("hibernate.hbm2ddl.auto", "create");
+        props.put("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
+
         jpaPersistModule.properties(props);
         install(jpaPersistModule);
 

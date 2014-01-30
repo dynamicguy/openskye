@@ -19,6 +19,9 @@ public class H2DatabaseTestModule extends AbstractModule {
         props.put("javax.persistence.jdbc.user", "sa");
         props.put("javax.persistence.jdbc.password", "");
         props.put("javax.persistence.jdbc.driver", "org.h2.Driver");
+        props.put("hibernate.hbm2ddl.auto", "create");
+        props.put("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
+
         jpaPersistModule.properties(props);
         install(jpaPersistModule);
         install(new GuiceBerryModule());

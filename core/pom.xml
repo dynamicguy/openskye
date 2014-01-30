@@ -43,6 +43,13 @@
             <version>${dropwizard.version}</version>
         </dependency>
 
+        <!-- Dropwizard DB migrations -->
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-migrations</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+
         <!-- For the domain and also the JPA models for JPA OMR -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -225,6 +232,11 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
         </dependency>
 
     </dependencies>

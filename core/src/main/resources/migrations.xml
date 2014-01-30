@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet author="admin (generated)" id="1390535812880-1">
+        <createTable catalogName="openskye" tableName="information_store_definition_properties">
+            <column name="information_store_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-2">
+        <createTable catalogName="openskye" tableName="task_log">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="exception_json" type="LONGTEXT"/>
+            <column name="log_time" type="datetime"/>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="status" type="INT(10)"/>
+            <column name="task_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-3">
+        <createTable catalogName="openskye" tableName="permission">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-4">
+        <createTable catalogName="openskye" tableName="archive_store">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="implementation" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-5">
+        <createTable catalogName="openskye" tableName="object_metadata_data">
+            <column name="object_metadata_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="metadata" type="VARCHAR(255)"/>
+            <column name="metadata_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-6">
+        <createTable catalogName="openskye" tableName="task_statistics">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="simple_objects_found" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="simple_objects_processed" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-7">
+        <createTable catalogName="openskye" tableName="node">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hostname" type="VARCHAR(255)"/>
+            <column name="service_account" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-8">
+        <createTable catalogName="openskye" tableName="role">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-9">
+        <createTable catalogName="openskye" tableName="skye_user">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="api_key" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)"/>
+            <column name="domain" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-10">
+        <createTable catalogName="openskye" tableName="project">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="duplication_allowed" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="domain_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-11">
+        <createTable catalogName="openskye" tableName="archive_store_definition_properties">
+            <column name="archive_store_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-12">
+        <createTable catalogName="openskye" tableName="node_archive_store_instance">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="node_role" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archive_store_instance_id" type="VARCHAR(36)"/>
+            <column name="node_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-13">
+        <createTable catalogName="openskye" tableName="project_user_roles">
+            <column name="role_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_user_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-14">
+        <createTable catalogName="openskye" tableName="attribute_definition">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="embed_in_object" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optional" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_label" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="INT(10)"/>
+            <column name="metadata_template_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-15">
+        <createTable catalogName="openskye" tableName="hold">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="query" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-16">
+        <createTable catalogName="openskye" tableName="task">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ended" type="datetime"/>
+            <column name="queued" type="datetime"/>
+            <column name="started" type="datetime"/>
+            <column name="status" type="INT(10)"/>
+            <column name="step_class_name" type="VARCHAR(255)"/>
+            <column name="step_json" type="LONGTEXT"/>
+            <column name="node_id" type="VARCHAR(36)"/>
+            <column name="parent_task_id" type="VARCHAR(36)"/>
+            <column name="project_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-17">
+        <createTable catalogName="openskye" tableName="user_role">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="VARCHAR(36)"/>
+            <column name="user_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-18">
+        <createTable catalogName="openskye" tableName="audit_log">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audit_entity" type="VARCHAR(255)"/>
+            <column name="audit_event" type="INT(10)"/>
+            <column name="created_at" type="datetime"/>
+            <column name="object_affected" type="VARCHAR(255)"/>
+            <column name="object_event" type="INT(10)"/>
+            <column name="skye_user_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-19">
+        <createTable catalogName="openskye" tableName="archive_store_definition">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archive_store_id" type="VARCHAR(36)"/>
+            <column name="project_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-20">
+        <createTable catalogName="openskye" tableName="domain">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-21">
+        <createTable catalogName="openskye" tableName="channel_archive_store">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archive_store_definition_id" type="VARCHAR(36)"/>
+            <column name="channel_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-22">
+        <createTable catalogName="openskye" tableName="OBJECT_SET_OBJECT_METADATA">
+            <column name="object_set_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object_metadata_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-23">
+        <createTable catalogName="openskye" tableName="task_schedule">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cron_expression" type="VARCHAR(255)"/>
+            <column name="step_class_name" type="VARCHAR(255)"/>
+            <column name="step_json" type="LONGTEXT"/>
+            <column name="project_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-24">
+        <createTable catalogName="openskye" tableName="object_metadata_tags">
+            <column name="object_metadata_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-25">
+        <createTable catalogName="openskye" tableName="metadata_template">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="domain_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-26">
+        <createTable catalogName="openskye" tableName="channel_filter_definition">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="definition" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="implementation" type="VARCHAR(255)"/>
+            <column name="include" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="channel" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-27">
+        <createTable catalogName="openskye" tableName="audit_log_audit_log_properties">
+            <column name="audit_log" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audit_log_properties" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-28">
+        <createTable catalogName="openskye" tableName="retention_policy">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="metadata_criteria" type="LONGTEXT"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_type" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="INT(10)"/>
+            <column name="records_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retention_period" type="BIGINT(19)"/>
+            <column name="template_id" type="VARCHAR(36)"/>
+            <column name="attribute_definition_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-29">
+        <createTable catalogName="openskye" tableName="object_metadata_archive_content_block">
+            <column name="archive_content_block_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object_metadata_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-30">
+        <createTable catalogName="openskye" tableName="archive_store_properties">
+            <column name="archive_store_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-31">
+        <createTable catalogName="openskye" tableName="archive_content_block_node">
+            <column name="node_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archive_content_block_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-32">
+        <createTable catalogName="openskye" tableName="object_metadata">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archive_size" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="checksum" type="VARCHAR(255)"/>
+            <column name="container" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="datetime"/>
+            <column name="implementation" type="VARCHAR(255)"/>
+            <column name="information_store_id" type="VARCHAR(255)"/>
+            <column name="ingested" type="datetime"/>
+            <column name="last_modified" type="datetime"/>
+            <column name="mime_type" type="VARCHAR(255)"/>
+            <column name="original_size" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="VARCHAR(255)"/>
+            <column name="task_id" type="VARCHAR(255)"/>
+            <column name="project" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-33">
+        <createTable catalogName="openskye" tableName="channel">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="information_store_definition" type="VARCHAR(36)"/>
+            <column name="project_id" type="VARCHAR(36)"/>
+            <column name="retention_policy_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-34">
+        <createTable catalogName="openskye" tableName="attribute_instance">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_value" type="VARCHAR(255)"/>
+            <column name="metadata_owner_type" type="INT(10)"/>
+            <column name="owner_id" type="VARCHAR(255)"/>
+            <column name="attribute_definition_id" type="VARCHAR(36)"/>
+            <column name="channel_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-35">
+        <createTable catalogName="openskye" tableName="object_set">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="on_hold" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="query" type="VARCHAR(255)"/>
+            <column name="type" type="INT(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-36">
+        <createTable catalogName="openskye" tableName="information_store_definition">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="implementation" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-37">
+        <createTable catalogName="openskye" tableName="attribute_definition_values">
+            <column name="attribute_definition_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="possible_value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-38">
+        <createTable catalogName="openskye" tableName="archive_content_block">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="checksum" type="VARCHAR(255)"/>
+            <column name="compressed_size" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_size" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archive_store_instance" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-39">
+        <createTable catalogName="openskye" tableName="audit_log_property">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="property_name" type="VARCHAR(255)"/>
+            <column name="property_value" type="VARCHAR(255)"/>
+            <column name="audit_log" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-40">
+        <createTable catalogName="openskye" tableName="role_permission">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="VARCHAR(36)"/>
+            <column name="role_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-41">
+        <createTable catalogName="openskye" tableName="project_user">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="VARCHAR(36)"/>
+            <column name="user_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-42">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_h7ir1pha7s1opbegxgfgpx8y3"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="retention_policy"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-43">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_20nqoesixc8t7uw31mybweidx"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="information_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-44">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_ga2sqp4lboblqv6oks9oryd9q"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="domain"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-45">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_kfd2knk5vudeiuibev8y6roaf"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="object_set"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-46">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_1r44jjdpx9o6wabic55qp3mgm"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="channel"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-47">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_tdcsmo3bdk4eysgnblpu9i9"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-48">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_jlpdsi55ey81exftwaxgwmet9"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="object_metadata_tags"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-49">
+        <addUniqueConstraint catalogName="openskye" columnNames="email" constraintName="UK_nd2wlbt5blmlys8t0ue8a4hwc"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="skye_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-50">
+        <addUniqueConstraint catalogName="openskye" columnNames="audit_log_properties"
+                             constraintName="UK_b0woovnldcfka1nlvt0idsrt2" deferrable="false" disabled="false"
+                             initiallyDeferred="false" tableName="audit_log_audit_log_properties"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-51">
+        <addUniqueConstraint catalogName="openskye" columnNames="records_code"
+                             constraintName="UK_9h6bu9r660rvmgugmun6j7xgd" deferrable="false" disabled="false"
+                             initiallyDeferred="false" tableName="retention_policy"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-52">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_43f1bguegt55dvnhsyvnmnemv"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="archive_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-53">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_nclrf7hwbavebj9639f90sckx"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="skye_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-54">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_3k75vvu7mevyvvb5may5lj8k7"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-55">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_sss05y0ocg01jq762y9oa6syr"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="attribute_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-56">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_8w42mbwddut6vuhqrea0ur1pl"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="metadata_template"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-57">
+        <addUniqueConstraint catalogName="openskye" columnNames="hostname" constraintName="UK_jc3df2vh6uh80wajmby94emig"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="node"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-58">
+        <addUniqueConstraint catalogName="openskye" columnNames="name" constraintName="UK_8sewwnpamngi6b1dwaa88askk"
+                             deferrable="false" disabled="false" initiallyDeferred="false" tableName="role"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-59">
+        <addPrimaryKey catalogName="openskye" columnNames="information_store_id, name" constraintName="PRIMARY"
+                       tableName="information_store_definition_properties"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-60">
+        <addPrimaryKey catalogName="openskye" columnNames="object_set_id, object_metadata_id" constraintName="PRIMARY"
+                       tableName="OBJECT_SET_OBJECT_METADATA"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-61">
+        <addPrimaryKey catalogName="openskye" columnNames="archive_store_id, name" constraintName="PRIMARY"
+                       tableName="archive_store_properties"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-62">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-63">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="audit_log_property"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-64">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="information_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-65">
+        <addPrimaryKey catalogName="openskye" columnNames="object_metadata_id, metadata_key" constraintName="PRIMARY"
+                       tableName="object_metadata_data"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-66">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="retention_policy"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-67">
+        <addPrimaryKey catalogName="openskye" columnNames="archive_store_id, name" constraintName="PRIMARY"
+                       tableName="archive_store_definition_properties"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-68">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task_schedule"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-69">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-70">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="attribute_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-71">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="attribute_instance"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-72">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="object_set"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-73">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="audit_log"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-74">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="user_role"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-75">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="metadata_template"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-76">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="archive_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-77">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="channel"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-78">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="archive_content_block"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-79">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="role_permission"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-80">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-81">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="node"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-82">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="channel_archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-83">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="permission"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-84">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task_log"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-85">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="object_metadata"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-86">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task_statistics"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-87">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="skye_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-88">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="node_archive_store_instance"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-89">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="domain"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-90">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="project_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-91">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="hold"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-92">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+                       tableName="channel_filter_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-93">
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="role"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-94">
+        <addForeignKeyConstraint baseColumnNames="archive_store_definition_id" baseTableCatalogName="openskye"
+                                 baseTableName="channel_archive_store" constraintName="FK_5poug2cpnl0g88y1i3ccohbfn"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-95">
+        <addForeignKeyConstraint baseColumnNames="archive_store_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_store_properties" constraintName="FK_6x6vi855ttnp7ibuioxukg98w"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-96">
+        <addForeignKeyConstraint baseColumnNames="archive_store_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_store_definition_properties"
+                                 constraintName="FK_hpahg0anc1eyy8niyp5pw05kw" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-97">
+        <addForeignKeyConstraint baseColumnNames="domain" baseTableCatalogName="openskye" baseTableName="skye_user"
+                                 constraintName="FK_25byu93n2vmjqq5hf8jj238em" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="domain"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-98">
+        <addForeignKeyConstraint baseColumnNames="attribute_definition_id" baseTableCatalogName="openskye"
+                                 baseTableName="attribute_definition_values"
+                                 constraintName="FK_39m9m9w5t26ilh8g4slp0f9ia" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="attribute_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-99">
+        <addForeignKeyConstraint baseColumnNames="object_metadata_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_metadata_tags" constraintName="FK_ki9iw3taqyajw8rmjnwwyh9tl"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="object_metadata"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-100">
+        <addForeignKeyConstraint baseColumnNames="permission_id" baseTableCatalogName="openskye"
+                                 baseTableName="role_permission" constraintName="FK_fn4pldu982p9u158rpk6nho5k"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="permission"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-101">
+        <addForeignKeyConstraint baseColumnNames="channel_id" baseTableCatalogName="openskye"
+                                 baseTableName="channel_archive_store" constraintName="FK_t53tokwh96ocuiof1pes65ryr"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="channel"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-102">
+        <addForeignKeyConstraint baseColumnNames="audit_log" baseTableCatalogName="openskye"
+                                 baseTableName="audit_log_audit_log_properties"
+                                 constraintName="FK_bvkpkofs624mboql3kcl93aq7" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="audit_log"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-103">
+        <addForeignKeyConstraint baseColumnNames="information_store_id" baseTableCatalogName="openskye"
+                                 baseTableName="information_store_definition_properties"
+                                 constraintName="FK_cw1ft30xba9iw8dri3gv257rg" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="information_store_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-104">
+        <addForeignKeyConstraint baseColumnNames="object_metadata_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_metadata_archive_content_block"
+                                 constraintName="FK_f59q0wo4akul0lr7ycpf6gtia" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="object_metadata"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-105">
+        <addForeignKeyConstraint baseColumnNames="archive_content_block_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_metadata_archive_content_block"
+                                 constraintName="FK_l3i00rky29g42t2kd3ymag7yh" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_content_block"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-106">
+        <addForeignKeyConstraint baseColumnNames="attribute_definition_id" baseTableCatalogName="openskye"
+                                 baseTableName="attribute_instance" constraintName="FK_a17ose2hp9im2mtd0jo90ybsw"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="attribute_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-107">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye"
+                                 baseTableName="project_user" constraintName="FK_ptwhmsh2vocln8sffhyvr2ohm"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-108">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_store_definition" constraintName="FK_m1jl603d0m9ml0idt6jbi6wx7"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-109">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye"
+                                 baseTableName="task_schedule" constraintName="FK_8cmjubphtr8mligodmcjwud6v"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-110">
+        <addForeignKeyConstraint baseColumnNames="domain_id" baseTableCatalogName="openskye"
+                                 baseTableName="metadata_template" constraintName="FK_p23j7kionyoxlwv67u59n6pmn"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="domain"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-111">
+        <addForeignKeyConstraint baseColumnNames="channel" baseTableCatalogName="openskye"
+                                 baseTableName="channel_filter_definition" constraintName="FK_cde6gsqrstj3hkfvonum1qvhk"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="channel"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-112">
+        <addForeignKeyConstraint baseColumnNames="node_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_content_block_node" constraintName="FK_86cmmc0aje8cd7yb6t5yy06x"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="node"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-113">
+        <addForeignKeyConstraint baseColumnNames="archive_content_block_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_content_block_node"
+                                 constraintName="FK_6pnfquhac6s4y060mxi1p74ow" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_content_block"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-114">
+        <addForeignKeyConstraint baseColumnNames="template_id" baseTableCatalogName="openskye"
+                                 baseTableName="retention_policy" constraintName="FK_qpi5v4t6m5vtqadkospr3v1e0"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="metadata_template"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-115">
+        <addForeignKeyConstraint baseColumnNames="node_id" baseTableCatalogName="openskye" baseTableName="task"
+                                 constraintName="FK_snmeik8rjvtiaxpk8grdyr5gw" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="node"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-116">
+        <addForeignKeyConstraint baseColumnNames="node_id" baseTableCatalogName="openskye"
+                                 baseTableName="node_archive_store_instance"
+                                 constraintName="FK_iwxgmio38hvmu2ph7rk8e6v7d" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="node"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-117">
+        <addForeignKeyConstraint baseColumnNames="audit_log" baseTableCatalogName="openskye"
+                                 baseTableName="audit_log_property" constraintName="FK_na92hd82rpo73hqyotbmyidqr"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="audit_log"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-118">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableCatalogName="openskye" baseTableName="project_user"
+                                 constraintName="fk_user_id2" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableCatalogName="openskye" referencedTableName="skye_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-119">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableCatalogName="openskye"
+                                 baseTableName="role_permission" constraintName="FK_j89g87bvih4d6jbxjcssrybks"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="role"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-120">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableCatalogName="openskye" baseTableName="user_role"
+                                 constraintName="fk_user_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableCatalogName="openskye" referencedTableName="skye_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-121">
+        <addForeignKeyConstraint baseColumnNames="project_user_id" baseTableCatalogName="openskye"
+                                 baseTableName="project_user_roles" constraintName="FK_3rtjliy68vgo1fmfxwwd6qa1p"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-122">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableCatalogName="openskye"
+                                 baseTableName="project_user_roles" constraintName="FK_nqw6l7lmfvoufcqishhvp707v"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="role"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-123">
+        <addForeignKeyConstraint baseColumnNames="metadata_template_id" baseTableCatalogName="openskye"
+                                 baseTableName="attribute_definition" constraintName="FK_oqytfuog5934l9mqep83wc57k"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="metadata_template"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-124">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye" baseTableName="channel"
+                                 constraintName="FK_2bynu54vw4ap61csqaakwdvut" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-125">
+        <addForeignKeyConstraint baseColumnNames="archive_store_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_store_definition" constraintName="FK_8jbqdk535nj8fdop15yemky2d"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-126">
+        <addForeignKeyConstraint baseColumnNames="attribute_definition_id" baseTableCatalogName="openskye"
+                                 baseTableName="retention_policy" constraintName="FK_42bns2j94maq5twrjqdr5v5v4"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="attribute_definition"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-127">
+        <addForeignKeyConstraint baseColumnNames="parent_task_id" baseTableCatalogName="openskye" baseTableName="task"
+                                 constraintName="FK_huxl38l5dmbifm4fgeuf525jy" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="task"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-128">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye"
+                                 baseTableName="information_store_definition"
+                                 constraintName="FK_2bdi3vhawkccowclko3t27lro" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-129">
+        <addForeignKeyConstraint baseColumnNames="archive_store_instance_id" baseTableCatalogName="openskye"
+                                 baseTableName="node_archive_store_instance"
+                                 constraintName="FK_akkgi7g6mf4wiy83kgev6wdgp" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-130">
+        <addForeignKeyConstraint baseColumnNames="domain_id" baseTableCatalogName="openskye" baseTableName="project"
+                                 constraintName="FK_8l1cccuisamgod349kdqw52e6" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="domain"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-131">
+        <addForeignKeyConstraint baseColumnNames="retention_policy_id" baseTableCatalogName="openskye"
+                                 baseTableName="channel" constraintName="FK_aq2yrf1cu0bbs9x0lti55j5qe"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="retention_policy"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-132">
+        <addForeignKeyConstraint baseColumnNames="object_metadata_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_set_to_metadata" constraintName="FK_9f2e5kwcvn9wnlcwn9wd9qp6o"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="object_metadata"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-133">
+        <addForeignKeyConstraint baseColumnNames="skye_user_id" baseTableCatalogName="openskye"
+                                 baseTableName="audit_log" constraintName="FK_j7cf0e8xtb371isdkwt6mv59"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="skye_user"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-134">
+        <addForeignKeyConstraint baseColumnNames="task" baseTableCatalogName="openskye" baseTableName="task_statistics"
+                                 constraintName="FK_fainwi1klnr3dvu76pnxmlami" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="task"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-135">
+        <addForeignKeyConstraint baseColumnNames="archive_store_instance" baseTableCatalogName="openskye"
+                                 baseTableName="archive_content_block" constraintName="FK_9m0l60ckfes76hair5sg5x4eb"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="archive_store"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-136">
+        <addForeignKeyConstraint baseColumnNames="channel_id" baseTableCatalogName="openskye"
+                                 baseTableName="attribute_instance" constraintName="FK_a9nuy3tt3y0m9x2s98itdewub"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="channel"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-137">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye" baseTableName="task"
+                                 constraintName="FK_b7i81l1tk1ph95xnhtoftyv53" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-138">
+        <addForeignKeyConstraint baseColumnNames="project" baseTableCatalogName="openskye"
+                                 baseTableName="object_metadata" constraintName="FK_easii5uu6x66yb5auunj9ibir"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-139">
+        <addForeignKeyConstraint baseColumnNames="object_metadata_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_metadata_data" constraintName="FK_jxb2ltrkaexkvrilldhbla2kd"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="object_metadata"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-140">
+        <addForeignKeyConstraint baseColumnNames="object_set_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_set_to_metadata" constraintName="FK_eievyfy2vt8psakfgpxokau1b"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="object_set"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-141">
+        <addForeignKeyConstraint baseColumnNames="audit_log_properties" baseTableCatalogName="openskye"
+                                 baseTableName="audit_log_audit_log_properties"
+                                 constraintName="FK_b0woovnldcfka1nlvt0idsrt2" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="audit_log_property"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-142">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableCatalogName="openskye" baseTableName="user_role"
+                                 constraintName="FK_it77eq964jhfqtu54081ebtio" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="role"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-143">
+        <addForeignKeyConstraint baseColumnNames="information_store_definition" baseTableCatalogName="openskye"
+                                 baseTableName="channel" constraintName="FK_kcy4efe60u9xre0qrhlmnxka3"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="information_store_definition"/>
+    </changeSet>
+</databaseChangeLog>
