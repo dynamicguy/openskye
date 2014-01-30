@@ -22,7 +22,7 @@
             <column name="log_time" type="datetime"/>
             <column name="message" type="VARCHAR(255)"/>
             <column name="status" type="INT(10)"/>
-            <column name="task_id" type="VARCHAR(255)"/>
+            <column name="task_id" type="VARCHAR(36)"/>
         </createTable>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-3">
@@ -50,7 +50,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-5">
         <createTable catalogName="openskye" tableName="object_metadata_data">
-            <column name="object_metadata_id" type="VARCHAR(255)">
+            <column name="object_metadata_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="metadata" type="VARCHAR(255)"/>
@@ -268,10 +268,10 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-22">
         <createTable catalogName="openskye" tableName="OBJECT_SET_OBJECT_METADATA">
-            <column name="object_set_id" type="VARCHAR(255)">
+            <column name="object_set_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="object_metadata_id" type="VARCHAR(255)">
+            <column name="object_metadata_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -289,7 +289,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-24">
         <createTable catalogName="openskye" tableName="object_metadata_tags">
-            <column name="object_metadata_id" type="VARCHAR(255)">
+            <column name="object_metadata_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -355,7 +355,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-29">
         <createTable catalogName="openskye" tableName="object_metadata_archive_content_block">
-            <column name="archive_content_block_id" type="VARCHAR(255)">
+            <column name="archive_content_block_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="object_metadata_id" type="VARCHAR(36)">
@@ -398,7 +398,7 @@
             </column>
             <column name="created" type="datetime"/>
             <column name="implementation" type="VARCHAR(255)"/>
-            <column name="information_store_id" type="VARCHAR(255)"/>
+            <column name="information_store_id" type="VARCHAR(36)"/>
             <column name="ingested" type="datetime"/>
             <column name="last_modified" type="datetime"/>
             <column name="mime_type" type="VARCHAR(255)"/>
@@ -406,7 +406,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="path" type="VARCHAR(255)"/>
-            <column name="task_id" type="VARCHAR(255)"/>
+            <column name="task_id" type="VARCHAR(36)"/>
             <column name="project" type="VARCHAR(36)"/>
         </createTable>
     </changeSet>
@@ -430,7 +430,7 @@
             </column>
             <column name="attribute_value" type="VARCHAR(255)"/>
             <column name="metadata_owner_type" type="INT(10)"/>
-            <column name="owner_id" type="VARCHAR(255)"/>
+            <column name="owner_id" type="VARCHAR(36)"/>
             <column name="attribute_definition_id" type="VARCHAR(36)"/>
             <column name="channel_id" type="VARCHAR(36)"/>
         </createTable>
