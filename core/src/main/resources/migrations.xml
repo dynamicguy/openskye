@@ -592,121 +592,121 @@
                              deferrable="false" disabled="false" initiallyDeferred="false" tableName="role"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-59">
-        <addPrimaryKey catalogName="openskye" columnNames="information_store_id, name" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="information_store_id, name" constraintName="PK_information_store_definition_properties"
                        tableName="information_store_definition_properties"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-60">
-        <addPrimaryKey catalogName="openskye" columnNames="object_set_id, object_metadata_id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="object_set_id, object_metadata_id" constraintName="PK_OBJECT_SET_OBJECT_METADATA"
                        tableName="OBJECT_SET_OBJECT_METADATA"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-61">
-        <addPrimaryKey catalogName="openskye" columnNames="archive_store_id, name" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="archive_store_id, name" constraintName="PK_archive_store_properties"
                        tableName="archive_store_properties"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-62">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="archive_store"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_archive_store" tableName="archive_store"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-63">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="audit_log_property"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_audit_log_property" tableName="audit_log_property"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-64">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_information_store_definition"
                        tableName="information_store_definition"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-65">
-        <addPrimaryKey catalogName="openskye" columnNames="object_metadata_id, metadata_key" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="object_metadata_id, metadata_key" constraintName="PK_object_metadata_data"
                        tableName="object_metadata_data"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-66">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="retention_policy"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_retention_policy" tableName="retention_policy"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-67">
-        <addPrimaryKey catalogName="openskye" columnNames="archive_store_id, name" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="archive_store_id, name" constraintName="PK_archive_store_definition_properties"
                        tableName="archive_store_definition_properties"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-68">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task_schedule"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_task_schedule" tableName="task_schedule"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-69">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="project"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_project" tableName="project"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-70">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_attribute_definition"
                        tableName="attribute_definition"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-71">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="attribute_instance"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_attribute_instance" tableName="attribute_instance"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-72">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="object_set"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_object_set" tableName="object_set"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-73">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="audit_log"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_audit_log" tableName="audit_log"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-74">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="user_role"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_user_role" tableName="user_role"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-75">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="metadata_template"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_metadata_template" tableName="metadata_template"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-76">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_archive_store_definition"
                        tableName="archive_store_definition"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-77">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="channel"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_channel" tableName="channel"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-78">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_archive_content_block"
                        tableName="archive_content_block"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-79">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="role_permission"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_role_permission" tableName="role_permission"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-80">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_task" tableName="task"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-81">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="node"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_node" tableName="node"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-82">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_channel_archive_store"
                        tableName="channel_archive_store"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-83">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="permission"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_permission" tableName="permission"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-84">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task_log"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_task_log" tableName="task_log"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-85">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="object_metadata"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_object_metadata" tableName="object_metadata"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-86">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="task_statistics"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_task_statistics" tableName="task_statistics"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-87">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="skye_user"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_skye_user" tableName="skye_user"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-88">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_node_archive_store_instance"
                        tableName="node_archive_store_instance"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-89">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="domain"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_domain" tableName="domain"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-90">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="project_user"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_project_user" tableName="project_user"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-91">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="hold"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_hold" tableName="hold"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-92">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY"
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_channel_filter_definition"
                        tableName="channel_filter_definition"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-93">
-        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PRIMARY" tableName="role"/>
+        <addPrimaryKey catalogName="openskye" columnNames="id" constraintName="PK_role" tableName="role"/>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-94">
         <addForeignKeyConstraint baseColumnNames="archive_store_definition_id" baseTableCatalogName="openskye"
