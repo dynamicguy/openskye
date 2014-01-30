@@ -27,7 +27,7 @@ import java.util.*;
 public class ObjectMetadata {
 
     @Id
-    @Column(unique = true)
+    @Column(unique = true, length = 36)
     @NotNull
     private String id = UUID.randomUUID().toString();
     @Size(min = 1, max = 1024)

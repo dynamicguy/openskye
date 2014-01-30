@@ -36,9 +36,9 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     @Parameter(names = "--cull")
     protected boolean cull;
     @Parameter(names = "--classify")
-    protected boolean replicate;
-    @Parameter(names = "--replicate")
     protected boolean classify;
+    @Parameter(names = "--replicate")
+    protected boolean replicate;
     @Parameter(names = "--verify")
     protected boolean verify;
     @Parameter(names = "--extract")
