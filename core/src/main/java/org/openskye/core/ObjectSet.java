@@ -38,16 +38,16 @@ public class ObjectSet implements Identifiable {
     private boolean onHold = false;
     @ManyToMany
     @JoinTable(
-            name = "OBJECT_SET_TO_METADATA",
+            name = "OBJECT_SET_OBJECT_METADATA",
             joinColumns = {
                     @JoinColumn(
-                            name = "setId",
+                            name = "OBJECT_SET_ID",
                             referencedColumnName = "id"
                     )
             },
             inverseJoinColumns = {
                     @JoinColumn(
-                            name = "metadataId",
+                            name = "OBJECT_METADATA_ID",
                             referencedColumnName = "id"
                     )
             }

@@ -37,14 +37,14 @@ public class ProjectUser implements Identifiable {
     @JoinTable(
         name = "PROJECT_USER_ROLES", joinColumns = {
         @JoinColumn(
-                name = "roleId",
-                referencedColumnName = "id"
+                name = "PROJECT_USER_ID",
+                referencedColumnName = "ID"
         )
     },
     inverseJoinColumns = {
         @JoinColumn(
-                name = "projectUserId",
-                referencedColumnName = "id"
+                name = "ROLE_ID",
+                referencedColumnName = "ID"
         )
     }
     )
