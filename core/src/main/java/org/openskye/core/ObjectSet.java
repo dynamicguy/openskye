@@ -27,7 +27,7 @@ public class ObjectSet implements Identifiable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(unique = true)
+    @Column(unique = true, length = 36)
     private String id;
     @NotBlank
     @NotNull
