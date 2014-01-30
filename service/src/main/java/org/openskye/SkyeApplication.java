@@ -7,6 +7,8 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +68,12 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         bootstrap.addBundle(new AssetsBundle("/apidocs", "/explore", "index.html"));
         bootstrap.addBundle(new SwaggerBundle());
         bootstrap.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        bootstrap.addBundle(new MigrationsBundle<SkyeConfiguration>() {
+            @Override
+            public DataSourceFactory getDataSourceFactory(SkyeConfiguration skyeConfiguration) {
+                return skyeConfiguration.getDatabaseConfiguration().getDataSourceFactory(skyeConfiguration);
+            }
+        });
 
         this.bootstrap = bootstrap;
     }

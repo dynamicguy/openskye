@@ -14,7 +14,7 @@ public class SkyeConfiguration extends Configuration {
     @Valid
     @NotNull
     @JsonProperty
-    private DatabaseConfiguration database = new DatabaseConfiguration();
+    private SkyeDatabaseConfiguration database = new SkyeDatabaseConfiguration();
     @Valid
     @JsonProperty
     private ServiceConfiguration services = new ServiceConfiguration();
@@ -23,7 +23,7 @@ public class SkyeConfiguration extends Configuration {
     @JsonProperty
     private SearchConfiguration search = new SearchConfiguration();
 
-    public DatabaseConfiguration getDatabaseConfiguration() {
+    public SkyeDatabaseConfiguration getDatabaseConfiguration() {
         return database;
     }
 

@@ -47,8 +47,8 @@ public class ArchiveContentBlock {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "ARCHIVE_CONTENT_BLOCK_NODE",
-            joinColumns = {@JoinColumn(name = "NODE_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "ARCHIVE_CONTENT_BLOCK_ID", referencedColumnName = "ID")})
+            joinColumns = {@JoinColumn(name = "ARCHIVE_CONTENT_BLOCK_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "NODE_ID", referencedColumnName = "ID")})
     @JsonIgnore
     private List<Node> nodes = new ArrayList<>();
 
