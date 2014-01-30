@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+    <persistence-unit name="Default" transaction-type="RESOURCE_LOCAL">
+        <class>org.openskye.domain.User</class>
+        <class>org.openskye.domain.UserRole</class>
+        <class>org.openskye.domain.Role</class>
+        <class>org.openskye.domain.ArchiveStoreInstance</class>
+        <class>org.openskye.domain.AttributeInstance</class>
+        <class>org.openskye.domain.AuditEvent</class>
+        <class>org.openskye.domain.AttributeDefinition</class>
+        <class>org.openskye.domain.AuditLog</class>
+        <class>org.openskye.domain.AuditLogProperty</class>
+        <class>org.openskye.domain.Channel</class>
+        <class>org.openskye.domain.ChannelFilterDefinition</class>
+        <class>org.openskye.domain.ChannelArchiveStore</class>
+        <class>org.openskye.domain.Domain</class>
+        <class>org.openskye.domain.ArchiveStoreDefinition</class>
+        <class>org.openskye.domain.InformationStoreDefinition</class>
+        <class>org.openskye.domain.MetadataTemplate</class>
+        <class>org.openskye.domain.Permission</class>
+        <class>org.openskye.domain.Project</class>
+        <class>org.openskye.domain.RetentionPolicy</class>
+        <class>org.openskye.domain.RolePermission</class>
+        <class>org.openskye.domain.Task</class>
+        <class>org.openskye.domain.TaskLog</class>
+        <class>org.openskye.domain.TaskSchedule</class>
+        <class>org.openskye.domain.TaskStatistics</class>
+        <class>org.openskye.domain.ChannelFilterDefinition</class>
+        <class>org.openskye.core.ObjectSet</class>
+        <class>org.openskye.core.ObjectMetadata</class>
+        <class>org.openskye.core.Tag</class>
+        <class>org.openskye.core.ArchiveContentBlock</class>
+        <class>org.openskye.domain.ProjectUser</class>
+        <class>org.openskye.domain.Node</class>
+        <class>org.openskye.domain.NodeArchiveStoreInstance</class>
+    </persistence-unit>
+</persistence>
