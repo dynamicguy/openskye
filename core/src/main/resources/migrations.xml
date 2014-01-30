@@ -386,7 +386,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-32">
         <createTable catalogName="openskye" tableName="object_metadata">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="archive_size" type="BIGINT(19)">
@@ -437,7 +437,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-35">
         <createTable catalogName="openskye" tableName="object_set">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">
