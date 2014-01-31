@@ -151,15 +151,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     public boolean isObjectInOMR(ObjectMetadata objectMetadata) {
         String queryPath = objectMetadata.getPath();
         String queryChecksum = objectMetadata.getChecksum();
+        Project queryProject = objectMetadata.getProject();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
         if (queryChecksum != null) {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum));
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum), cb.equal(root.get(ObjectMetadata_.project), queryProject));
         } else {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath));
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath),cb.equal(root.get(ObjectMetadata_.project), queryProject));
         }
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);

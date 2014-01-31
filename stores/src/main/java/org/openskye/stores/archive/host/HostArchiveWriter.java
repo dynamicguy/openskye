@@ -2,9 +2,10 @@ package org.openskye.stores.archive.host;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.*;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.util.IOUtils;
 import org.eobjects.metamodel.DataContextFactory;
 import org.eobjects.metamodel.UpdateCallback;
 import org.eobjects.metamodel.UpdateScript;
@@ -32,30 +33,29 @@ import java.util.List;
  */
 @Slf4j
 public class HostArchiveWriter extends AbstractArchiveStoreWriter {
+    public final String TMP_DECOMPRESSION_PATH;
     private final Task task;
     private final HostArchiveStore hostArchiveStore;
-    public final String TMP_DECOMPRESSION_PATH;
 
 
     public HostArchiveWriter(Task task, HostArchiveStore hostArchiveStore) {
         this.hostArchiveStore = hostArchiveStore;
         this.task = task;
-        TMP_DECOMPRESSION_PATH=hostArchiveStore.getFilePath() + "/tmpArchive/";
+        TMP_DECOMPRESSION_PATH = hostArchiveStore.getFilePath() + "/tmpArchive/";
 
     }
 
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
+        ArchiveContentBlock acb;
+
         //check if the archive store already has this simple object in an ACB and if object duplication is allowed on the project
-        if (isObjectArchived(simpleObject)) {
-            //This archive store has this object already
-            List<ArchiveContentBlock> objectACBs = simpleObject.getObjectMetadata().getArchiveContentBlocks();
-            objectACBs.add(simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).get());
-            simpleObject.getObjectMetadata().setArchiveContentBlocks(objectACBs);
+        if (isObjectArchived(simpleObject) && simpleObject.getObjectMetadata().getProject().isDuplicationAllowed()) {
+            //This archive store has this object already, so write to the existing ACB with this object in this store
+            acb = simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).get();
         } else {
 
-            ArchiveContentBlock acb = new ArchiveContentBlock();
-
+            acb = new ArchiveContentBlock();
             // We need to link this ACB to the Node we are currently running on
             acb.setNodes(new ArrayList());
             if (NodeManager.hasNode()) {
@@ -72,90 +72,90 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             acb = getOmr().put(acb);
 
             simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
+        }
 
+        if (simpleObject instanceof JDBCStructuredObject) {
+            // we need to store the whole table as a CSV
+            final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
+            final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
+            if (HostArchiveWriter.log.isDebugEnabled())
+                HostArchiveWriter.log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
+            final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(tempStoragePath);
+            dataContext.executeUpdate(new UpdateScript() {
+                public void run(UpdateCallback callback) {
 
-            if (simpleObject instanceof JDBCStructuredObject) {
-                // we need to store the whole table as a CSV
-                final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
-                final JDBCStructuredObject structuredObject = (JDBCStructuredObject) simpleObject;
-                if (HostArchiveWriter.log.isDebugEnabled())
-                    HostArchiveWriter.log.debug("Writing temp structured object to " + tempStoragePath.getAbsolutePath());
-                final UpdateableDataContext dataContext = DataContextFactory.createCsvDataContext(tempStoragePath);
-                dataContext.executeUpdate(new UpdateScript() {
-                    public void run(UpdateCallback callback) {
+                    // Create the table in a file representing the Archive Content Block
+                    TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
 
-                        // Create the table in a file representing the Archive Content Block
-                        TableCreationBuilder tableCreator = callback.createTable(dataContext.getDefaultSchema(), structuredObject.getTable().getName());
+                    for (Column column : structuredObject.getTable().getColumns()) {
+                        tableCreator.withColumn(column.getName()).ofType(column.getType()).ofSize(column.getColumnSize());
+                    }
 
-                        for (Column column : structuredObject.getTable().getColumns()) {
-                            tableCreator.withColumn(column.getName()).ofType(column.getType()).ofSize(column.getColumnSize());
+                    Table table = tableCreator.execute();
+                    Iterator<Row> rows = structuredObject.getRows();
+                    while (rows.hasNext()) {
+                        Row row = rows.next();
+                        RowInsertionBuilder insert = callback.insertInto(table);
+                        int pos = 0;
+                        for (String name : structuredObject.getTable().getColumnNames()) {
+                            insert.value(name, row.getValues()[pos]);
+                            pos++;
                         }
-
-                        Table table = tableCreator.execute();
-                        Iterator<Row> rows = structuredObject.getRows();
-                        while (rows.hasNext()) {
-                            Row row = rows.next();
-                            RowInsertionBuilder insert = callback.insertInto(table);
-                            int pos = 0;
-                            for (String name : structuredObject.getTable().getColumnNames()) {
-                                insert.value(name, row.getValues()[pos]);
-                                pos++;
-                            }
-                            insert.execute();
-                        }
+                        insert.execute();
                     }
-
-                });
-
-                // Post process the stored object to handle the filters
-                postProcess(acb, tempStoragePath, simpleObject);
-
-            } else if (simpleObject instanceof UnstructuredObject) {
-                UnstructuredObject unstructuredObject = null;
-                final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
-
-                // we can just store this as a file
-                if (simpleObject.getObjectMetadata().getImplementation().equals(FileSystemCompressedObject.class.getName())) { //is it a compressed object?
-                    unstructuredObject = (FileSystemCompressedObject) simpleObject;
-                    decompress((FileSystemCompressedObject) unstructuredObject);
-                    try {
-                        FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
-
-                    } catch (IOException e) {
-                        throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + hostArchiveStore.getFilePath(), e);
-                    } catch (MissingObjectException e) {
-                        throw new SkyeException("Simple object missing from information store?", e);
-                    }
-                } else {
-                    unstructuredObject = (UnstructuredObject) simpleObject;
-
-                    if (isInCompressedObject(unstructuredObject)) {
-                        String path = unstructuredObject.getObjectMetadata().getPath();
-                        String[] pathSplit = path.split("/");
-                        String fileName = pathSplit[pathSplit.length-1];
-                        String container = pathSplit[pathSplit.length-2];
-                        unstructuredObject.getObjectMetadata().setPath(TMP_DECOMPRESSION_PATH + container +"/"+fileName);
-                    }
-                    try {
-                        FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
-
-                    } catch (IOException e) {
-                        throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + hostArchiveStore.getFilePath(), e);
-                    } catch (MissingObjectException e) {
-                        throw new SkyeException("Simple object missing from information store?", e);
-                    }
-
                 }
 
-                // Post process the stored object to handle the filters
-                postProcess(acb, tempStoragePath, unstructuredObject);
+            });
 
+            // Post process the stored object to handle the filters
+            postProcess(acb, tempStoragePath, simpleObject);
 
+        } else if (simpleObject instanceof UnstructuredObject) {
+            UnstructuredObject unstructuredObject = null;
+            final File tempStoragePath = hostArchiveStore.getTempACBPath(acb, true);
+
+            // we can just store this as a file
+            if (simpleObject.getObjectMetadata().getImplementation().equals(FileSystemCompressedObject.class.getName())) { //is it a compressed object?
+                unstructuredObject = (FileSystemCompressedObject) simpleObject;
+                decompress((FileSystemCompressedObject) unstructuredObject);
+                try {
+                    FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
+
+                } catch (IOException e) {
+                    throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + hostArchiveStore.getFilePath(), e);
+                } catch (MissingObjectException e) {
+                    throw new SkyeException("Simple object missing from information store?", e);
+                }
             } else {
-                throw new SkyeException("Archive store " + hostArchiveStore.getName() + " does not support simple object " + simpleObject);
+                unstructuredObject = (UnstructuredObject) simpleObject;
+
+                if (isInCompressedObject(unstructuredObject)) {
+                    String path = unstructuredObject.getObjectMetadata().getPath();
+                    String[] pathSplit = path.split("/");
+                    String fileName = pathSplit[pathSplit.length - 1];
+                    String container = pathSplit[pathSplit.length - 2];
+                    unstructuredObject.getObjectMetadata().setPath(TMP_DECOMPRESSION_PATH + container + "/" + fileName);
+                }
+                try {
+                    FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
+
+                } catch (IOException e) {
+                    throw new SkyeException("An I/O exception occurred while trying to write unstructured data for simple object " + simpleObject.getObjectMetadata().getId() + " to " + hostArchiveStore.getFilePath(), e);
+                } catch (MissingObjectException e) {
+                    throw new SkyeException("Simple object missing from information store?", e);
+                }
+
             }
+
+            // Post process the stored object to handle the filters
+            postProcess(acb, tempStoragePath, unstructuredObject);
+
+
+        } else {
+            throw new SkyeException("Archive store " + hostArchiveStore.getName() + " does not support simple object " + simpleObject);
         }
         return simpleObject;
+
     }
 
     private boolean isInCompressedObject(SimpleObject simpleObject) {
@@ -183,18 +183,18 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 tempStoragePath.delete();
                 //clean up the temporary decompression folder and the files within once they're archived
                 File decompressionPath = new File(TMP_DECOMPRESSION_PATH);
-                if(simpleObject.getObjectMetadata().getPath().contains(TMP_DECOMPRESSION_PATH) && decompressionPath.exists()){
+                if (simpleObject.getObjectMetadata().getPath().contains(TMP_DECOMPRESSION_PATH) && decompressionPath.exists()) {
                     File extractedFile = new File(simpleObject.getObjectMetadata().getPath());
                     extractedFile.delete();
                     File[] currentFiles = decompressionPath.listFiles();
-                    for(File f : currentFiles){
-                        if(f.isDirectory()){
-                            if(f.listFiles().length==0){
+                    for (File f : currentFiles) {
+                        if (f.isDirectory()) {
+                            if (f.listFiles().length == 0) {
                                 f.delete();
                             }
                         }
                     }
-                    if(decompressionPath.listFiles().length==0){
+                    if (decompressionPath.listFiles().length == 0) {
                         decompressionPath.delete();
                     }
                 }
@@ -214,17 +214,41 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public boolean isObjectArchived(SimpleObject simpleObject) {
-        return simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).isPresent() && !simpleObject.getObjectMetadata().getProject().isDuplicationAllowed();
+        return simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).isPresent();
     }
 
     @Override
-    public UnstructuredCompressedObject compress(SimpleObject so, CompressionType type) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public UnstructuredCompressedObject compress(SimpleObject so) {
+        UnstructuredCompressedObject compressedObject = new FileSystemCompressedObject();
+        ObjectMetadata om = so.getObjectMetadata();
+        if (so instanceof StructuredObject) {
+            //TODO: How (or are we) going to to compress individual structured objects?
+        } else if (so instanceof UnstructuredObject) {
+            try {
+                OutputStream out = new FileOutputStream(so.getObjectMetadata().getPath() + ".tar");
+                ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
+                ArchiveEntry entry = new TarArchiveEntry(so.getObjectMetadata().getPath());
+                outputStream.putArchiveEntry(entry);
+                IOUtils.copy(((UnstructuredObject) so).getInputStream(), outputStream);
+                outputStream.closeArchiveEntry();
+                outputStream.close();
+                om.setPath(so.getObjectMetadata().getPath() + ".tar");
+                compressedObject.setObjectMetadata(om);
+            } catch (ArchiveException e) {
+                throw new SkyeException("Skye Exception", e);
+            } catch (MissingObjectException e) {
+                throw new SkyeException("Skye Exception", e);
+            } catch (IOException e) {
+                throw new SkyeException("Skye Exception", e);
+            }
+        }
+
+        return compressedObject;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public UnstructuredCompressedObject compress(ArchiveContentBlock acb, CompressionType type) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public UnstructuredCompressedObject compress(ArchiveContentBlock acb) {
+        return null;
     }
 
     @Override
@@ -242,7 +266,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             while (currentEntry != null) {
                 byte[] entryContent = new byte[(int) currentEntry.getSize()];
                 stream.read(entryContent);
-                File destFile = new File(TMP_DECOMPRESSION_PATH + compressedObject.getCompressedContainer()+"/"+currentEntry.getName());
+                File destFile = new File(TMP_DECOMPRESSION_PATH + compressedObject.getCompressedContainer() + "/" + currentEntry.getName());
                 FileUtils.copyInputStreamToFile(new ByteArrayInputStream(entryContent), destFile);
                 currentEntry = stream.getNextEntry();
             }
@@ -255,11 +279,11 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
     }
 
-    public String createDecompressionPath(String path){
+    public String createDecompressionPath(String path) {
         String[] pathSplit = path.split("/");
-        String fileName = pathSplit[pathSplit.length-1];
-        String container = pathSplit[pathSplit.length-2];
-        return TMP_DECOMPRESSION_PATH + container+"/"+fileName;
+        String fileName = pathSplit[pathSplit.length - 1];
+        String container = pathSplit[pathSplit.length - 2];
+        return TMP_DECOMPRESSION_PATH + container + "/" + fileName;
     }
 
 }

@@ -23,19 +23,17 @@ public interface ArchiveStoreWriter {
      * Compress a {@link SimpleObject} into an UnstructuredCompressedObject. Users have a choice as to the manner of compression
      *
      * @param so The {@link SimpleObject} to compress
-     * @param type The type of compression to use in creating this object.
      * @return The resulting compressed object
      */
-    public abstract UnstructuredCompressedObject compress(SimpleObject so, CompressionType type);
+    public abstract UnstructuredCompressedObject compress(SimpleObject so);
 
     /**
      * Compress an {@link org.openskye.core.ArchiveContentBlock} into an UnstructuredCompressedObject. Users have a choice as to the manner of compression
      *
      * @param acb The {@link org.openskye.core.ArchiveContentBlock} to compress
-     * @param type The type of compression to use in creating this object.
      * @return The resulting compressed object
      */
-    public abstract UnstructuredCompressedObject compress(ArchiveContentBlock acb, CompressionType type);
+    public abstract UnstructuredCompressedObject compress(ArchiveContentBlock acb);
 
     public abstract List<SimpleObject> decompress(UnstructuredCompressedObject compressedObject);
 
