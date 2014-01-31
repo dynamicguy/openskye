@@ -386,7 +386,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-32">
         <createTable catalogName="openskye" tableName="object_metadata">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="archive_size" type="BIGINT(19)">
@@ -437,7 +437,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-35">
         <createTable catalogName="openskye" tableName="object_set">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">
@@ -984,7 +984,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-132">
         <addForeignKeyConstraint baseColumnNames="object_metadata_id" baseTableCatalogName="openskye"
-                                 baseTableName="object_set_to_metadata" constraintName="FK_9f2e5kwcvn9wnlcwn9wd9qp6o"
+                                 baseTableName="OBJECT_SET_OBJECT_METADATA" constraintName="FK_9f2e5kwcvn9wnlcwn9wd9qp6o"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableCatalogName="openskye"
                                  referencedTableName="object_metadata"/>
@@ -1040,7 +1040,7 @@
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-140">
         <addForeignKeyConstraint baseColumnNames="object_set_id" baseTableCatalogName="openskye"
-                                 baseTableName="object_set_to_metadata" constraintName="FK_eievyfy2vt8psakfgpxokau1b"
+                                 baseTableName="OBJECT_SET_OBJECT_METADATA" constraintName="FK_eievyfy2vt8psakfgpxokau1b"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableCatalogName="openskye"
                                  referencedTableName="object_set"/>
