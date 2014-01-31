@@ -8,10 +8,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.Node;
-import org.openskye.domain.Project;
-import org.openskye.domain.RetentionPolicy;
-import org.openskye.domain.TaskStatus;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ProjectDAO;
 import org.openskye.domain.dao.RetentionPolicyDAO;
 
@@ -129,6 +126,8 @@ public class ClassifyTaskStep extends TaskStep {
             om.getMetadata().put("recordsCode", classifyMap.get(objectId));
             omr.put(om);
         }
+        if (task.getStatistics() == null)
+            task.setStatistics(new TaskStatistics());
         task.getStatistics().addSimpleObjectsFound(objectsFound);
         task.getStatistics().addSimpleObjectsProcessed(objectsProcessed);
 
