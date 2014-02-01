@@ -6,10 +6,14 @@ import com.google.common.base.CaseFormat;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.beanutils.BeanUtils;
+import org.openskye.cli.CliException;
 import org.openskye.cli.ConsoleLogger;
 import org.openskye.cli.SkyeCliSettings;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.core.SkyeException;
+import org.openskye.domain.Node;
+import org.openskye.domain.NodeArchiveStoreInstance;
+import org.openskye.domain.NodeRole;
 
 import javax.ws.rs.core.MediaType;
 import java.io.Console;
@@ -283,6 +287,48 @@ public abstract class ExecutableCommand {
                 BeanUtils.setProperty(newObject, props.getName(), props.getProperties());
             } catch (Exception e) {
                 throw new SkyeException("Unable to add properties to object", e);
+            }
+        }
+        return newObject;
+
+    }
+
+    /**
+     * Assigns a set of properties to a <code>NodeRolesField</code>. The user can enter a set of node
+     * roles when creating an object. They are parsed and assigned here.
+     *
+     * @param field     the <code>NodeRolesField</code>
+     * @param newObject the object being created or modified
+     *
+     * @return the newly modified object
+     *
+     * @see NodeRolesField
+     */
+    protected Object setNodeRolesField(NodeRolesField field, Object newObject) {
+        final String PRIMARY = "PRIMARY";
+        final String REPLICA = "REPLICA";
+
+        if (dynamicParams.get(field.getName()) != null) {
+            List<NodeArchiveStoreInstance> nodes = new ArrayList<>();
+            String value = dynamicParams.get(field.getName());
+            String[] pairs = value.split(",");
+            for (String pair : pairs) {
+                String[] tokens = pair.split(":");
+                NodeArchiveStoreInstance link = new NodeArchiveStoreInstance();
+                link.setNode(getResource("nodes/" + resolveAlias(tokens[0])).get(Node.class));
+                if ( PRIMARY.startsWith(tokens[1].toUpperCase()) ) {
+                    link.setNodeRole(NodeRole.PRIMARY);
+                } else if ( REPLICA.startsWith(tokens[1].toUpperCase()) ) {
+                    link.setNodeRole(NodeRole.REPLICA);
+                } else {
+                    throw new CliException("Invalid node role: "+tokens[1]);
+                }
+                nodes.add(link);
+            }
+            try {
+                BeanUtils.setProperty(newObject, field.getName(), nodes);
+            } catch (Exception e) {
+                throw new SkyeException("Unable to add node roles to object", e);
             }
         }
         return newObject;

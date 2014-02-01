@@ -208,6 +208,8 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                 newObject = setPropertiesField((PropertiesField) field, newObject);
             } else if (field instanceof EnumerationField) {
                 selectEnum((EnumerationField) field, newObject);
+            } else if (field instanceof NodeRolesField) {
+                newObject = setNodeRolesField((NodeRolesField) field, newObject);
             }
         }
         Object result = getResource(getCollectionPlural()).post(getClazz(), newObject);
