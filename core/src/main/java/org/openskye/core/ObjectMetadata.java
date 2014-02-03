@@ -57,6 +57,7 @@ public class ObjectMetadata {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime lastModified = new DateTime();
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "PROJECT_ID")
     private Project project = null;
     private long originalSize;
     private long archiveSize;
