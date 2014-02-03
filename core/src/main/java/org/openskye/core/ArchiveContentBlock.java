@@ -40,6 +40,7 @@ public class ArchiveContentBlock {
     private ArchiveStoreInstance archiveStoreInstance;
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "PROJECT_ID")
     private Project project;
     // TODO we need to validate these
     private String checksum;
