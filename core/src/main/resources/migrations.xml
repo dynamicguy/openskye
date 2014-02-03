@@ -1068,11 +1068,52 @@
                                  referencedTableName="information_store_definition"/>
     </changeSet>
     <changeSet author="admin" id="1390535812880-144" >
-        <addColumn tableName="archive_content_block">
+        <addColumn catalogName="openskye" tableName="archive_content_block">
             <column name="project_id" type="varchar(36)"/>
         </addColumn>
     </changeSet>
     <changeSet author="admin" id="1390535812880-145" >
-        <renameColumn tableName="object_metadata" newColumnName="project_id" oldColumnName="project"/>
+        <addColumn catalogName="openskye" tableName="object_metadata">
+            <column name="project_id" type="varchar(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="admin" id="1390535812880-146">
+        <sql>
+            update object_metadata set project_id = project
+        </sql>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-147">
+        <dropForeignKeyConstraint baseTableCatalogName="openskye" baseTableName="object_metadata" constraintName="FK_easii5uu6x66yb5auunj9ibir"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-148">
+        <dropColumn catalogName="openskye" tableName="object_metadata" columnName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-149">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye"
+                                 baseTableName="object_metadata" constraintName="FK_object_metadata_project"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin" id="1390535812880-150">
+        <sql>
+            update archive_content_block acb
+            set project_id = (select project_id
+            from object_metadata_archive_content_block omacb,
+            object_metadata om
+            where omacb.object_metadata_id = om.id
+            and acb.id = omacb.archive_content_block_id);
+        </sql>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-151">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableCatalogName="openskye"
+                                 baseTableName="archive_content_block" constraintName="FK_archive_content_block_project"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableCatalogName="openskye"
+                                 referencedTableName="project"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-152">
+        <addNotNullConstraint catalogName="openskye"
+                              tableName="archive_content_block" columnDataType="varchar(36)" columnName="project_id"/>
     </changeSet>
 </databaseChangeLog>
