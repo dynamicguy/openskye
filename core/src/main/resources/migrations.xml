@@ -485,6 +485,9 @@
             <column name="archive_store_instance" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
+            <column name="project" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-39">

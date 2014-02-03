@@ -87,26 +87,25 @@ public class JPAObjectMetadataRepositoryTest {
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
         TaskStatistics taskStatistics = new TaskStatistics();
+        taskStatisticsDAO.create(taskStatistics);
+        Project project = new Project();
+        project.setName("Test Project");
+        Project newProject = projects.create(project);
 
         asi.setImplementation(InMemoryArchiveStore.IMPLEMENTATION);
         archiveStoreInstanceDAO.create(asi);
         asd.setArchiveStoreInstance(asi);
         archiveStores.create(asd);
         acb.setArchiveStoreInstance(asi);
+        acb.setProject(newProject);
         objectMetadata.getArchiveContentBlocks().add(acb);
 
         isd.setImplementation(InMemoryInformationStore.IMPLEMENTATION);
         informationStores.create(isd);
         objectMetadata.setInformationStoreId(isd.getId());
 
-        taskStatisticsDAO.create(taskStatistics);
-        Project project = new Project();
-        project.setName("Test Project");
-        Project newProject = projects.create(project);
-
         Node node = new Node();
         nodeDAO.create(node);
-
 
         TestTaskStep step = new TestTaskStep(newProject, node, 2, 1, true);
         Task task = step.toTask();

@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.openskye.domain.ArchiveStoreInstance;
 import org.openskye.domain.Node;
+import org.openskye.domain.Project;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -37,6 +38,9 @@ public class ArchiveContentBlock {
     @NotNull
     @ManyToOne
     private ArchiveStoreInstance archiveStoreInstance;
+    @NotNull
+    @ManyToOne
+    private Project project;
     // TODO we need to validate these
     private String checksum;
     private long originalSize;

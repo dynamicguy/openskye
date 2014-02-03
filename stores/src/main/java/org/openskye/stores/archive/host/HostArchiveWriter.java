@@ -64,6 +64,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             acb.setObjectMetadataReferences(new ArrayList());
             acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
             acb.setArchiveStoreInstance(hostArchiveStore.getArchiveStoreInstance());
+            acb.setProject(simpleObject.getObjectMetadata().getProject());
             acb.setChecksum(simpleObject.getObjectMetadata().getChecksum());
             acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
 
