@@ -65,7 +65,6 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
             acb.setArchiveStoreInstance(hostArchiveStore.getArchiveStoreInstance());
             acb.setProject(simpleObject.getObjectMetadata().getProject());
-            acb.setChecksum(simpleObject.getObjectMetadata().getChecksum());
             acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
 
             // We need to push the ACB to the OMR so that we are able to have a
@@ -177,7 +176,9 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 File targetPath = hostArchiveStore.getAcbPath(acb, true);
                 FileUtils.copyInputStreamToFile(processFilters(hostArchiveStore.getFilters(), new FileInputStream(tempStoragePath)), targetPath);
                 FileInputStream fis = new FileInputStream(targetPath);
-                simpleObject.getObjectMetadata().setChecksum(DigestUtils.md5Hex(fis));
+                String checksum = DigestUtils.md5Hex(fis);
+                fis.close();
+                simpleObject.getObjectMetadata().setChecksum(checksum);
                 simpleObject.getObjectMetadata().setIngested(DateTime.now());
                 simpleObject.getObjectMetadata().setMimeType("text/csv");
                 simpleObject.getObjectMetadata().setArchiveSize(targetPath.length());
@@ -199,6 +200,10 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                         decompressionPath.delete();
                     }
                 }
+
+                // update the ACB checksum
+                acb.setChecksum(checksum);
+                getOmr().put(acb);
             }
 
         } catch (FileNotFoundException e) {

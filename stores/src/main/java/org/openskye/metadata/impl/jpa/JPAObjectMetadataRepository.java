@@ -380,7 +380,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ArchiveContentBlock> getACBs(Project project, ArchiveStoreInstance asi) {
-        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a where (a.project=:projectId AND a.archiveStoreInstance=:asiId)", ArchiveContentBlock.class);
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a where (a.project.id=:projectId AND a.archiveStoreInstance.id=:asiId)", ArchiveContentBlock.class);
         query.setParameter("asiId", asi.getId());
         query.setParameter("projectId", project.getId());
         return query.getResultList();

@@ -174,9 +174,10 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public boolean verify(ArchiveContentBlock acb) {
         try {
-            File targetPath = getAcbPath(acb, true);
+            File targetPath = getAcbPath(acb, false);
             FileInputStream fis = new FileInputStream(targetPath);
             String newChecksum = DigestUtils.md5Hex(fis);
+            fis.close();
             if ( acb.getChecksum().equals(newChecksum) ) {
                 return true;
             } else {
@@ -223,10 +224,10 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         // Lets create rough buckets so we don't end up with everything in one directory
         String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
-        HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
 
         if (isNew) {
             mkParentDir(simpleObjectDir);
+            HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
         } else if (!simpleObjectDir.exists()) {
             throw new SkyeException("ACB Directory not found: " + fileName);
         }
