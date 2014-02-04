@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.SkyeException;
-import org.openskye.domain.Channel;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Node;
-import org.openskye.domain.Project;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.task.step.*;
 
@@ -151,7 +148,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new VerifyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         selectReferenceField(new ReferenceField(Node.class), step);
-        //TODO verify task step still under construction
+        selectReferenceField(new ReferenceField(ArchiveStoreDefinition.class), step);
         create(step);
     }
 

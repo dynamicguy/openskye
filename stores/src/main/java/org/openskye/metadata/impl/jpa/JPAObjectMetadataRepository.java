@@ -1,26 +1,20 @@
 package org.openskye.metadata.impl.jpa;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Node;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
 import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.domain.dao.ProjectDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.SetJoin;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +30,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     protected InformationStoreDefinitionDAO informationStores;
     @Inject
     protected ProjectDAO projects;
+
     @Inject
     private Provider<EntityManager> emf;
 
@@ -380,6 +375,14 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a INNER JOIN a.nodes n where n.id=:primaryNodeId AND a.id NOT IN (SELECT a2.id FROM ArchiveContentBlock a2 INNER JOIN a2.nodes n2 WHERE n2.id=:targetNodeId)", ArchiveContentBlock.class);
         query.setParameter("primaryNodeId", primary.getId());
         query.setParameter("targetNodeId", target.getId());
+        return query.getResultList();
+    }
+
+    @Override
+    public Iterable<ArchiveContentBlock> getACBs(Project project, ArchiveStoreInstance asi) {
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a where (a.project=:projectId AND a.archiveStoreInstance=:asiId)", ArchiveContentBlock.class);
+        query.setParameter("asiId", asi.getId());
+        query.setParameter("projectId", project.getId());
         return query.getResultList();
     }
 

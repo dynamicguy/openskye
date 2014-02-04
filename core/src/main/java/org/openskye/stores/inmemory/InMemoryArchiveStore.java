@@ -70,6 +70,11 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
+    public boolean verify(ArchiveContentBlock acb) {
+        return true;
+    }
+
+    @Override
     public Iterable<ObjectStreamFilter> getFilters() {
         return new ArrayList<>();
     }
