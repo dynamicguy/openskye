@@ -59,10 +59,18 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
 
         RequestQueryContext requestContext = RequestQueryContextHolder.getContext();
 
-        if(requestContext != null)
-            return new PaginatedResult<>(query.getResultList(), requestContext);
+        if(requestContext != null) {
+            final CriteriaBuilder builder = getCriteriaBuilder();
+            final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+            countQuery.select(builder.count(countQuery.from(entityClass)));
 
-        return new PaginatedResult<>(query.getResultList());
+            PaginatedResult<T> paginatedResult = new PaginatedResult<>(query.getResultList(), requestContext);
+            paginatedResult.setTotalResults(currentEntityManager().createQuery(countQuery).getSingleResult());
+            return paginatedResult;
+        }
+        else {
+            return new PaginatedResult<>(query.getResultList());
+        }
     }
 
     protected TypedQuery<T> getPaginatedQuery(CriteriaQuery<T> criteria, Root<T> selectEntity) {
