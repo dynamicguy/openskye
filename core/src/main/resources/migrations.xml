@@ -1097,12 +1097,14 @@
     </changeSet>
     <changeSet author="admin" id="1390535812880-150">
         <sql>
-            update archive_content_block acb
-            set project_id = (select project_id
-            from object_metadata_archive_content_block omacb,
-            object_metadata om
-            where omacb.object_metadata_id = om.id
-            and acb.id = omacb.archive_content_block_id);
+            UPDATE  acb
+            SET     acb.project_id =
+                (SELECT om.project_id
+                FROM    object_metadata_archive_content_block omacb,
+                        object_metadata om
+                WHERE   acb.id = omacb.archive_content_block_id
+                AND     om.id = omacb.object_metadata_id)
+            FROM    archive_content_block acb
         </sql>
     </changeSet>
     <changeSet author="admin (generated)" id="1390535812880-151">
