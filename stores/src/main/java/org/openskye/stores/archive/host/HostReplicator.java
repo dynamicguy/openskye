@@ -179,7 +179,7 @@ public class HostReplicator implements Replicator {
         }
 
         for (NodeArchiveStoreInstance nodeInstance : archiveStore.getArchiveStoreInstance().getNodes()) {
-            if (targetNode.equals(nodeInstance.getNode())) {
+            if (targetNode.getId().equals(nodeInstance.getNode().getId())) {
                 if (!NodeRole.REPLICA.equals(nodeInstance.getNodeRole()))
                     throw new SkyeException("Replication can not be run on a node that does not have the role REPLICA for the given archive store, this looks like it is the primary");
                 return;
