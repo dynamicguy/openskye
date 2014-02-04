@@ -5,10 +5,7 @@ import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
 import org.openskye.core.SimpleObject;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Node;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 
 /**
  * This is the standard interface to allow the storage of {@link SimpleObject} instances
@@ -169,6 +166,14 @@ public interface ObjectMetadataRepository {
      * @return An {@link Iterable} collection of {@link org.openskye.core.ArchiveContentBlock}
      */
     Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance);
+
+    /**
+     * Returns an iterator to the {@link org.openskye.core.ArchiveContentBlock}s for the specified
+     * {@link Project} and {@link ArchiveStoreInstance}
+     *
+     * @return An {@link Iterable} collection of {@link org.openskye.core.ArchiveContentBlock}
+     */
+    Iterable<ArchiveContentBlock> getACBs(Project project, ArchiveStoreInstance archiveStoreInstance);
 
     /**
      * Allows for the creation/update of an ACB

@@ -87,6 +87,14 @@ public interface ArchiveStore {
     Optional<SimpleObject> materialize(ObjectMetadata metadata);
 
     /**
+     * Verify that the content for {@link ArchiveContentBlock} is still intact
+     *
+     * @param acb the ACB to verify
+     * @return true if the ACB content is intact, false if corrupt
+     */
+    boolean verify(ArchiveContentBlock acb);
+
+    /**
      * Returns a list of the {@link ObjectStreamFilter}s that have been
      * enabled on this archive store
      * <p/>

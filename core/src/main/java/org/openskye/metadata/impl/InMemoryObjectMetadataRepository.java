@@ -5,10 +5,7 @@ import com.google.common.collect.Lists;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.ObjectSet;
-import org.openskye.domain.InformationStoreDefinition;
-import org.openskye.domain.Node;
-import org.openskye.domain.Project;
-import org.openskye.domain.Task;
+import org.openskye.domain.*;
 import org.openskye.metadata.ObjectMetadataRepository;
 
 import java.util.*;
@@ -160,6 +157,11 @@ public class InMemoryObjectMetadataRepository implements ObjectMetadataRepositor
 
     @Override
     public Iterable<ArchiveContentBlock> getACBsForReplication(Node primary, Node target, Project archiveStoreInstance) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Iterable<ArchiveContentBlock> getACBs(Project project, ArchiveStoreInstance archiveStoreInstance) {
         throw new UnsupportedOperationException();
     }
 

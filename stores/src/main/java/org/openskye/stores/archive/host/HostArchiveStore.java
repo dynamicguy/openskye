@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Injector;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eobjects.metamodel.DataContext;
@@ -168,6 +169,26 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
             throw new SkyeException("Unable to create object for metadata " + metadata, e);
         }
 
+    }
+
+    @Override
+    public boolean verify(ArchiveContentBlock acb) {
+        try {
+            File targetPath = getAcbPath(acb, true);
+            FileInputStream fis = new FileInputStream(targetPath);
+            String newChecksum = DigestUtils.md5Hex(fis);
+            if ( acb.getChecksum().equals(newChecksum) ) {
+                return true;
+            } else {
+                log.error("Checksum mismatch for ACB "+acb.getId());
+                return false;
+            }
+        } catch (FileNotFoundException fe) {
+            log.error("File not found for ACB "+acb.getId());
+            return false;
+        } catch (IOException ie) {
+            throw new SkyeException("Unable to verify ACB", ie);
+        }
     }
 
     @Override
