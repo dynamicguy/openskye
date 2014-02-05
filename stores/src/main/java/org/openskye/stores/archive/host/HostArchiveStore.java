@@ -5,6 +5,8 @@ import com.google.inject.Injector;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eobjects.metamodel.DataContext;
@@ -26,8 +28,7 @@ import java.util.UUID;
 import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
 
 /**
- * An implementation of an {@link ArchiveStore} that simply uses the local
- * filesystem to store archives
+ * An implementation of an {@link ArchiveStore} that simply uses the local filesystem to store archives
  */
 @Slf4j
 public class HostArchiveStore implements ArchiveStore, QueryableStore {
@@ -111,12 +112,23 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     public Optional<InputStream> getStream(ObjectMetadata metadata) {
         try {
             if (metadata.getArchiveContentBlock(this.getArchiveStoreInstance()).isPresent()) {
-                InputStream is = new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance()).get(), false));
-                return Optional.of(is);
+                File acbBucketFile = new File(getFilePath() + "/" + getBucket(metadata.getArchiveContentBlock(this.getArchiveStoreInstance()).get()));
+                InputStream is;
+                for (File f : acbBucketFile.listFiles()) {
+                    if (f.getPath().contains(".tar")) {
+                        is = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(f.getPath())));
+                    } else {
+                        is = new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance()).get(), false));
+                    }
+                    return Optional.of(is);
+                }
             } else return Optional.absent();
         } catch (FileNotFoundException e) {
             throw new SkyeException("ACB references storage, but unable to find archive file?");
+        } catch (ArchiveException e) {
+            throw new SkyeException("Skye Exception", e);
         }
+        return Optional.absent();
     }
 
     @Override
@@ -174,17 +186,18 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public boolean verify(ArchiveContentBlock acb) {
         try {
-            File targetPath = getAcbPath(acb, true);
+            File targetPath = getAcbPath(acb, false);
             FileInputStream fis = new FileInputStream(targetPath);
             String newChecksum = DigestUtils.md5Hex(fis);
-            if ( acb.getChecksum().equals(newChecksum) ) {
+            fis.close();
+            if (acb.getChecksum().equals(newChecksum)) {
                 return true;
             } else {
-                log.error("Checksum mismatch for ACB "+acb.getId());
+                log.error("Checksum mismatch for ACB " + acb.getId());
                 return false;
             }
         } catch (FileNotFoundException fe) {
-            log.error("File not found for ACB "+acb.getId());
+            log.error("File not found for ACB " + acb.getId());
             return false;
         } catch (IOException ie) {
             throw new SkyeException("Unable to verify ACB", ie);
@@ -223,12 +236,18 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         // Lets create rough buckets so we don't end up with everything in one directory
         String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
-        HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
+
 
         if (isNew) {
+            HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
             mkParentDir(simpleObjectDir);
-        } else if (!simpleObjectDir.exists()) {
-            throw new SkyeException("ACB Directory not found: " + fileName);
+        } else {
+            if (!simpleObjectDir.exists()) {  //file doesn't exist where its supposed to?
+                simpleObjectDir = new File(fileName + ".tar"); //does the compressed version exist?
+                if (!simpleObjectDir.exists()) {
+                    throw new SkyeException("ACB Directory not found: " + fileName);
+                }
+            }
         }
         return simpleObjectDir;
     }

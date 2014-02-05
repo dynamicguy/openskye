@@ -20,7 +20,7 @@ public interface ArchiveStoreWriter {
     public abstract boolean isObjectArchived(SimpleObject simpleObject);
 
     /**
-     * Compress a {@link SimpleObject} into an UnstructuredCompressedObject. Users have a choice as to the manner of compression
+     * Compress a {@link SimpleObject} into an UnstructuredCompressedObject.
      *
      * @param so The {@link SimpleObject} to compress
      * @return The resulting compressed object
@@ -28,12 +28,14 @@ public interface ArchiveStoreWriter {
     public abstract UnstructuredCompressedObject compress(SimpleObject so);
 
     /**
-     * Compress an {@link org.openskye.core.ArchiveContentBlock} into an UnstructuredCompressedObject. Users have a choice as to the manner of compression
+     * Compress an {@link org.openskye.core.ArchiveContentBlock} into an UnstructuredCompressedObject.
      *
      * @param acb The {@link org.openskye.core.ArchiveContentBlock} to compress
      * @return The resulting compressed object
      */
-    public abstract UnstructuredCompressedObject compress(ArchiveContentBlock acb);
+    public abstract void compress(ArchiveContentBlock acb);
+
+    public abstract void compressAllACBs();
 
     public abstract List<SimpleObject> decompress(UnstructuredCompressedObject compressedObject);
 

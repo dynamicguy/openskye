@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
@@ -14,7 +15,10 @@ import org.openskye.metadata.ObjectMetadataRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,15 +151,16 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         String queryPath = objectMetadata.getPath();
         String queryChecksum = objectMetadata.getChecksum();
         Project queryProject = objectMetadata.getProject();
+        DateTime lastModified = objectMetadata.getLastModified();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
         if (queryChecksum != null) {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum), cb.equal(root.get(ObjectMetadata_.project), queryProject));
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum), cb.equal(root.get(ObjectMetadata_.project), queryProject), cb.equal(root.get(ObjectMetadata_.lastModified), lastModified));
         } else {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath),cb.equal(root.get(ObjectMetadata_.project), queryProject));
+            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath),cb.equal(root.get(ObjectMetadata_.project), queryProject), cb.equal(root.get(ObjectMetadata_.lastModified), lastModified));
         }
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);
@@ -380,7 +385,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ArchiveContentBlock> getACBs(Project project, ArchiveStoreInstance asi) {
-        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a where (a.project=:projectId AND a.archiveStoreInstance=:asiId)", ArchiveContentBlock.class);
+        TypedQuery<ArchiveContentBlock> query = getEntityManager().createQuery("select a from ArchiveContentBlock a where (a.project.id=:projectId AND a.archiveStoreInstance.id=:asiId)", ArchiveContentBlock.class);
         query.setParameter("asiId", asi.getId());
         query.setParameter("projectId", project.getId());
         return query.getResultList();

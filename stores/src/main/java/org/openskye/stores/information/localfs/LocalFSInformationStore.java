@@ -171,6 +171,7 @@ public class LocalFSInformationStore implements InformationStore {
         if (!isObjectInStore(simpleObject)) {
 
             File targetFile = new File(this.informationStoreDefinition.getProperties().get(FILE_PATH) + "/" + simpleObject.getObjectMetadata().getPath());
+            targetFile.setWritable(true);
             targetFile.mkdirs();
             targetFile.delete();
 
