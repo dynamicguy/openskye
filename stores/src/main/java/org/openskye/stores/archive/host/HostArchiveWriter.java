@@ -50,15 +50,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
-        ArchiveContentBlock acb;
-
-        //check if the archive store already has this simple object in an ACB and if object duplication is allowed on the project
-        if (isObjectArchived(simpleObject) && simpleObject.getObjectMetadata().getProject().isDuplicationAllowed()) {
-            //This archive store has this object already, so write to the existing ACB with this object in this store
-            acb = simpleObject.getObjectMetadata().getArchiveContentBlock(hostArchiveStore.getArchiveStoreInstance()).get();
-        } else {
-
-            acb = new ArchiveContentBlock();
+        ArchiveContentBlock acb = new ArchiveContentBlock();
             // We need to link this ACB to the Node we are currently running on
             acb.setNodes(new ArrayList());
             if (NodeManager.hasNode()) {
@@ -75,7 +67,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             acb = getOmr().put(acb);
 
             simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
-        }
+
 
         if (simpleObject instanceof JDBCStructuredObject) {
             // we need to store the whole table as a CSV
@@ -272,15 +264,13 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 File objectFile = hostArchiveStore.getAcbPath(acb, false);
                 ArchiveEntry entry = new TarArchiveEntry(objectFile, so.getObjectMetadata().getPath());
                 outputStream.putArchiveEntry(entry);
-                IOUtils.copy(((UnstructuredObject) so).getInputStream(), outputStream);
+                IOUtils.copy(new FileInputStream(objectFile), outputStream);
                 outputStream.closeArchiveEntry();
                 outputStream.close();
                 objectFile.delete();
             }
         } catch (ArchiveException e) {
             throw new SkyeException("Cannot compress ArchiveContentBlock", e);
-        } catch (MissingObjectException e) {
-            throw new SkyeException("Skye Exception", e);
         } catch (IOException e) {
             throw new SkyeException("Skye Exception", e);
         }

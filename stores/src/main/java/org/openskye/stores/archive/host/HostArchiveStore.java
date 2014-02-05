@@ -28,8 +28,7 @@ import java.util.UUID;
 import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
 
 /**
- * An implementation of an {@link ArchiveStore} that simply uses the local
- * filesystem to store archives
+ * An implementation of an {@link ArchiveStore} that simply uses the local filesystem to store archives
  */
 @Slf4j
 public class HostArchiveStore implements ArchiveStore, QueryableStore {
@@ -191,14 +190,14 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
             FileInputStream fis = new FileInputStream(targetPath);
             String newChecksum = DigestUtils.md5Hex(fis);
             fis.close();
-            if ( acb.getChecksum().equals(newChecksum) ) {
+            if (acb.getChecksum().equals(newChecksum)) {
                 return true;
             } else {
                 log.error("Checksum mismatch for ACB " + acb.getId());
                 return false;
             }
         } catch (FileNotFoundException fe) {
-            log.error("File not found for ACB "+acb.getId());
+            log.error("File not found for ACB " + acb.getId());
             return false;
         } catch (IOException ie) {
             throw new SkyeException("Unable to verify ACB", ie);
@@ -237,20 +236,19 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         // Lets create rough buckets so we don't end up with everything in one directory
         String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId();
         File simpleObjectDir = new File(fileName);
-        HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
+
 
         if (isNew) {
             HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
             mkParentDir(simpleObjectDir);
-            if(!simpleObjectDir.exists()){
-                throw new SkyeException("Could not create ACB ["+fileName+"]");
-            }
         } else {
-            simpleObjectDir = new File(fileName + ".tar"); //does the compressed version exist?
-            if (!simpleObjectDir.exists()) {
-                throw new SkyeException("ACB Directory not found: " + fileName);
+            if (!simpleObjectDir.exists()) {  //file doesn't exist where its supposed to?
+                simpleObjectDir = new File(fileName + ".tar"); //does the compressed version exist?
+                if (!simpleObjectDir.exists()) {
+                    throw new SkyeException("ACB Directory not found: " + fileName);
+                }
             }
-        } 
+        }
         return simpleObjectDir;
     }
 
