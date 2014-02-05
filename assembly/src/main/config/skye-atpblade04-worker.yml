@@ -67,7 +67,7 @@ server:
       port: 5001
   adminConnectors:
     - type: http
-      port: 8082
+      port: 9092
 
 logging:
   level: INFO
