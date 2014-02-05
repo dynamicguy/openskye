@@ -5,8 +5,8 @@ import com.google.inject.Injector;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eobjects.metamodel.DataContext;
@@ -113,10 +113,23 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         try {
             if (metadata.getArchiveContentBlock(this.getArchiveStoreInstance()).isPresent()) {
                 File acbBucketFile = new File(getFilePath() + "/" + getBucket(metadata.getArchiveContentBlock(this.getArchiveStoreInstance()).get()));
-                InputStream is;
+                InputStream is = null;
                 for (File f : acbBucketFile.listFiles()) {
                     if (f.getPath().contains(".tar")) {
-                        is = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(f.getPath())));
+                        TarArchiveInputStream archiveStream = new TarArchiveInputStream(new BufferedInputStream(new FileInputStream(f.getPath())));
+                        TarArchiveEntry entry = archiveStream.getNextTarEntry();
+                        while (entry != null) {
+                            if (metadata.getPath().contains(entry.getName())) {
+                                byte[] entryContent = new byte[(int) entry.getSize()];
+                                archiveStream.read(entryContent);
+                                is = new ByteArrayInputStream(entryContent);
+                                break;
+                            }
+                            else{
+                                entry = archiveStream.getNextTarEntry();
+                            }
+                        }
+
                     } else {
                         is = new FileInputStream(getAcbPath(metadata.getArchiveContentBlock(getArchiveStoreInstance()).get(), false));
                     }
@@ -125,7 +138,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
             } else return Optional.absent();
         } catch (FileNotFoundException e) {
             throw new SkyeException("ACB references storage, but unable to find archive file?");
-        } catch (ArchiveException e) {
+        } catch (IOException e) {
             throw new SkyeException("Skye Exception", e);
         }
         return Optional.absent();
