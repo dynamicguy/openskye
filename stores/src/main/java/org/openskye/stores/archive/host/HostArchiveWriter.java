@@ -1,9 +1,11 @@
 package org.openskye.stores.archive.host;
 
+import com.google.common.net.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.*;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.util.IOUtils;
 import org.eobjects.metamodel.DataContextFactory;
@@ -22,6 +24,7 @@ import org.openskye.node.NodeManager;
 import org.openskye.stores.FileSystemCompressedObject;
 import org.openskye.stores.archive.AbstractArchiveStoreWriter;
 import org.openskye.stores.information.jdbc.JDBCStructuredObject;
+import org.openskye.stores.information.localfs.LocalFileUnstructuredObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -183,6 +186,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 simpleObject.getObjectMetadata().setMimeType("text/csv");
                 simpleObject.getObjectMetadata().setArchiveSize(targetPath.length());
                 tempStoragePath.delete();
+                compress(acb);
                 //clean up the temporary decompression folder and the files within once they're archived
                 File decompressionPath = new File(TMP_DECOMPRESSION_PATH);
                 if (simpleObject.getObjectMetadata().getPath().contains(TMP_DECOMPRESSION_PATH) && decompressionPath.exists()) {
@@ -227,9 +231,6 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     public UnstructuredCompressedObject compress(SimpleObject so) {
         UnstructuredCompressedObject compressedObject = new FileSystemCompressedObject();
         ObjectMetadata om = so.getObjectMetadata();
-        if (so instanceof StructuredObject) {
-            //TODO: How (or are we) going to to compress individual structured objects?
-        } else if (so instanceof UnstructuredObject) {
             try {
                 OutputStream out = new FileOutputStream(so.getObjectMetadata().getPath() + ".tar");
                 ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
@@ -239,6 +240,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 outputStream.closeArchiveEntry();
                 outputStream.close();
                 om.setPath(so.getObjectMetadata().getPath() + ".tar");
+                om.setMimeType(MediaType.TAR.toString());
                 compressedObject.setObjectMetadata(om);
             } catch (ArchiveException e) {
                 throw new SkyeException("Skye Exception", e);
@@ -247,14 +249,47 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             } catch (IOException e) {
                 throw new SkyeException("Skye Exception", e);
             }
-        }
+
 
         return compressedObject;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public UnstructuredCompressedObject compress(ArchiveContentBlock acb) {
-        return null;
+    public void compress(ArchiveContentBlock acb) {
+
+        String compressionPath = hostArchiveStore.getAcbPath(acb, false).getPath() + ".tar";
+        List<ArchiveContentBlock> acbs = new ArrayList<>();
+        acbs.add(acb);
+        try {
+            OutputStream out = new FileOutputStream(compressionPath);
+            ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
+            ((TarArchiveOutputStream)outputStream).setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+            ((TarArchiveOutputStream)outputStream).setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
+            //go through everything contained in the ACB, add to the tar file
+            for (ObjectMetadata om : acb.getObjectMetadataReferences()) {
+                SimpleObject so = new LocalFileUnstructuredObject();
+                so.setObjectMetadata(om);
+                File objectFile = hostArchiveStore.getAcbPath(acb, false);
+                ArchiveEntry entry = new TarArchiveEntry(objectFile, so.getObjectMetadata().getPath());
+                outputStream.putArchiveEntry(entry);
+                IOUtils.copy(((UnstructuredObject) so).getInputStream(), outputStream);
+                outputStream.closeArchiveEntry();
+                outputStream.close();
+                objectFile.delete();
+            }
+        } catch (ArchiveException e) {
+            throw new SkyeException("Cannot compress ArchiveContentBlock", e);
+        } catch (MissingObjectException e) {
+            throw new SkyeException("Skye Exception", e);
+        } catch (IOException e) {
+            throw new SkyeException("Skye Exception", e);
+        }
+
+    }
+
+    @Override
+    public void compressAllACBs() {
+
     }
 
     @Override

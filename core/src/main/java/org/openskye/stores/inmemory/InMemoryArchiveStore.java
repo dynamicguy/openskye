@@ -100,8 +100,13 @@ public class InMemoryArchiveStore implements ArchiveStore, ArchiveStoreWriter {
     }
 
     @Override
-    public UnstructuredCompressedObject compress(ArchiveContentBlock acb) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public void compress(ArchiveContentBlock acb) {
+
+    }
+
+    @Override
+    public void compressAllACBs() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
