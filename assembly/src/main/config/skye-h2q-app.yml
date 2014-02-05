@@ -16,7 +16,7 @@ server:
       port: 5000
   adminConnectors:
     - type: http
-      port: 8081
+      port: 9091
 
 logging:
   level: INFO
