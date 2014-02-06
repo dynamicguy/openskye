@@ -151,7 +151,7 @@ public class HostArchiveStoreTest {
         assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
         long ingested = archive.getStatistics().getSimpleObjectsProcessed();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);
-
+        temp.toFile().deleteOnExit();
     }
 
     @Test
@@ -205,6 +205,7 @@ public class HostArchiveStoreTest {
         assertThat("result has first row", iter.next() != null);
         assertThat("we have a row", iter.hasNext());
         assertThat("result has second row", iter.next() != null);
+        temp.toFile().deleteOnExit();
     }
 
     @Test
@@ -249,5 +250,6 @@ public class HostArchiveStoreTest {
         String contentOut = reader.readLine();
 
         assertThat("Content retrieved matches content stored", contentOut, is(equalTo(contentIn)));
+        temp.toFile().deleteOnExit();
     }
 }
