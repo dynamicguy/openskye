@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.cli.commands.fields.*;
 import org.openskye.cli.util.ObjectTableView;
 import org.openskye.core.ObjectMetadata;
-import org.openskye.core.SearchPage;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Project;
 import org.openskye.domain.dao.PaginatedResult;
@@ -31,6 +30,8 @@ import java.util.List;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class ObjectsCommand extends AbstractCrudCommand {
+    private final String pageParam = "_page";
+    private final String pageSizeParam = "_pageSize";
 
     @Inject
     private final String commandName = "objects";
@@ -42,14 +43,16 @@ public class ObjectsCommand extends AbstractCrudCommand {
     private boolean count;
 
     @Override
-    public void execute(){
+    public void execute() {
         super.execute();
 
-        if(search)
+        if (search) {
             search();
+        }
 
-        if(count)
+        if (count) {
             count();
+        }
     }
 
     @Override
@@ -72,70 +75,38 @@ public class ObjectsCommand extends AbstractCrudCommand {
         output.error("You cannot directly create object metadata");
     }
 
-    public void search(){
+    public void search() {
         String query = dynamicParams.get("query");
-        String strPageNumber = dynamicParams.get("pageNumber");
-        String strPageSize = dynamicParams.get("pageSize");
+        String strPage = dynamicParams.get(pageParam);
+        String strPageSize = dynamicParams.get(pageSizeParam);
         String projectId = resolveAlias(dynamicParams.get("project"));
-        long pageNumber = 0;
-        long pageSize = 0;
-        SearchPage searchPage = null;
 
-        if(strPageNumber != null && !strPageNumber.isEmpty())
-        {
-            if(strPageSize == null || strPageSize.isEmpty())
-                 pageSize = 20;
-            else
-            {
-                try
-                {
-                    pageSize = Long.parseLong(strPageSize);
-                }
-                catch(Exception ex)
-                {
-                    throw new SkyeException("The pageSize parameter must be an integer", ex);
-                }
+        if(strPageSize!=null) {
+            try {
+                Long.parseLong(strPageSize);
+            } catch (Exception ex) {
+                throw new SkyeException("The _pageSize parameter must be an integer", ex);
             }
-
-            try
-            {
-                pageNumber = Long.parseLong(strPageNumber);
-            }
-            catch(Exception ex)
-            {
-                throw new SkyeException("The pageNumber parameter must be an integer", ex);
-            }
-
-            searchPage = new SearchPage(pageNumber, pageSize);
         }
-        else if(strPageSize != null && !strPageSize.isEmpty())
-        {
-            try
-            {
-                pageSize = Long.parseLong(strPageSize);
-            }
-            catch(Exception ex)
-            {
-                throw new SkyeException("The pageSize parameter must be an integer", ex);
-            }
 
-            searchPage = new SearchPage(0, pageSize);
+        if(strPage!=null) {
+            try {
+                Long.parseLong(strPage);
+            } catch (Exception ex) {
+                throw new SkyeException("The _page parameter must be an integer", ex);
+            }
         }
 
         MultivaluedMap queryParams = new MultivaluedMapImpl();
         String url = settings.getUrl() + getCollectionPlural() + "/search";
 
         queryParams.add("query", query);
+        queryParams.add("_page", strPage);
+        queryParams.add("_pageSize", strPageSize);
 
-        if(searchPage != null)
-        {
-            url += "/paginated";
-            queryParams.add("pageNumber", Long.toString(searchPage.getPageNumber()));
-            queryParams.add("pageSize", Long.toString(searchPage.getPageSize()));
-        }
-
-        if(projectId != null && !projectId.isEmpty())
+        if (projectId != null && !projectId.isEmpty()) {
             url += "/" + projectId;
+        }
 
         WebResource resource = client.resource(url).queryParams(queryParams);
 
@@ -152,30 +123,21 @@ public class ObjectsCommand extends AbstractCrudCommand {
         fieldsWithId.addAll(getFieldNames());
 
         if (paginatedResult.getTotalResults() > 0) {
-
-            if(searchPage == null)
-                output.message("Listing " + getCollectionPlural());
+            output.message("Listing " + getCollectionPlural());
 
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
             output.insertLines(1);
             tableView.draw(output);
 
-            if(searchPage == null)
-                output.success("\nFound " + paginatedResult.getTotalResults() + " " + getCollectionPlural());
-            else
-            {
-                output.success("\nShowing page number: " + paginatedResult.getPage());
-                output.success("\nResults on this page: " + paginatedResult.getPageSize());
-            }
-
+            output.success("\nFound " + paginatedResult.getTotalResults() + " " + getCollectionPlural());
+            output.success("Showing page number: " + paginatedResult.getPage());
+            output.success("Results on this page: " + paginatedResult.getResults().size());
         } else {
             output.success("\nNo " + getCollectionPlural() + " found");
-
         }
     }
 
-    public void count()
-    {
+    public void count() {
         String query = dynamicParams.get("query");
         String projectId = resolveAlias(dynamicParams.get("project"));
 
@@ -184,8 +146,9 @@ public class ObjectsCommand extends AbstractCrudCommand {
 
         queryParams.add("query", query);
 
-        if(projectId != null && !projectId.isEmpty())
+        if (projectId != null && !projectId.isEmpty()) {
             url += "/" + projectId;
+        }
 
         WebResource resource = client.resource(url).queryParams(queryParams);
 

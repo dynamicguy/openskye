@@ -59,6 +59,8 @@ public class ObjectSetsCommand extends AbstractCrudCommand {
             create();
         } else if (delete) {
             delete();
+        } else if (update){
+            update();
         }
     }
 

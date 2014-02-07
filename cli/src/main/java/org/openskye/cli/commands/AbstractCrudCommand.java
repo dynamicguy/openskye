@@ -2,6 +2,7 @@ package org.openskye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.google.common.base.CaseFormat;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +15,8 @@ import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.*;
 
 /**
  * An Abstract Base for Crud-like commands which are in place for setting up the metadata for Skye processing. Each
@@ -54,6 +52,14 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      */
     @Parameter(names = "--get")
     protected boolean get;
+
+    /**
+     * A JCommand parameter which represents an update request. {@link #update()} is called if this parameter is set to true
+     * (set by the user by adding --get to the end of their command).
+     */
+    @Parameter(names="--update")
+    protected boolean update;
+
     @Parameter
     private List<String> id;
 
@@ -73,13 +79,62 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
         if (list) {
             list();
-
         } else if (create) {
             create();
         } else if (delete) {
             delete();
         } else if (get) {
             get();
+        } else if (update){
+            update();
+        }
+
+    }
+
+    protected void update() {
+        String id = resolveAlias(dynamicParams.get("id"));
+        List<Field> fields = getFields();
+        Object objectToChange = getResource(getCollectionPlural() + "/" + id).get(getClazz());
+        String changes = dynamicParams.get("fields");
+        String[] fieldPairs = changes.split(",");
+        Map<String, String> fieldPairMap = new HashMap<>();
+        //split and organize the fields to change
+        for(String pairs:fieldPairs){
+            String[] pairSplit = pairs.split("::");
+            fieldPairMap.put(pairSplit[0], pairSplit[1]);
+        }
+
+        for(Field field : fields){
+            if(fieldPairMap.containsKey(field.getName())){
+                String attributeVal = fieldPairMap.get(field.getName());
+                String attributeName = field.getName();
+                if (field instanceof TextField) {
+                    String newValue = attributeVal;
+                    try {
+                        BeanUtils.setProperty(objectToChange, attributeName, newValue);
+                        output.raw(objectToChange.toString());
+                    } catch (Exception e) {
+                        throw new SkyeException("Unable to set property " + attributeName + " on " + objectToChange + " to " + newValue);
+                    }
+                } else if(field instanceof NumberField){
+                    long newValue = Long.parseLong(attributeVal);
+                    try {
+                        BeanUtils.setProperty(objectToChange, attributeName, newValue);
+                        output.raw(objectToChange.toString());
+                    } catch (Exception e) {
+                        throw new SkyeException("Unable to set property " + attributeName + " on " + objectToChange + " to " + newValue);
+                    }
+                }
+                else if (field instanceof ReferenceField) {
+                    objectToChange = selectReferenceField((ReferenceField) field, objectToChange);
+                } else if (field instanceof PropertiesField) {
+                    objectToChange = setPropertiesField((PropertiesField) field, objectToChange);
+                } else if (field instanceof EnumerationField) {
+                    selectEnum((EnumerationField) field, objectToChange);
+                } else if (field instanceof NodeRolesField) {
+                    objectToChange = setNodeRolesField((NodeRolesField) field, objectToChange);
+                }
+            }
         }
 
     }
@@ -119,7 +174,40 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      * paginated result is returned in a tabular structure.
      */
     public void list() {
-        PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
+        final String pageParam = "_page";
+        final String pageSizeParam = "_pageSize";
+        final String sortParam = "_sort";
+        final String sortDirParam = "_sortDir";
+
+        String strPage = dynamicParams.get(pageParam);
+        String strPageSize = dynamicParams.get(pageSizeParam);
+        String strSort = dynamicParams.get(sortParam);
+        String strSortDir = dynamicParams.get(sortDirParam);
+
+        if (strPageSize != null) {
+            try {
+                Long.parseLong(strPageSize);
+            } catch (Exception ex) {
+                throw new SkyeException("The _pageSize parameter must be an integer", ex);
+            }
+        }
+
+        if (strPage != null) {
+            try {
+                Long.parseLong(strPage);
+            } catch (Exception ex) {
+                throw new SkyeException("The _page parameter must be an integer", ex);
+            }
+        }
+
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+
+        queryParams.add(sortParam, strSort);
+        queryParams.add(sortDirParam, strSortDir);
+        queryParams.add(pageParam, strPage);
+        queryParams.add(pageSizeParam, strPageSize);
+
+        PaginatedResult paginatedResult = getResource(getCollectionPlural(), queryParams).get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
         fieldsWithId.addAll(getFieldNames());
@@ -140,11 +228,12 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
             output.insertLines(1);
             tableView.draw(output);
-            output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
+            output.success("\nFound " + paginatedResult.getTotalResults() + " " + getCollectionPlural());
+            output.success("Showing page number: " + paginatedResult.getPage());
+            output.success("Results on this page: " + paginatedResult.getResults().size());
 
         } else {
             output.success("\nNo " + getCollectionPlural() + " found");
-
         }
     }
 

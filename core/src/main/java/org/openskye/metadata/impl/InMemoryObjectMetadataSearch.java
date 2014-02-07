@@ -1,7 +1,9 @@
 package org.openskye.metadata.impl;
 
+import com.google.inject.Inject;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.SearchPage;
+import org.openskye.core.SkyeSession;
 import org.openskye.domain.Project;
 import org.openskye.metadata.ObjectMetadataSearch;
 
@@ -14,6 +16,9 @@ import java.util.Set;
 public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
 
     private Set<ObjectMetadata> objects = new HashSet<>();
+
+    @Inject
+    private SkyeSession session;
 
     @Override
     public long count(String query)
@@ -128,8 +133,19 @@ public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public void index(ObjectMetadata objectMetadata) {
+    public void index(ObjectMetadata objectMetadata)
+    {
+        delete(objectMetadata);
         objects.add(objectMetadata);
+    }
+
+    @Override
+    public void index(Iterable<ObjectMetadata> objectMetadataList)
+    {
+        // Generally, we'd do some bulk operation here.
+        // In this case, it's not really advantageous.
+        for(ObjectMetadata objectMetadata : objectMetadataList)
+            index(objectMetadata);
     }
 
     /**
@@ -140,6 +156,43 @@ public class InMemoryObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void clear() {
         objects = new HashSet<>();
+    }
+
+    @Override
+    public void delete()
+    {
+        String domainId = session.getDomain().getId();
+
+        // With a real search implementation, if you need to loop through like this,
+        // you are doing it wrong...
+        for(ObjectMetadata objectMetadata : objects)
+        {
+            if(objectMetadata.getProject().getDomain().getId().equals(domainId))
+                delete(objectMetadata);
+        }
+    }
+
+    @Override
+    public void delete(ObjectMetadata objectMetadata)
+    {
+        objects.remove(objectMetadata);
+    }
+
+    @Override
+    public void delete(Iterable<ObjectMetadata> objectMetadataList)
+    {
+        for(ObjectMetadata objectMetadata : objectMetadataList)
+            delete(objectMetadata);
+    }
+
+    @Override
+    public void delete(Project project)
+    {
+        for(ObjectMetadata objectMetadata : objects)
+        {
+            if(objectMetadata.getProject().getId().equals(project.getId()))
+                delete(objectMetadata);
+        }
     }
 
     /**

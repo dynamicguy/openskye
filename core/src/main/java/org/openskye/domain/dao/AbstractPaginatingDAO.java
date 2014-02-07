@@ -99,10 +99,9 @@ public abstract class AbstractPaginatingDAO<T extends Identifiable> {
 
         TypedQuery<T> query = currentEntityManager().createQuery(criteria);
 
-        if(requestContext != null && requestContext.getPageSize() > 0)
-        {
+        if(requestContext != null && requestContext.getPageSize() > 0) {
             // Apply the pagination
-            query.setFirstResult(requestContext.getOffset());
+            query.setFirstResult(requestContext.getOffset()-1);
             query.setMaxResults(requestContext.getPageSize());
         }
 

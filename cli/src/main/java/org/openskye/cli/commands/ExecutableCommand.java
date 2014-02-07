@@ -16,6 +16,7 @@ import org.openskye.domain.NodeArchiveStoreInstance;
 import org.openskye.domain.NodeRole;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.Console;
 import java.util.*;
 
@@ -85,8 +86,24 @@ public abstract class ExecutableCommand {
      * @return the result of the REST request
      */
     protected WebResource.Builder getResource(String path) {
-        WebResource webResource = client
-                .resource(settings.getUrl() + path);
+        return getResource(path, null);
+    }
+
+    /**
+     * Sends a REST request to the Skye API. The given path is converted to a REST request using the user settings to
+     * create the full URL, and then sent to the API. The result is the result of the rest request, which can be a newly
+     * created object or a paginated result, depending on the request.
+     *
+     * @param path the appending path to a specific Skye API resource, used to find the required endpoint.
+     * @param params map of params that should be set as query params for the http request.
+     *
+     * @return the result of the REST request
+     */
+    protected WebResource.Builder getResource(String path, MultivaluedMap params) {
+        WebResource webResource = client.resource(settings.getUrl() + path);
+        if (params != null && params.size() > 0) {
+            webResource = webResource.queryParams(params);
+        }
         WebResource.Builder result = webResource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON_TYPE);
 
         // If we have an API key in place then we will use it

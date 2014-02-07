@@ -8,7 +8,6 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.openskye.core.ArchiveContentBlock;
 import org.openskye.core.ObjectMetadata;
-import org.openskye.core.SearchPage;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.AuthenticationExceptionMapper;
 import org.openskye.exceptions.AuthorizationExceptionMapper;
@@ -258,6 +257,8 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         WebResource resource = resourceRule.client().resource(api);
 
         PaginatedResult<ObjectMetadata> result = resource.type(MEDIA_TYPE).get(PaginatedResult.class);
+        result.setPageSize(12);
+        result.setTotalResults(12);
 
         assertThat("search returned expected results", result, equalTo(metadataSearchResult));
     }
@@ -288,6 +289,8 @@ public class ObjectMetadataResourceTest extends AbstractObjectTest {
         WebResource resource = resourceRule.client().resource(api);
 
         PaginatedResult<ObjectMetadata> result = resource.type(MEDIA_TYPE).get(PaginatedResult.class);
+        result.setPageSize(12);
+        result.setTotalResults(12);
 
         assertThat("search with project returned expected results", result, equalTo(metadataSearchResult));
     }

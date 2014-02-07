@@ -3,6 +3,7 @@ package org.openskye.metadata;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.SearchPage;
 import org.openskye.domain.Project;
+import org.openskye.domain.Domain;
 
 /**
  * This is the standard interface to allow the searching of {@link org.openskye.core.SimpleObject} instances
@@ -91,11 +92,46 @@ public interface ObjectMetadataSearch {
     void index(ObjectMetadata objectMetadata);
 
     /**
+     * Uses bulk indexing to create indexes for multiple {@link ObjectMetadata} at once.
+     *
+     * @param objectMetadataList A collection of {@link ObjectMetadata} to be indexed.
+     */
+    void index(Iterable<ObjectMetadata> objectMetadataList);
+
+    /**
      * Clears the indexed items for the OMS.
      * <p/>
      * This is intended for testing and demo purposes.
      */
     void clear();
+
+    /**
+     * Deletes all search indexes for the current user's {@link Domain}.
+     *
+     * This is intended as a preparatory step for the Reindex Task.
+     */
+    void delete();
+
+    /**
+     * Deletes all existing indexed information related to an {@link ObjectMetadata}.
+     *
+     * @param objectMetadata The {@link ObjectMetadata} for which indexed objects are deleted.
+     */
+    void delete(ObjectMetadata objectMetadata);
+
+    /**
+     * Deletes all existing indexed information related to a collection of {@link ObjectMetadata}.
+     *
+     * @param objectMetadataList The {@link ObjectMetadata} collection for which indexed information should be deleted.
+     */
+    void delete(Iterable<ObjectMetadata> objectMetadataList);
+
+    /**
+     * Deletes all search indexes for a given {@link Project}
+     *
+     * @param project The {@link Project} for which indexed objects are deleted.
+     */
+    void delete(Project project);
 
     /**
      * Ensures that all indexed entries are added to internal storage.
