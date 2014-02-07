@@ -151,17 +151,14 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         String queryPath = objectMetadata.getPath();
         String queryChecksum = objectMetadata.getChecksum();
         Project queryProject = objectMetadata.getProject();
-        DateTime lastModified = objectMetadata.getLastModified();
+        String queryInformationStoreId = objectMetadata.getInformationStoreId();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
-        if (queryChecksum != null) {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum), cb.equal(root.get(ObjectMetadata_.project), queryProject), cb.equal(root.get(ObjectMetadata_.lastModified), lastModified));
-        } else {
-            cq.where(cb.equal(root.get(ObjectMetadata_.path), queryPath),cb.equal(root.get(ObjectMetadata_.project), queryProject), cb.equal(root.get(ObjectMetadata_.lastModified), lastModified));
-        }
+        cq.where( cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum),
+                cb.equal(root.get(ObjectMetadata_.project), queryProject), cb.equal(root.get(ObjectMetadata_.informationStoreId), queryInformationStoreId) );
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);
     }

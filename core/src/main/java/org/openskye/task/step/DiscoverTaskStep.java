@@ -27,6 +27,10 @@ public class DiscoverTaskStep extends TaskStep {
     private Channel channel;
     @JsonIgnore
     private List<ChannelFilter> filters = new ArrayList<>();
+    @JsonIgnore
+    Exception searchException = null;
+    @JsonIgnore
+    int searchFailures = 0;
 
     public DiscoverTaskStep(Channel channel, Node node) {
         this.channel = channel;
@@ -76,18 +80,26 @@ public class DiscoverTaskStep extends TaskStep {
         if (task.getStatistics() == null)
             task.setStatistics(new TaskStatistics());
 
-        for (SimpleObject simpleObject : simpleObjects) {
-            if (!omr.isObjectInOMR(simpleObject.getObjectMetadata()) || task.getProject().isDuplicationAllowed()) {  //is the object in the OMR already?
-                if (simpleObject instanceof ContainerObject)
-                    discover(is, is.getChildren(simpleObject), task);
-                else if (simpleObject instanceof UnstructuredCompressedObject) {
-                    omr.put(simpleObject.getObjectMetadata());
-                    discover(is, ((UnstructuredCompressedObject) simpleObject).getObjectsContained(), task);
-                } else {
-                    if (isIncludedByFilter(simpleObject)) {
-                        task.getStatistics().incrementSimpleObjectsFound();
+        for (SimpleObject object : simpleObjects) {
 
-                        ObjectMetadata om = simpleObject.getObjectMetadata();
+            if (object instanceof ContainerObject) {
+
+                // this is a pure container, such as a directory
+                discover(is, is.getChildren(object), task);
+
+            } else if ( isIncludedByFilter(object) ) {
+
+                ObjectMetadata om = object.getObjectMetadata();
+                if ( ! omr.isObjectInOMR(om) ) {
+                    // this file has either never been discovered for this project, or has
+                    // a different checksum than the last time it was found
+                    if (object instanceof UnstructuredCompressedObject) {
+                        // this is a regular file which is also a container, such as a zip archive
+                        omr.put(om);
+                        discover(is, ((UnstructuredCompressedObject) object).getObjectsContained(), task);
+                    } else {
+                        // this is a regular file which is not a container, such as a PDF document
+                        task.getStatistics().incrementSimpleObjectsFound();
                         for (AttributeInstance attrInstance : getChannel().getAttributeInstances()) {
                             om.getMetadata().put(attrInstance.getAttributeDefinition().getShortLabel(), attrInstance.getAttributeValue());
                         }
@@ -96,13 +108,23 @@ public class DiscoverTaskStep extends TaskStep {
                         }
                         om.setTaskId(task.getId());
                         omr.put(om);
-                        oms.index(om);
-                        auditObject(simpleObject, ObjectEvent.DISCOVERED);
+                        auditObject(object, ObjectEvent.DISCOVERED);
+                    }
+                }
+
+                try {
+                    oms.index(om);
+                    task.getStatistics().incrementSimpleObjectsProcessed();
+                } catch (Exception e) {
+                    searchFailures++;
+                    if ( searchException == null ) {
+                        // save the first exception thrown by OMS
+                        searchException = e;
                     }
                 }
             }
-
         }
+
     }
 
     /**
@@ -115,9 +137,11 @@ public class DiscoverTaskStep extends TaskStep {
      */
     private boolean isIncludedByFilter(SimpleObject simpleObject) {
         for (ChannelFilter filter : filters) {
-            if (filter.isFiltered(simpleObject.getObjectMetadata())) {
-                return filter.isInclude();
-            } else {
+            boolean matches = filter.isFiltered(simpleObject.getObjectMetadata());
+            if ( matches != filter.isInclude() ) {
+                // Exclude the object if:
+                // - the filter doesn't match the object, and it's an include filter
+                // - OR the filter does match the object, but it's an exclude filter
                 return false;
             }
         }
