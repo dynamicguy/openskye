@@ -12,15 +12,17 @@ import java.util.Map;
 @Data
 public class RequestQueryContext {
 
-    private int page = 0;
-    // Temporary "show all fix"
-    //private int pageSize = 20;
-    private int pageSize = 0;
+    private int page = 1;
+    private int pageSize = 10;
     private String sort = null;
     private SortDirection sortDir = SortDirection.ASC;
     private Map<String, String> filter = new HashMap<>();
 
+    public void setPage(int page) {
+        this.page = Math.max(page, 1);
+    }
+
     public int getOffset() {
-        return page * pageSize;
+        return Math.max((page - 1) * pageSize, 1);
     }
 }

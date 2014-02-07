@@ -1,6 +1,5 @@
 package org.openskye.domain.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import org.openskye.core.SearchPage;
@@ -15,8 +14,8 @@ import java.util.List;
 @Data
 public class PaginatedResult<T> {
 
-    private long page = 0;
-    private long pageSize = 20;
+    private long page = 1;
+    private long pageSize = 10;
     private long totalResults = 0;
     private List<T> results = new ArrayList<>();
 
@@ -73,12 +72,6 @@ public class PaginatedResult<T> {
         pageSize = getPageSize();
 
         return this;
-    }
-
-    @JsonIgnore
-    public long getDisplayPage()
-    {
-        return page + 1;
     }
 
     @Override

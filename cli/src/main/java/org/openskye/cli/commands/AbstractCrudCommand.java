@@ -2,6 +2,7 @@ package org.openskye.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.google.common.base.CaseFormat;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.openskye.core.SkyeException;
 import org.openskye.domain.Identifiable;
 import org.openskye.domain.dao.PaginatedResult;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.*;
 
 /**
@@ -77,7 +79,6 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
 
         if (list) {
             list();
-
         } else if (create) {
             create();
         } else if (delete) {
@@ -173,7 +174,40 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      * paginated result is returned in a tabular structure.
      */
     public void list() {
-        PaginatedResult paginatedResult = getResource(getCollectionPlural()).get(PaginatedResult.class);
+        final String pageParam = "_page";
+        final String pageSizeParam = "_pageSize";
+        final String sortParam = "_sort";
+        final String sortDirParam = "_sortDir";
+
+        String strPage = dynamicParams.get(pageParam);
+        String strPageSize = dynamicParams.get(pageSizeParam);
+        String strSort = dynamicParams.get(sortParam);
+        String strSortDir = dynamicParams.get(sortDirParam);
+
+        if (strPageSize != null) {
+            try {
+                Long.parseLong(strPageSize);
+            } catch (Exception ex) {
+                throw new SkyeException("The _pageSize parameter must be an integer", ex);
+            }
+        }
+
+        if (strPage != null) {
+            try {
+                Long.parseLong(strPage);
+            } catch (Exception ex) {
+                throw new SkyeException("The _page parameter must be an integer", ex);
+            }
+        }
+
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+
+        queryParams.add(sortParam, strSort);
+        queryParams.add(sortDirParam, strSortDir);
+        queryParams.add(pageParam, strPage);
+        queryParams.add(pageSizeParam, strPageSize);
+
+        PaginatedResult paginatedResult = getResource(getCollectionPlural(), queryParams).get(PaginatedResult.class);
         List<String> fieldsWithId = new ArrayList<>();
         fieldsWithId.add("id");
         fieldsWithId.addAll(getFieldNames());
@@ -194,11 +228,12 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             ObjectTableView tableView = new ObjectTableView(paginatedResult, fieldsWithId);
             output.insertLines(1);
             tableView.draw(output);
-            output.success("\nFound " + paginatedResult.getResults().size() + " " + getCollectionPlural());
+            output.success("\nFound " + paginatedResult.getTotalResults() + " " + getCollectionPlural());
+            output.success("Showing page number: " + paginatedResult.getPage());
+            output.success("Results on this page: " + paginatedResult.getResults().size());
 
         } else {
             output.success("\nNo " + getCollectionPlural() + " found");
-
         }
     }
 

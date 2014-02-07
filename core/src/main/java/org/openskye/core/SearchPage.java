@@ -15,25 +15,21 @@ public class SearchPage
     @Setter
     private long pageSize;
 
-    public SearchPage()
-    {
-        this.pageNumber = 0;
+    public SearchPage() {
+        this.pageNumber = 1;
         this.pageSize = 0;
     }
 
-    public SearchPage(long pageNumber, long pageSize)
-    {
+    public SearchPage(long pageNumber, long pageSize) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }
 
-    public long getPageStart()
-    {
-        return (pageNumber * pageSize);
+    public long getPageStart() {
+        return ((pageNumber-1) * pageSize);
     }
 
-    public long getPageEnd()
-    {
-        return ((pageNumber + 1) * pageSize);
+    public long getPageEnd() {
+        return (pageNumber * pageSize);
     }
 }
