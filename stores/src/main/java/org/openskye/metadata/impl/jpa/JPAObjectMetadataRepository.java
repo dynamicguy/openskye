@@ -207,7 +207,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(InformationStoreDefinition informationStoreDefinition) {
-        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
+        List<ObjectMetadata> listObjectMetadata = null;
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
@@ -250,7 +250,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(Task task) {
-        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
+        List<ObjectMetadata> listObjectMetadata = null;
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
@@ -317,18 +317,15 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     }
 
     public Iterable<ObjectMetadata> getAllObjects() {
-        List<ObjectMetadata> listJpaObjectMetadata;
-        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
+        List<ObjectMetadata> listObjectMetadata = null;
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
 
-        listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
-
-        for (ObjectMetadata jpa : listJpaObjectMetadata)
-            listObjectMetadata.add(jpa);
+        // TODO we need to make this iterable or we will load everything into memory
+        listObjectMetadata = getEntityManager().createQuery(cq).getResultList();
 
         return listObjectMetadata;
     }
