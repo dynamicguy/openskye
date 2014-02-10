@@ -1,9 +1,11 @@
 package org.openskye.metadata.elasticsearch;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse;
+import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.count.CountResponse;
@@ -15,16 +17,14 @@ import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.indices.IndexMissingException;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.openskye.core.ObjectMetadata;
-import org.openskye.core.SearchPage;
-import org.openskye.core.SkyeException;
-import org.openskye.core.SkyeSession;
+import org.openskye.core.*;
 import org.openskye.domain.Project;
 import org.openskye.metadata.ObjectMetadataSearch;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +42,14 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     private SkyeSession session;
     @Inject
     private ObjectMapper objectMapper;
+
+    @JsonIgnore
+    public static final long BULK_REQUEST_SIZE = 20;
+
+    private enum OperationType
+    {
+        INDEX, DELETE
+    }
 
     @Override
     public long count(String query)
@@ -212,42 +220,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void index(Iterable<ObjectMetadata> objectMetadataList)
     {
-        // Create a bulk request.
-        log.debug("Creating a bulk index request.");
-        BulkRequestBuilder bulkRequest = client.prepareBulk();
-
-        for(ObjectMetadata objectMetadata : objectMetadataList)
-        {
-            try
-            {
-                // For each object in the list, attempt to serialize that object.
-                String domainId = objectMetadata.getProject().getDomain().getId();
-                String projectId = objectMetadata.getProject().getId();
-                String message = "Attempting to add an ObjectMetadata instance to a bulk index request.\n" +
-                        "Domain Id: " + domainId + "\n" +
-                        "Project Id: " + projectId + "\n" +
-                        "ObjectMetadata: " + objectMetadata;
-                log.debug(message);
-
-                String json = objectMapper.writeValueAsString(objectMetadata);
-
-                // Add the index request to the bulk request.
-                bulkRequest.add(client.prepareIndex(domainId, projectId, objectMetadata.getId())
-                        .setSource(json));
-            }
-            catch (JsonProcessingException ex)
-            {
-                throw new SkyeException("Failed to marshal ObjectMetadata as JSON", ex);
-            }
-        }
-
-        // Execute the bulk index request.
-        log.debug("Executing the bulk index request.");
-        BulkResponse response = bulkRequest.execute().actionGet();
-
-        // Upon completion, if there are failures, indicate the nature of each in an exception.
-        if(response.hasFailures())
-            throw new SkyeException(response.buildFailureMessage());
+        performBulkOperation(objectMetadataList, OperationType.INDEX);
     }
 
     /**
@@ -294,32 +267,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void delete(Iterable<ObjectMetadata> objectMetadataList)
     {
-        // Create the bulk delete request.
-        log.debug("Creating bulk delete request.");
-        BulkRequestBuilder bulkRequest = client.prepareBulk();
-
-        for(ObjectMetadata objectMetadata : objectMetadataList)
-        {
-            // Add the individual delete request to the bulk request.
-            String domainId = objectMetadata.getProject().getDomain().getId();
-            String projectId = objectMetadata.getProject().getId();
-            String message = "Attempting to add an ObjectMetadata to a bulk delete request.\n" +
-                             "Domain Id: " + domainId + "\n" +
-                             "Project Id: " + projectId + "\n" +
-                             "ObjectMetadata: " + objectMetadata;
-            log.debug(message);
-
-            bulkRequest.add(client.prepareDelete(domainId, projectId, objectMetadata.getId()));
-        }
-
-        // Executing the bulk delete request.
-        log.debug("Executing the bulk delete request.");
-        BulkResponse response = bulkRequest.execute().actionGet();
-
-        // Upon completion, if there are failures, indicate them in an exception.
-        if(response.hasFailures())
-            throw new SkyeException(response.buildFailureMessage());
-
+        performBulkOperation(objectMetadataList, OperationType.DELETE);
     }
 
     @Override
@@ -335,6 +283,80 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
               .setQuery(QueryBuilders.matchAllQuery())
               .execute()
               .actionGet();
+    }
+
+    /**
+     * Prepares and performs the operation of the specified type on multiple objects using
+     * one or more bulk operations of a maximum size indicated by the BULK_REQUEST_SIZE constant.
+     * This is more efficient than performing the operations one at a time, and the operations
+     * will continue being performed even if one operation fails.
+     * In the event of at least one failure, an {@link AggregateException} will be thrown when all
+     * {@link ObjectMetadata} instances have been processed indicating the nature of each failure.
+     *
+     * @param objectMetadataList An Iterable object that accesses the {@link ObjectMetadata} instances on which the operation is to be performed.
+     *
+     * @param type The operation to be performed, as specified by the {@link OperationType} enumeration.
+     */
+    private void performBulkOperation(Iterable<ObjectMetadata> objectMetadataList, OperationType type)
+    {
+        // Create a bulk request.
+        log.debug("Performing a bulk " + type.name() + " operation.");
+        BulkRequestBuilder bulkRequest = client.prepareBulk();
+
+        List<Exception> exceptionList = new ArrayList<>();
+        AggregateException aggregateException = new AggregateException("The bulk " + type.name() + " operation failed on some objects.");
+        Iterator<ObjectMetadata> iterator = objectMetadataList.iterator();
+
+        while(iterator.hasNext())
+        {
+            ObjectMetadata objectMetadata = iterator.next();
+
+            // For each object in the list, attempt to serialize that object.
+            String domainId = objectMetadata.getProject().getDomain().getId();
+            String projectId = objectMetadata.getProject().getId();
+            String message = "Attempting to add an ObjectMetadata instance to a bulk " + type.name() + " request.\n" +
+                    "Domain Id: " + domainId + "\n" +
+                    "Project Id: " + projectId + "\n" +
+                    "ObjectMetadata: " + objectMetadata;
+            log.debug(message);
+
+
+            // Add the index request to the bulk request.
+            if(type == OperationType.INDEX)
+            {
+                try
+                {
+                    String json = objectMapper.writeValueAsString(objectMetadata);
+                    bulkRequest.add(client.prepareIndex(domainId, projectId, objectMetadata.getId())
+                        .setSource(json));
+                }
+                catch (JsonProcessingException ex)
+                {
+                    aggregateException.add(ex);
+                }
+            }
+            else
+            {
+                bulkRequest.add(client.prepareDelete(domainId, projectId, objectMetadata.getId()));
+            }
+
+            if(bulkRequest.numberOfActions() >= BULK_REQUEST_SIZE || iterator.hasNext() == false)
+            {
+                BulkResponse response = bulkRequest.execute().actionGet();
+
+                for(BulkItemResponse item : response.getItems())
+                {
+                    if(item.isFailed())
+                        aggregateException.add(new SkyeException(item.getFailureMessage()));
+                }
+
+                if(iterator.hasNext())
+                    bulkRequest = client.prepareBulk();
+            }
+        }
+
+        if(!aggregateException.isEmpty())
+            throw aggregateException;
     }
 
     /**
