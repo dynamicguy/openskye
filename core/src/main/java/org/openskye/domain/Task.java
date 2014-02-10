@@ -91,7 +91,8 @@ public class Task implements Identifiable {
         @JsonSubTypes.Type(value=org.openskye.task.step.ExtractTaskStep.class, name="ExtractTaskStep"),
         @JsonSubTypes.Type(value=org.openskye.task.step.TestTaskStep.class, name="TestTaskStep"),
         @JsonSubTypes.Type(value=org.openskye.task.step.VerifyTaskStep.class, name="VerifyTaskStep"),
-        @JsonSubTypes.Type(value=org.openskye.task.step.ReplicateTaskStep.class, name="ReplicateTaskStep")
+        @JsonSubTypes.Type(value=org.openskye.task.step.ReplicateTaskStep.class, name="ReplicateTaskStep"),
+        @JsonSubTypes.Type(value=org.openskye.task.step.ReindexTaskStep.class, name="ReindexTaskStep")
     })
     private TaskStep step;
     @Transient
