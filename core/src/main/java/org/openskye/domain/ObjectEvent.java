@@ -7,5 +7,11 @@ package org.openskye.domain;
  * Project: platform
  */
 public enum ObjectEvent {
-    DISCOVERED, ARCHIVED, INGESTED, MODIFIED, CORRUPTED, DESTROYED
+    DISCOVERED,
+    ARCHIVED,
+    INGESTED,
+    MODIFIED,
+    CORRUPTED,
+    DESTROYED,
+    INDEXED
 }
