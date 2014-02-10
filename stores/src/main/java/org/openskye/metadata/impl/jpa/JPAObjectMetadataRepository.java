@@ -216,10 +216,8 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
         cq.where(cb.equal(root.get(ObjectMetadata_.informationStoreId), informationStoreDefinition.getId()));
 
-        List<ObjectMetadata> listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
-
-        for (ObjectMetadata jpa : listJpaObjectMetadata)
-            listObjectMetadata.add(jpa);
+        // TODO we need to make this iterable or we will load everything into memory
+        listObjectMetadata = getEntityManager().createQuery(cq).getResultList();
 
         return listObjectMetadata;
     }
@@ -253,7 +251,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public Iterable<ObjectMetadata> getObjects(Task task) {
         List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
-        List<ObjectMetadata> listJpaObjectMetadata = null;
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
@@ -261,11 +258,8 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         cq.select(root);
         cq.where(cb.equal(root.get(ObjectMetadata_.taskId), task.getId()));
 
-        listJpaObjectMetadata = getEntityManager().createQuery(cq).getResultList();
-
-        // TODO we need to make this iterable
-        for (ObjectMetadata jpa : listJpaObjectMetadata)
-            listObjectMetadata.add(jpa);
+        // TODO we need to make this iterable or we will load everything into memory
+        listObjectMetadata = getEntityManager().createQuery(cq).getResultList();
 
         return listObjectMetadata;
 
@@ -281,7 +275,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
      */
     @Override
     public Iterable<ObjectMetadata> getObjects(ObjectSet objectSet) {
-        List<ObjectMetadata> listObjectMetadata = new ArrayList<>();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectSet> cq = cb.createQuery(ObjectSet.class);
         Root<ObjectSet> root = cq.from(ObjectSet.class);
@@ -289,12 +282,10 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         cq.select(root);
         cq.where(cb.equal(root.get(ObjectSet_.id), objectSet.getId()));
 
+        // TODO we need to make this iterable or we will load everything into memory
         objectSet = getEntityManager().createQuery(cq).getSingleResult();
 
-        for (ObjectMetadata jpaObjectMetadata : objectSet.getObjectMetadataSet())
-            listObjectMetadata.add(jpaObjectMetadata);
-
-        return listObjectMetadata;
+        return objectSet.getObjectMetadataSet();
     }
 
     /**
@@ -312,7 +303,6 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     @Override
     public Iterable<ObjectSet> getAllObjectSets() {
-        List<ObjectSet> listJpaObjectSets;
         List<ObjectSet> listObjectSets = new ArrayList<>();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectSet> cq = cb.createQuery(ObjectSet.class);
@@ -320,12 +310,8 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
         cq.select(root);
 
-        listJpaObjectSets = getEntityManager().createQuery(cq).getResultList();
-
-        // TODO we need to make this iterable or we will load everything into
-        // memory
-        for (ObjectSet jpa : listJpaObjectSets)
-            listObjectSets.add(jpa);
+        // TODO we need to make this iterable or we will load everything into memory
+        listObjectSets = getEntityManager().createQuery(cq).getResultList();
 
         return listObjectSets;
     }
