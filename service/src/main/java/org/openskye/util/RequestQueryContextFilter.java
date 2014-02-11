@@ -27,29 +27,34 @@ public class RequestQueryContextFilter implements Filter {
         if (servletRequest instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = WebUtils.toHttp(servletRequest);
 
-            if (httpRequest.getQueryString() != null)
+            if (httpRequest.getQueryString() != null) {
                 log.debug("Got query string " + httpRequest.getQueryString());
-
-            if (httpRequest.getParameter("_page") != null) {
-                try {
-                    log.debug("Setting page to " + httpRequest.getParameter("_page"));
-                    context.setPage(Integer.parseInt(httpRequest.getParameter("_page")));
-                } catch (NumberFormatException ex) {
-                    log.debug("Invalid _page param = " + httpRequest.getParameter("_page"));
-                }
             }
-            if (httpRequest.getParameter("_pageSize") != null) {
+
+            String pageParam = httpRequest.getParameter("_page");
+            if (pageParam != null) {
                 try {
-                    log.debug("Setting page size to " + httpRequest.getParameter("_pageSize"));
-                    context.setPageSize(Integer.parseInt(httpRequest.getParameter("_pageSize")));
+                    log.debug("Setting page to " + pageParam);
+                    context.setPage(Integer.parseInt(pageParam));
                 } catch (NumberFormatException ex) {
-                    log.debug("Invalid _page param = " + httpRequest.getParameter("_pageSize"));
+                    log.debug("Invalid _page param = " + pageParam);
                 }
             }
 
-            if (httpRequest.getParameter("_sort") != null) {
-                log.debug("Setting sort to " + httpRequest.getParameter("_sort"));
-                context.setSort(httpRequest.getParameter("_sort"));
+            String pageSizeParam = httpRequest.getParameter("_pageSize");
+            if (pageSizeParam != null) {
+                try {
+                    log.debug("Setting page size to " + pageSizeParam);
+                    context.setPageSize(Integer.parseInt(pageSizeParam));
+                } catch (NumberFormatException ex) {
+                    log.debug("Invalid _page param = " + pageSizeParam);
+                }
+            }
+
+            String sortParam = httpRequest.getParameter("_sort");
+            if (sortParam != null) {
+                log.debug("Setting sort to " + sortParam);
+                context.setSort(sortParam);
             }
 
             if ("desc".equals(httpRequest.getParameter("_sortDir"))) {
@@ -57,6 +62,7 @@ public class RequestQueryContextFilter implements Filter {
                 context.setSortDir(SortDirection.DESC);
             }
         }
+
         RequestQueryContextHolder.setContext(context);
         filterChain.doFilter(servletRequest, servletResponse);
     }
