@@ -45,6 +45,8 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     private Task createFromStep(TaskStep newStep) {
         injector.injectMembers(newStep);
 
+        projectID = "*";
+
         // Some Tasks, like Reindex, may be set up to operate on all projects at once.
         // If this is the case, then the Project will be null, so the projectID that
         // Shiro looks at will default to *, for all projects.
@@ -157,7 +159,11 @@ public class TaskResource extends ProjectSpecificResource<Task> {
         authorize("get");
         if (taskDAO.get(id).isPresent()) {
             Task result = taskDAO.get(id).get();
-            projectID = result.getProject().getId();
+            projectID = "*";
+
+            if(result.getProject() != null)
+                projectID = result.getProject().getId();
+
             return super.get(id);
         } else {
             throw new NotFoundException();
@@ -172,7 +178,11 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     public PaginatedResult<TaskLog> getTaskLogs(@PathParam("id") String id) {
         if (taskDAO.get(id).isPresent()) {
             Task result = taskDAO.get(id).get();
-            projectID = result.getProject().getId();
+            projectID = "*";
+
+            if(result.getProject() != null)
+                projectID = result.getProject().getId();
+
             authorize("get");
             return taskLogDAO.getLogsForTask(result);
         } else {
@@ -190,12 +200,12 @@ public class TaskResource extends ProjectSpecificResource<Task> {
         List<Task> results = paginatedResult.getResults();
         for (Task t : results)
         {
-            String projectId = "*";
+            String taskProjectId = "*";
 
             if(t.getProject() != null)
-                projectId = t.getProject().getId();
+                taskProjectId = t.getProject().getId();
 
-            if (!isPermitted("list", projectId))
+            if (!isPermitted("list", taskProjectId))
             {
                 results.remove(t);
             }
