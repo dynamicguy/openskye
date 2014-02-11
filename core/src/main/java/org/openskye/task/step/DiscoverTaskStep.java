@@ -114,6 +114,7 @@ public class DiscoverTaskStep extends TaskStep {
 
                 try {
                     oms.index(om);
+                    auditObject(om, ObjectEvent.INDEXED);
                     task.getStatistics().incrementSimpleObjectsProcessed();
                 } catch (Exception e) {
                     searchFailures++;
