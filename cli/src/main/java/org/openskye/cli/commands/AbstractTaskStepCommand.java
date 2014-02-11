@@ -44,6 +44,8 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     protected boolean destroy;
     @Parameter(names = "--test")
     protected boolean test;
+    @Parameter(names = "--reindex")
+    protected boolean reindex;
 
     public abstract Class getClazz();
 
@@ -65,6 +67,9 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void execute() {
         // Ensure we are logged in
         settings.mustHaveApiKey();
+
+        // TODO Default case here?
+        // What if the user didn't put in any of these?
         if (list) {
             list();
         } else if (discover) {
@@ -85,6 +90,10 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
             destroy();
         } else if (test) {
             test();
+        }
+        else if (reindex)
+        {
+            reindex();
         }
     }
 
@@ -168,7 +177,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        step = (ReplicateTaskStep) selectReferenceField(new ReferenceField(Node.class), step);
+        step = (DestroyTaskStep) selectReferenceField(new ReferenceField(Node.class), step);
         ((DestroyTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
         step = setTargetInformationStore(step);
         create(step);
@@ -182,6 +191,24 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         enterNumber(new NumberField("sleepSeconds"), step);
         enterNumber(new NumberField("iterations"), step);
         enterBoolean(new BooleanField("pass"), step);
+
+        create(step);
+    }
+
+    public void reindex()
+    {
+        ReindexTaskStep step = new ReindexTaskStep();
+        output.message("Creating a new " + step.getLabel() + "task:\n");
+        selectReferenceField(new ReferenceField(Node.class), step);
+
+        String projectId = dynamicParams.get("project");
+
+        if(projectId != null && !projectId.isEmpty())
+        {
+            selectReferenceField(new ReferenceField(Project.class), step);
+        }
+
+        create(step);
     }
 
     public TaskStep setTargetInformationStore(TaskStep step) {

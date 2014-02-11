@@ -44,7 +44,13 @@ public class TaskResource extends ProjectSpecificResource<Task> {
 
     private Task createFromStep(TaskStep newStep) {
         injector.injectMembers(newStep);
-        projectID = newStep.getProject().getId();
+
+        // Some Tasks, like Reindex, may be set up to operate on all projects at once.
+        // If this is the case, then the Project will be null, so the projectID that
+        // Shiro looks at will default to *, for all projects.
+        if(newStep.getProject() != null)
+            projectID = newStep.getProject().getId();
+
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);
@@ -129,6 +135,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     @Transactional
     @Timed
     public Task create(TestTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
+    @ApiOperation(value = "Create new reindex task", notes = "Create a new reindex task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/reindex")
+    @Transactional
+    @Timed
+    public Task create(ReindexTaskStep newStep) {
         return createFromStep(newStep);
     }
 
