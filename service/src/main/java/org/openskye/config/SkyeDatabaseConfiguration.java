@@ -4,6 +4,8 @@ import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.DatabaseConfiguration;
 import lombok.Data;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.salt.FixedStringSaltGenerator;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 @Data
 public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
 
+    protected static StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
     @NotNull
     private String driverClass;
     private String user;
@@ -18,9 +21,7 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
     private String dialect;
     @NotNull
     private String url;
-    
     private String connectionProviderClass;
-    
     // hibernate.c3p0.max_size
     private Integer poolMaxSize;
     // hibernate.c3p0.min_size
@@ -33,11 +34,8 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
     private String poolPreferredTestQuery;
     // hibernate.c3p0.testConnectionOnCheckout
     private String poolTestConnectionOnCheckout;
-    
     private Integer poolConnectionMaxIdleTime;
-    
     private Integer maxIdleTimeExcessConnections;
-    
     private Integer unreturnedConnectionTimeout;
 
     @Override
@@ -46,10 +44,10 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
         SkyeDatabaseConfiguration skyeDatabaseConfiguration = ((SkyeConfiguration) configuration).getDatabaseConfiguration();
         dsf.setUrl(skyeDatabaseConfiguration.getUrl());
         dsf.setUser(skyeDatabaseConfiguration.getUser());
-        dsf.setPassword(skyeDatabaseConfiguration.getPassword());
         dsf.setDriverClass(skyeDatabaseConfiguration.getDriverClass());
 
         HashMap<String, String> props = new HashMap<>();
+        props.put("connection.password", skyeDatabaseConfiguration.getPassword());
         props.put("hibernate.dialect", skyeDatabaseConfiguration.getDialect());
         props.put("hibernate.connection.provider_class", skyeDatabaseConfiguration.getConnectionProviderClass());
         props.put("hibernate.c3p0.max_size", String.valueOf(skyeDatabaseConfiguration.getPoolMaxSize()));
@@ -64,4 +62,55 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
         dsf.setProperties(props);
         return dsf;
     }
+
+    public String getPassword() {
+        if (!encryptor.isInitialized()) {
+            encryptor.setPassword("openSkye12");
+            FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
+            saltGenerator.setSalt("openSkye12");
+            encryptor.setSaltGenerator(saltGenerator);
+            encryptor.setAlgorithm("PBEWithMD5AndDES");
+        }
+        return encryptor.decrypt(password);
+    }
+
+    public void setPassword(String newPassword) {
+        if (password == null) {
+            //if newPassword is plaintext
+            if (!isPasswordHashed(newPassword)) {
+                password = hashPw(newPassword);
+            } else {
+                password = newPassword;
+            }
+        }
+    }
+
+    public String hashPw(String newPassword) {
+        if (!encryptor.isInitialized()) {
+            encryptor.setPassword("openSkye12");
+            FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
+            saltGenerator.setSalt("openSkye12");
+            encryptor.setSaltGenerator(saltGenerator);
+            encryptor.setAlgorithm("PBEWithMD5AndDES");
+        }
+        return encryptor.encrypt(newPassword);
+    }
+
+    public boolean isPasswordHashed(String testPass) {
+        if (!encryptor.isInitialized()) {
+            encryptor.setPassword("openSkye12");
+            FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
+            saltGenerator.setSalt("openSkye12");
+            encryptor.setSaltGenerator(saltGenerator);
+            encryptor.setAlgorithm("PBEWithMD5AndDES");
+        }
+        try {
+            encryptor.decrypt(testPass);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+
+    }
+
 }

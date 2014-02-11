@@ -201,6 +201,13 @@
             <version>0.3m</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt-hibernate4</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Lets use Lombok to try and make the Java code a little easier -->
         <dependency>
             <groupId>org.projectlombok</groupId>
