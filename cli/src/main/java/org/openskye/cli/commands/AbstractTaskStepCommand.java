@@ -198,7 +198,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void reindex()
     {
         ReindexTaskStep step = new ReindexTaskStep();
-        output.message("Creating a new " + step.getLabel() + "task:\n");
+        output.message("Creating a new " + step.getLabel() + " task:\n");
         selectReferenceField(new ReferenceField(Node.class), step);
 
         String projectId = dynamicParams.get("project");

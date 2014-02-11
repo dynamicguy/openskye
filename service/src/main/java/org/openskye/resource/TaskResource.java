@@ -188,8 +188,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     public PaginatedResult<Task> getAll() {
         PaginatedResult<Task> paginatedResult = super.getAll();
         List<Task> results = paginatedResult.getResults();
-        for (Task t : results) {
-            if (!isPermitted("list", t.getProject().getId())) {
+        for (Task t : results)
+        {
+            String projectId = "*";
+
+            if(t.getProject() != null)
+                projectId = t.getProject().getId();
+
+            if (!isPermitted("list", projectId))
+            {
                 results.remove(t);
             }
         }
