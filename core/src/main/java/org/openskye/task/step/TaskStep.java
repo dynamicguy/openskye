@@ -13,6 +13,7 @@ import org.openskye.domain.dao.AuditLogDAO;
 import org.openskye.metadata.ObjectMetadataRepository;
 import org.openskye.metadata.ObjectMetadataSearch;
 import org.openskye.stores.StoreRegistry;
+import org.openskye.task.TaskManager;
 
 import javax.persistence.EntityManager;
 import java.util.concurrent.Callable;
@@ -32,6 +33,9 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     @JsonIgnore
     @Inject
     protected ObjectMetadataSearch oms;
+    @JsonIgnore
+    @Inject
+    protected TaskManager taskManager;
     @JsonIgnore
     protected boolean hasOuterTransaction = false;  // is this task already wrapped in an outer transaction?
     @JsonIgnore
@@ -161,6 +165,14 @@ public abstract class TaskStep implements Callable<TaskStatus> {
             throw exception;
 
         return status;
+    }
+
+    protected void toLog(String message,Exception e) {
+        taskManager.toLog(task,message,e);
+    }
+
+    protected void toLog(String message) {
+        taskManager.toLog(task,message);
     }
 
     protected abstract TaskStatus doStep() throws Exception;

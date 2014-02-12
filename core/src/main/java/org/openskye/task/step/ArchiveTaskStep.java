@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
+import org.openskye.domain.dao.TaskDAO;
 
 import java.util.*;
 
@@ -19,6 +20,8 @@ import java.util.*;
 public class ArchiveTaskStep extends TaskStep {
     @Inject
     private ChannelDAO channelDAO;
+    @Inject
+    private TaskDAO taskDAO;
     @Getter
     @Setter
     private Channel channel;
@@ -93,11 +96,17 @@ public class ArchiveTaskStep extends TaskStep {
     }
 
     private Iterable<ObjectMetadata> getObjectMetadataIterator() {
-        List<ObjectMetadata> objects;
-        if (task.getParentTask() == null) {
-            objects = (List<ObjectMetadata>) omr.getObjects(channel.getInformationStoreDefinition());
-        } else {
-            objects = (List<ObjectMetadata>) omr.getObjects(task.getParentTask());
+        // Find all objects discovered through the specified channel that have not yet been archived
+
+        List<ObjectMetadata> objects = new ArrayList<>();
+        for ( ObjectMetadata om : omr.getObjects(channel.getInformationStoreDefinition()) ) {
+            if ( readyToArchive(om) ) {
+                objects.add(om);
+            }
+            if ( (Runtime.getRuntime().totalMemory() * 100) / Runtime.getRuntime().maxMemory() > 90 ) {
+                // Don't have enough memory to keep building this huge object list .. run another archive task later
+                break;
+            }
         }
         Collections.sort(objects, new Comparator<ObjectMetadata>() { //orders based on implementation
             @Override
@@ -119,5 +128,14 @@ public class ArchiveTaskStep extends TaskStep {
         return objects;
     }
 
-
+    private boolean readyToArchive(ObjectMetadata om) {
+        String omStoreId = om.getInformationStoreId();
+        InformationStoreDefinition channelStore = channel.getInformationStoreDefinition();
+        if ( omStoreId == null || channelStore == null || ! omStoreId.equals(channelStore.getId()) ) {
+            return false;
+        }
+        // Make sure there are no ACBs for this object, before calling it 'ready to archive'
+        List<ArchiveContentBlock> acbList = om.getArchiveContentBlocks();
+        return ( acbList == null || acbList.size() == 0 );
+    }
 }

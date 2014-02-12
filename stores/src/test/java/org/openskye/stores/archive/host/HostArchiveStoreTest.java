@@ -142,9 +142,11 @@ public class HostArchiveStoreTest {
         NodeManager.setNode(node);
 
         Task discovery = new DiscoverTaskStep(channel, node).toTask();
+        discovery.setId(UUID.randomUUID().toString());
         taskManager.submit(discovery);
 
         Task archive = new ArchiveTaskStep(channel, node).toTask();
+        archive.setId(UUID.randomUUID().toString());
         taskManager.submit(archive);
 
         long discovered = discovery.getStatistics().getSimpleObjectsFound();
@@ -180,11 +182,13 @@ public class HostArchiveStoreTest {
         NodeManager.setNode(node);
 
         Task discovery = new DiscoverTaskStep(channel, node).toTask();
+        discovery.setId(UUID.randomUUID().toString());
         taskManager.submit(discovery);
         long discovered = discovery.getStatistics().getSimpleObjectsFound();
         assertThat("We should have 1 discovered simple objects, not " + discovered, discovered == 1);
 
         Task archive = new ArchiveTaskStep(channel, node).toTask();
+        archive.setId(UUID.randomUUID().toString());
         taskManager.submit(archive);
         long ingested = archive.getStatistics().getSimpleObjectsProcessed();
         assertThat("We should have 1 ingested simple objects, not " + ingested, ingested == 1);

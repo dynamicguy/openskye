@@ -28,9 +28,13 @@ public class DiscoverTaskStep extends TaskStep {
     @JsonIgnore
     private List<ChannelFilter> filters = new ArrayList<>();
     @JsonIgnore
-    Exception searchException = null;
+    int skippedObjects = 0;
     @JsonIgnore
-    int searchFailures = 0;
+    int discoveredObjects = 0;
+    @JsonIgnore
+    int indexedObjects = 0;
+    @JsonIgnore
+    int indexFailures = 0;
 
     public DiscoverTaskStep(Channel channel, Node node) {
         this.channel = channel;
@@ -72,6 +76,15 @@ public class DiscoverTaskStep extends TaskStep {
 
         discover(is, is.getRoot(), task);
 
+        toLog(discoveredObjects + " new objects discovered");
+        if ( skippedObjects > 0 ) {
+            toLog(skippedObjects + " previously discovered objects found");
+        }
+        toLog(indexedObjects + " objects indexed");
+        if ( indexFailures > 0 ) {
+            toLog(indexFailures + " objects failed to index");
+        }
+
         return TaskStatus.COMPLETED;
     }
 
@@ -91,6 +104,7 @@ public class DiscoverTaskStep extends TaskStep {
 
                 ObjectMetadata om = object.getObjectMetadata();
                 if ( ! omr.isObjectInOMR(om) ) {
+                    om.setTaskId(task.getId());
                     // this file has either never been discovered for this project, or has
                     // a different checksum than the last time it was found
                     if (object instanceof UnstructuredCompressedObject) {
@@ -106,21 +120,24 @@ public class DiscoverTaskStep extends TaskStep {
                         if (getChannel().getRetentionPolicy() != null) {
                             om.getMetadata().put(MetadataConstants.RETENTION_POLICY_ID, channel.getRetentionPolicy().getId());
                         }
-                        om.setTaskId(task.getId());
                         omr.put(om);
                         auditObject(object, ObjectEvent.DISCOVERED);
                     }
+                    discoveredObjects++;
+                } else {
+                    skippedObjects++;
                 }
 
                 try {
                     oms.index(om);
+                    indexedObjects++;
                     task.getStatistics().incrementSimpleObjectsProcessed();
                 } catch (Exception e) {
-                    searchFailures++;
-                    if ( searchException == null ) {
-                        // save the first exception thrown by OMS
-                        searchException = e;
+                    if ( indexFailures == 0 ) {
+                        // log the first exception thrown by OMS
+                        toLog("exception while indexing",e);
                     }
+                    indexFailures++;
                 }
             }
         }
@@ -140,8 +157,8 @@ public class DiscoverTaskStep extends TaskStep {
             boolean matches = filter.isFiltered(simpleObject.getObjectMetadata());
             if ( matches != filter.isInclude() ) {
                 // Exclude the object if:
-                // - the filter doesn't match the object, and it's an include filter
-                // - OR the filter does match the object, but it's an exclude filter
+                // - the filter doesn't match the object, and it's an include filter (false != true)
+                // - OR the filter does match the object, but it's an exclude filter (true != false)
                 return false;
             }
         }

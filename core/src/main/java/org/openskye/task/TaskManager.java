@@ -20,4 +20,14 @@ public interface TaskManager {
      */
     void submit(Task task);
 
+    /**
+     * Record an event in the task log
+     *
+     * @param task the task which triggered the event
+     * @param message message to be entered in the log
+     * @param e exception thrown, if applicable
+     */
+    void toLog(Task task, String message, Exception e);
+    void toLog(Task task, String message);
+
 }

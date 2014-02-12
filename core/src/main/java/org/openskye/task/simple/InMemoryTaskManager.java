@@ -51,5 +51,13 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    @Override
+    public void toLog(Task task, String message) {
+        // Not implemented for in memory task manager
+    }
 
+    @Override
+    public void toLog(Task task, String message, Exception e) {
+        // Not implemented for in memory task manager
+    }
 }

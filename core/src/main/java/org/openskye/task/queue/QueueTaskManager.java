@@ -48,7 +48,7 @@ public class QueueTaskManager implements TaskManager {
         }
     }
 
-    protected void toLog(Task task, String message, Exception e) {
+    public void toLog(Task task, String message, Exception e) {
         TaskLog taskLog = new TaskLog();
         taskLog.setTaskId(task.getId());
         taskLog.setStatus(task.getStatus());
@@ -57,7 +57,7 @@ public class QueueTaskManager implements TaskManager {
         taskLogDAO.create(taskLog);
     }
 
-    protected void toLog(Task task, String message) {
+    public void toLog(Task task, String message) {
         toLog(task, message, null);
     }
 
