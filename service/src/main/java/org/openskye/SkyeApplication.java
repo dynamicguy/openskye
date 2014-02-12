@@ -59,7 +59,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        argsPath = args[1];
+        argsPath = args[args.length-1];
         new SkyeApplication().run(args);
     }
 
