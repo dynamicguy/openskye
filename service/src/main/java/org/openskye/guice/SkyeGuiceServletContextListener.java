@@ -9,7 +9,7 @@ import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.guice.web.GuiceShiroFilter;
 import org.apache.shiro.guice.web.ShiroWebModule;
-import org.openskye.config.SkyeConfiguration;
+import org.openskye.SkyeApplication;
 import org.openskye.task.TaskManager;
 import org.openskye.util.PersistFilter;
 
@@ -59,8 +59,9 @@ public class SkyeGuiceServletContextListener extends GuiceServletContextListener
         this.servletContext.addFilter("Guice Shiro Filter", getInjector().getInstance(GuiceShiroFilter.class))
                 .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
-        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
-        autoConfig.addTasks(environment, injector);
+        AutoConfig autoConfig = new AutoConfig(SkyeApplication.class.getPackage().getName());
+        autoConfig.run(environment, injector);
+
         log.info("Starting the task manager");
         TaskManager taskManager = injector.getInstance(TaskManager.class);
         taskManager.start();

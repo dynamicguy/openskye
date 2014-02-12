@@ -177,10 +177,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
             }
         });
 
-        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
-        autoConfig.addResources(environment);
-        autoConfig.addProviders(environment);
-
         // Add a listener for us to be able to wire in Shiro and then bootstrap all the modules off this
         // so we only have one guice injector
         environment.servlets().addServletListeners(new SkyeGuiceServletContextListener(jpaPersistModule, environment, bootstrap, jerseyContainerModule, dropwizardEnvironmentModule, skyeModule));

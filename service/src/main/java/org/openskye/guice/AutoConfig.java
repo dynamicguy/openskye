@@ -41,6 +41,7 @@ public class AutoConfig {
     }
 
     public void run(Environment environment, Injector injector) {
+        addHealthChecks(environment, injector);
         addProviders(environment);
         addInjectableProviders(environment);
         addResources(environment);
@@ -94,5 +95,14 @@ public class AutoConfig {
         }
     }
 
+    public void addHealthChecks(Environment environment, Injector injector) {
+        Set<Class<? extends InjectableHealthCheck>> healthCheckClasses = reflections
+                .getSubTypesOf(InjectableHealthCheck.class);
+        for (Class<? extends InjectableHealthCheck> healthCheck : healthCheckClasses) {
+            InjectableHealthCheck instance = injector.getInstance(healthCheck);
+            environment.healthChecks().register(instance.getName(), instance);
+            logger.info("Added injectableHealthCheck: {}", healthCheck);
+        }
+    }
 }
 
