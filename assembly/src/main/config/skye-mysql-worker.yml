@@ -6,7 +6,7 @@ database:
   user: root
 
   # the password
-  password: password
+  password: 82/+R4YkDCZTdNmFch9+bw==
 
   # the JDBC URL
   url: "jdbc:mysql://localhost/openskye"
@@ -58,6 +58,10 @@ worker:
   threadCount: 5
   pollPeriodSec: 30
 
+search:
+  host: localhost
+  port: 9300
+
 server:
   applicationConnectors:
     - type: http
@@ -65,10 +69,6 @@ server:
   adminConnectors:
     - type: http
       port: 9092
-
-search:
-  host: "localhost"
-  port: 9300
 
 logging:
   level: INFO

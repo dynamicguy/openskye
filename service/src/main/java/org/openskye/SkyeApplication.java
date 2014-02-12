@@ -20,6 +20,11 @@ import org.openskye.util.SwaggerBundle;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.ext.ExceptionMapper;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -34,6 +39,7 @@ import java.util.Set;
 @Slf4j
 public class SkyeApplication extends Application<SkyeConfiguration> {
 
+    private static String argsPath;
     /**
      * The pre-start application environment, used to start Dropwizard
      *
@@ -49,9 +55,11 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      * This file contains relevant configuration information for Skye (database configuration, url location)
      *
      * @param args - The yml file passed from the command line call
+     *
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+        argsPath = args[1];
         new SkyeApplication().run(args);
     }
 
@@ -61,6 +69,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      * initialize(Bootstrap<T> bootstrap))
      *
      * @param bootstrap - The Dropwizard application environment
+     *
      * @see io.dropwizard.Application
      */
     @Override
@@ -84,6 +93,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      *
      * @param configuration - The configuration file (yml) passed when calling skye server
      * @param environment   - The environment for the Skye application
+     *
      * @throws Exception
      */
     @Override
@@ -133,6 +143,22 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         props.put("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
 
         jpaPersistModule.properties(props);
+        //rewrite the yml if the password has been modified
+        Path path = Paths.get(argsPath);
+        Charset charset = StandardCharsets.UTF_8;
+
+        String content = new String(Files.readAllBytes(path), charset);
+        String passwordString = "password: ";
+        String contentPortion = content.substring(content.lastIndexOf(passwordString)+passwordString.length(), content.length());
+        String oldPassword = contentPortion.substring(0, contentPortion.indexOf(System.getProperty("line.separator")));
+        if(oldPassword.equals(configuration.getDatabaseConfiguration().getPassword())){
+            String newPassword = configuration.getDatabaseConfiguration().hashPw(oldPassword);
+            configuration.getDatabaseConfiguration().setPassword(newPassword);
+            String newContent = contentPortion.replace(configuration.getDatabaseConfiguration().getPassword(), configuration.getDatabaseConfiguration().hashPw(configuration.getDatabaseConfiguration().getPassword()));
+            content = content.replace(contentPortion, newContent);
+            Files.write(path, content.getBytes(charset));
+        }
+
 
         DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
 

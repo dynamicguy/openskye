@@ -44,7 +44,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
 
     private Task createFromStep(TaskStep newStep) {
         injector.injectMembers(newStep);
-        projectID = newStep.getProject().getId();
+
+        projectID = "*";
+
+        // Some Tasks, like Reindex, may be set up to operate on all projects at once.
+        // If this is the case, then the Project will be null, so the projectID that
+        // Shiro looks at will default to *, for all projects.
+        if(newStep.getProject() != null)
+            projectID = newStep.getProject().getId();
+
         authorize("create");
         Task newInstance = super.create(newStep.toTask());
         taskManager.submit(newInstance);
@@ -132,6 +140,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
         return createFromStep(newStep);
     }
 
+    @ApiOperation(value = "Create new reindex task", notes = "Create a new reindex task and return with its unique id", response = Task.class)
+    @POST
+    @Path("/reindex")
+    @Transactional
+    @Timed
+    public Task create(ReindexTaskStep newStep) {
+        return createFromStep(newStep);
+    }
+
     @ApiOperation(value = "Find task by id", notes = "Return a task by id", response = Task.class)
     @Path("/{id}")
     @GET
@@ -142,7 +159,11 @@ public class TaskResource extends ProjectSpecificResource<Task> {
         authorize("get");
         if (taskDAO.get(id).isPresent()) {
             Task result = taskDAO.get(id).get();
-            projectID = result.getProject().getId();
+            projectID = "*";
+
+            if(result.getProject() != null)
+                projectID = result.getProject().getId();
+
             return super.get(id);
         } else {
             throw new NotFoundException();
@@ -157,7 +178,11 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     public PaginatedResult<TaskLog> getTaskLogs(@PathParam("id") String id) {
         if (taskDAO.get(id).isPresent()) {
             Task result = taskDAO.get(id).get();
-            projectID = result.getProject().getId();
+            projectID = "*";
+
+            if(result.getProject() != null)
+                projectID = result.getProject().getId();
+
             authorize("get");
             return taskLogDAO.getLogsForTask(result);
         } else {
@@ -173,8 +198,15 @@ public class TaskResource extends ProjectSpecificResource<Task> {
     public PaginatedResult<Task> getAll() {
         PaginatedResult<Task> paginatedResult = super.getAll();
         List<Task> results = paginatedResult.getResults();
-        for (Task t : results) {
-            if (!isPermitted("list", t.getProject().getId())) {
+        for (Task t : results)
+        {
+            String taskProjectId = "*";
+
+            if(t.getProject() != null)
+                taskProjectId = t.getProject().getId();
+
+            if (!isPermitted("list", taskProjectId))
+            {
                 results.remove(t);
             }
         }

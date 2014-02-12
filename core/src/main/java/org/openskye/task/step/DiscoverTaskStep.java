@@ -130,6 +130,7 @@ public class DiscoverTaskStep extends TaskStep {
 
                 try {
                     oms.index(om);
+                    auditObject(om, ObjectEvent.INDEXED);
                     indexedObjects++;
                     task.getStatistics().incrementSimpleObjectsProcessed();
                 } catch (Exception e) {
