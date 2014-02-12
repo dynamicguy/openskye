@@ -150,7 +150,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         String content = new String(Files.readAllBytes(path), charset);
         String passwordString = "password: ";
         String contentPortion = content.substring(content.lastIndexOf(passwordString)+passwordString.length(), content.length());
-        String oldPassword = contentPortion.substring(0, contentPortion.indexOf("\n\n"));
+        String oldPassword = contentPortion.substring(0, contentPortion.indexOf(System.getProperty("line.separator")));
         if(oldPassword.equals(configuration.getDatabaseConfiguration().getPassword())){
             String newPassword = configuration.getDatabaseConfiguration().hashPw(oldPassword);
             configuration.getDatabaseConfiguration().setPassword(newPassword);
