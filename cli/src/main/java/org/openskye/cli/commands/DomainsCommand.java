@@ -23,7 +23,7 @@ public class DomainsCommand extends AbstractCrudCommand {
     private final String commandName = "domains";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).build();
+        return FieldBuilder.start().add(new TextField("name", false)).build();
     }
 
     @Override

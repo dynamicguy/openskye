@@ -24,7 +24,7 @@ public class HoldsCommand extends AbstractCrudCommand {
 
     @Override
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).add(new TextField("query")).build();
+        return FieldBuilder.start().add(new TextField("name", false)).add(new TextField("description", false)).add(new TextField("query", false)).build();
     }
 
     @Override

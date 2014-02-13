@@ -23,7 +23,7 @@ public class RolesCommand extends AbstractCrudCommand {
     private final String commandName = "roles";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).build();
+        return FieldBuilder.start().add(new TextField("name", false)).build();
     }
 
     @Override

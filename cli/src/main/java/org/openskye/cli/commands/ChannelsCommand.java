@@ -24,7 +24,7 @@ public class ChannelsCommand extends AbstractCrudCommand {
     private final String commandName = "channels";
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new ReferenceField(Project.class)).add(new ReferenceField(InformationStoreDefinition.class)).build();
+        return FieldBuilder.start().add(new TextField("name", false)).add(new ReferenceField(Project.class, false)).add(new ReferenceField(InformationStoreDefinition.class, false)).build();
     }
 
     @Override

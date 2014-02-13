@@ -58,7 +58,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     }
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("projectId")).build();
+        return FieldBuilder.start().add(new TextField("projectId", false)).build();
     }
 
     protected abstract void create(TaskStep step);
@@ -116,59 +116,59 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void discover() {
         TaskStep step = new DiscoverTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(Channel.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(Channel.class, false), step);
         create(step);
     }
 
     public void archive() {
         TaskStep step = new ArchiveTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(Channel.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(Channel.class, false), step);
         create(step);
     }
 
     public void cull() {
         TaskStep step = new CullTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(Project.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(Project.class, false), step);
         create(step);
     }
 
     public void replicate() {
         TaskStep step = new ReplicateTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(Project.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(Project.class, false), step);
         create(step);
     }
 
     public void classify() {
         TaskStep step = new ClassifyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(Project.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(Project.class, false), step);
         create(step);
     }
 
     public void verify() {
         TaskStep step = new VerifyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(ArchiveStoreDefinition.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(ArchiveStoreDefinition.class, false), step);
         create(step);
     }
 
     public void extract() {
         TaskStep step = new ExtractTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
         if (dynamicParams.get("objectSetId") != null) {
             ((ExtractTaskStep) step).setObjectSetId(resolveAlias(dynamicParams.get("objectSetId")));
         } else {
-            selectReferenceField(new ReferenceField(Channel.class), step);
+            selectReferenceField(new ReferenceField(Channel.class, false), step);
         }
         step = setTargetInformationStore(step);
         create(step);
@@ -177,7 +177,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void destroy() {
         TaskStep step = new DestroyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        step = (DestroyTaskStep) selectReferenceField(new ReferenceField(Node.class), step);
+        step = (DestroyTaskStep) selectReferenceField(new ReferenceField(Node.class, false), step);
         ((DestroyTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
         step = setTargetInformationStore(step);
         create(step);
@@ -186,11 +186,11 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     public void test() {
         TaskStep step = new TestTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
-        selectReferenceField(new ReferenceField(Project.class), step);
-        enterNumber(new NumberField("sleepSeconds"), step);
-        enterNumber(new NumberField("iterations"), step);
-        enterBoolean(new BooleanField("pass"), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
+        selectReferenceField(new ReferenceField(Project.class, false), step);
+        enterNumber(new NumberField("sleepSeconds", false), step);
+        enterNumber(new NumberField("iterations", false), step);
+        enterBoolean(new BooleanField("pass", false), step);
 
         create(step);
     }
@@ -199,13 +199,13 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
     {
         ReindexTaskStep step = new ReindexTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
-        selectReferenceField(new ReferenceField(Node.class), step);
+        selectReferenceField(new ReferenceField(Node.class, false), step);
 
         String projectId = dynamicParams.get("project");
 
         if(projectId != null && !projectId.isEmpty())
         {
-            selectReferenceField(new ReferenceField(Project.class), step);
+            selectReferenceField(new ReferenceField(Project.class, false), step);
         }
 
         create(step);
