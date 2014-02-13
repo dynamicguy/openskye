@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
@@ -148,15 +149,15 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
     @Override
     public boolean isObjectInOMR(ObjectMetadata objectMetadata) {
         String queryPath = objectMetadata.getPath();
-        String queryChecksum = objectMetadata.getChecksum();
-        Project queryProject = objectMetadata.getProject();
+        DateTime queryLastModified = objectMetadata.getLastModified().minusSeconds(1); // ignore time difference less than 1 second
         String queryInformationStoreId = objectMetadata.getInformationStoreId();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
         cq.select(root);
-        cq.where( cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum),
+        cq.where( cb.equal(root.get(ObjectMetadata_.path), queryPath),
+                cb.greaterThanOrEqualTo(root.get(ObjectMetadata_.lastModified), queryLastModified),
                 cb.equal(root.get(ObjectMetadata_.informationStoreId), queryInformationStoreId) );
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);
