@@ -248,28 +248,34 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void delete()
     {
-        log.debug("Deleting indexed data for the domain " + session.getDomain());
-        String domainId = session.getDomain().getId();
+        Domain domain = session.getDomain();
+        log.debug("Deleting indexed data for the domain " + domain);
 
-
-
-        client.prepareDeleteByQuery()
-                .setIndices(domainId)
-                .setQuery(QueryBuilders.matchAllQuery())
-                .execute()
-                .actionGet();
+        // If there is at least one record indexed for the domain, delete the index.
+        if(isDomainIndexed(domain))
+        {
+            client.admin()
+                  .indices()
+                  .prepareDelete(domain.getId())
+                  .execute()
+                  .actionGet();
+        }
     }
 
     @Override
     public void delete(ObjectMetadata objectMetadata)
     {
         log.debug("Deleting indexed information for the ObjectMetadata " + objectMetadata);
-        String domainId = objectMetadata.getProject().getDomain().getId();
-        String projectId = objectMetadata.getProject().getId();
+        Project project = objectMetadata.getProject();
+        Domain domain = project.getDomain();
 
-        client.prepareDelete(domainId, projectId, objectMetadata.getId())
-                .execute()
-                .actionGet();
+        if(isProjectIndexed(project))
+        {
+            client.prepareDelete(domain.getId(), project.getId(), objectMetadata.getId())
+                  .execute()
+                  .actionGet();
+        }
+
     }
 
     @Override
@@ -406,7 +412,6 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         log.debug("Performing a bulk " + type.name() + " operation.");
         BulkRequestBuilder bulkRequest = client.prepareBulk();
 
-        List<Exception> exceptionList = new ArrayList<>();
         AggregateException aggregateException = new AggregateException("The bulk " + type.name() + " operation failed on some objects.");
         Iterator<ObjectMetadata> iterator = objectMetadataList.iterator();
 
@@ -424,35 +429,43 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
             log.debug(message);
 
 
-            // Add the index request to the bulk request.
             if(type == OperationType.INDEX)
             {
                 try
                 {
+                    // For index requests, attempt to serialize the ObjectMetadata.
+                    // If successful, add the index request to our bulk request.
                     String json = objectMapper.writeValueAsString(objectMetadata);
                     bulkRequest.add(client.prepareIndex(domainId, projectId, objectMetadata.getId())
                         .setSource(json));
                 }
                 catch (JsonProcessingException ex)
                 {
+                    // If an ObjectMetadata cannot be serialized, collect the details of this failure.
                     aggregateException.add(ex);
                 }
             }
             else
             {
+                // If this is a delete operation, then prepare the delete request and add it to the builk request.
                 bulkRequest.add(client.prepareDelete(domainId, projectId, objectMetadata.getId()));
             }
 
+            // If we have just processed the last ObjectMetadata, or a full bulk request is ready,
+            // then it should be executed.
             if(bulkRequest.numberOfActions() >= BULK_REQUEST_SIZE || iterator.hasNext() == false)
             {
                 BulkResponse response = bulkRequest.execute().actionGet();
 
+                // Each response must be checked for failures.
                 for(BulkItemResponse item : response.getItems())
                 {
                     if(item.isFailed())
                     {
                         if(item.getResponse() instanceof DeleteResponse)
                         {
+                            // If a delete request failed because no object was previously indexed,
+                            // ignore these failures.  Otherwise, report them.
                             DeleteResponse deleteResponse = item.getResponse();
 
                             if(deleteResponse.isNotFound() == false)
@@ -460,16 +473,21 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                         }
                         else
                         {
+                            // All failed index events should be reported.
                             aggregateException.add(new SkyeException(item.getFailureMessage()));
                         }
                     }
                 }
 
+                // If there are any remaining objects after a bulk request is completed, then
+                // a new bulk request must be prepared.
                 if(iterator.hasNext())
                     bulkRequest = client.prepareBulk();
             }
         }
 
+        // If there is at least one failure, then an AggregateException listing details for each
+        // Failure should be thrown now that all objects are processed.
         if(!aggregateException.isEmpty())
             throw aggregateException;
     }
