@@ -6,7 +6,7 @@ database:
   user: root
 
   # the password
-  password: 82/+R4YkDCZTdNmFch9+bw==
+  password: password
 
   # the JDBC URL
   url: "jdbc:mysql://localhost/openskye"
