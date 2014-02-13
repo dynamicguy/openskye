@@ -97,7 +97,6 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         // Adding in the exception mappers
         environment.jersey().register(new ConstraintViolationExceptionMapper());
 
-
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
 
@@ -142,8 +141,13 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
         dropwizardEnvironmentModule.setEnvironmentData(configuration, environment);
 
         SkyeModule skyeModule = new SkyeModule(configuration);
-        // Set-up the filters
 
+        // Disable the detailed metrics if requested
+        if (configuration.isMetricsDisabled()) {
+            bootstrap.getMetricRegistry().addListener(new MetricDisablerListener(bootstrap));
+        }
+
+        // Set-up the filters
         environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
                 .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 

@@ -104,6 +104,7 @@ public class LocalFSInformationStore implements InformationStore {
                         metadata.setPath(p.toAbsolutePath().toString());
                         metadata.setProject(informationStoreDefinition.getProject());
                         metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
+                        metadata.setLastModified(new DateTime(p.toFile().lastModified()));
                         metadata.setMimeType(MimeTypeUtil.getContentType(p));
                         metadata.setInformationStoreId(informationStoreDefinition.getId());
                         compressedObj.setObjectMetadata(metadata);
@@ -115,6 +116,7 @@ public class LocalFSInformationStore implements InformationStore {
                         metadata.setPath(p.toAbsolutePath().toString());
                         metadata.setProject(informationStoreDefinition.getProject());
                         metadata.setOriginalSize(FileUtils.sizeOf(p.toFile()));
+                        metadata.setLastModified(new DateTime(p.toFile().lastModified()));
                         metadata.setMimeType(MimeTypeUtil.getContentType(p));
                         metadata.setInformationStoreId(informationStoreDefinition.getId());
                         unstructObj.setObjectMetadata(metadata);
