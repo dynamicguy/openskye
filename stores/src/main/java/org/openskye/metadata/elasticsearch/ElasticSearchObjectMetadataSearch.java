@@ -3,30 +3,36 @@ package org.openskye.metadata.elasticsearch;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
+import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingRequestBuilder;
+import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse;
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.count.CountResponse;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.cluster.metadata.IndexMetaData;
+import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.indices.IndexMissingException;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.hibernate.tool.hbm2ddl.IndexMetadata;
 import org.openskye.core.*;
+import org.openskye.domain.Domain;
 import org.openskye.domain.Project;
 import org.openskye.metadata.ObjectMetadataSearch;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An implementation of OMS that uses ElasticSearch
@@ -245,6 +251,8 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         log.debug("Deleting indexed data for the domain " + session.getDomain());
         String domainId = session.getDomain().getId();
 
+
+
         client.prepareDeleteByQuery()
                 .setIndices(domainId)
                 .setQuery(QueryBuilders.matchAllQuery())
@@ -273,16 +281,111 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @Override
     public void delete(Project project)
     {
-        String domainId = project.getDomain().getId();
         String message = "Deleting all indexed data from project " + project;
         log.debug(message);
 
-        client.prepareDeleteByQuery()
-              .setIndices(domainId)
-              .setTypes(project.getId())
-              .setQuery(QueryBuilders.matchAllQuery())
+        // If the project has never been used to index data, then we have nothing to delete.
+        if(isProjectIndexed(project) == false)
+            return;
+
+        // We now know that information exists for the project.
+        // Since we have the metadata for the domain (domainIndex) and the project (projectType),
+        // we can use them to perform the delete without the expense of performing a full query.
+        client.admin()
+              .indices()
+              .prepareDeleteMapping()
+              .setIndices(project.getDomain().getId())
+              .setType(project.getId())
               .execute()
               .actionGet();
+    }
+
+    /**
+     * Attempts to get information about the index created for the {@link Domain}.
+     *
+     * @param domain The {@link Domain} for which index information is retrieved.
+     *
+     * @return The {@link IndexMetaData} relating to the {@link Domain}, if it is found.
+     */
+    protected Optional<IndexMetaData> getDomainIndex(Domain domain)
+    {
+        // First, query Elastic Search about its current state.
+        ClusterStateResponse stateResponse = client.admin()
+                                                   .cluster()
+                                                   .prepareState()
+                                                   .execute()
+                                                   .actionGet();
+
+        // Obtain information about objects indexed for the domain, or null if it is not found.
+        IndexMetaData domainIndex = stateResponse.getState()
+                                                 .getMetaData()
+                                                 .getIndices()
+                                                 .get(domain.getId());
+
+        if(domainIndex == null)
+        {
+            log.debug("No objects have been indexed for the domain " + domain);
+
+            return Optional.absent();
+        }
+
+        return Optional.of(domainIndex);
+    }
+
+    /**
+     * Determines if the any objects have been indexed for the given {@link Domain}.
+     *
+     * @param domain The {@link Domain} for which we are checking.
+     *
+     * @return True if at least one object has been indexed for the {@link Domain} or false if none have been indexed.
+     */
+    protected boolean isDomainIndexed(Domain domain)
+    {
+        if(getDomainIndex(domain).isPresent())
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Attempts to get information about the ElasticSearch type mappings created for the {@link Project}.
+     *
+     * @param project The {@link Project} for which type mapping information will be retrieved.
+     *
+     * @return The {@link MappingMetaData} related to the {@link Project}, if it is found.
+     */
+    protected Optional<MappingMetaData> getProjectMapping(Project project)
+    {
+        Optional<IndexMetaData> domainIndex = getDomainIndex(project.getDomain());
+
+        if(!domainIndex.isPresent())
+            return Optional.absent();
+
+        MappingMetaData projectMapping = domainIndex.get().getMappings().get(project.getId());
+
+        if(projectMapping == null)
+        {
+            log.debug("No objects have been indexed for the project " + project);
+
+            return Optional.absent();
+        }
+
+        return Optional.of(projectMapping);
+    }
+
+    /**
+     * Determines if any objects have been indexed for the given {@link Project}.
+     *
+     * @param project The {@link Project} for which we are checking.
+     *
+     * @return True if at least one object has been indexed for the {@link Project} or false if none have been indexed.
+     */
+    protected boolean isProjectIndexed(Project project)
+    {
+        if(getProjectMapping(project).isPresent())
+            return true;
+
+        return false;
     }
 
     /**
@@ -297,7 +400,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      *
      * @param type The operation to be performed, as specified by the {@link OperationType} enumeration.
      */
-    private void performBulkOperation(Iterable<ObjectMetadata> objectMetadataList, OperationType type)
+    protected void performBulkOperation(Iterable<ObjectMetadata> objectMetadataList, OperationType type)
     {
         // Create a bulk request.
         log.debug("Performing a bulk " + type.name() + " operation.");
@@ -347,7 +450,19 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                 for(BulkItemResponse item : response.getItems())
                 {
                     if(item.isFailed())
-                        aggregateException.add(new SkyeException(item.getFailureMessage()));
+                    {
+                        if(item.getResponse() instanceof DeleteResponse)
+                        {
+                            DeleteResponse deleteResponse = item.getResponse();
+
+                            if(deleteResponse.isNotFound() == false)
+                                aggregateException.add(new SkyeException(item.getFailureMessage()));
+                        }
+                        else
+                        {
+                            aggregateException.add(new SkyeException(item.getFailureMessage()));
+                        }
+                    }
                 }
 
                 if(iterator.hasNext())
@@ -373,15 +488,20 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                 .actionGet();
     }
 
-    protected String[] getIndexNames() {
+    protected Set<String> getIndexNameSet()
+    {
         IndicesStatusResponse response = this.client.admin()
                 .indices()
                 .prepareStatus()
                 .execute()
                 .actionGet();
-        Set<String> indexSet = response.getIndices().keySet();
 
-        return indexSet.toArray(new String[0]);
+        return response.getIndices().keySet();
+    }
+
+    protected String[] getIndexNames() {
+
+        return getIndexNameSet().toArray(new String[0]);
     }
 
     /**
