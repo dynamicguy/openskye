@@ -59,7 +59,7 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        argsPath = args[1];
+        argsPath = args[args.length-1];
         new SkyeApplication().run(args);
     }
 
@@ -118,7 +118,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
         // Adding in the exception mappers
         environment.jersey().register(new ConstraintViolationExceptionMapper());
 
-
         final GuiceContainer container = new GuiceContainer();
         JerseyContainerModule jerseyContainerModule = new JerseyContainerModule(container);
 
@@ -159,12 +158,16 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
             Files.write(path, content.getBytes(charset));
         }
 
-
         DropwizardEnvironmentModule<SkyeConfiguration> dropwizardEnvironmentModule = new DropwizardEnvironmentModule<>(SkyeConfiguration.class);
 
         SkyeModule skyeModule = new SkyeModule(configuration);
-        // Set-up the filters
 
+        // Disable the detailed metrics if requested
+        if (configuration.isMetricsDisabled()) {
+            bootstrap.getMetricRegistry().addListener(new MetricDisablerListener(bootstrap));
+        }
+
+        // Set-up the filters
         environment.servlets().addFilter("Request Query Context Filter", RequestQueryContextFilter.class)
                 .addMappingForUrlPatterns(null, false, environment.getApplicationContext().getContextPath() + "*");
 
@@ -176,10 +179,6 @@ public class SkyeApplication extends Application<SkyeConfiguration> {
                 return container;
             }
         });
-
-        AutoConfig autoConfig = new AutoConfig(this.getClass().getPackage().getName());
-        autoConfig.addResources(environment);
-        autoConfig.addProviders(environment);
 
         // Add a listener for us to be able to wire in Shiro and then bootstrap all the modules off this
         // so we only have one guice injector

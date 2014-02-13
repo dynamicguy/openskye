@@ -13,7 +13,7 @@ import java.util.HashMap;
 @Data
 public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
 
-    protected static StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+    protected static StandardPBEStringEncryptor encryptor;
     @NotNull
     private String driverClass;
     private String user;
@@ -45,9 +45,9 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
         dsf.setUrl(skyeDatabaseConfiguration.getUrl());
         dsf.setUser(skyeDatabaseConfiguration.getUser());
         dsf.setDriverClass(skyeDatabaseConfiguration.getDriverClass());
+        dsf.setPassword(skyeDatabaseConfiguration.getPassword());
 
         HashMap<String, String> props = new HashMap<>();
-        props.put("connection.password", skyeDatabaseConfiguration.getPassword());
         props.put("hibernate.dialect", skyeDatabaseConfiguration.getDialect());
         props.put("hibernate.connection.provider_class", skyeDatabaseConfiguration.getConnectionProviderClass());
         props.put("hibernate.c3p0.max_size", String.valueOf(skyeDatabaseConfiguration.getPoolMaxSize()));
@@ -64,28 +64,37 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
     }
 
     public String getPassword() {
-        if (!encryptor.isInitialized()) {
-            encryptor.setPassword("openSkye12");
-            FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
-            saltGenerator.setSalt("openSkye12");
-            encryptor.setSaltGenerator(saltGenerator);
-            encryptor.setAlgorithm("PBEWithMD5AndDES");
+        if (encryptor != null) {
+            if (!encryptor.isInitialized()) {
+                encryptor.setPassword("openSkye12");
+                FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
+                saltGenerator.setSalt("openSkye12");
+                encryptor.setSaltGenerator(saltGenerator);
+                encryptor.setAlgorithm("PBEWithMD5AndDES");
+            }
+            return encryptor.decrypt(password);
+        } else {
+            return password;
         }
-        return encryptor.decrypt(password);
     }
 
     public void setPassword(String newPassword) {
-        if (password == null) {
+        if (encryptor != null) {
             //if newPassword is plaintext
             if (!isPasswordHashed(newPassword)) {
                 password = hashPw(newPassword);
             } else {
                 password = newPassword;
             }
+        }else{
+            password=newPassword;
         }
     }
 
     public String hashPw(String newPassword) {
+        if (encryptor == null) {
+            encryptor = new StandardPBEStringEncryptor();
+        }
         if (!encryptor.isInitialized()) {
             encryptor.setPassword("openSkye12");
             FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
@@ -97,12 +106,16 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
     }
 
     public boolean isPasswordHashed(String testPass) {
-        if (!encryptor.isInitialized()) {
-            encryptor.setPassword("openSkye12");
-            FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
-            saltGenerator.setSalt("openSkye12");
-            encryptor.setSaltGenerator(saltGenerator);
-            encryptor.setAlgorithm("PBEWithMD5AndDES");
+        if (encryptor != null) {
+            if (!encryptor.isInitialized()) {
+                encryptor.setPassword("openSkye12");
+                FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
+                saltGenerator.setSalt("openSkye12");
+                encryptor.setSaltGenerator(saltGenerator);
+                encryptor.setAlgorithm("PBEWithMD5AndDES");
+            }
+        } else {
+            return false;
         }
         try {
             encryptor.decrypt(testPass);
