@@ -51,7 +51,7 @@ public class SkyeWorker extends Application<SkyeWorkerConfiguration> {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        argsPath = args[1];
+        argsPath = args[args.length-1];
         new SkyeWorker().run(args);
     }
 
