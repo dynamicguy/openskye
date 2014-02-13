@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ArchiveStoreInstanceDAO;
@@ -158,7 +157,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
         cq.select(root);
         cq.where( cb.equal(root.get(ObjectMetadata_.path), queryPath), cb.equal(root.get(ObjectMetadata_.checksum), queryChecksum),
-                cb.equal(root.get(ObjectMetadata_.project), queryProject), cb.equal(root.get(ObjectMetadata_.informationStoreId), queryInformationStoreId) );
+                cb.equal(root.get(ObjectMetadata_.informationStoreId), queryInformationStoreId) );
 
         return (getEntityManager().createQuery(cq).getResultList().size() > 0);
     }
