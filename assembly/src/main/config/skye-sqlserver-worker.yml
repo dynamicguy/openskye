@@ -79,3 +79,4 @@ logging:
   appenders:
     - type: console
 
+isMetricsDisabled: false

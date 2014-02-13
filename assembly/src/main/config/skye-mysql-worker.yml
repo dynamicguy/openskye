@@ -76,3 +76,5 @@ logging:
     org.openskye: DEBUG
   appenders:
     - type: console
+
+isMetricsDisabled: false

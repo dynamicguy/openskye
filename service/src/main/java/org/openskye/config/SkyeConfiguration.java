@@ -2,6 +2,7 @@ package org.openskye.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 /**
  * The configuration object for the Skye service
  */
+@Data
 public class SkyeConfiguration extends Configuration {
 
     @Valid
@@ -35,4 +37,5 @@ public class SkyeConfiguration extends Configuration {
         return search;
     }
 
+    public boolean isMetricsDisabled = false;
 }
