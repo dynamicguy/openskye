@@ -52,6 +52,10 @@ services:
   taskManager: org.openskye.task.queue.QueueTaskManager
   taskScheduler: org.openskye.task.quartz.QuartzTaskScheduler
 
+search:
+  host: localhost
+  port: 9300
+
 server:
   applicationConnectors:
     - type: http
