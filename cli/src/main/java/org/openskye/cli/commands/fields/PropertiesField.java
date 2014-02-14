@@ -9,9 +9,10 @@ public class PropertiesField extends Field {
     private final Map<String, String> properties;
     private final String name;
 
-    public PropertiesField(String name) {
+    public PropertiesField(String name, boolean optional) {
         this.properties = new HashMap<>();
         this.name = name;
+        this.isOptional=optional;
     }
 
     public void addProperty(String property, String value){

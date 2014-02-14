@@ -264,7 +264,9 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 File objectFile = hostArchiveStore.getAcbPath(acb, false);
                 ArchiveEntry entry = new TarArchiveEntry(objectFile, so.getObjectMetadata().getPath());
                 outputStream.putArchiveEntry(entry);
-                IOUtils.copy(new FileInputStream(objectFile), outputStream);
+                InputStream fileStream = new FileInputStream(objectFile);
+                IOUtils.copy(fileStream, outputStream);
+                fileStream.close();
                 outputStream.closeArchiveEntry();
                 outputStream.close();
                 objectFile.delete();

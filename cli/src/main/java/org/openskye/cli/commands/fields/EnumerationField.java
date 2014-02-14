@@ -14,10 +14,11 @@ public class EnumerationField extends Field{
     private final String name;
     private final Class clazz;
 
-    public EnumerationField(String name, Class newEnum) {
+    public EnumerationField(String name, Class newEnum, boolean optional) {
         this.name = name;
         this.clazz=newEnum;
         this.anEnum=EnumSet.allOf(newEnum);
+        this.isOptional=optional;
     }
 
     public List<? extends Enum> getAllEnumOptions(){

@@ -2,6 +2,7 @@ package org.openskye.cli.commands.fields;
 
 import com.google.common.base.CaseFormat;
 import lombok.Data;
+import lombok.Getter;
 import org.apache.commons.lang.WordUtils;
 
 /**
@@ -9,29 +10,39 @@ import org.apache.commons.lang.WordUtils;
  */
 @Data
 public class ReferenceField extends Field {
-
-    private final String name;
-    private final String resource;
-    private final String value;
-    private final String id;
-    private final Class clazz;
+    @Getter
+    protected final String name;
+    protected final String resource;
+    protected final String value;
+    protected final String id;
+    protected final Class clazz;
 
     //Constructor for ReferenceFields with specific names
 
-    public ReferenceField(String name, Class clazz) {
+    public ReferenceField(String name, Class clazz, boolean optional) {
         this.name = name;
         this.resource = getResourceString(clazz);
         this.id = "id";
         this.value = "name";
         this.clazz = clazz;
+        this.isOptional=optional;
     }
 
-    public ReferenceField(Class clazz){
+    public ReferenceField(Class clazz, boolean optional){
         this.name = WordUtils.uncapitalize(clazz.getSimpleName());
         this.clazz = clazz;
         this.id = "id";
         this.value = "name";
         this.resource = getResourceString(clazz);
+        this.isOptional=optional;
+    }
+
+    public ReferenceField() {
+        name = null;
+        resource = null;
+        value = null;
+        id = null;
+        clazz = Object.class;
     }
 
     public String getResourceString(Class clazz){

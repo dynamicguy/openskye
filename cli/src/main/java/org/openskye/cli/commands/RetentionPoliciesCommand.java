@@ -24,7 +24,7 @@ public class RetentionPoliciesCommand extends AbstractCrudCommand {
 
     @Override
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("name")).add(new TextField("description")).add(new TextField("recordsCode")).add(new NumberField("retentionPeriod")).add(new NumberField("priority")).add(new EnumerationField("periodType", PeriodType.class)).add(new ReferenceField(MetadataTemplate.class)).add(new TextField("metadataCriteria")).build();
+        return FieldBuilder.start().add(new TextField("name", false)).add(new TextField("description", false)).add(new TextField("recordsCode", false)).add(new NumberField("retentionPeriod", false)).add(new NumberField("priority", false)).add(new EnumerationField("periodType", PeriodType.class, false)).add(new ReferenceField(MetadataTemplate.class, false)).add(new TextField("metadataCriteria", false)).build();
     }
 
     @Override

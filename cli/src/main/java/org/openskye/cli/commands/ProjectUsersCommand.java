@@ -26,7 +26,7 @@ public class ProjectUsersCommand extends AbstractCrudCommand {
 
     @Override
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new ReferenceField(User.class)).add(new ReferenceField(Project.class)).build();
+        return FieldBuilder.start().add(new ReferenceField(User.class, false)).add(new ReferenceField(Project.class, false)).build();
     }
 
     @Override

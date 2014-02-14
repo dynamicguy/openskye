@@ -7,8 +7,9 @@ public class NumberField extends Field {
 
     private final String name;
 
-    public NumberField(String name) {
+    public NumberField(String name, boolean optional) {
         this.name = name;
+        this.isOptional=optional;
     }
 
     @Override

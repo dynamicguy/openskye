@@ -52,14 +52,12 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
      */
     @Parameter(names = "--get")
     protected boolean get;
-
     /**
-     * A JCommand parameter which represents an update request. {@link #update()} is called if this parameter is set to true
-     * (set by the user by adding --get to the end of their command).
+     * A JCommand parameter which represents an update request. {@link #update()} is called if this parameter is set to
+     * true (set by the user by adding --get to the end of their command).
      */
-    @Parameter(names="--update")
+    @Parameter(names = "--update")
     protected boolean update;
-
     @Parameter
     private List<String> id;
 
@@ -85,7 +83,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             delete();
         } else if (get) {
             get();
-        } else if (update){
+        } else if (update) {
             update();
         }
 
@@ -99,13 +97,13 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         String[] fieldPairs = changes.split(",");
         Map<String, String> fieldPairMap = new HashMap<>();
         //split and organize the fields to change
-        for(String pairs:fieldPairs){
+        for (String pairs : fieldPairs) {
             String[] pairSplit = pairs.split("::");
             fieldPairMap.put(pairSplit[0], pairSplit[1]);
         }
 
-        for(Field field : fields){
-            if(fieldPairMap.containsKey(field.getName())){
+        for (Field field : fields) {
+            if (fieldPairMap.containsKey(field.getName())) {
                 String attributeVal = fieldPairMap.get(field.getName());
                 String attributeName = field.getName();
                 if (field instanceof TextField) {
@@ -116,7 +114,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     } catch (Exception e) {
                         throw new SkyeException("Unable to set property " + attributeName + " on " + objectToChange + " to " + newValue);
                     }
-                } else if(field instanceof NumberField){
+                } else if (field instanceof NumberField) {
                     long newValue = Long.parseLong(attributeVal);
                     try {
                         BeanUtils.setProperty(objectToChange, attributeName, newValue);
@@ -124,8 +122,7 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
                     } catch (Exception e) {
                         throw new SkyeException("Unable to set property " + attributeName + " on " + objectToChange + " to " + newValue);
                     }
-                }
-                else if (field instanceof ReferenceField) {
+                } else if (field instanceof ReferenceField) {
                     objectToChange = selectReferenceField((ReferenceField) field, objectToChange);
                 } else if (field instanceof PropertiesField) {
                     objectToChange = setPropertiesField((PropertiesField) field, objectToChange);
@@ -216,10 +213,10 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
             // If an alias was specified on the command line, and the listed objects are identifiable
             // save the id of the first listed result to the alias
             Object firstResult = paginatedResult.getResults().get(0);
-            if ( firstResult instanceof Map ) {
-                Map<String,String> firstMap = (Map<String,String>) firstResult;
-                if ( firstMap.containsKey("id") ) {
-                  saveAlias(firstMap.get("id"));
+            if (firstResult instanceof Map) {
+                Map<String, String> firstMap = (Map<String, String>) firstResult;
+                if (firstMap.containsKey("id")) {
+                    saveAlias(firstMap.get("id"));
                 }
             }
 
@@ -274,41 +271,44 @@ public abstract class AbstractCrudCommand extends ExecutableCommand {
         for (Field field : getFields()) {
             String attributeName = field.getName();
             String attributeVal = dynamicParams.get(attributeName);
-            if (field instanceof TextField) {
-                String newValue = attributeVal;
-                try {
-                    BeanUtils.setProperty(newObject, attributeName, newValue);
-                    output.raw(newObject.toString());
-                } catch (Exception e) {
-                    throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
+            if (!field.isOptional && attributeVal == null) {
+                throw new CliException("The required field " + attributeName + " is missing a value");
+            } else if (attributeVal != null) {
+                if (field instanceof TextField) {
+                    String newValue = attributeVal;
+                    try {
+                        BeanUtils.setProperty(newObject, attributeName, newValue);
+                        output.raw(newObject.toString());
+                    } catch (Exception e) {
+                        throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
+                    }
+                } else if (field instanceof NumberField) {
+                    long newValue = Long.parseLong(attributeVal);
+                    try {
+                        BeanUtils.setProperty(newObject, attributeName, newValue);
+                        output.raw(newObject.toString());
+                    } catch (Exception e) {
+                        throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
+                    }
+                } else if (field instanceof ReferenceField) {
+                    newObject = selectReferenceField((ReferenceField) field, newObject);
+                } else if (field instanceof PropertiesField) {
+                    newObject = setPropertiesField((PropertiesField) field, newObject);
+                } else if (field instanceof EnumerationField) {
+                    selectEnum((EnumerationField) field, newObject);
+                } else if (field instanceof NodeRolesField) {
+                    newObject = setNodeRolesField((NodeRolesField) field, newObject);
                 }
-            } else if(field instanceof NumberField){
-                long newValue = Long.parseLong(attributeVal);
-                try {
-                    BeanUtils.setProperty(newObject, attributeName, newValue);
-                    output.raw(newObject.toString());
-                } catch (Exception e) {
-                    throw new SkyeException("Unable to set property " + attributeName + " on " + newObject + " to " + newValue);
-                }
-            }
-            else if (field instanceof ReferenceField) {
-                newObject = selectReferenceField((ReferenceField) field, newObject);
-            } else if (field instanceof PropertiesField) {
-                newObject = setPropertiesField((PropertiesField) field, newObject);
-            } else if (field instanceof EnumerationField) {
-                selectEnum((EnumerationField) field, newObject);
-            } else if (field instanceof NodeRolesField) {
-                newObject = setNodeRolesField((NodeRolesField) field, newObject);
             }
         }
         Object result = getResource(getCollectionPlural()).post(getClazz(), newObject);
         String id;
-        if ( result instanceof Identifiable ) {
+        if (result instanceof Identifiable) {
             id = ((Identifiable) result).getId();
-        } else if ( result instanceof ObjectSet ) {
+        } else if (result instanceof ObjectSet) {
             id = ((ObjectSet) result).getId();
         } else {
-            throw new SkyeException("Cannot resolve id for "+result.getClass().getName());
+            throw new SkyeException("Cannot resolve id for " + result.getClass().getName());
         }
         saveAlias(id);
         output.success("Created " + getCollectionSingular() + " with id " + id);

@@ -36,7 +36,7 @@ public class TasksCommand extends AbstractTaskStepCommand {
     private String failedTaskId = null;
 
     public List<Field> getFields() {
-        return FieldBuilder.start().add(new TextField("projectId")).build();
+        return FieldBuilder.start().add(new TextField("projectId", false)).build();
     }
 
     @Override
