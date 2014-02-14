@@ -64,66 +64,42 @@ public class SkyeDatabaseConfiguration implements DatabaseConfiguration {
     }
 
     public String getPassword() {
-        if (encryptor != null) {
-            if (!encryptor.isInitialized()) {
-                encryptor.setPassword("openSkye12");
-                FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
-                saltGenerator.setSalt("openSkye12");
-                encryptor.setSaltGenerator(saltGenerator);
-                encryptor.setAlgorithm("PBEWithMD5AndDES");
-            }
-            return encryptor.decrypt(password);
-        } else {
-            return password;
-        }
+        return encryptor.decrypt(password);
     }
 
     public void setPassword(String newPassword) {
-        if (encryptor != null) {
-            //if newPassword is plaintext
-            if (!isPasswordHashed(newPassword)) {
-                password = hashPw(newPassword);
-            } else {
-                password = newPassword;
-            }
-        }else{
-            password=newPassword;
-        }
-    }
-
-    public String hashPw(String newPassword) {
         if (encryptor == null) {
             encryptor = new StandardPBEStringEncryptor();
         }
+
         if (!encryptor.isInitialized()) {
+            // Initialize encryptor
             encryptor.setPassword("openSkye12");
             FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
             saltGenerator.setSalt("openSkye12");
             encryptor.setSaltGenerator(saltGenerator);
             encryptor.setAlgorithm("PBEWithMD5AndDES");
         }
+
+        //if newPassword is plaintext
+        if (!isPasswordHashed(newPassword)) {
+            password = hashPw(newPassword);
+        } else {
+            password = newPassword;
+        }
+    }
+
+    public String hashPw(String newPassword) {
         return encryptor.encrypt(newPassword);
     }
 
     public boolean isPasswordHashed(String testPass) {
-        if (encryptor != null) {
-            if (!encryptor.isInitialized()) {
-                encryptor.setPassword("openSkye12");
-                FixedStringSaltGenerator saltGenerator = new FixedStringSaltGenerator();
-                saltGenerator.setSalt("openSkye12");
-                encryptor.setSaltGenerator(saltGenerator);
-                encryptor.setAlgorithm("PBEWithMD5AndDES");
-            }
-        } else {
-            return false;
-        }
         try {
             encryptor.decrypt(testPass);
         } catch (Exception e) {
             return false;
         }
         return true;
-
     }
 
 }
