@@ -124,21 +124,21 @@ public class DiscoverTaskStep extends TaskStep {
                         auditObject(object, ObjectEvent.DISCOVERED);
                     }
                     discoveredObjects++;
+
+                    try {
+                        oms.index(om);
+                        auditObject(om, ObjectEvent.INDEXED);
+                        indexedObjects++;
+                        task.getStatistics().incrementSimpleObjectsProcessed();
+                    } catch (Exception e) {
+                        if ( indexFailures == 0 ) {
+                            // log the first exception thrown by OMS
+                            toLog("exception while indexing",e);
+                        }
+                        indexFailures++;
+                    }
                 } else {
                     skippedObjects++;
-                }
-
-                try {
-                    oms.index(om);
-                    auditObject(om, ObjectEvent.INDEXED);
-                    indexedObjects++;
-                    task.getStatistics().incrementSimpleObjectsProcessed();
-                } catch (Exception e) {
-                    if ( indexFailures == 0 ) {
-                        // log the first exception thrown by OMS
-                        toLog("exception while indexing",e);
-                    }
-                    indexFailures++;
                 }
             }
         }
