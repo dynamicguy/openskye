@@ -52,27 +52,22 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     @JsonIgnore
     public static final long BULK_REQUEST_SIZE = 20;
 
-    private enum OperationType
-    {
+    private enum OperationType {
         INDEX, DELETE
     }
 
     @Override
-    public long count(String query)
-    {
+    public long count(String query) {
         String index = session.getDomain().getId();
         String escapedQuery = smartEscapeQuery(query);
         CountResponse response;
 
-        try
-        {
+        try {
             response = client.prepareCount(index)
-                             .setQuery(new QueryStringQueryBuilder(escapedQuery))
-                             .execute()
-                             .actionGet();
-        }
-        catch(IndexMissingException ex)
-        {
+                    .setQuery(new QueryStringQueryBuilder(escapedQuery))
+                    .execute()
+                    .actionGet();
+        } catch (IndexMissingException ex) {
             return 0;
         }
 
@@ -80,23 +75,19 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public long count(Project project, String query)
-    {
+    public long count(Project project, String query) {
         String index = session.getDomain().getId();
         String type = project.getId();
         String escapedQuery = smartEscapeQuery(query);
         CountResponse response;
 
-        try
-        {
+        try {
             response = client.prepareCount(index)
-                             .setTypes(type)
-                             .setQuery(new QueryStringQueryBuilder(escapedQuery))
-                             .execute()
-                             .actionGet();
-        }
-        catch(IndexMissingException ex)
-        {
+                    .setTypes(type)
+                    .setQuery(new QueryStringQueryBuilder(escapedQuery))
+                    .execute()
+                    .actionGet();
+        } catch (IndexMissingException ex) {
             return 0;
         }
 
@@ -104,11 +95,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public Iterable<ObjectMetadata> search(String query)
-    {
+    public Iterable<ObjectMetadata> search(String query) {
         long count = count(query);
 
-        if(count == 0)
+        if (count == 0)
             return new ArrayList<>();
 
         SearchPage searchPage = new SearchPage(START_PAGE, count);
@@ -117,11 +107,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public Iterable<ObjectMetadata> search(Project project, String query)
-    {
+    public Iterable<ObjectMetadata> search(Project project, String query) {
         long count = count(project, query);
 
-        if(count == 0)
+        if (count == 0)
             return new ArrayList<>();
 
         SearchPage searchPage = new SearchPage(START_PAGE, count);
@@ -134,7 +123,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         List<ObjectMetadata> listMetadata = new ArrayList<>();
 
         try {
-            log.debug("Start start on "+session.getDomain().getId());
+            log.debug("Start start on " + session.getDomain().getId());
             SearchResponse response = this.client.prepareSearch()
                     .setIndices(session.getDomain().getId())
                     .setSearchType(SEARCH_TYPE)
@@ -206,9 +195,9 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         String domainId = objectMetadata.getProject().getDomain().getId();
         String projectId = objectMetadata.getProject().getId();
         String message = "Attempting to index an ObjectMetadata instance.\n" +
-                        "Domain Id: " + domainId + "\n" +
-                        "Project Id: " + projectId + "\n" +
-                        "ObjectMetadata: " + objectMetadata;
+                "Domain Id: " + domainId + "\n" +
+                "Project Id: " + projectId + "\n" +
+                "ObjectMetadata: " + objectMetadata;
         log.debug(message);
 
 
@@ -224,8 +213,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public void index(Iterable<ObjectMetadata> objectMetadataList)
-    {
+    public void index(Iterable<ObjectMetadata> objectMetadataList) {
         performBulkOperation(objectMetadataList, OperationType.INDEX);
     }
 
@@ -235,8 +223,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      * This is intended for testing and demo purposes.
      */
     @Override
-    public void clear()
-    {
+    public void clear() {
         log.debug("Clearing all indexed data across all indexed domains.");
         this.client.prepareDeleteByQuery()
                 .setIndices(getIndexNames())
@@ -246,90 +233,81 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
     }
 
     @Override
-    public void delete()
-    {
+    public void delete() {
         Domain domain = session.getDomain();
         log.debug("Deleting indexed data for the domain " + domain);
 
         // If there is at least one record indexed for the domain, delete the index.
-        if(isDomainIndexed(domain))
-        {
+        if (isDomainIndexed(domain)) {
             client.admin()
-                  .indices()
-                  .prepareDelete(domain.getId())
-                  .execute()
-                  .actionGet();
+                    .indices()
+                    .prepareDelete(domain.getId())
+                    .execute()
+                    .actionGet();
         }
     }
 
     @Override
-    public void delete(ObjectMetadata objectMetadata)
-    {
+    public void delete(ObjectMetadata objectMetadata) {
         log.debug("Deleting indexed information for the ObjectMetadata " + objectMetadata);
         Project project = objectMetadata.getProject();
         Domain domain = project.getDomain();
 
-        if(isProjectIndexed(project))
-        {
+        if (isProjectIndexed(project)) {
             client.prepareDelete(domain.getId(), project.getId(), objectMetadata.getId())
-                  .execute()
-                  .actionGet();
+                    .execute()
+                    .actionGet();
         }
 
     }
 
     @Override
-    public void delete(Iterable<ObjectMetadata> objectMetadataList)
-    {
+    public void delete(Iterable<ObjectMetadata> objectMetadataList) {
         performBulkOperation(objectMetadataList, OperationType.DELETE);
     }
 
     @Override
-    public void delete(Project project)
-    {
+    public void delete(Project project) {
         String message = "Deleting all indexed data from project " + project;
         log.debug(message);
 
         // If the project has never been used to index data, then we have nothing to delete.
-        if(isProjectIndexed(project) == false)
+        if (isProjectIndexed(project) == false)
             return;
 
         // We now know that information exists for the project.
         // Since we have the metadata for the domain (domainIndex) and the project (projectType),
         // we can use them to perform the delete without the expense of performing a full query.
         client.admin()
-              .indices()
-              .prepareDeleteMapping()
-              .setIndices(project.getDomain().getId())
-              .setType(project.getId())
-              .execute()
-              .actionGet();
+                .indices()
+                .prepareDeleteMapping()
+                .setIndices(project.getDomain().getId())
+                .setType(project.getId())
+                .execute()
+                .actionGet();
     }
 
     /**
      * Attempts to get information about the index created for the {@link Domain}.
      *
      * @param domain The {@link Domain} for which index information is retrieved.
-     *
      * @return The {@link IndexMetaData} relating to the {@link Domain}, if it is found.
      */
-    protected Optional<IndexMetaData> getDomainIndex(Domain domain)
-    {
+    protected Optional<IndexMetaData> getDomainIndex(Domain domain) {
         // First, query Elastic Search about its current state.
         ClusterStateResponse stateResponse = client.admin()
-                                                   .cluster()
-                                                   .prepareState()
-                                                   .execute()
-                                                   .actionGet();
+                .cluster()
+                .prepareState()
+                .execute()
+                .actionGet();
 
         // Obtain information about objects indexed for the domain, or null if it is not found.
         IndexMetaData domainIndex = stateResponse.getState()
-                                                 .getMetaData()
-                                                 .getIndices()
-                                                 .get(domain.getId());
+                .getMetaData()
+                .getIndices()
+                .get(domain.getId());
 
-        if(domainIndex == null)
-        {
+        if (domainIndex == null) {
             log.debug("No objects have been indexed for the domain " + domain);
 
             return Optional.absent();
@@ -342,12 +320,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      * Determines if the any objects have been indexed for the given {@link Domain}.
      *
      * @param domain The {@link Domain} for which we are checking.
-     *
      * @return True if at least one object has been indexed for the {@link Domain} or false if none have been indexed.
      */
-    protected boolean isDomainIndexed(Domain domain)
-    {
-        if(getDomainIndex(domain).isPresent())
+    protected boolean isDomainIndexed(Domain domain) {
+        if (getDomainIndex(domain).isPresent())
             return true;
 
         return false;
@@ -357,20 +333,17 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      * Attempts to get information about the ElasticSearch type mappings created for the {@link Project}.
      *
      * @param project The {@link Project} for which type mapping information will be retrieved.
-     *
      * @return The {@link MappingMetaData} related to the {@link Project}, if it is found.
      */
-    protected Optional<MappingMetaData> getProjectMapping(Project project)
-    {
+    protected Optional<MappingMetaData> getProjectMapping(Project project) {
         Optional<IndexMetaData> domainIndex = getDomainIndex(project.getDomain());
 
-        if(!domainIndex.isPresent())
+        if (!domainIndex.isPresent())
             return Optional.absent();
 
         MappingMetaData projectMapping = domainIndex.get().getMappings().get(project.getId());
 
-        if(projectMapping == null)
-        {
+        if (projectMapping == null) {
             log.debug("No objects have been indexed for the project " + project);
 
             return Optional.absent();
@@ -383,12 +356,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      * Determines if any objects have been indexed for the given {@link Project}.
      *
      * @param project The {@link Project} for which we are checking.
-     *
      * @return True if at least one object has been indexed for the {@link Project} or false if none have been indexed.
      */
-    protected boolean isProjectIndexed(Project project)
-    {
-        if(getProjectMapping(project).isPresent())
+    protected boolean isProjectIndexed(Project project) {
+        if (getProjectMapping(project).isPresent())
             return true;
 
         return false;
@@ -403,11 +374,9 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      * {@link ObjectMetadata} instances have been processed indicating the nature of each failure.
      *
      * @param objectMetadataList An Iterable object that accesses the {@link ObjectMetadata} instances on which the operation is to be performed.
-     *
-     * @param type The operation to be performed, as specified by the {@link OperationType} enumeration.
+     * @param type               The operation to be performed, as specified by the {@link OperationType} enumeration.
      */
-    protected void performBulkOperation(Iterable<ObjectMetadata> objectMetadataList, OperationType type)
-    {
+    protected void performBulkOperation(Iterable<ObjectMetadata> objectMetadataList, OperationType type) {
         // Create a bulk request.
         log.debug("Performing a bulk " + type.name() + " operation.");
         BulkRequestBuilder bulkRequest = client.prepareBulk();
@@ -415,8 +384,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
         AggregateException aggregateException = new AggregateException("The bulk " + type.name() + " operation failed on some objects.");
         Iterator<ObjectMetadata> iterator = objectMetadataList.iterator();
 
-        while(iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             ObjectMetadata objectMetadata = iterator.next();
 
             // For each object in the list, attempt to serialize that object.
@@ -428,51 +396,38 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                     "ObjectMetadata: " + objectMetadata;
             log.debug(message);
 
-
-            if(type == OperationType.INDEX)
-            {
-                try
-                {
+            if (type == OperationType.INDEX) {
+                try {
                     // For index requests, attempt to serialize the ObjectMetadata.
                     // If successful, add the index request to our bulk request.
                     String json = objectMapper.writeValueAsString(objectMetadata);
                     bulkRequest.add(client.prepareIndex(domainId, projectId, objectMetadata.getId())
-                        .setSource(json));
-                }
-                catch (JsonProcessingException ex)
-                {
+                            .setSource(json));
+                } catch (JsonProcessingException ex) {
                     // If an ObjectMetadata cannot be serialized, collect the details of this failure.
                     aggregateException.add(ex);
                 }
-            }
-            else
-            {
-                // If this is a delete operation, then prepare the delete request and add it to the builk request.
+            } else {
+                // If this is a delete operation, then prepare the delete request and add it to the bulk request.
                 bulkRequest.add(client.prepareDelete(domainId, projectId, objectMetadata.getId()));
             }
 
             // If we have just processed the last ObjectMetadata, or a full bulk request is ready,
             // then it should be executed.
-            if(bulkRequest.numberOfActions() >= BULK_REQUEST_SIZE || iterator.hasNext() == false)
-            {
+            if (bulkRequest.numberOfActions() >= BULK_REQUEST_SIZE || iterator.hasNext() == false) {
                 BulkResponse response = bulkRequest.execute().actionGet();
 
                 // Each response must be checked for failures.
-                for(BulkItemResponse item : response.getItems())
-                {
-                    if(item.isFailed())
-                    {
-                        if(item.getResponse() instanceof DeleteResponse)
-                        {
+                for (BulkItemResponse item : response.getItems()) {
+                    if (item.isFailed()) {
+                        if (item.getResponse() instanceof DeleteResponse) {
                             // If a delete request failed because no object was previously indexed,
                             // ignore these failures.  Otherwise, report them.
                             DeleteResponse deleteResponse = item.getResponse();
 
-                            if(deleteResponse.isNotFound() == false)
+                            if (deleteResponse.isNotFound() == false)
                                 aggregateException.add(new SkyeException(item.getFailureMessage()));
-                        }
-                        else
-                        {
+                        } else {
                             // All failed index events should be reported.
                             aggregateException.add(new SkyeException(item.getFailureMessage()));
                         }
@@ -481,14 +436,14 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
 
                 // If there are any remaining objects after a bulk request is completed, then
                 // a new bulk request must be prepared.
-                if(iterator.hasNext())
+                if (iterator.hasNext())
                     bulkRequest = client.prepareBulk();
             }
         }
 
         // If there is at least one failure, then an AggregateException listing details for each
         // Failure should be thrown now that all objects are processed.
-        if(!aggregateException.isEmpty())
+        if (!aggregateException.isEmpty())
             throw aggregateException;
     }
 
@@ -506,8 +461,7 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
                 .actionGet();
     }
 
-    protected Set<String> getIndexNameSet()
-    {
+    protected Set<String> getIndexNameSet() {
         IndicesStatusResponse response = this.client.admin()
                 .indices()
                 .prepareStatus()
