@@ -60,7 +60,7 @@ public class HoldResource extends AbstractUpdatableDomainResource<Hold> {
         return super.get(id);
     }
 
-    @ApiOperation(value = "List all users", notes = "Returns all users in a paginated structure", responseContainer = "List", response = Hold.class)
+    @ApiOperation(value = "List all holds", notes = "Returns all holds in a paginated structure", responseContainer = "List", response = Hold.class)
     @GET
     @Transactional
     @Timed
@@ -69,7 +69,7 @@ public class HoldResource extends AbstractUpdatableDomainResource<Hold> {
         return super.getAll();
     }
 
-    @ApiOperation(value = "Delete user", notes = "Delete the user (found by unique id)")
+    @ApiOperation(value = "Delete hold", notes = "Delete the hold (found by unique id)")
     @Path("/{id}")
     @DELETE
     @Transactional
