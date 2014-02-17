@@ -106,8 +106,10 @@ public class ReindexTaskStep extends TaskStep {
         } catch (AggregateException ex) {
             toLog("exception while indexing ", ex.getFirstException());
             toLog(ex.count() + " objects failed to index.");
+            return TaskStatus.FAILED;
         } catch (Exception ex) {
             toLog("exception while indexing ", ex);
+            return TaskStatus.FAILED;
         }
 
         return TaskStatus.COMPLETED;

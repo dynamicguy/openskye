@@ -83,6 +83,7 @@ public class DiscoverTaskStep extends TaskStep {
         toLog(indexedObjects + " objects indexed");
         if ( indexFailures > 0 ) {
             toLog(indexFailures + " objects failed to index");
+            return TaskStatus.FAILED;
         }
 
         return TaskStatus.COMPLETED;
