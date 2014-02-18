@@ -235,6 +235,32 @@ public class ObjectMetadataResource {
 
     }
 
+    /**
+     * Lists all {@link ObjectMetadata} related to the given {@link Project} id.
+     *
+     * @param projectId The id of the {@link Project} for the query.
+     * @return A {@link PaginatedResult} listing all instances related to the {@link Project}.
+     */
+    @ApiOperation(value = "Lists all ObjectMetadata for a Project",
+            notes = "Supply a Project id.  Returns a list of ObjectMetadata in a paginated structure",
+            responseContainer = "List",
+            response = ObjectMetadata.class)
+    @Path("/project/{projectId}")
+    @GET
+    @Transactional
+    @Timed
+    public PaginatedResult<ObjectMetadata> getByProject(@PathParam("projectId") String projectId) {
+
+        Optional<Project> project = projects.get(projectId);
+
+        if (!project.isPresent())
+            throw new NotFoundException();
+        checkPermission("list", projectId);
+
+        return new PaginatedResult<>(repository.getObjects(project.get()));
+
+    }
+
     @ApiOperation(value = "Counts the results for a search query.",
             notes = "Supply a query string (query).  Returns the number of search results",
             response = Long.class)
