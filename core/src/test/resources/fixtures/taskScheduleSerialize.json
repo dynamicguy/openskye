@@ -1,1 +1,1 @@
-{"project":{"id":"2093e8ab-6aab-4421-970d-1c79bc3be427","active":true,"duplicationAllowed":false},"stepClassName":"org.openskye.task.step.TestTaskStep","step":{"node":{},"sleepSeconds":2,"iterations":1,"pass":true}}
+{"project":{"id":"2093e8ab-6aab-4421-970d-1c79bc3be427","active":true,"duplicationAllowed":false},"stepClassName":"org.openskye.task.step.TestTaskStep","step":{"node":{},"sleepSeconds":2,"iterations":1,"pass":true},"cronExpression":"0 0 2 * * ?"}

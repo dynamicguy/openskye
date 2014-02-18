@@ -95,6 +95,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         taskSchedule.setProject(getProject());
         taskSchedule.setStepClassName(this.getClass().getName());
         taskSchedule.setStep(this);
+        taskSchedule.setCronExpression(cronExpression);
         return taskSchedule;
     }
 
@@ -135,44 +136,38 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     }
 
     @Override
-    public TaskStatus call() throws Exception
-    {
+    public TaskStatus call() throws Exception {
         TaskStatus status = TaskStatus.COMPLETED;
         SkyeException exception = null;
 
         log.debug("Starting transaction for task " + getTask().getId());
         beginTransaction();
 
-        try
-        {
+        try {
             log.debug("Performing task step for " + getTask().getId());
             status = doStep();
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             status = TaskStatus.FAILED;
             log.warn("Task " + getTask().getId() + " failed due to exception of type " + ex.getClass().getCanonicalName());
             exception = new SkyeException("Transaction Step failed.", ex);
             emf.get().getTransaction().setRollbackOnly();
-        }
-        finally
-        {
+        } finally {
             commitTransaction();
             log.debug("Committing transaction for task " + getTask().getId());
         }
 
-        if(exception != null)
+        if (exception != null)
             throw exception;
 
         return status;
     }
 
-    protected void toLog(String message,Exception e) {
-        taskManager.toLog(task,message,e);
+    protected void toLog(String message, Exception e) {
+        taskManager.toLog(task, message, e);
     }
 
     protected void toLog(String message) {
-        taskManager.toLog(task,message);
+        taskManager.toLog(task, message);
     }
 
     protected abstract TaskStatus doStep() throws Exception;
