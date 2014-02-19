@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An Abstract Base for commands that manage batch mode
- * processing steps in Skye, represented by TaskStep subclasses
+ * An Abstract Base for commands that manage batch mode processing steps in Skye, represented by TaskStep subclasses
  */
 @Data
 @Slf4j
@@ -90,9 +89,7 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
             destroy();
         } else if (test) {
             test();
-        }
-        else if (reindex)
-        {
+        } else if (reindex) {
             reindex();
         }
     }
@@ -178,8 +175,11 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         TaskStep step = new DestroyTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         step = (DestroyTaskStep) selectReferenceField(new ReferenceField(Node.class, false), step);
-        ((DestroyTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
-        step = setTargetInformationStore(step);
+        step = (DestroyTaskStep) selectReferenceField(new ReferenceField(InformationStoreDefinition.class, true), step);
+        if (dynamicParams.get("objectSetId") != null) {
+            ((DestroyTaskStep) step).setObjectSetId(dynamicParams.get("objectSetId"));
+        }
+
         create(step);
     }
 
@@ -195,16 +195,14 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
         create(step);
     }
 
-    public void reindex()
-    {
+    public void reindex() {
         ReindexTaskStep step = new ReindexTaskStep();
         output.message("Creating a new " + step.getLabel() + " task:\n");
         selectReferenceField(new ReferenceField(Node.class, false), step);
 
         String projectId = dynamicParams.get("project");
 
-        if(projectId != null && !projectId.isEmpty())
-        {
+        if (projectId != null && !projectId.isEmpty()) {
             selectReferenceField(new ReferenceField(Project.class, false), step);
         }
 
@@ -217,8 +215,6 @@ public abstract class AbstractTaskStepCommand extends ExecutableCommand {
             InformationStoreDefinition chosenDef = getResource("informationStoreDefinitions/" + resolveAlias(dynamicParams.get("targetInformationStoreDefinition"))).get(InformationStoreDefinition.class);
             if (step instanceof ExtractTaskStep) {
                 ((ExtractTaskStep) step).setTargetInformationStoreDefinition(chosenDef);
-            } else {
-                ((DestroyTaskStep) step).setTargetInformationStoreDefinition(chosenDef);
             }
 
         } catch (Exception e) {

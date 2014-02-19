@@ -16,6 +16,7 @@ import org.openskye.stores.StoreRegistry;
 import org.openskye.task.TaskManager;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -133,6 +134,15 @@ public abstract class TaskStep implements Callable<TaskStatus> {
         auditLog.setObjectAffected(om.getId());
         auditLog.setUser(auditLogDAO.getCurrentUser());
         auditLogDAO.create(auditLog);
+    }
+
+    protected Optional<ObjectEvent> getLatestEvent(ObjectMetadata objectMetadata){
+        if(auditLogDAO.findByObject(objectMetadata.getId()).isPresent()){
+            List<AuditLog> objectLogs = auditLogDAO.findByObject(objectMetadata.getId()).get();
+            return Optional.of(objectLogs.get(objectLogs.size()-1).getObjectEvent());
+        } else {
+            return Optional.absent();
+        }
     }
 
     @Override

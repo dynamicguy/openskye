@@ -51,22 +51,22 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
         ArchiveContentBlock acb = new ArchiveContentBlock();
-            // We need to link this ACB to the Node we are currently running on
-            acb.setNodes(new ArrayList());
-            if (NodeManager.hasNode()) {
-                acb.getNodes().add(NodeManager.getNode());
-            }
-            acb.setObjectMetadataReferences(new ArrayList());
-            acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
-            acb.setArchiveStoreInstance(hostArchiveStore.getArchiveStoreInstance());
-            acb.setProject(simpleObject.getObjectMetadata().getProject());
-            acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
+        // We need to link this ACB to the Node we are currently running on
+        acb.setNodes(new ArrayList());
+        if (NodeManager.hasNode()) {
+            acb.getNodes().add(NodeManager.getNode());
+        }
+        acb.setObjectMetadataReferences(new ArrayList());
+        acb.getObjectMetadataReferences().add(simpleObject.getObjectMetadata());
+        acb.setArchiveStoreInstance(hostArchiveStore.getArchiveStoreInstance());
+        acb.setProject(simpleObject.getObjectMetadata().getProject());
+        acb.setOriginalSize(simpleObject.getObjectMetadata().getOriginalSize());
 
-            // We need to push the ACB to the OMR so that we are able to have a
-            // UUID on the ACB
-            acb = getOmr().put(acb);
+        // We need to push the ACB to the OMR so that we are able to have a
+        // UUID on the ACB
+        acb = getOmr().put(acb);
 
-            simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
+        simpleObject.getObjectMetadata().getArchiveContentBlocks().add(acb);
 
 
         if (simpleObject instanceof JDBCStructuredObject) {
@@ -223,24 +223,24 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     public UnstructuredCompressedObject compress(SimpleObject so) {
         UnstructuredCompressedObject compressedObject = new FileSystemCompressedObject();
         ObjectMetadata om = so.getObjectMetadata();
-            try {
-                OutputStream out = new FileOutputStream(so.getObjectMetadata().getPath() + ".tar");
-                ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
-                ArchiveEntry entry = new TarArchiveEntry(so.getObjectMetadata().getPath());
-                outputStream.putArchiveEntry(entry);
-                IOUtils.copy(((UnstructuredObject) so).getInputStream(), outputStream);
-                outputStream.closeArchiveEntry();
-                outputStream.close();
-                om.setPath(so.getObjectMetadata().getPath() + ".tar");
-                om.setMimeType(MediaType.TAR.toString());
-                compressedObject.setObjectMetadata(om);
-            } catch (ArchiveException e) {
-                throw new SkyeException("Skye Exception", e);
-            } catch (MissingObjectException e) {
-                throw new SkyeException("Skye Exception", e);
-            } catch (IOException e) {
-                throw new SkyeException("Skye Exception", e);
-            }
+        try {
+            OutputStream out = new FileOutputStream(so.getObjectMetadata().getPath() + ".tar");
+            ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
+            ArchiveEntry entry = new TarArchiveEntry(so.getObjectMetadata().getPath());
+            outputStream.putArchiveEntry(entry);
+            IOUtils.copy(((UnstructuredObject) so).getInputStream(), outputStream);
+            outputStream.closeArchiveEntry();
+            outputStream.close();
+            om.setPath(so.getObjectMetadata().getPath() + ".tar");
+            om.setMimeType(MediaType.TAR.toString());
+            compressedObject.setObjectMetadata(om);
+        } catch (ArchiveException e) {
+            throw new SkyeException("Skye Exception", e);
+        } catch (MissingObjectException e) {
+            throw new SkyeException("Skye Exception", e);
+        } catch (IOException e) {
+            throw new SkyeException("Skye Exception", e);
+        }
 
 
         return compressedObject;  //To change body of implemented methods use File | Settings | File Templates.
@@ -255,8 +255,8 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
         try {
             OutputStream out = new FileOutputStream(compressionPath);
             ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
-            ((TarArchiveOutputStream)outputStream).setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
-            ((TarArchiveOutputStream)outputStream).setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
+            ((TarArchiveOutputStream) outputStream).setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+            ((TarArchiveOutputStream) outputStream).setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
             //go through everything contained in the ACB, add to the tar file
             for (ObjectMetadata om : acb.getObjectMetadataReferences()) {
                 SimpleObject so = new LocalFileUnstructuredObject();
@@ -266,21 +266,17 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 outputStream.putArchiveEntry(entry);
                 InputStream fileStream = new FileInputStream(objectFile);
                 IOUtils.copy(fileStream, outputStream);
-                fileStream.close();
                 outputStream.closeArchiveEntry();
-                outputStream.close();
+                fileStream.close();
                 objectFile.delete();
             }
+            outputStream.close();
+
         } catch (ArchiveException e) {
             throw new SkyeException("Cannot compress ArchiveContentBlock", e);
         } catch (IOException e) {
             throw new SkyeException("Skye Exception", e);
         }
-
-    }
-
-    @Override
-    public void compressAllACBs() {
 
     }
 

@@ -7,8 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.changes.ChangeSet;
+import org.apache.commons.compress.changes.ChangeSetPerformer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eobjects.metamodel.DataContext;
 import org.eobjects.metamodel.DataContextFactory;
 import org.openskye.core.*;
@@ -124,8 +128,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
                                 archiveStream.read(entryContent);
                                 is = new ByteArrayInputStream(entryContent);
                                 break;
-                            }
-                            else{
+                            } else {
                                 entry = archiveStream.getNextTarEntry();
                             }
                         }
@@ -226,7 +229,44 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     @Override
     public void destroy(ObjectMetadata om) {
         if (om.getArchiveContentBlock(getArchiveStoreInstance()).isPresent()) {
-            getAcbPath(om.getArchiveContentBlock(getArchiveStoreInstance()).get(), false).delete();
+            ArchiveContentBlock acb = om.getArchiveContentBlock(getArchiveStoreInstance()).get();
+            try {
+                TarArchiveInputStream archiveInputStream = new TarArchiveInputStream(new FileInputStream(getAcbPath(acb, false)));
+                TarArchiveOutputStream archiveOut = new TarArchiveOutputStream(new FileOutputStream(getAcbPath(acb, false)));
+                TarArchiveEntry currentEntry = archiveInputStream.getNextTarEntry();
+                InputStream is;
+                ChangeSet changes = new ChangeSet();
+                while (currentEntry != null) { //go through the ACB tar
+                    byte[] entryContent = new byte[(int) currentEntry.getSize()];
+
+                    if (om.getPath().contains(currentEntry.getName())) {
+                        log.debug("Rewriting data on object "+om);
+                        for (int i = 0; i <= 6; i++) {
+                            changes.add(currentEntry, new ByteArrayInputStream(StringUtils.leftPad("", entryContent.length, (char) Math.random()).getBytes()));
+                        }
+                        log.debug("Rewrite complete.");
+                    } else {
+                        archiveInputStream.read(entryContent);
+                        is = new ByteArrayInputStream(entryContent);
+                        changes.add(currentEntry, is);
+                    }
+                    currentEntry = archiveInputStream.getNextTarEntry();
+
+                }
+
+                ChangeSetPerformer performer = new ChangeSetPerformer(changes);
+                performer.perform(archiveInputStream, archiveOut);
+                if (acb.getObjectMetadataReferences().size() <= 1) {
+                    //delete the container if there are no other objects using it
+                    log.debug("Deleting empty ACB "+acb);
+                    getAcbPath(acb, false).delete();
+                } else {
+
+                    //remove entry
+                }
+            } catch (Exception e) {
+                throw new SkyeException("ACB not found", e);
+            }
         }
     }
 
