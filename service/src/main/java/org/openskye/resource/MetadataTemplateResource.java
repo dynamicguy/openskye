@@ -90,7 +90,7 @@ public class MetadataTemplateResource extends AbstractUpdatableDomainResource<Me
 
     @Path("/{id}/attributeDefinitions")
     @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
+    @ApiOperation(value = "Return the attribute definitions associated with this metadata template")
     public PaginatedResult<AttributeDefinition> getFieldDefinitions(@PathParam("id") String id) {
         MetadataTemplate metadataTemplate = get(id);
         return new PaginatedResult<AttributeDefinition>().paginate(metadataTemplate.getAttributeDefinitions());

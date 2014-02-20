@@ -111,7 +111,7 @@ public class ProjectResource extends ProjectSpecificResource<Project> {
 
     @Path("/{id}/archiveStores")
     @GET
-    @ApiOperation(value = "Return the archive stores owned by this domain")
+    @ApiOperation(value = "Return the archive stores associated with this project")
     public PaginatedResult<ArchiveStoreDefinition> getArchiveStores(@PathParam("id") String id) {
         Project project = get(id);
         projectID = id;
@@ -120,7 +120,7 @@ public class ProjectResource extends ProjectSpecificResource<Project> {
 
     @Path("/{id}/informationStores")
     @GET
-    @ApiOperation(value = "Return the information stores owned by this domain")
+    @ApiOperation(value = "Return the information stores associated with this project")
     public PaginatedResult<InformationStoreDefinition> getInformationStores(@PathParam("id") String id) {
         Project project = get(id);
         projectID = id;
