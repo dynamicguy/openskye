@@ -24,20 +24,20 @@ public class DestroyTaskStep extends TaskStep {
     private String objectSetId;
     @Getter
     @Setter
-    private InformationStoreDefinition targetInformationStoreDefinition;
+    private InformationStoreDefinition informationStoreDefinition;
     @JsonIgnore
     @Inject
     private StoreRegistry storeRegistry;
 
     public DestroyTaskStep(String objectSetId, InformationStoreDefinition targetInformationStoreDefinition, Node node) {
         this.objectSetId = objectSetId;
-        this.targetInformationStoreDefinition = targetInformationStoreDefinition;
+        this.informationStoreDefinition = targetInformationStoreDefinition;
         setNode(node);
     }
 
     @Override
     public Project getStepProject() {
-        return targetInformationStoreDefinition.getProject();
+        return informationStoreDefinition.getProject();
     }
 
     @Override
@@ -47,8 +47,8 @@ public class DestroyTaskStep extends TaskStep {
 
     @Override
     public void rehydrate() {
-        if (targetInformationStoreDefinition.getImplementation() == null) {
-            targetInformationStoreDefinition = informationStoreDefinitionDAO.get(targetInformationStoreDefinition.getId()).get();
+        if (informationStoreDefinition.getImplementation() == null) {
+            informationStoreDefinition = informationStoreDefinitionDAO.get(informationStoreDefinition.getId()).get();
         }
     }
 
@@ -57,8 +57,8 @@ public class DestroyTaskStep extends TaskStep {
         if (objectSetId == null) {
             throw new SkyeException("Task " + task.getId() + " is missing an object set id");
         }
-        if (targetInformationStoreDefinition == null) {
-            throw new SkyeException("Task " + task.getId() + " is missing a target information store definition");
+        if (informationStoreDefinition == null) {
+            throw new SkyeException("Task " + task.getId() + " is missing an information store definition");
         }
     }
 
@@ -72,19 +72,17 @@ public class DestroyTaskStep extends TaskStep {
             objectSet = Optional.absent();
         }
 
-        Optional<InformationStore> targetInformationStore = storeRegistry.build(targetInformationStoreDefinition);
+        Optional<InformationStore> targetInformationStore = storeRegistry.build(informationStoreDefinition);
 
         if (targetInformationStore.isPresent()) {
             Iterable<ObjectMetadata> omIterator;
             if (objectSet.isPresent()) {
                 omIterator = omr.getObjects(objectSet.get());
             } else {
-                omIterator = omr.getObjects(targetInformationStoreDefinition);
+                omIterator = omr.getObjects(informationStoreDefinition);
             }
             for (ObjectMetadata om : omIterator) {
                 for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
-                    // TODO do we need to check if this ACB is in use by another
-                    // object metadata
                     Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
                     if (archiveStore.isPresent()) {
                         archiveStore.get().destroy(om);
@@ -96,7 +94,7 @@ public class DestroyTaskStep extends TaskStep {
             }
 
         } else {
-            throw new SkyeException("Unable to build target information store from definition " + targetInformationStoreDefinition);
+            throw new SkyeException("Unable to build information store from definition " + informationStoreDefinition);
         }
 
         return TaskStatus.COMPLETED;

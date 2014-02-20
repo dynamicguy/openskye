@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.openskye.core.AggregateException;
 import org.openskye.core.ObjectMetadata;
 import org.openskye.core.SkyeException;
 import org.openskye.domain.Node;
@@ -28,14 +29,13 @@ import java.util.List;
  * This {@link TaskStep} is intended to recover from some issue with search indexing.
  * First, it removes existing search index information, which may be incomplete.
  * Then, it creates new, up to date index information for objects in the {@link ObjectMetadataRepository}.
- *
+ * <p/>
  * Currently, this operation may optionally specify a particular {@link Project} to be Reindexed.
  * If no {@link Project} is specified, then all the operation is run for each {@link Project}.
  */
 @NoArgsConstructor
 @Slf4j
-public class ReindexTaskStep extends TaskStep
-{
+public class ReindexTaskStep extends TaskStep {
     @JsonProperty
     @Setter
     private Project project = null;
@@ -59,49 +59,41 @@ public class ReindexTaskStep extends TaskStep
     @JsonIgnore
     private static final String STEP_LABEL = "REINDEX";
 
-    ReindexTaskStep(Node node)
-    {
+    ReindexTaskStep(Node node) {
         setNode(node);
     }
 
-    ReindexTaskStep(Node node, Project project)
-    {
+    ReindexTaskStep(Node node, Project project) {
         setNode(node);
         this.project = project;
     }
 
 
     @Override
-    public void validate()
-    {
+    public void validate() {
     }
 
     @Override
-    protected Project getStepProject()
-    {
+    protected Project getStepProject() {
         return project;
     }
 
     @Override
-    protected TaskStatus doStep() throws Exception
-    {
+    protected TaskStatus doStep() throws Exception {
         // TODO Add auditing.
         log.debug("Starting reindex task" + task);
-        if(task.getStatistics() == null)
+        if (task.getStatistics() == null)
             task.setStatistics(new TaskStatistics());
 
         Iterable<ObjectMetadata> omResultSet;
 
-        if(project == null)
-        {
+        if (project == null) {
             log.debug("Clear all search indices.");
             oms.clear();
 
             log.debug("Getting all ObjectMetadata to index.");
             omResultSet = omr.getAllObjects();
-        }
-        else
-        {
+        } else {
             log.debug("Delete search indices for project " + project);
             oms.delete(project);
 
@@ -109,25 +101,31 @@ public class ReindexTaskStep extends TaskStep
             omResultSet = omr.getObjects(project);
         }
 
-        oms.index(omResultSet);
+        try {
+            oms.index(omResultSet);
+        } catch (AggregateException ex) {
+            toLog("exception while indexing ", ex.getFirstException());
+            toLog(ex.count() + " objects failed to index.");
+            return TaskStatus.FAILED;
+        } catch (Exception ex) {
+            toLog("exception while indexing ", ex);
+            return TaskStatus.FAILED;
+        }
 
         return TaskStatus.COMPLETED;
     }
 
     @Override
-    public String getLabel()
-    {
+    public String getLabel() {
         return STEP_LABEL;
     }
 
     @Override
-    public void rehydrate()
-    {
-        if(project != null)
-        {
+    public void rehydrate() {
+        if (project != null) {
             Optional<Project> projectResult = projectDAO.get(project.getId());
 
-            if(!projectResult.isPresent())
+            if (!projectResult.isPresent())
                 throw new SkyeException("Project ID is not found.");
 
             project = projectResult.get();
@@ -135,7 +133,7 @@ public class ReindexTaskStep extends TaskStep
 
         Optional<Node> nodeResult = nodeDAO.get(getNode().getId());
 
-        if(!nodeResult.isPresent())
+        if (!nodeResult.isPresent())
             throw new SkyeException("Node ID is not found.");
 
         setNode(nodeResult.get());

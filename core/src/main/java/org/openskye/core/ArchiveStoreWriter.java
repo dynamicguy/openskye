@@ -35,8 +35,6 @@ public interface ArchiveStoreWriter {
      */
     public abstract void compress(ArchiveContentBlock acb);
 
-    public abstract void compressAllACBs();
-
     public abstract List<SimpleObject> decompress(UnstructuredCompressedObject compressedObject);
 
     /**

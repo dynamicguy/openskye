@@ -40,4 +40,22 @@ public class AuditLogDAO extends AbstractPaginatingDAO<AuditLog> {
         }
     }
 
+    public Optional<List<AuditLog>> findByObject(String objectId) {
+        List<AuditLog> foundActivities;
+        CriteriaQuery<AuditLog> cq = createCriteriaQuery();
+        Root<AuditLog> root = cq.from(AuditLog.class);
+
+        cq.where(getCriteriaBuilder().equal(root.get("objectAffected"), objectId));
+        cq.orderBy(getCriteriaBuilder().asc(root.get("createdAt")));
+
+
+        foundActivities = getEntityManagerProvider().get().createQuery(cq).getResultList();
+
+        if (foundActivities.size() > 0) {
+            return Optional.of(foundActivities);
+        } else {
+            return Optional.absent();
+        }
+    }
+
 }
