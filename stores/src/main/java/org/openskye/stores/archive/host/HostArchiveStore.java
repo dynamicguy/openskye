@@ -5,11 +5,13 @@ import com.google.inject.Injector;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.changes.ChangeSet;
 import org.apache.commons.compress.changes.ChangeSetPerformer;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -119,9 +121,9 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
                 File acbBucketFile = new File(getFilePath() + "/" + getBucket(metadata.getArchiveContentBlock(this.getArchiveStoreInstance()).get()));
                 InputStream is = null;
                 for (File f : acbBucketFile.listFiles()) {
-                    if (f.getPath().contains(".tar")) {
-                        TarArchiveInputStream archiveStream = new TarArchiveInputStream(new BufferedInputStream(new FileInputStream(f.getPath())));
-                        TarArchiveEntry entry = archiveStream.getNextTarEntry();
+                    if (f.getPath().contains(".tar.gz")) {
+                        TarArchiveInputStream archiveStream = new TarArchiveInputStream(new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(f))));
+                        ArchiveEntry entry = archiveStream.getNextEntry();
                         while (entry != null) {
                             if (metadata.getPath().contains(entry.getName())) {
                                 byte[] entryContent = new byte[(int) entry.getSize()];
@@ -254,14 +256,15 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
 
                 }
 
-                ChangeSetPerformer performer = new ChangeSetPerformer(changes);
-                performer.perform(archiveInputStream, archiveOut);
+
                 if (acb.getObjectMetadataReferences().size() <= 1) {
                     //delete the container if there are no other objects using it
                     log.debug("Deleting empty ACB "+acb);
                     getAcbPath(acb, false).delete();
                 } else {
-
+                    changes.delete(om.getPath());
+                    ChangeSetPerformer performer = new ChangeSetPerformer(changes);
+                    performer.perform(archiveInputStream, archiveOut);
                     //remove entry
                 }
             } catch (Exception e) {
@@ -296,7 +299,7 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
             mkParentDir(simpleObjectDir);
         } else {
             if (!simpleObjectDir.exists()) {  //file doesn't exist where its supposed to?
-                simpleObjectDir = new File(fileName + ".tar"); //does the compressed version exist?
+                simpleObjectDir = new File(fileName + ".tar.gz"); //does the compressed version exist?
                 if (!simpleObjectDir.exists()) {
                     throw new SkyeException("ACB Directory not found: " + fileName);
                 }
