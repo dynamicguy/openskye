@@ -6,6 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.*;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.util.IOUtils;
 import org.eobjects.metamodel.DataContextFactory;
@@ -173,12 +174,12 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 FileInputStream fis = new FileInputStream(targetPath);
                 String checksum = DigestUtils.md5Hex(fis);
                 fis.close();
+                compress(acb);
                 simpleObject.getObjectMetadata().setChecksum(checksum);
                 simpleObject.getObjectMetadata().setIngested(DateTime.now());
                 simpleObject.getObjectMetadata().setMimeType("text/csv");
-                simpleObject.getObjectMetadata().setArchiveSize(targetPath.length());
+                simpleObject.getObjectMetadata().setArchiveSize(hostArchiveStore.getAcbPath(acb, true).length());
                 tempStoragePath.delete();
-                compress(acb);
                 //clean up the temporary decompression folder and the files within once they're archived
                 File decompressionPath = new File(TMP_DECOMPRESSION_PATH);
                 if (simpleObject.getObjectMetadata().getPath().contains(TMP_DECOMPRESSION_PATH) && decompressionPath.exists()) {
@@ -249,14 +250,14 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     @Override
     public void compress(ArchiveContentBlock acb) {
 
-        String compressionPath = hostArchiveStore.getAcbPath(acb, false).getPath() + ".tar";
+        String compressionPath = hostArchiveStore.getAcbPath(acb, false).getPath() + ".tar.gz";
         List<ArchiveContentBlock> acbs = new ArrayList<>();
         acbs.add(acb);
         try {
-            OutputStream out = new FileOutputStream(compressionPath);
-            ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
-            ((TarArchiveOutputStream) outputStream).setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
-            ((TarArchiveOutputStream) outputStream).setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
+            FileOutputStream out = new FileOutputStream(compressionPath);
+            TarArchiveOutputStream outputStream = new TarArchiveOutputStream(new GzipCompressorOutputStream(new BufferedOutputStream(out)));
+            outputStream.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+            outputStream.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
             //go through everything contained in the ACB, add to the tar file
             for (ObjectMetadata om : acb.getObjectMetadataReferences()) {
                 SimpleObject so = new LocalFileUnstructuredObject();
@@ -272,8 +273,6 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             }
             outputStream.close();
 
-        } catch (ArchiveException e) {
-            throw new SkyeException("Cannot compress ArchiveContentBlock", e);
         } catch (IOException e) {
             throw new SkyeException("Skye Exception", e);
         }
