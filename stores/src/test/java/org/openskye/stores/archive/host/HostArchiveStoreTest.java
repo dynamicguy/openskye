@@ -31,6 +31,7 @@ import org.openskye.task.step.DiscoverTaskStep;
 
 import javax.inject.Inject;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -214,6 +215,7 @@ public class HostArchiveStoreTest {
 
     @Test
     public void UnstructuredObjectTest() throws Exception {
+        String s = File.separator;
 
         // Construct a mock node
         Node node = new Node();
@@ -224,8 +226,11 @@ public class HostArchiveStoreTest {
         // Construct a mock archive store
         ArchiveStoreInstance asi = new ArchiveStoreInstance();
         asi.setImplementation(HostArchiveStore.IMPLEMENTATION);
-        Path temp = Files.createTempDirectory("archive-" + UUID.randomUUID().toString());
-        asi.getProperties().put(HostArchiveStore.FILE_PATH, temp.toAbsolutePath().toString());
+        String testId = UUID.randomUUID().toString();
+        Path archivePath = Files.createTempDirectory("archive-" + testId);
+        Path tmpPath = Files.createTempDirectory("tmp-" + testId);
+        asi.getProperties().put(HostArchiveStore.FILE_PATH, archivePath.toAbsolutePath().toString());
+        asi.getProperties().put(HostArchiveStore.TMP_PATH, tmpPath.toAbsolutePath().toString());
         ArchiveStoreDefinition das = new ArchiveStoreDefinition();
         das.setId(UUID.randomUUID().toString());
         das.setArchiveStoreInstance(asi);
@@ -238,7 +243,7 @@ public class HostArchiveStoreTest {
         project.setName("UnstructuredObjectTest Project");
         project.setId(UUID.randomUUID().toString());
         String objectId = UUID.randomUUID().toString();
-        String path = "UnstructuredObjectTest/123.txt";
+        String path = "UnstructuredObjectTest" + s + "123.txt";
         String contentIn = "This is a test of unstructured object archiving";
         InMemoryUnstructuredObject objectIn = new InMemoryUnstructuredObject(project,objectId,path,contentIn);
 
@@ -254,6 +259,6 @@ public class HostArchiveStoreTest {
         String contentOut = reader.readLine();
 
         assertThat("Content retrieved matches content stored", contentOut, is(equalTo(contentIn)));
-        temp.toFile().deleteOnExit();
+        archivePath.toFile().deleteOnExit();
     }
 }
