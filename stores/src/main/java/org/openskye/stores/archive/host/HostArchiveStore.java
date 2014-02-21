@@ -290,20 +290,14 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
         HostArchiveStore.log.debug("Getting path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
-        String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId();
+        String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId() + ".tar.gz";
         File simpleObjectDir = new File(fileName);
-
 
         if (isNew) {
             HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
             mkParentDir(simpleObjectDir);
-        } else {
-            if (!simpleObjectDir.exists()) {  //file doesn't exist where its supposed to?
-                simpleObjectDir = new File(fileName + ".tar.gz"); //does the compressed version exist?
-                if (!simpleObjectDir.exists()) {
-                    throw new SkyeException("ACB Directory not found: " + fileName);
-                }
-            }
+        } else if (!simpleObjectDir.exists()) {
+            throw new SkyeException("ACB Directory not found: " + fileName);
         }
         return simpleObjectDir;
     }
