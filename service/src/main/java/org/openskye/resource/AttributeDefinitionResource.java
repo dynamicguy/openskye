@@ -7,7 +7,6 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openskye.domain.AttributeDefinition;
 import org.openskye.domain.AttributeType;
-import org.openskye.domain.dao.AbstractPaginatingDAO;
 import org.openskye.domain.dao.AttributeDefinitionDAO;
 import org.openskye.domain.dao.PaginatedResult;
 import org.openskye.exceptions.BadRequestException;
@@ -94,18 +93,16 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     }
 
     @ApiOperation(value = "Indicates if an attribute definition is in use",
-                  notes = "Given a valid attribute definition id, returns true if at least one attribute instance is defined, or false if it is not.",
-                  response = Boolean.class)
+            notes = "Given a valid attribute definition id, returns true if at least one attribute instance is defined, or false if it is not.",
+            response = Boolean.class)
     @Path("/inUse/{id}")
     @GET
     @Transactional
     @Timed
-    public Boolean isInUse(@PathParam("id") String id)
-    {
+    public Boolean isInUse(@PathParam("id") String id) {
         Optional<AttributeDefinition> definition = getDAO().get(id);
 
-        if(!definition.isPresent())
-        {
+        if (!definition.isPresent()) {
             throw new NotFoundException();
         }
 
@@ -113,36 +110,42 @@ public class AttributeDefinitionResource extends AbstractUpdatableDomainResource
     }
 
     @Override
-    protected void validateUpdate(String id, AttributeDefinition newInstance)
-    {
+    protected void validateCreate(AttributeDefinition newInstance) {
+        validateUpdate(null, newInstance);
+    }
+
+    @Override
+    protected void validateUpdate(String id, AttributeDefinition newInstance) {
         List<String> possibleValues = newInstance.getPossibleValues();
 
-        if(possibleValues == null)
+        if (possibleValues == null) {
             possibleValues = new ArrayList<>();
+        }
 
-        if(newInstance.getType() != AttributeType.ENUMERATED)
-        {
-            if(possibleValues.size() != 0)
+        if (newInstance.getType() != AttributeType.ENUMERATED) {
+            if (possibleValues.size() != 0) {
                 throw new BadRequestException("Only Enumerated attributes may have possible values.");
+            }
 
             return;
         }
 
-        for(String value : possibleValues)
-        {
+        for (String value : possibleValues) {
             int numberOf = 0;
 
-            if(value == null || value.isEmpty())
+            if (value == null || value.isEmpty()) {
                 throw new BadRequestException("Possible values for Enumerated attributes may not be empty.");
-
-            for(String otherValue : possibleValues)
-            {
-                if(otherValue.equals(value))
-                    numberOf++;
             }
 
-            if(numberOf > 1)
+            for (String otherValue : possibleValues) {
+                if (otherValue.equals(value)) {
+                    numberOf++;
+                }
+            }
+
+            if (numberOf > 1) {
                 throw new BadRequestException("Each possible value for an Enumerated attribute must be unique.");
+            }
         }
     }
 }
