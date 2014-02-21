@@ -292,14 +292,18 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
         String s = File.separator;
         HostArchiveStore.log.debug("Getting path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
-        String fileName = getFilePath() + s + getBucket(acb) + s + acb.getId() + ".tar.gz";
-        File simpleObjectDir = new File(fileName);
+        String fileName = getFilePath() + s + getBucket(acb) + s + acb.getId();
+        File acbFile = new File(fileName);
 
         if (isNew) {
             HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
-            mkParentDir(simpleObjectDir);
+            mkParentDir(acbFile);
+        } else {
+            if (!acbFile.exists()) {  //file doesn't exist where its supposed to?
+                acbFile = new File(fileName + ".tar.gz"); //does the compressed version exist?
+            }
         }
-        return simpleObjectDir;
+        return acbFile;
     }
 
     private String getBucket(ArchiveContentBlock acb) {
