@@ -68,6 +68,7 @@ public class HostReplicator implements Replicator {
 
                 acb.getNodes().add(targetNode);
                 archiveStore.getOmr().put(acb);
+                archiveStore.getAcbPath(acb, true); // trick the archive store into creating needed directories
                 File acbPath = archiveStore.getAcbPath(acb, false);
 
                 // exec 'scp -f rfile' remotely
