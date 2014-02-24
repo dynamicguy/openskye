@@ -12,6 +12,7 @@ import org.openskye.stores.util.MimeTypeUtil;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 
 /**
@@ -22,7 +23,13 @@ public class FileSystemCompressedObject extends UnstructuredCompressedObject {
     public List<SimpleObject> getObjectsContained() {
         try {
             List<SimpleObject> objects = new ArrayList<>();
-            ArchiveInputStream stream = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(this.getObjectMetadata().getPath())));
+            File objectFile = new File(this.getObjectMetadata().getPath());
+            ArchiveInputStream stream;
+            try{
+                stream = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(objectFile)));
+            } catch (ArchiveException e){
+                stream = new ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.TAR, new GZIPInputStream(new FileInputStream(objectFile)));
+            }
             ArchiveEntry currentEntry = stream.getNextEntry();
             ObjectMetadata om = this.getObjectMetadata();
             String originalPath = this.getObjectMetadata().getPath();
@@ -76,7 +83,13 @@ public class FileSystemCompressedObject extends UnstructuredCompressedObject {
         try {
             stream = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(this.getObjectMetadata().getPath())));
         } catch (ArchiveException e) {
-            throw new SkyeException("Cannot create ArchiveStream", e);
+            try {
+                stream = new ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.TAR, new GZIPInputStream(new FileInputStream(this.getObjectMetadata().getPath())));
+            } catch (ArchiveException e1) {
+                throw new SkyeException("Skye Exception", e1);
+            } catch (IOException e1) {
+                throw new SkyeException("Skye Exception", e1);
+            }
         } catch (FileNotFoundException e) {
             throw new SkyeException("Path not found", e);
         }

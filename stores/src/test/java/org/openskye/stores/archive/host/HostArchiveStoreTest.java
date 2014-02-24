@@ -207,8 +207,6 @@ public class HostArchiveStoreTest {
         Iterator<Row> iter = result.getRows();
         assertThat("we have a row", iter.hasNext());
         assertThat("result has first row", iter.next() != null);
-        assertThat("we have a row", iter.hasNext());
-        assertThat("result has second row", iter.next() != null);
         temp.toFile().deleteOnExit();
     }
 
