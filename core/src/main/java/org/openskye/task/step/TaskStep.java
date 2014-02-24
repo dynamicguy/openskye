@@ -139,7 +139,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     protected Optional<ObjectEvent> getLatestEvent(ObjectMetadata objectMetadata){
         if(auditLogDAO.findByObject(objectMetadata.getId()).isPresent()){
             List<AuditLog> objectLogs = auditLogDAO.findByObject(objectMetadata.getId()).get();
-            return Optional.of(objectLogs.get(objectLogs.size()-1).getObjectEvent());
+            return Optional.of(objectLogs.get(0).getObjectEvent());
         } else {
             return Optional.absent();
         }

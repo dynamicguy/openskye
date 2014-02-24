@@ -85,8 +85,12 @@ public class DestroyTaskStep extends TaskStep {
                 for (ArchiveContentBlock acb : om.getArchiveContentBlocks()) {
                     Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
                     if (archiveStore.isPresent()) {
-                        archiveStore.get().destroy(om);
-                        auditObject(om, ObjectEvent.DESTROYED);
+                        if (getLatestEvent(om).get() != ObjectEvent.DESTROYED) {
+                            archiveStore.get().destroy(om);
+                            auditObject(om, ObjectEvent.DESTROYED);
+                        } else {
+                            toLog("Object "+om+" already destroyed");
+                        }
                     } else {
                         throw new SkyeException("Unable to build archive store " + archiveStore);
                     }

@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.changes.ChangeSet;
 import org.apache.commons.compress.changes.ChangeSetPerformer;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +31,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import static org.eobjects.metamodel.DataContextFactory.createCsvDataContext;
 
@@ -233,9 +236,9 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     public void destroy(ObjectMetadata om) {
         if (om.getArchiveContentBlock(getArchiveStoreInstance()).isPresent()) {
             ArchiveContentBlock acb = om.getArchiveContentBlock(getArchiveStoreInstance()).get();
+            File acbFile = getAcbPath(acb, false);
             try {
-                TarArchiveInputStream archiveInputStream = new TarArchiveInputStream(new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(getAcbPath(acb, false)))));
-                TarArchiveOutputStream archiveOut = new TarArchiveOutputStream(new GzipCompressorOutputStream(new BufferedOutputStream(new FileOutputStream(getAcbPath(acb, false)))));
+                TarArchiveInputStream archiveInputStream = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.TAR, new GZIPInputStream(new FileInputStream(acbFile)));
                 ArchiveEntry currentEntry = archiveInputStream.getNextEntry();
                 InputStream is;
                 ChangeSet changes = new ChangeSet();
@@ -274,12 +277,15 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
                 } else {
                     changes.delete(om.getPath());
                     ChangeSetPerformer performer = new ChangeSetPerformer(changes);
+                    TarArchiveOutputStream archiveOut = (TarArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, new GZIPOutputStream(new FileOutputStream(acbFile)));
                     performer.perform(archiveInputStream, archiveOut);
                     //remove entry
                 }
             } catch (FileNotFoundException e) {
                 throw new SkyeException("Cannot find ACB", e);
             } catch (IOException e) {
+                throw new SkyeException("Cannot access archive", e);
+            } catch (ArchiveException e) {
                 throw new SkyeException("Cannot access archive", e);
             }
         }

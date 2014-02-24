@@ -179,8 +179,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
                 compress(acb);
                 simpleObject.getObjectMetadata().setChecksum(checksum);
                 simpleObject.getObjectMetadata().setIngested(DateTime.now());
-                simpleObject.getObjectMetadata().setMimeType("text/csv");
-                simpleObject.getObjectMetadata().setArchiveSize(hostArchiveStore.getAcbPath(acb, true).length());
+                simpleObject.getObjectMetadata().setArchiveSize(FileUtils.sizeOf(hostArchiveStore.getAcbPath(acb, false)));
                 tempStoragePath.delete();
                 //clean up the temporary decompression folder and the files within once they're archived
                 File decompressionPath = new File(TMP_DECOMPRESSION_PATH);
