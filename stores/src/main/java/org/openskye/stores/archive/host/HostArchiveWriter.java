@@ -43,14 +43,16 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
 
     public HostArchiveWriter(Task task, HostArchiveStore hostArchiveStore) {
+        String s = File.separator;
         this.hostArchiveStore = hostArchiveStore;
         this.task = task;
-        TMP_DECOMPRESSION_PATH = hostArchiveStore.getFilePath() + "/tmpArchive/";
+        TMP_DECOMPRESSION_PATH = hostArchiveStore.getFilePath() + s + "tmpArchive" + s;
 
     }
 
     @Override
     public SimpleObject put(SimpleObject simpleObject) {
+        String s = File.separator;
         ArchiveContentBlock acb = new ArchiveContentBlock();
         // We need to link this ACB to the Node we are currently running on
         acb.setNodes(new ArrayList());
@@ -127,10 +129,10 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
                 if (isInCompressedObject(unstructuredObject)) {
                     String path = unstructuredObject.getObjectMetadata().getPath();
-                    String[] pathSplit = path.split("/");
+                    String[] pathSplit = path.split(s);
                     String fileName = pathSplit[pathSplit.length - 1];
                     String container = pathSplit[pathSplit.length - 2];
-                    unstructuredObject.getObjectMetadata().setPath(TMP_DECOMPRESSION_PATH + container + "/" + fileName);
+                    unstructuredObject.getObjectMetadata().setPath(TMP_DECOMPRESSION_PATH + container + s + fileName);
                 }
                 try {
                     FileUtils.copyInputStreamToFile(unstructuredObject.getInputStream(), tempStoragePath);
@@ -225,14 +227,14 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
         UnstructuredCompressedObject compressedObject = new FileSystemCompressedObject();
         ObjectMetadata om = so.getObjectMetadata();
         try {
-            OutputStream out = new FileOutputStream(so.getObjectMetadata().getPath() + ".tar");
+            OutputStream out = new FileOutputStream(so.getObjectMetadata().getPath());
             ArchiveOutputStream outputStream = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
             ArchiveEntry entry = new TarArchiveEntry(so.getObjectMetadata().getPath());
             outputStream.putArchiveEntry(entry);
             IOUtils.copy(((UnstructuredObject) so).getInputStream(), outputStream);
             outputStream.closeArchiveEntry();
             outputStream.close();
-            om.setPath(so.getObjectMetadata().getPath() + ".tar");
+            om.setPath(so.getObjectMetadata().getPath());
             om.setMimeType(MediaType.TAR.toString());
             compressedObject.setObjectMetadata(om);
         } catch (ArchiveException e) {
@@ -281,6 +283,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
 
     @Override
     public List<SimpleObject> decompress(UnstructuredCompressedObject compressedObject) {
+        String s = File.separator;
         log.info("Decompressing compressed object: " + compressedObject.getObjectMetadata());
         try {
             ArchiveInputStream stream = (ArchiveInputStream) compressedObject.getInputStream();
@@ -294,7 +297,7 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
             while (currentEntry != null) {
                 byte[] entryContent = new byte[(int) currentEntry.getSize()];
                 stream.read(entryContent);
-                File destFile = new File(TMP_DECOMPRESSION_PATH + compressedObject.getCompressedContainer() + "/" + currentEntry.getName());
+                File destFile = new File(TMP_DECOMPRESSION_PATH + compressedObject.getCompressedContainer() + s + currentEntry.getName());
                 FileUtils.copyInputStreamToFile(new ByteArrayInputStream(entryContent), destFile);
                 currentEntry = stream.getNextEntry();
             }
@@ -308,10 +311,11 @@ public class HostArchiveWriter extends AbstractArchiveStoreWriter {
     }
 
     public String createDecompressionPath(String path) {
-        String[] pathSplit = path.split("/");
+        String s = File.separator;
+        String[] pathSplit = path.split(s);
         String fileName = pathSplit[pathSplit.length - 1];
         String container = pathSplit[pathSplit.length - 2];
-        return TMP_DECOMPRESSION_PATH + container + "/" + fileName;
+        return TMP_DECOMPRESSION_PATH + container + s + fileName;
     }
 
 }
