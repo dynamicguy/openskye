@@ -67,6 +67,7 @@ public class AttributeDefinition implements Identifiable {
     /**
      * The type of attribute this definition applies to. For example text, numeric, date (see {@link AttributeType}).
      */
+    @NotNull
     private AttributeType type;
     /**
      * A list of possible values that can be assigned to this attribute.

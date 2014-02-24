@@ -1115,4 +1115,8 @@
         <addNotNullConstraint catalogName="openskye"
                               tableName="archive_content_block" columnDataType="varchar(36)" columnName="project_id"/>
     </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-153">
+        <addNotNullConstraint catalogName="openskye"
+                              tableName="attribute_definition" columnDataType="INT(10)" columnName="type"/>
+    </changeSet>
 </databaseChangeLog>

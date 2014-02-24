@@ -60,15 +60,16 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
 
     @Override
     public void initialize(ArchiveStoreInstance asi) {
+        String s = File.separator;
         this.archiveStoreInstance = asi;
         this.filePath = archiveStoreInstance.getProperties().get(FILE_PATH);
 
         this.tmpPath = archiveStoreInstance.getProperties().get(TMP_PATH);
 
         if (this.filePath == null)
-            this.filePath = "/tmp/" + archiveStoreInstance.getId() + "/archives";
+            this.filePath = s + "tmp" + s + archiveStoreInstance.getId() + s + "archives";
         if (this.tmpPath == null)
-            this.tmpPath = "/tmp/" + archiveStoreInstance.getId() + "/tmp";
+            this.tmpPath = s + "tmp" + s + archiveStoreInstance.getId() + s + "tmp";
 
         HostArchiveStore.log.info("Creating instance of " + this.getName());
 
@@ -288,42 +289,38 @@ public class HostArchiveStore implements ArchiveStore, QueryableStore {
     }
 
     public File getAcbPath(ArchiveContentBlock acb, boolean isNew) {
+        String s = File.separator;
         HostArchiveStore.log.debug("Getting path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
-        String fileName = getFilePath() + "/" + getBucket(acb) + "/" + acb.getId();
-        File simpleObjectDir = new File(fileName);
-
+        String fileName = getFilePath() + s + getBucket(acb) + s + acb.getId();
+        File acbFile = new File(fileName);
 
         if (isNew) {
             HostArchiveStore.log.debug("Storing object with ACB [" + fileName + "]");
-            mkParentDir(simpleObjectDir);
+            mkParentDir(acbFile);
         } else {
-            if (!simpleObjectDir.exists()) {  //file doesn't exist where its supposed to?
-                simpleObjectDir = new File(fileName + ".tar.gz"); //does the compressed version exist?
-                if (!simpleObjectDir.exists()) {
-                    throw new SkyeException("ACB Directory not found: " + fileName);
-                }
+            if (!acbFile.exists()) {  //file doesn't exist where its supposed to?
+                acbFile = new File(fileName + ".tar.gz"); //does the compressed version exist?
             }
         }
-        return simpleObjectDir;
+        return acbFile;
     }
 
     private String getBucket(ArchiveContentBlock acb) {
-        return acb.getId().substring(0, 10);
+        String bucketName = acb.getId().substring(0, 10);
+        return bucketName;
     }
 
     public File getTempACBPath(ArchiveContentBlock acb, boolean isNew) {
+        String s = File.separator;
         HostArchiveStore.log.debug("Getting temp path for " + acb);
         // Lets create rough buckets so we don't end up with everything in one directory
-        String fileName = getTempPath() + "/" + getBucket(acb) + "/" + acb.getId();
+        String fileName = getTempPath() + s + getBucket(acb) + s + acb.getId();
         File simpleObjectDir = new File(fileName);
         HostArchiveStore.log.debug("Storing temp object with ACB [" + fileName + "]");
 
         if (isNew) {
             mkParentDir(simpleObjectDir);
-
-        } else if (!simpleObjectDir.exists()) {
-            throw new SkyeException("Unable to find simple object for acb " + acb);
         }
         return simpleObjectDir;
     }

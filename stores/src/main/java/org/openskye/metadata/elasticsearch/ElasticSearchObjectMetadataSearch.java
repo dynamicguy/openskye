@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -29,7 +30,10 @@ import org.openskye.metadata.ObjectMetadataSearch;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An implementation of OMS that uses ElasticSearch
@@ -481,6 +485,10 @@ public class ElasticSearchObjectMetadataSearch implements ObjectMetadataSearch {
      */
     @SuppressWarnings({"ConstantConditions"})
     private static String smartEscapeQuery(String str) {
+        if (StringUtils.isBlank(str)) {
+            return "";
+        }
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
