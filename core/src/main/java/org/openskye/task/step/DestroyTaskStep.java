@@ -12,7 +12,7 @@ import org.openskye.domain.dao.InformationStoreDefinitionDAO;
 import org.openskye.stores.StoreRegistry;
 
 /**
- * A simple implementation of the destroy task type
+ * A simple implementation of the destroy task type.
  */
 @NoArgsConstructor
 public class DestroyTaskStep extends TaskStep {
