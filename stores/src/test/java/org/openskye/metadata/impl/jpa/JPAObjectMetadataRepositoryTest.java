@@ -168,7 +168,6 @@ public class JPAObjectMetadataRepositoryTest {
         assertThat("get objects by task should contain created metadata",
                 isFound);
 
-
         ObjectSet objectSet = omr.createObjectSet("TestObjectSet");
         Optional<ObjectSet> setOutput = omr.getObjectSet(objectSet.getId());
 
@@ -189,7 +188,7 @@ public class JPAObjectMetadataRepositoryTest {
 
         omr.addObjectToSet(objectSet, metadataOutput.get());
 
-        assertThat("object can be added to object set",
+        assertThat("object was added to object set",
                 omr.isObjectInSet(objectSet, metadataOutput.get()));
 
         isFound = false;
@@ -200,9 +199,8 @@ public class JPAObjectMetadataRepositoryTest {
                 isFound = true;
         }
 
-        assertThat("object is not found in object set",
+        assertThat("object is found in object set",
                 isFound);
-
 
         System.out.println("About to DELETE");
 
@@ -210,8 +208,7 @@ public class JPAObjectMetadataRepositoryTest {
 
         System.out.println("DELETED");
 
-
-        assertThat("object has not been removed from object set",
+        assertThat("object has been removed from object set",
                 (!omr.isObjectInSet(objectSet, metadataOutput.get())));
 
         omr.deleteObjectSet(objectSet);

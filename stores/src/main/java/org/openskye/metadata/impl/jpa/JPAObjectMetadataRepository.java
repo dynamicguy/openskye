@@ -151,16 +151,18 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         String queryPath = objectMetadata.getPath();
         DateTime queryLastModified = objectMetadata.getLastModified().minusSeconds(1); // ignore time difference less than 1 second
         String queryInformationStoreId = objectMetadata.getInformationStoreId();
+
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<ObjectMetadata> cq = cb.createQuery(ObjectMetadata.class);
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<ObjectMetadata> root = cq.from(ObjectMetadata.class);
 
-        cq.select(root);
         cq.where( cb.equal(root.get(ObjectMetadata_.path), queryPath),
                 cb.greaterThanOrEqualTo(root.get(ObjectMetadata_.lastModified), queryLastModified),
                 cb.equal(root.get(ObjectMetadata_.informationStoreId), queryInformationStoreId) );
 
-        return (getEntityManager().createQuery(cq).getResultList().size() > 0);
+        cq.select(cb.count(root));
+
+        return (getEntityManager().createQuery(cq).getSingleResult() > 0);
     }
 
     /**
@@ -180,7 +182,7 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
 
     /**
      * Either adds the {@link ObjectMetadata} to the repository, or, if it
-     * already exists (by it's id property), removes the old
+     * already exists (by its id property), removes the old
      * {@link ObjectMetadata} and replaces it with the new one.  If an
      * Exception occurs, then the repository is rolled back to it's previous
      * state, and the exception should be rethrown.
