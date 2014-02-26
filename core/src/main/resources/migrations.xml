@@ -1119,4 +1119,14 @@
         <addNotNullConstraint catalogName="openskye"
                               tableName="attribute_definition" columnDataType="INT(10)" columnName="type"/>
     </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-154">
+        <addUniqueConstraint catalogName="openskye" columnNames="INFORMATION_STORE_ID, PATH, LAST_MODIFIED" constraintName="UC_OBJECT_METADATA_ISI_P_LM"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="OBJECT_METADATA"/>
+    </changeSet>
+    <changeSet author="admin (generated)" id="1390535812880-155">
+        <addUniqueConstraint catalogName="openskye" columnNames="ARCHIVE_CONTENT_BLOCK_ID, OBJECT_METADATA_ID" constraintName="UC_OMACB_ACBI_OMI"
+                             deferrable="false" disabled="false" initiallyDeferred="false"
+                             tableName="OBJECT_METADATA_ARCHIVE_CONTENT_BLOCK"/>
+    </changeSet>
 </databaseChangeLog>
