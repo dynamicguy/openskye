@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
@@ -14,6 +15,7 @@ import org.openskye.domain.dao.InformationStoreDefinitionDAO;
  * A simple implementation of the discover task type
  */
 @NoArgsConstructor
+@Slf4j
 public class ExtractTaskStep extends TaskStep {
 
     @Inject
@@ -105,21 +107,28 @@ public class ExtractTaskStep extends TaskStep {
 
         for (ObjectMetadata om : objectMetadataIterable) {
             if (!getLatestEvent(om).get().equals(ObjectEvent.DESTROYED)) {
-                if (om.getArchiveContentBlocks().size() > 0) {
-                    // Lets just get the first ACB
-                    ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
-                    Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
-                    if (archiveStore.isPresent()) {
-                        Optional<SimpleObject> simpleObject = archiveStore.get().materialize(om);
-                        if (simpleObject.isPresent()) {
-                            targetInformationStore.get().put(simpleObject.get());
+                if (hasEvent(om, ObjectEvent.ARCHIVED)) {
+                    // It should only attempt the extract if there is an associated ACB
+                    if (om.getArchiveContentBlocks().size() > 0) {
+                        // Lets just get the first ACB
+                        ArchiveContentBlock acb = om.getArchiveContentBlocks().get(0);
+                        Optional<ArchiveStore> archiveStore = storeRegistry.build(acb.getArchiveStoreInstance());
+                        if (archiveStore.isPresent()) {
+                            Optional<SimpleObject> simpleObject = archiveStore.get().materialize(om);
+                            if (simpleObject.isPresent()) {
+                                targetInformationStore.get().put(simpleObject.get());
+                            }
+                        } else {
+                            throw new SkyeException("Unable to build the archive store from definition " + acb.getArchiveStoreInstance());
                         }
-                    } else {
-                        throw new SkyeException("Unable to build the archive store from definition " + acb.getArchiveStoreInstance());
-                    }
 
+                    } else {
+                        log.warn("Missing an archive content block for " + om);
+                        throw new SkyeException("Another operation is in progress, please retry.");
+                    }
                 } else {
-                    throw new SkyeException("Missing an archive content block for " + om);
+                    log.warn("Extract attempted prior to Archive for " + om);
+                    throw new SkyeException("Please run an Archive Task, prior to Extract.");
                 }
             }
         }

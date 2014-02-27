@@ -5,11 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
 import org.openskye.core.*;
 import org.openskye.domain.*;
 import org.openskye.domain.dao.ChannelDAO;
 import org.openskye.domain.dao.TaskDAO;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -59,10 +63,20 @@ public class ArchiveTaskStep extends TaskStep {
 
     @Override
     protected TaskStatus doStep() throws Exception {
-
         log.debug("Starting archive task " + task);
-        if (task.getStatistics() == null)
+
+        // Set the read isolation to dirty
+        final Session session = (Session) auditLogDAO.getEntityManagerProvider().get().getDelegate();
+        session.doWork(new Work() {
+            @Override
+            public void execute(Connection connection) throws SQLException {
+                connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+            }
+        });
+
+        if (task.getStatistics() == null) {
             task.setStatistics(new TaskStatistics());
+        }
 
         // Build up the information and archive stores
         log.debug("Starting archive task step on " + channel);
@@ -76,19 +90,22 @@ public class ArchiveTaskStep extends TaskStep {
         // Based on the fact that we have done discovery then we will
         // look for all SimpleObject's that from the OMR
         for (ObjectMetadata objectMetadata : getObjectMetadataIterator()) {
-            objectMetadata.setTaskId(task.getId());
-            try {
-                SimpleObject simpleObject = is.materialize(objectMetadata);
-                task.getStatistics().incrementSimpleObjectsProcessed();
-                for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
-                    channelStoreWriters.get(cas).put(simpleObject);
-                    auditObject(simpleObject, ObjectEvent.ARCHIVED);
+            // It should only attempt the archival if it was NOT already archived
+            if (!hasEvent(objectMetadata, ObjectEvent.ARCHIVED)) {
+                objectMetadata.setTaskId(task.getId());
+                try {
+                    SimpleObject simpleObject = is.materialize(objectMetadata);
+                    task.getStatistics().incrementSimpleObjectsProcessed();
+                    for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
+                        channelStoreWriters.get(cas).put(simpleObject);
+                        auditObject(simpleObject, ObjectEvent.ARCHIVED);
+                    }
+                    // After we have ingested we need to update the
+                    // object metadata again
+                    omr.put(simpleObject.getObjectMetadata());
+                } catch (InvalidSimpleObjectException e) {
+                    throw new SkyeException("Unable to materialize object " + objectMetadata, e);
                 }
-                // After we have ingested we need to update the
-                // object metadata again
-                omr.put(simpleObject.getObjectMetadata());
-            } catch (InvalidSimpleObjectException e) {
-                throw new SkyeException("Unable to materialize object " + objectMetadata, e);
             }
         }
 

@@ -1,7 +1,9 @@
 package org.openskye.domain.dao;
 
 import com.google.common.base.Optional;
+import org.hibernate.Session;
 import org.openskye.domain.AuditLog;
+import org.openskye.domain.ObjectEvent;
 import org.openskye.domain.User;
 
 import javax.persistence.criteria.CriteriaQuery;
@@ -56,6 +58,20 @@ public class AuditLogDAO extends AbstractPaginatingDAO<AuditLog> {
         } else {
             return Optional.absent();
         }
+    }
+
+    /**
+     * Check for the existence of objects having a specific object event
+     * @param objectId id of ObjectMetatdata
+     * @param objectEvent event to check
+     * @return
+     */
+    public boolean isObjectWithEventAudited(String objectId, ObjectEvent objectEvent) {
+        Session session = (Session) currentEntityManager().getDelegate();
+
+        return (((Number) session.createQuery("select count(*) from AuditLog al where al.objectAffected = :oa and al.objectEvent = :oe").
+                setParameter("oa", objectId).setParameter("oe", objectEvent).uniqueResult()).longValue() > 0);
+
     }
 
 }

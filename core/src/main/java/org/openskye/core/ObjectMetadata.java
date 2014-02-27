@@ -65,6 +65,7 @@ public class ObjectMetadata {
     private String checksum;
     private String informationStoreId;
     @ManyToMany(cascade = CascadeType.ALL)
+    @ElementCollection(fetch = FetchType.EAGER)
     @JoinTable(
             name = "OBJECT_METADATA_ARCHIVE_CONTENT_BLOCK",
             joinColumns = {@JoinColumn(name = "OBJECT_METADATA_ID", referencedColumnName = "ID")},
