@@ -106,6 +106,7 @@ public class ExtractTaskStep extends TaskStep {
         }
 
         for (ObjectMetadata om : objectMetadataIterable) {
+            emf.get().refresh(om); // Synchronize object's state in cache
             if (!getLatestEvent(om).get().equals(ObjectEvent.DESTROYED)) {
                 if (hasEvent(om, ObjectEvent.ARCHIVED)) {
                     // It should only attempt the extract if there is an associated ACB
@@ -123,12 +124,12 @@ public class ExtractTaskStep extends TaskStep {
                         }
 
                     } else {
-                        log.warn("Missing an archive content block for " + om);
-                        throw new SkyeException("Another operation is in progress, please retry.");
+                        log.warn("File Skipped. Missing an archive content block for " + om);
+                        //TODO add a message to show that a certain # of files were skipped
                     }
                 } else {
-                    log.warn("Extract attempted prior to Archive for " + om);
-                    throw new SkyeException("Please run an Archive Task, prior to Extract.");
+                    log.warn("File Skipped. OM hasn't been Archived yet for " + om);
+                    //TODO add a message to show that a certain # of files were skipped
                 }
             }
         }

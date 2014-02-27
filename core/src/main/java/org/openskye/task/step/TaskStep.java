@@ -51,7 +51,7 @@ public abstract class TaskStep implements Callable<TaskStatus> {
     private Node node;
     @JsonIgnore
     @Inject
-    private Provider<EntityManager> emf;
+    protected Provider<EntityManager> emf;
 
     public abstract void validate();
 

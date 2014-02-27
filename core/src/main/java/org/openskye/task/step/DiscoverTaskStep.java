@@ -104,6 +104,7 @@ public class DiscoverTaskStep extends TaskStep {
             } else if ( isIncludedByFilter(object) ) {
 
                 ObjectMetadata om = object.getObjectMetadata();
+                emf.get().refresh(om); // Synchronize object's state in cache
                 if ( ! omr.isObjectInOMR(om) ) {
                     om.setTaskId(task.getId());
                     // this file has either never been discovered for this project, or has

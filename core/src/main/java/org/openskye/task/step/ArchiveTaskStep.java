@@ -114,9 +114,10 @@ public class ArchiveTaskStep extends TaskStep {
 
     private Iterable<ObjectMetadata> getObjectMetadataIterator() {
         // Find all objects discovered through the specified channel that have not yet been archived
-
         List<ObjectMetadata> objects = new ArrayList<>();
+
         for ( ObjectMetadata om : omr.getObjects(channel.getInformationStoreDefinition()) ) {
+            emf.get().refresh(om); // Synchronize object's state in cache
             if ( readyToArchive(om) ) {
                 objects.add(om);
             }
@@ -125,6 +126,7 @@ public class ArchiveTaskStep extends TaskStep {
                 break;
             }
         }
+
         Collections.sort(objects, new Comparator<ObjectMetadata>() { //orders based on implementation
             @Override
             public int compare(ObjectMetadata o1, ObjectMetadata o2) {
