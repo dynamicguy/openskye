@@ -95,10 +95,10 @@ public class ArchiveTaskStep extends TaskStep {
                 objectMetadata.setTaskId(task.getId());
                 try {
                     SimpleObject simpleObject = is.materialize(objectMetadata);
+                    auditObject(simpleObject, ObjectEvent.ARCHIVED);
                     task.getStatistics().incrementSimpleObjectsProcessed();
                     for (ChannelArchiveStore cas : channel.getChannelArchiveStores()) {
                         channelStoreWriters.get(cas).put(simpleObject);
-                        auditObject(simpleObject, ObjectEvent.ARCHIVED);
                     }
                     // After we have ingested we need to update the
                     // object metadata again
