@@ -106,7 +106,6 @@ public class ExtractTaskStep extends TaskStep {
         }
 
         for (ObjectMetadata om : objectMetadataIterable) {
-            emf.get().refresh(om); // Synchronize object's state in cache
             if (!getLatestEvent(om).get().equals(ObjectEvent.DESTROYED)) {
                 if (hasEvent(om, ObjectEvent.ARCHIVED)) {
                     // It should only attempt the extract if there is an associated ACB

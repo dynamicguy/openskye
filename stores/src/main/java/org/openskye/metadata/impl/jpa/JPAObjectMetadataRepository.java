@@ -21,6 +21,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An implementation of the {@link ObjectMetadataRepository} using the Java
@@ -221,6 +222,11 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         // TODO we need to make this iterable or we will load everything into memory
         listObjectMetadata = getEntityManager().createQuery(cq).getResultList();
 
+        // Make sure objects aren't stale
+        for (Object next : listObjectMetadata) {
+            getEntityManager().refresh(next);
+        }
+
         return listObjectMetadata;
     }
 
@@ -287,7 +293,13 @@ public class JPAObjectMetadataRepository implements ObjectMetadataRepository {
         // TODO we need to make this iterable or we will load everything into memory
         objectSet = getEntityManager().createQuery(cq).getSingleResult();
 
-        return objectSet.getObjectMetadataSet();
+        Set<ObjectMetadata> omSet = objectSet.getObjectMetadataSet();
+        // Make sure objects aren't stale
+        for (Object next : omSet) {
+            getEntityManager().refresh(next);
+        }
+
+        return omSet;
     }
 
     /**

@@ -120,7 +120,6 @@ public class ArchiveTaskStep extends TaskStep {
         List<ObjectMetadata> objects = new ArrayList<>();
 
         for ( ObjectMetadata om : omr.getObjects(channel.getInformationStoreDefinition()) ) {
-            emf.get().refresh(om); // Synchronize object's state in cache
             if ( readyToArchive(om) ) {
                 objects.add(om);
             }
