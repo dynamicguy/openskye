@@ -106,6 +106,9 @@ public class ArchiveTaskStep extends TaskStep {
                 } catch (InvalidSimpleObjectException e) {
                     throw new SkyeException("Unable to materialize object " + objectMetadata, e);
                 }
+            } else {
+                log.warn("File Skipped. OM has already been Archived: " + objectMetadata);
+                //TODO add a message to show that a certain # of files were skipped
             }
         }
 
